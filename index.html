@@ -11,25 +11,29 @@
   <div class="app">
 
     <!-- DASHBOARD -->
-    <section class="card">
+    <section class="card dashboard">
       <h2>📊 דשבורד</h2>
-      <p>סה״כ הרגלים: <strong id="totalHabits">0</strong></p>
-      <p>בוצעו היום: <strong id="doneToday">0</strong></p>
-      <p>התקדמות היום: <strong id="progressToday">0/0</strong></p>
+      <div class="stats">
+        <div>סה״כ הרגלים: <strong id="totalHabits">0</strong></div>
+        <div>בוצעו היום: <strong id="doneToday">0</strong></div>
+        <div>התקדמות היום: <strong id="progressToday">0/0</strong></div>
+      </div>
     </section>
 
     <!-- TODAY HABITS -->
-    <section class="card">
+    <section class="card today">
       <h2>🗓 הרגלים להיום</h2>
 
-      <input type="text" id="habitInput" placeholder="הוסף הרגל חדש..." />
-      <button onclick="addHabit()">➕ הוסף הרגל</button>
+      <div class="input-group">
+        <input type="text" id="habitInput" placeholder="הוסף הרגל חדש..." />
+        <button onclick="addHabit()">➕</button>
+      </div>
 
       <ul id="habitList"></ul>
     </section>
 
     <!-- LAST 14 DAYS -->
-    <section class="card">
+    <section class="card history">
       <h2>📈 14 ימים אחרונים</h2>
       <div id="history"></div>
     </section>
