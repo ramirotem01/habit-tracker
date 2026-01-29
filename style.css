@@ -1,20 +1,22 @@
 li {
   display: flex;
-  align-items: center;       /* מרכז אנכי של ה-checkbox */
+  align-items: center;
+  justify-content: space-between;
   padding: 10px 12px;
   border-radius: 10px;
   background: #f9fafb;
   margin-bottom: 8px;
-  min-height: 50px;
+  min-height: 40px;
 }
 
 li span {
   flex: 1;                   /* תופס את כל השטח הזמין */
   margin-left: 12px;         /* רווח בין הטקסט ל-checkbox */
-  word-break: break-word;    /* אם מילה ארוכה, נשברת */
+  white-space: normal;       /* מאפשר שורות נוספות אם צריך */
+  overflow-wrap: break-word; /* שבר מילים ארוכות */
+  max-width: 400px;          /* ניתן לשנות לפי הצורך – כ-50 תווים בקו אחד */
   font-size: 16px;
   line-height: 1.4;
-  white-space: normal;       /* מאפשר שורה נוספת */
 }
 
 li input[type="checkbox"] {
@@ -22,5 +24,5 @@ li input[type="checkbox"] {
   width: 24px;
   height: 24px;
   margin: 0;
-  align-self: center;         /* מרכז אנכי */
+  align-self: center;
 }
