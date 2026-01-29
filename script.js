@@ -1,7 +1,6 @@
 // =====================
-// כללי
+// אלמנטים עיקריים
 // =====================
-
 const habitListEl = document.getElementById("habitList");
 const totalHabitsEl = document.getElementById("totalHabits");
 const doneTodayEl = document.getElementById("doneToday");
@@ -129,16 +128,17 @@ function renderHistory() {
   const dailyKeys = Object.keys(dailyStats).sort().slice(-days);
 
   dailyKeys.forEach(day => {
+    const currentHabits = allHabits.map(h => h.text); // רק ההרגלים הקיימים ברשימה
     let habitsDone = 0;
 
-    allHabits.forEach(habit => {
-      if(dailyStats[day] && dailyStats[day][habit.text]) {
+    currentHabits.forEach(habitText => {
+      if(dailyStats[day] && dailyStats[day][habitText]) {
         habitsDone++;
       }
     });
 
     const div = document.createElement("div");
-    div.textContent = `${day}: ${habitsDone}/${allHabits.length} הושלם`;
+    div.textContent = `${day}: ${habitsDone}/${currentHabits.length} הושלם`;
     historyEl.appendChild(div);
   });
 }
