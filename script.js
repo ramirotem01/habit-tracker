@@ -95,7 +95,7 @@ function renderManage() {
       allHabits.splice(index, 1);
       saveHabits();
       renderManage();
-      renderDashboard(); // סנכרון עם הדשבורד
+      renderDashboard(); // סנכרון מיידי עם הדשבורד
     };
 
     li.appendChild(deleteBtn);
@@ -125,20 +125,23 @@ function renderHistory() {
 
   historyEl.innerHTML = "";
   const days = 14;
+
+  // בודק את ה-14 הימים האחרונים
   const dailyKeys = Object.keys(dailyStats).sort().slice(-days);
 
   dailyKeys.forEach(day => {
-    const currentHabits = allHabits.map(h => h.text); // רק ההרגלים הקיימים ברשימה
     let habitsDone = 0;
+    const totalHabits = allHabits.length; // סך ההרגלים הקיימים בדף הניהול ברגע זה
 
-    currentHabits.forEach(habitText => {
-      if(dailyStats[day] && dailyStats[day][habitText]) {
+    allHabits.forEach(habit => {
+      // ספירת ההרגלים שסומנו בדשבורד ביום זה
+      if(dailyStats[day] && dailyStats[day][habit.text]) {
         habitsDone++;
       }
     });
 
     const div = document.createElement("div");
-    div.textContent = `${day}: ${habitsDone}/${currentHabits.length} הושלם`;
+    div.textContent = `${day}: ${habitsDone}/${totalHabits} הושלם`;
     historyEl.appendChild(div);
   });
 }
