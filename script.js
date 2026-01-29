@@ -1,74 +1,166 @@
-const habitInput = document.getElementById("habitInput");
-const habitList = document.getElementById("habitList");
+// =====================
+// כללי
+// =====================
 
+const habitListEl = document.getElementById("habitList");
 const totalHabitsEl = document.getElementById("totalHabits");
 const doneTodayEl = document.getElementById("doneToday");
 const progressTodayEl = document.getElementById("progressToday");
+const todayDateEl = document.getElementById("todayDate");
 const historyEl = document.getElementById("history");
 
-let habits = JSON.parse(localStorage.getItem("habits")) || [];
+// דף ניהול
+const manageListEl = document.getElementById("manageList");
+const newHabitInput = document.getElementById("newHabit");
 
-function save() {
-  localStorage.setItem("habits", JSON.stringify(habits));
+// תאריך היום
+const today = new Date().toLocaleDateString("he-IL");
+if(todayDateEl) todayDateEl.textContent = today;
+
+// =====================
+// טעינת נתונים מ-localStorage
+// =====================
+let allHabits = JSON.parse(localStorage.getItem("allHabits")) || [];
+let dailyStats = JSON.parse(localStorage.getItem("dailyStats")) || {};
+if(!dailyStats[today]) dailyStats[today] = {};
+
+// =====================
+// שמירה ב-localStorage
+// =====================
+function saveHabits() {
+  localStorage.setItem("allHabits", JSON.stringify(allHabits));
 }
 
-function addHabit() {
-  const text = habitInput.value.trim();
-  if (!text) return;
-
-  habits.push({ text, done: false });
-  habitInput.value = "";
-  save();
-  render();
+function saveStats() {
+  localStorage.setItem("dailyStats", JSON.stringify(dailyStats));
 }
 
-function toggleHabit(index) {
-  habits[index].done = !habits[index].done;
-  save();
-  render();
-}
+// =====================
+// דשבורד
+// =====================
+function renderDashboard() {
+  if(!habitListEl) return; // אם לא קיים דף דשבורד
 
-function render() {
-  habitList.innerHTML = "";
+  habitListEl.innerHTML = "";
 
-  habits.forEach((habit, index) => {
+  let doneCount = 0;
+
+  allHabits.forEach(habit => {
     const li = document.createElement("li");
+
+    const textSpan = document.createElement("span");
+    textSpan.textContent = habit.text;
+    li.appendChild(textSpan);
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.checked = habit.done;
-    checkbox.onchange = () => toggleHabit(index);
+    checkbox.checked = dailyStats[today][habit.text] || false;
 
-    const span = document.createElement("span");
-    span.textContent = habit.text;
+    checkbox.onchange = () => {
+      dailyStats[today][habit.text] = checkbox.checked;
+      saveStats();
+      renderDashboard();
+    };
 
-    li.appendChild(span);
     li.appendChild(checkbox);
-    habitList.appendChild(li);
+    habitListEl.appendChild(li);
+
+    if(checkbox.checked) doneCount++;
   });
 
-  updateDashboard();
+  totalHabitsEl.textContent = allHabits.length;
+  doneTodayEl.textContent = doneCount;
+  progressTodayEl.textContent = `${doneCount}/${allHabits.length}`;
+
   renderHistory();
 }
 
-function updateDashboard() {
-  const total = habits.length;
-  const done = habits.filter(h => h.done).length;
+// =====================
+// ניהול רשימת הרגלים
+// =====================
+function renderManage() {
+  if(!manageListEl) return;
 
-  totalHabitsEl.textContent = total;
-  doneTodayEl.textContent = done;
-  progressTodayEl.textContent = `${done}/${total}`;
+  manageListEl.innerHTML = "";
+
+  allHabits.forEach((habit, index) => {
+    const li = document.createElement("li");
+
+    const textSpan = document.createElement("span");
+    textSpan.textContent = habit.text;
+    li.appendChild(textSpan);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "מחק";
+    deleteBtn.onclick = () => {
+      allHabits.splice(index, 1);
+      saveHabits();
+      renderManage();
+      renderDashboard(); // סנכרון עם הדשבורד
+    };
+
+    li.appendChild(deleteBtn);
+    manageListEl.appendChild(li);
+  });
 }
 
-function renderHistory() {
-  historyEl.innerHTML = "";
-  const days = 14;
-
-  for (let i = days; i >= 1; i--) {
-    const div = document.createElement("div");
-    div.textContent = `יום -${i}: אין נתונים (פיתוח הבא 😉)`;
-    historyEl.appendChild(div);
+// =====================
+// הוספת הרגל חדש
+// =====================
+function addHabit() {
+  const text = newHabitInput.value.trim();
+  if(text) {
+    allHabits.push({ text });
+    newHabitInput.value = "";
+    saveHabits();
+    renderManage();
+    renderDashboard();
   }
 }
 
-render();
+// =====================
+// סטטיסטיקה 14 יום
+// =====================
+function renderHistory() {
+  if(!historyEl) return;
+
+  historyEl.innerHTML = "";
+  const days = 14;
+  const dailyKeys = Object.keys(dailyStats).sort().slice(-days);
+
+  dailyKeys.forEach(day => {
+    let habitsDone = 0;
+
+    allHabits.forEach(habit => {
+      if(dailyStats[day] && dailyStats[day][habit.text]) {
+        habitsDone++;
+      }
+    });
+
+    const div = document.createElement("div");
+    div.textContent = `${day}: ${habitsDone}/${allHabits.length} הושלם`;
+    historyEl.appendChild(div);
+  });
+}
+
+// =====================
+// ניווט בין דפים
+// =====================
+function goManage() {
+  window.location.href = "manage.html";
+}
+
+// =====================
+// אירועים
+// =====================
+if(newHabitInput) {
+  newHabitInput.addEventListener("keypress", function(e){
+    if(e.key === "Enter") addHabit();
+  });
+}
+
+// =====================
+// אתחול
+// =====================
+renderManage();
+renderDashboard();
