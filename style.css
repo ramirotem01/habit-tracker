@@ -5,13 +5,14 @@
 
 body {
   margin: 0;
-  background: #f5f7fa;
-  padding: 12px;
+  background: #eef2f7;
+  padding: 0;
 }
 
 .app {
-  max-width: 600px;
+  max-width: 480px;
   margin: auto;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -19,9 +20,9 @@ body {
 
 .card {
   background: white;
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 16px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
 }
 
 h2 {
@@ -29,17 +30,29 @@ h2 {
   font-size: 18px;
 }
 
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.today .input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
 input {
-  width: 100%;
+  flex: 1;
   padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
 }
 
 button {
-  width: 100%;
-  padding: 14px;
+  padding: 12px 16px;
   border: none;
   border-radius: 10px;
   background: #4f46e5;
@@ -48,21 +61,61 @@ button {
   cursor: pointer;
 }
 
+button:hover {
+  background: #3730a3;
+}
+
 ul {
   list-style: none;
   padding: 0;
-  margin-top: 12px;
+  margin: 0;
 }
 
 li {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f9fafb;
   margin-bottom: 8px;
 }
 
-@media (max-width: 480px) {
+li input[type="checkbox"] {
+  transform: scale(1.3);
+}
+
+#history div {
+  background: #f3f4f6;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* רספונסיביות */
+@media (max-width: 400px) {
+  .app {
+    padding: 10px;
+  }
+
   h2 {
     font-size: 16px;
+  }
+
+  input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  li {
+    padding: 8px 10px;
+    font-size: 14px;
   }
 }
