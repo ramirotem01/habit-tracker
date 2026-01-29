@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ניהול הרגלים</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <h1>📝 ניהול הרגלים</h1>
+
+    <div class="input-group">
+      <input type="text" id="newHabit" placeholder="הוסף הרגל חדש..." />
+      <button onclick="addHabit()">➕ הוסף</button>
+    </div>
+
+    <ul id="habitList"></ul>
+
+    <button onclick="goDashboard()">🔙 לדשבורד</button>
+  </div>
+
+  <script src="manage.js"></script>
+</body>
+</html>
