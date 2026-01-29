@@ -8,50 +8,45 @@ const historyEl = document.getElementById("history");
 const today = new Date().toLocaleDateString("he-IL");
 todayDateEl.textContent = today;
 
-let todayHabits = JSON.parse(localStorage.getItem("todayHabits")) || [];
+// 🔹 Load today's progress from localStorage
+let dailyStats = JSON.parse(localStorage.getItem("dailyStats")) || {};
+if(!dailyStats[today]) dailyStats[today] = {};  // עבור כל הרגל נשמר true/false
 
-// סנכרון עם הרשימה הכללית
-function syncHabits() {
-  const allHabits = JSON.parse(localStorage.getItem("allHabits")) || [];
-  const todayMap = {};
-  todayHabits.forEach(h => { todayMap[h.text] = h.done; });
-
-  todayHabits = allHabits.map(h => ({ text: h.text, done: todayMap[h.text] || false }));
-  saveToday();
-}
-
-function saveToday() {
-  localStorage.setItem("todayHabits", JSON.stringify(todayHabits));
+function saveStats() {
+  localStorage.setItem("dailyStats", JSON.stringify(dailyStats));
 }
 
 // render Dashboard
 function render() {
-  syncHabits(); // סנכרון תמידי
   habitListEl.innerHTML = "";
 
+  // קח תמיד את הרשימה המדויקת מהניהול
+  const allHabits = JSON.parse(localStorage.getItem("allHabits")) || [];
   let doneCount = 0;
-  todayHabits.forEach((habit, index) => {
+
+  allHabits.forEach(habit => {
     const li = document.createElement("li");
     li.textContent = habit.text;
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.checked = habit.done;
+    checkbox.checked = dailyStats[today][habit.text] || false;
+
     checkbox.onchange = () => {
-      habit.done = checkbox.checked;
-      saveToday();
-      render();
+      dailyStats[today][habit.text] = checkbox.checked;
+      saveStats();
+      render();  // רנדר מחדש אחרי שינוי
     };
 
     li.appendChild(checkbox);
     habitListEl.appendChild(li);
 
-    if(habit.done) doneCount++;
+    if(checkbox.checked) doneCount++;
   });
 
-  totalHabitsEl.textContent = todayHabits.length;
+  totalHabitsEl.textContent = allHabits.length;
   doneTodayEl.textContent = doneCount;
-  progressTodayEl.textContent = `${doneCount}/${todayHabits.length}`;
+  progressTodayEl.textContent = `${doneCount}/${allHabits.length}`;
 
   renderHistory();
 }
@@ -60,23 +55,20 @@ function render() {
 function renderHistory() {
   historyEl.innerHTML = "";
   const days = 14;
-  for (let i = days; i >= 1; i--) {
+  const dailyKeys = Object.keys(dailyStats).sort().slice(-days); // 14 ימים אחרונים
+
+  dailyKeys.forEach(day => {
+    const habitsDone = Object.values(dailyStats[day]).filter(v => v).length;
+    const total = Object.keys(dailyStats[day]).length;
     const div = document.createElement("div");
-    div.textContent = `יום -${i}: אין נתונים עדיין`;
+    div.textContent = `${day}: ${habitsDone}/${total} הושלם`;
     historyEl.appendChild(div);
-  }
+  });
 }
 
 // ניווט לניהול
 function goManage() {
   window.location.href = "manage.html";
 }
-
-// 🎯 סנכרון אוטומטי בין דפים
-window.addEventListener('storage', (event) => {
-  if(event.key === 'allHabits') {
-    render();
-  }
-});
 
 render();
