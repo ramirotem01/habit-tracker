@@ -10,19 +10,13 @@ todayDateEl.textContent = today;
 
 let todayHabits = JSON.parse(localStorage.getItem("todayHabits")) || [];
 
-// פונקציה לסנכרון עם רשימת ההרגלים העדכנית
+// סנכרון עם הרשימה הכללית
 function syncHabits() {
   const allHabits = JSON.parse(localStorage.getItem("allHabits")) || [];
-
-  // מפת מיקום ההרגלים הקיימים
   const todayMap = {};
   todayHabits.forEach(h => { todayMap[h.text] = h.done; });
 
-  // בונים todayHabits חדש לפי כל ההרגלים הקיימים ב-allHabits
-  todayHabits = allHabits.map(h => {
-    return { text: h.text, done: todayMap[h.text] || false };
-  });
-
+  todayHabits = allHabits.map(h => ({ text: h.text, done: todayMap[h.text] || false }));
   saveToday();
 }
 
@@ -32,7 +26,7 @@ function saveToday() {
 
 // render Dashboard
 function render() {
-  syncHabits(); // סנכרון תמידי לפני הצגה
+  syncHabits(); // סנכרון תמידי
   habitListEl.innerHTML = "";
 
   let doneCount = 0;
@@ -77,5 +71,12 @@ function renderHistory() {
 function goManage() {
   window.location.href = "manage.html";
 }
+
+// 🎯 סנכרון אוטומטי בין דפים
+window.addEventListener('storage', (event) => {
+  if(event.key === 'allHabits') {
+    render();
+  }
+});
 
 render();
