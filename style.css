@@ -1,7 +1,85 @@
+/* =======================
+   CSS כללי
+======================= */
+* {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #eef2f7;
+  direction: rtl; /* מימין לשמאל */
+  padding: 0;
+  margin: 0;
+}
+
+/* =======================
+   מיכל מרכזי
+======================= */
+.app {
+  max-width: 480px;
+  margin: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* =======================
+   כרטיסים (דשבורד, היום, היסטוריה)
+======================= */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+h1, h2 {
+  margin-bottom: 12px;
+}
+
+/* =======================
+   קלטים וכפתורים
+======================= */
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #4f46e5;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #3730a3;
+}
+
+/* =======================
+   רשימות והרגלים
+======================= */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
 li {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   padding: 10px 12px;
   border-radius: 10px;
   background: #f9fafb;
@@ -10,19 +88,54 @@ li {
 }
 
 li span {
-  flex: 1;                   /* תופס את כל השטח הזמין */
-  margin-left: 12px;         /* רווח בין הטקסט ל-checkbox */
-  white-space: normal;       /* מאפשר שורות נוספות אם צריך */
-  overflow-wrap: break-word; /* שבר מילים ארוכות */
-  max-width: 400px;          /* ניתן לשנות לפי הצורך – כ-50 תווים בקו אחד */
+  display: inline-block;
+  max-width: 75%;           /* מספיק מקום להרבה מילים */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;   /* אם יותר מדי, יוצג ... */
   font-size: 16px;
   line-height: 1.4;
 }
 
+/* =======================
+   Checkbox בתוך li
+======================= */
 li input[type="checkbox"] {
-  flex-shrink: 0;             /* לא מצטמצם */
-  width: 24px;
-  height: 24px;
-  margin: 0;
-  align-self: center;
+  transform: scale(1.3);
+  margin-left: 10px;
+}
+
+/* =======================
+   היסטוריה
+======================= */
+#history div {
+  background: #f3f4f6;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* =======================
+   רספונסיביות
+======================= */
+@media (max-width: 400px) {
+  .app {
+    padding: 10px;
+  }
+  h2 {
+    font-size: 16px;
+  }
+  input, button {
+    font-size: 14px;
+    padding: 10px;
+  }
+  li {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
 }
