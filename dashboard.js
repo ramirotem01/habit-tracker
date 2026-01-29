@@ -8,12 +8,16 @@ const historyEl = document.getElementById("history");
 const today = new Date().toLocaleDateString("he-IL");
 todayDateEl.textContent = today;
 
-let allHabits = JSON.parse(localStorage.getItem("allHabits")) || [];
 let todayHabits = JSON.parse(localStorage.getItem("todayHabits")) || [];
 
-// יצירת רשימת היום אם ריקה
-if(todayHabits.length === 0){
-  todayHabits = allHabits.map(h => ({ text: h.text, done: false }));
+// פונקציה לסנכרון עם רשימת ההרגלים העדכנית
+function syncHabits() {
+  const allHabits = JSON.parse(localStorage.getItem("allHabits")) || [];
+  allHabits.forEach(habit => {
+    if(!todayHabits.some(h => h.text === habit.text)){
+      todayHabits.push({ text: habit.text, done: false });
+    }
+  });
   saveToday();
 }
 
@@ -23,6 +27,7 @@ function saveToday() {
 
 // render Dashboard
 function render() {
+  syncHabits(); // סנכרון תמידי
   habitListEl.innerHTML = "";
 
   let doneCount = 0;
