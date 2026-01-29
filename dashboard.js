@@ -13,11 +13,16 @@ let todayHabits = JSON.parse(localStorage.getItem("todayHabits")) || [];
 // פונקציה לסנכרון עם רשימת ההרגלים העדכנית
 function syncHabits() {
   const allHabits = JSON.parse(localStorage.getItem("allHabits")) || [];
-  allHabits.forEach(habit => {
-    if(!todayHabits.some(h => h.text === habit.text)){
-      todayHabits.push({ text: habit.text, done: false });
-    }
+
+  // מפת מיקום ההרגלים הקיימים
+  const todayMap = {};
+  todayHabits.forEach(h => { todayMap[h.text] = h.done; });
+
+  // בונים todayHabits חדש לפי כל ההרגלים הקיימים ב-allHabits
+  todayHabits = allHabits.map(h => {
+    return { text: h.text, done: todayMap[h.text] || false };
   });
+
   saveToday();
 }
 
@@ -27,7 +32,7 @@ function saveToday() {
 
 // render Dashboard
 function render() {
-  syncHabits(); // סנכרון תמידי
+  syncHabits(); // סנכרון תמידי לפני הצגה
   habitListEl.innerHTML = "";
 
   let doneCount = 0;
@@ -58,10 +63,10 @@ function render() {
 }
 
 // גרסת דמו להיסטוריה 14 יום
-function renderHistory(){
+function renderHistory() {
   historyEl.innerHTML = "";
   const days = 14;
-  for(let i=days; i>=1; i--){
+  for (let i = days; i >= 1; i--) {
     const div = document.createElement("div");
     div.textContent = `יום -${i}: אין נתונים עדיין`;
     historyEl.appendChild(div);
@@ -69,7 +74,7 @@ function renderHistory(){
 }
 
 // ניווט לניהול
-function goManage(){
+function goManage() {
   window.location.href = "manage.html";
 }
 
