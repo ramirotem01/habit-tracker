@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Habit Tracker</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="app">
-    <h1>Habit Tracker</h1>
+<h1>📊 דשבורד הרגלים</h1>
 
-    <form id="habit-form">
-      <input
-        type="text"
-        id="habit-input"
-        placeholder="הרגל חדש (למשל: לשתות מים)"
-        required
-      />
-      <button type="submit">➕ הוסף</button>
-    </form>
+<!-- DASHBOARD -->
+<div class="dashboard">
+  <div class="card">הרגלים: <span id="totalHabits">0</span></div>
+  <div class="card">בוצעו השבוע: <span id="weeklyDone">0</span></div>
+  <div class="card">היום: <span id="todayProgress">0/0</span></div>
+</div>
 
-    <ul id="habit-list"></ul>
-  </div>
+<!-- TODAY HABITS -->
+<h2>📅 הרגלים להיום (<span id="todayDate"></span>)</h2>
 
-  <script src="app.js"></script>
+<ul id="habitList"></ul>
+
+<input type="text" id="newHabit" placeholder="הרגל חדש...">
+<button onclick="addHabit()">➕ הוסף</button>
+
+<!-- PROGRESS -->
+<h2>📈 התקדמות 14 ימים אחרונים</h2>
+<div id="progress14" class="progress-bar"></div>
+
+<script src="script.js"></script>
 </body>
 </html>
