@@ -42,8 +42,8 @@ function render() {
     const span = document.createElement("span");
     span.textContent = habit.text;
 
-    li.appendChild(checkbox);
     li.appendChild(span);
+    li.appendChild(checkbox);
     habitList.appendChild(li);
   });
 
@@ -66,7 +66,7 @@ function renderHistory() {
 
   for (let i = days; i >= 1; i--) {
     const div = document.createElement("div");
-    div.textContent = `יום -${i}: אין נתונים (שלב הבא 😉)`;
+    div.textContent = `יום -${i}: אין נתונים (פיתוח הבא 😉)`;
     historyEl.appendChild(div);
   }
 }
