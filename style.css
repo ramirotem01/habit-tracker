@@ -1,19 +1,26 @@
 li {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: center;       /* מרכז אנכי של ה-checkbox */
   padding: 10px 12px;
   border-radius: 10px;
   background: #f9fafb;
   margin-bottom: 8px;
-  min-height: 40px;
-  flex-wrap: wrap; /* מאפשר לטקסט לקחת כמה שורות אם צריך */
+  min-height: 50px;
 }
 
 li span {
-  flex: 1 1 auto;       /* תופס את כל השטח הזמין */
-  margin-left: 10px;    /* רווח מה-checkbox */
-  white-space: normal;  /* מאפשר למלל להישבר כשצריך */
-  word-break: break-word; /* מילים ארוכות יתפרקו במקום לגרום לאוברפלואו */
+  flex: 1;                   /* תופס את כל השטח הזמין */
+  margin-left: 12px;         /* רווח בין הטקסט ל-checkbox */
+  word-break: break-word;    /* אם מילה ארוכה, נשברת */
   font-size: 16px;
+  line-height: 1.4;
+  white-space: normal;       /* מאפשר שורה נוספת */
+}
+
+li input[type="checkbox"] {
+  flex-shrink: 0;             /* לא מצטמצם */
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  align-self: center;         /* מרכז אנכי */
 }
