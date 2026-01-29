@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Habit Tracker</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Habit Tracker</h1>
-  <p>האפליקציה הראשונה שלי 🎉</p>
+
+  <div class="app">
+    <h1>Habit Tracker</h1>
+
+    <form id="habit-form">
+      <input
+        type="text"
+        id="habit-input"
+        placeholder="הרגל חדש (למשל: לשתות מים)"
+        required
+      />
+      <button type="submit">➕ הוסף</button>
+    </form>
+
+    <ul id="habit-list"></ul>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
