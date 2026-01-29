@@ -1,51 +1,23 @@
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
 body {
-  background: #f4f6f8;
-  margin: 0;
+  font-family: Arial;
+  direction: rtl;
+  background: #f5f5f5;
   padding: 20px;
 }
 
-.app {
-  max-width: 420px;
-  margin: auto;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-h1 {
-  text-align: center;
-}
-
-form {
+.dashboard {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
-input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-button {
-  padding: 10px 14px;
-  border: none;
-  border-radius: 8px;
-  background: #4CAF50;
-  color: white;
-  cursor: pointer;
-}
-
-button.done {
-  background: #999;
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  width: 30%;
+  text-align: center;
+  font-size: 18px;
 }
 
 ul {
@@ -54,9 +26,22 @@ ul {
 }
 
 li {
+  background: white;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
+}
+
+.progress-bar {
+  display: flex;
+  gap: 4px;
+}
+
+.day {
+  width: 20px;
+  height: 60px;
+  background: #ddd;
+  border-radius: 4px;
 }
