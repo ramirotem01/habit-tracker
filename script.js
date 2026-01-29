@@ -1,13 +1,35 @@
+const habitInput = document.getElementById("habitInput");
+const habitList = document.getElementById("habitList");
+
+const totalHabitsEl = document.getElementById("totalHabits");
+const doneTodayEl = document.getElementById("doneToday");
+const progressTodayEl = document.getElementById("progressToday");
+const historyEl = document.getElementById("history");
+
 let habits = JSON.parse(localStorage.getItem("habits")) || [];
 
-const today = new Date().toLocaleDateString("he-IL");
-document.getElementById("todayDate").innerText = today;
+function save() {
+  localStorage.setItem("habits", JSON.stringify(habits));
+}
+
+function addHabit() {
+  const text = habitInput.value.trim();
+  if (!text) return;
+
+  habits.push({ text, done: false });
+  habitInput.value = "";
+  save();
+  render();
+}
+
+function toggleHabit(index) {
+  habits[index].done = !habits[index].done;
+  save();
+  render();
+}
 
 function render() {
-  const list = document.getElementById("habitList");
-  list.innerHTML = "";
-
-  let doneToday = 0;
+  habitList.innerHTML = "";
 
   habits.forEach((habit, index) => {
     const li = document.createElement("li");
@@ -15,43 +37,38 @@ function render() {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.checked = habit.done;
-    checkbox.onchange = () => {
-      habit.done = checkbox.checked;
-      save();
-    };
+    checkbox.onchange = () => toggleHabit(index);
 
-    if (habit.done) doneToday++;
+    const span = document.createElement("span");
+    span.textContent = habit.text;
 
-    li.append(habit.name, checkbox);
-    list.appendChild(li);
+    li.appendChild(checkbox);
+    li.appendChild(span);
+    habitList.appendChild(li);
   });
 
-  document.getElementById("totalHabits").innerText = habits.length;
-  document.getElementById("todayProgress").innerText =
-    `${doneToday}/${habits.length}`;
+  updateDashboard();
+  renderHistory();
 }
 
-function addHabit() {
-  const input = document.getElementById("newHabit");
-  if (!input.value) return;
+function updateDashboard() {
+  const total = habits.length;
+  const done = habits.filter(h => h.done).length;
 
-  habits.push({ name: input.value, done: false });
-  input.value = "";
-  save();
+  totalHabitsEl.textContent = total;
+  doneTodayEl.textContent = done;
+  progressTodayEl.textContent = `${done}/${total}`;
 }
 
-function save() {
-  localStorage.setItem("habits", JSON.stringify(habits));
-  render();
-}
+function renderHistory() {
+  historyEl.innerHTML = "";
+  const days = 14;
 
-// גרף 14 ימים (דמו)
-const progress = document.getElementById("progress14");
-for (let i = 0; i < 14; i++) {
-  const day = document.createElement("div");
-  day.className = "day";
-  day.style.height = `${20 + Math.random() * 40}px`;
-  progress.appendChild(day);
+  for (let i = days; i >= 1; i--) {
+    const div = document.createElement("div");
+    div.textContent = `יום -${i}: אין נתונים (שלב הבא 😉)`;
+    historyEl.appendChild(div);
+  }
 }
 
 render();
