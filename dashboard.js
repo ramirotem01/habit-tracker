@@ -21,12 +21,13 @@ let dailyStats = {};
 // פונקציה להדפסת לוג
 function log(msg) {
   console.log(msg);
-  if(logDiv) logDiv.textContent = msg;
+  if(logDiv) logDiv.textContent += msg + "\n";
 }
 
 // בדיקה אם המשתמש מחובר
 auth.onAuthStateChanged(user => {
   if (!user) {
+    log("אין משתמש מחובר, מעבר לדף התחברות");
     window.location.href = "index.html";
     return;
   }
@@ -37,6 +38,7 @@ auth.onAuthStateChanged(user => {
 
 // טען את כל הנתונים
 function loadAll() {
+  log("טוען את כל הנתונים מה-Firestore...");
   Promise.all([loadBaseHabits(), loadTempHabits(), loadDailyStats()])
     .then(render)
     .catch(err => log("שגיאה בטעינת נתונים: " + err.message));
@@ -44,6 +46,7 @@ function loadAll() {
 
 // טען הרגלים קבועים מה-Firestore
 function loadBaseHabits() {
+  log("טוען הרגלים קבועים...");
   return db.collection("users")
     .doc(userId)
     .collection("habits")
@@ -57,6 +60,7 @@ function loadBaseHabits() {
 
 // טען הרגלים זמניים יומיים
 function loadTempHabits() {
+  log("טוען הרגלים זמניים...");
   return db.collection("users")
     .doc(userId)
     .collection("daily")
@@ -72,6 +76,7 @@ function loadTempHabits() {
 
 // טען סטטיסטיקה יומית
 function loadDailyStats() {
+  log("טוען סטטיסטיקה יומית...");
   return db.collection("users")
     .doc(userId)
     .collection("stats")
@@ -103,6 +108,7 @@ function toggleHabit(name, value) {
 function addTempHabit() {
   const text = tempHabitInput.value.trim();
   if (!text) return;
+  log("מנסה להוסיף משימה חד פעמית: " + text);
   db.collection("users")
     .doc(userId)
     .collection("daily")
@@ -110,6 +116,7 @@ function addTempHabit() {
     .collection("tempHabits")
     .add({ text })
     .then(() => {
+      log("המשימה נוספה בהצלחה!");
       tempHabitInput.value = "";
       loadAll();
     })
@@ -125,7 +132,10 @@ function deleteTempHabit(id) {
     .collection("tempHabits")
     .doc(id)
     .delete()
-    .then(loadAll)
+    .then(() => {
+      log("משימה זמנית נמחקה: " + id);
+      loadAll();
+    })
     .catch(err => log("שגיאה במחיקה: " + err.message));
 }
 
@@ -166,7 +176,11 @@ function render() {
           .collection("tempHabits")
           .doc(h.id)
           .update({ text: updated })
-          .then(loadAll);
+          .then(() => {
+            log("משימה עודכנה בהצלחה!");
+            loadAll();
+          })
+          .catch(err => log("שגיאה בעדכון משימה: " + err.message));
       }
     };
 
@@ -207,7 +221,9 @@ function renderHistory() {
         div.textContent = `${doc.id}: ${count}/${baseHabits.length} הושלם`;
         historyEl.appendChild(div);
       });
-    });
+      log("סטטיסטיקה 14 יום נטענה בהצלחה.");
+    })
+    .catch(err => log("שגיאה בטעינת סטטיסטיקה 14 יום: " + err.message));
 }
 
 // ניווט
@@ -218,6 +234,7 @@ function goManage() {
 // התנתקות
 logoutBtn.addEventListener("click", () => {
   auth.signOut().then(() => {
+    log("התנתק בהצלחה!");
     window.location.href = "index.html";
   });
 });
