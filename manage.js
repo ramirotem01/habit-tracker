@@ -23,17 +23,39 @@ function deleteHabit(index) {
   render();
 }
 
+function editHabit(index) {
+  const currentText = habits[index].text;
+  const updatedText = prompt("ערוך את ההרגל:", currentText);
+
+  if (updatedText === null) return; // ביטול
+  if (!updatedText.trim()) return;
+
+  habits[index].text = updatedText.trim();
+  save();
+  render();
+}
+
 function render() {
   habitList.innerHTML = "";
+
   habits.forEach((habit, index) => {
     const li = document.createElement("li");
-    li.textContent = habit.text;
 
-    const btn = document.createElement("button");
-    btn.textContent = "🗑 מחיקה";
-    btn.onclick = () => deleteHabit(index);
+    const span = document.createElement("span");
+    span.textContent = habit.text;
 
-    li.appendChild(btn);
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "✏️ עריכה";
+    editBtn.onclick = () => editHabit(index);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "🗑 מחיקה";
+    deleteBtn.onclick = () => deleteHabit(index);
+
+    li.appendChild(span);
+    li.appendChild(editBtn);
+    li.appendChild(deleteBtn);
+
     habitList.appendChild(li);
   });
 }
