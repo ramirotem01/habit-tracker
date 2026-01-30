@@ -1,61 +1,88 @@
 const habitList = document.getElementById("habitList");
 const newHabit = document.getElementById("newHabit");
 
-let habits = JSON.parse(localStorage.getItem("allHabits")) || [];
+let habits = [];
+let userId = null;
 
-function save() {
-  localStorage.setItem("allHabits", JSON.stringify(habits));
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+  userId = user.uid;
+  loadHabits();
+});
+
+function loadHabits() {
+  db.collection("users")
+    .doc(userId)
+    .collection("habits")
+    .orderBy("createdAt")
+    .get()
+    .then(snapshot => {
+      habits = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      render();
+    });
 }
 
 function addHabit() {
   const text = newHabit.value.trim();
   if (!text) return;
 
-  habits.push({ text });
-  newHabit.value = "";
-  save();
-  render();
+  db.collection("users")
+    .doc(userId)
+    .collection("habits")
+    .add({
+      text,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    .then(() => {
+      newHabit.value = "";
+      loadHabits();
+    });
 }
 
-function deleteHabit(index) {
-  habits.splice(index, 1);
-  save();
-  render();
+function deleteHabit(id) {
+  db.collection("users")
+    .doc(userId)
+    .collection("habits")
+    .doc(id)
+    .delete()
+    .then(loadHabits);
 }
 
-function editHabit(index) {
-  const currentText = habits[index].text;
-  const updatedText = prompt("ערוך את ההרגל:", currentText);
+function editHabit(id, currentText) {
+  const updated = prompt("עדכן הרגל:", currentText);
+  if (!updated) return;
 
-  if (updatedText === null) return; // ביטול
-  if (!updatedText.trim()) return;
-
-  habits[index].text = updatedText.trim();
-  save();
-  render();
+  db.collection("users")
+    .doc(userId)
+    .collection("habits")
+    .doc(id)
+    .update({ text: updated })
+    .then(loadHabits);
 }
 
 function render() {
   habitList.innerHTML = "";
 
-  habits.forEach((habit, index) => {
+  habits.forEach(habit => {
     const li = document.createElement("li");
-
-    const span = document.createElement("span");
-    span.textContent = habit.text;
+    li.textContent = habit.text;
 
     const editBtn = document.createElement("button");
-    editBtn.textContent = "✏️ עריכה";
-    editBtn.onclick = () => editHabit(index);
+    editBtn.textContent = "✏ עריכה";
+    editBtn.onclick = () => editHabit(habit.id, habit.text);
 
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "🗑 מחיקה";
-    deleteBtn.onclick = () => deleteHabit(index);
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "🗑 מחיקה";
+    delBtn.onclick = () => deleteHabit(habit.id);
 
-    li.appendChild(span);
     li.appendChild(editBtn);
-    li.appendChild(deleteBtn);
-
+    li.appendChild(delBtn);
     habitList.appendChild(li);
   });
 }
@@ -63,5 +90,3 @@ function render() {
 function goDashboard() {
   window.location.href = "index.html";
 }
-
-render();
