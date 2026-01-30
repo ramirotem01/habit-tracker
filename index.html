@@ -1,155 +1,34 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Habit Tracker</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f6fb;
-      direction: rtl;
-    }
-
-    header {
-      background: #4f46e5;
-      color: white;
-      padding: 16px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    main {
-      max-width: 500px;
-      margin: auto;
-      padding: 16px;
-    }
-
-    .card {
-      background: white;
-      border-radius: 10px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-
-    .habit {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .habit label {
-      flex: 1;
-      padding-right: 10px;
-      word-break: break-word;
-    }
-
-    .stats div {
-      margin-bottom: 6px;
-    }
-
-    a {
-      color: #4f46e5;
-      text-decoration: none;
-      font-weight: bold;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="app">
+    <h1>📊 דשבורד</h1>
 
-<header>
-  דשבורד הרגלים – <span id="todayDate"></span>
-</header>
+    <section class="card dashboard">
+      <p>תאריך היום: <strong id="todayDate"></strong></p>
+      <p>סה״כ הרגלים: <strong id="totalHabits">0</strong></p>
+      <p>בוצעו היום: <strong id="doneToday">0</strong></p>
+      <p>התקדמות היום: <strong id="progressToday">0/0</strong></p>
+      <button onclick="goManage()">⚙ ניהול הרגלים</button>
+    </section>
 
-<main>
+    <section class="card today">
+      <h2>🗓 הרגלים להיום</h2>
+      <ul id="habitList"></ul>
+    </section>
 
-  <div class="card stats">
-    <div>הרגלים היום: <strong id="todayProgress">0/0</strong></div>
+    <section class="card history">
+      <h2>📈 14 ימים אחרונים</h2>
+      <div id="history"></div>
+    </section>
   </div>
 
-  <div class="card">
-    <h3>הרגלים להיום</h3>
-    <div id="habitList"></div>
-    <br>
-    <a href="manage-habits.html">⚙ ניהול הרגלים</a>
-  </div>
-
-  <div class="card">
-    <h3>סטטיסטיקה – 14 ימים אחרונים</h3>
-    <div id="history"></div>
-  </div>
-
-</main>
-
-<script>
-  const habits = JSON.parse(localStorage.getItem("habits")) || [];
-  const dailyStats = JSON.parse(localStorage.getItem("dailyStats")) || {};
-
-  const today = new Date().toISOString().slice(0, 10);
-  document.getElementById("todayDate").textContent = today;
-
-  if (!dailyStats[today]) dailyStats[today] = {};
-
-  const habitListEl = document.getElementById("habitList");
-  const todayProgressEl = document.getElementById("todayProgress");
-  const historyEl = document.getElementById("history");
-
-  function renderHabits() {
-    habitListEl.innerHTML = "";
-    let done = 0;
-
-    habits.forEach(habit => {
-      const div = document.createElement("div");
-      div.className = "habit";
-
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = !!dailyStats[today][habit];
-
-      checkbox.onchange = () => {
-        dailyStats[today][habit] = checkbox.checked;
-        localStorage.setItem("dailyStats", JSON.stringify(dailyStats));
-        renderStats();
-      };
-
-      const label = document.createElement("label");
-      label.textContent = habit;
-
-      if (checkbox.checked) done++;
-
-      div.appendChild(checkbox);
-      div.appendChild(label);
-      habitListEl.appendChild(div);
-    });
-
-    todayProgressEl.textContent = `${done}/${habits.length}`;
-  }
-
-  function renderStats() {
-    historyEl.innerHTML = "";
-
-    const dates = Object.keys(dailyStats).sort().slice(-14);
-
-    dates.forEach(date => {
-      let done = 0;
-      habits.forEach(habit => {
-        if (dailyStats[date] && dailyStats[date][habit]) done++;
-      });
-
-      const div = document.createElement("div");
-      div.textContent = `${date}: ${done}/${habits.length}`;
-      historyEl.appendChild(div);
-    });
-
-    renderHabits();
-  }
-
-  renderStats();
-</script>
-
+  <script src="dashboard.js"></script>
 </body>
 </html>
