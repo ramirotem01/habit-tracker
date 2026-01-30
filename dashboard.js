@@ -4,69 +4,114 @@ const doneTodayEl = document.getElementById("doneToday");
 const progressTodayEl = document.getElementById("progressToday");
 const todayDateEl = document.getElementById("todayDate");
 const historyEl = document.getElementById("history");
+const tempHabitInput = document.getElementById("tempHabitInput");
 
 const today = new Date().toLocaleDateString("he-IL");
 todayDateEl.textContent = today;
 
-// 🔹 Load today's progress from localStorage
+// 🔹 Load daily stats
 let dailyStats = JSON.parse(localStorage.getItem("dailyStats")) || {};
-if(!dailyStats[today]) dailyStats[today] = {};  // עבור כל הרגל נשמר true/false
+if (!dailyStats[today]) dailyStats[today] = {};
 
 function saveStats() {
   localStorage.setItem("dailyStats", JSON.stringify(dailyStats));
 }
 
-// render Dashboard
+// ➕ הוספת הרגל חד פעמי להיום
+function addTempHabit() {
+  const text = tempHabitInput.value.trim();
+  if (!text) return;
+
+  if (dailyStats[today][text] !== undefined) {
+    alert("הרגל כזה כבר קיים היום 🙂");
+    return;
+  }
+
+  dailyStats[today][text] = false;
+  tempHabitInput.value = "";
+  saveStats();
+  render();
+}
+
+// 🔄 render Dashboard
 function render() {
   habitListEl.innerHTML = "";
 
-  // קח תמיד את הרשימה המדויקת מהניהול
-  const allHabits = JSON.parse(localStorage.getItem("allHabits")) || [];
+  const baseHabits = JSON.parse(localStorage.getItem("allHabits")) || [];
+  const baseHabitNames = baseHabits.map(h => h.text);
+
   let doneCount = 0;
+  let totalCount = 0;
 
-  allHabits.forEach(habit => {
-    const li = document.createElement("li");
-    li.textContent = habit.text;
+  // 1️⃣ הרגלים קבועים
+  baseHabitNames.forEach(name => {
+    if (dailyStats[today][name] === undefined) {
+      dailyStats[today][name] = false;
+    }
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = dailyStats[today][habit.text] || false;
-
-    checkbox.onchange = () => {
-      dailyStats[today][habit.text] = checkbox.checked;
-      saveStats();
-      render();  // רנדר מחדש אחרי שינוי
-    };
-
-    li.appendChild(checkbox);
+    const li = createHabitRow(name);
     habitListEl.appendChild(li);
 
-    if(checkbox.checked) doneCount++;
+    if (dailyStats[today][name]) doneCount++;
+    totalCount++;
   });
 
-  totalHabitsEl.textContent = allHabits.length;
-  doneTodayEl.textContent = doneCount;
-  progressTodayEl.textContent = `${doneCount}/${allHabits.length}`;
+  // 2️⃣ הרגלים חד פעמיים (שאינם בבסיס)
+  Object.keys(dailyStats[today]).forEach(name => {
+    if (!baseHabitNames.includes(name)) {
+      const li = createHabitRow(name, true);
+      habitListEl.appendChild(li);
 
+      if (dailyStats[today][name]) doneCount++;
+      totalCount++;
+    }
+  });
+
+  totalHabitsEl.textContent = totalCount;
+  doneTodayEl.textContent = doneCount;
+  progressTodayEl.textContent = `${doneCount}/${totalCount}`;
+
+  saveStats();
   renderHistory();
 }
 
-// גרסת דמו להיסטוריה 14 יום
+// יצירת שורה להרגל
+function createHabitRow(name, isTemp = false) {
+  const li = document.createElement("li");
+  li.textContent = name + (isTemp ? " (חד פעמי)" : "");
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = dailyStats[today][name];
+
+  checkbox.onchange = () => {
+    dailyStats[today][name] = checkbox.checked;
+    saveStats();
+    render();
+  };
+
+  li.appendChild(checkbox);
+  return li;
+}
+
+// 📈 היסטוריה – 14 ימים
 function renderHistory() {
   historyEl.innerHTML = "";
   const days = 14;
-  const dailyKeys = Object.keys(dailyStats).sort().slice(-days); // 14 ימים אחרונים
+  const dailyKeys = Object.keys(dailyStats).sort().slice(-days);
 
   dailyKeys.forEach(day => {
-    const habitsDone = Object.values(dailyStats[day]).filter(v => v).length;
-    const total = Object.keys(dailyStats[day]).length;
+    const values = Object.values(dailyStats[day]);
+    const done = values.filter(v => v).length;
+    const total = values.length;
+
     const div = document.createElement("div");
-    div.textContent = `${day}: ${habitsDone}/${total} הושלם`;
+    div.textContent = `${day}: ${done}/${total} הושלם`;
     historyEl.appendChild(div);
   });
 }
 
-// ניווט לניהול
+// ניווט
 function goManage() {
   window.location.href = "manage.html";
 }
