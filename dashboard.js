@@ -17,13 +17,13 @@ function saveStats() {
   localStorage.setItem("dailyStats", JSON.stringify(dailyStats));
 }
 
-// ➕ הוספת הרגל חד פעמי להיום
+// ➕ הוספת הרגל חד פעמי
 function addTempHabit() {
   const text = tempHabitInput.value.trim();
   if (!text) return;
 
   if (dailyStats[today][text] !== undefined) {
-    alert("הרגל כזה כבר קיים היום 🙂");
+    alert("הרגל כזה כבר קיים היום");
     return;
   }
 
@@ -33,74 +33,117 @@ function addTempHabit() {
   render();
 }
 
-// 🔄 render Dashboard
+// ✏️ עריכת הרגל חד פעמי
+function editTempHabit(oldName) {
+  const newName = prompt("ערוך הרגל חד פעמי:", oldName);
+  if (newName === null) return;
+
+  const trimmed = newName.trim();
+  if (!trimmed || trimmed === oldName) return;
+
+  if (dailyStats[today][trimmed] !== undefined) {
+    alert("הרגל כזה כבר קיים היום");
+    return;
+  }
+
+  dailyStats[today][trimmed] = dailyStats[today][oldName];
+  delete dailyStats[today][oldName];
+  saveStats();
+  render();
+}
+
+// 🗑 מחיקת הרגל חד פעמי
+function deleteTempHabit(name) {
+  if (!confirm("למחוק את ההרגל החד פעמי?")) return;
+  delete dailyStats[today][name];
+  saveStats();
+  render();
+}
+
+// 🔄 רנדר
 function render() {
   habitListEl.innerHTML = "";
 
   const baseHabits = JSON.parse(localStorage.getItem("allHabits")) || [];
-  const baseHabitNames = baseHabits.map(h => h.text);
+  const baseNames = baseHabits.map(h => h.text);
 
-  let doneCount = 0;
-  let totalCount = 0;
+  let done = 0;
+  let total = 0;
 
-  // 1️⃣ הרגלים קבועים
-  baseHabitNames.forEach(name => {
+  // הרגלים קבועים
+  baseNames.forEach(name => {
     if (dailyStats[today][name] === undefined) {
       dailyStats[today][name] = false;
     }
 
-    const li = createHabitRow(name);
+    const li = createHabitRow(name, false);
     habitListEl.appendChild(li);
 
-    if (dailyStats[today][name]) doneCount++;
-    totalCount++;
+    if (dailyStats[today][name]) done++;
+    total++;
   });
 
-  // 2️⃣ הרגלים חד פעמיים (שאינם בבסיס)
+  // הרגלים חד פעמיים
   Object.keys(dailyStats[today]).forEach(name => {
-    if (!baseHabitNames.includes(name)) {
+    if (!baseNames.includes(name)) {
       const li = createHabitRow(name, true);
       habitListEl.appendChild(li);
 
-      if (dailyStats[today][name]) doneCount++;
-      totalCount++;
+      if (dailyStats[today][name]) done++;
+      total++;
     }
   });
 
-  totalHabitsEl.textContent = totalCount;
-  doneTodayEl.textContent = doneCount;
-  progressTodayEl.textContent = `${doneCount}/${totalCount}`;
+  totalHabitsEl.textContent = total;
+  doneTodayEl.textContent = done;
+  progressTodayEl.textContent = `${done}/${total}`;
 
   saveStats();
   renderHistory();
 }
 
-// יצירת שורה להרגל
-function createHabitRow(name, isTemp = false) {
+// יצירת שורת הרגל
+function createHabitRow(name, isTemp) {
   const li = document.createElement("li");
-  li.textContent = name + (isTemp ? " (חד פעמי)" : "");
+
+  const label = document.createElement("span");
+  label.textContent = isTemp ? `${name} (חד פעמי)` : name;
 
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.checked = dailyStats[today][name];
-
   checkbox.onchange = () => {
     dailyStats[today][name] = checkbox.checked;
     saveStats();
     render();
   };
 
+  li.appendChild(label);
   li.appendChild(checkbox);
+
+  if (isTemp) {
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "✏️";
+    editBtn.onclick = () => editTempHabit(name);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "🗑";
+    deleteBtn.onclick = () => deleteTempHabit(name);
+
+    li.appendChild(editBtn);
+    li.appendChild(deleteBtn);
+  }
+
   return li;
 }
 
-// 📈 היסטוריה – 14 ימים
+// 📈 היסטוריה
 function renderHistory() {
   historyEl.innerHTML = "";
   const days = 14;
-  const dailyKeys = Object.keys(dailyStats).sort().slice(-days);
+  const keys = Object.keys(dailyStats).sort().slice(-days);
 
-  dailyKeys.forEach(day => {
+  keys.forEach(day => {
     const values = Object.values(dailyStats[day]);
     const done = values.filter(v => v).length;
     const total = values.length;
