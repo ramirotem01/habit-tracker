@@ -20,12 +20,20 @@
     </div>
 
     <div class="card">
+      <h2>הוסף הרגל יומי</h2>
+      <input type="text" id="tempHabitInput" placeholder="הרגל זמני חדש..." />
+      <button onclick="addTempHabit()">➕ הוסף</button>
+    </div>
+
+    <div class="card">
       <h2>סטטיסטיקה 14 יום</h2>
       <div id="history"></div>
     </div>
 
     <button onclick="goManage()">📝 ניהול הרגלים</button>
     <button id="logoutBtn">🚪 התנתק</button>
+
+    <div id="log" style="margin-top:20px; color:blue;"></div>
   </div>
 
   <script src="firebase.js"></script>
