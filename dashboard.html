@@ -1,36 +1,45 @@
-<div class="app">
-    <h1>📊 דשבורד יומי</h1>
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Habit Tracker - דשבורד</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <h1>📊 דשבורד</h1>
+
+    <section class="card summary-section">
+      <p>תאריך היום: <strong id="todayDate"></strong></p>
+      <p>סה״כ הרגלים: <strong id="totalHabits">0</strong></p>
+      <p>בוצעו היום: <strong id="doneToday">0</strong></p>
+      <p>התקדמות היום: <strong id="progressToday">0/0</strong></p>
+      <button onclick="goManage()">⚙ ניהול הרגלים</button>
+    </section>
+
+    <section class="card">
+      <h2>🗓 משימות להיום</h2>
+      <div class="input-group">
+        <input type="text" id="tempHabitInput" placeholder="משימה חד פעמית להיום..." />
+        <button id="addTempHabitBtn">➕ הוסף</button>
+      </div>
+      <ul id="habitList"></ul>
+    </section>
+
+    <section class="card">
+      <h2>📈 14 ימים אחרונים</h2>
+      <div id="history"></div>
+    </section>
+
+    <button id="logoutBtn" style="background:#ff4d4d; color:white;">🚪 התנתק</button>
     
-    <div class="card dashboard-summary">
-        <div>תאריך: <strong id="todayDate"></strong></div>
-        <div class="stats-grid">
-            <div class="stat-item">סה"כ משימות: <span id="totalHabits">0</span></div>
-            <div class="stat-item">בוצעו: <span id="doneToday">0</span></div>
-            <div class="stat-item">התקדמות: <span id="progressToday">0/0</span></div>
-        </div>
-    </div>
+    <div id="logBox" style="background:#eee; padding:10px; margin-top:20px; font-size:12px; max-height:100px; overflow:auto;"></div>
+  </div>
 
-    <div class="card tasks-section">
-        <h2>🗓 המשימות שלי להיום</h2>
-        
-        <div class="input-group">
-            <input type="text" id="tempHabitInput" placeholder="הוסף משימה חד פעמית להיום..." />
-            <button id="addTempHabitBtn">➕ הוסף</button>
-        </div>
-
-        <ul id="habitList" class="habit-list">
-            </ul>
-    </div>
-
-    <div class="card">
-        <h2>📈 היסטוריה (14 ימים)</h2>
-        <div id="history"></div>
-    </div>
-
-    <div class="actions">
-        <button onclick="goManage()">📝 ניהול הרגלים קבועים</button>
-        <button id="logoutBtn" class="secondary">🚪 התנתק</button>
-    </div>
-
-    <div id="logBox"></div>
-</div>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
