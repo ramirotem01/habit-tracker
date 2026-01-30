@@ -3,10 +3,10 @@ const totalHabitsEl = document.getElementById("totalHabits");
 const doneTodayEl = document.getElementById("doneToday");
 const progressTodayEl = document.getElementById("progressToday");
 const todayDateEl = document.getElementById("todayDate");
-const historyEl = document.getElementById("history");
 const tempHabitInput = document.getElementById("tempHabitInput");
-const logEl = document.getElementById("log");
+const historyEl = document.getElementById("history");
 const logoutBtn = document.getElementById("logoutBtn");
+const logEl = document.getElementById("log");
 
 const today = new Date().toLocaleDateString("he-IL");
 todayDateEl.textContent = today;
@@ -16,18 +16,16 @@ let baseHabits = [];
 let tempHabits = [];
 let dailyStats = {};
 
-// ==========================
+// =======================
 // התנתקות
-// ==========================
+// =======================
 logoutBtn.addEventListener("click", () => {
-  auth.signOut().then(() => {
-    window.location.href = "index.html";
-  });
+  auth.signOut().then(() => window.location.href = "index.html");
 });
 
-// ==========================
+// =======================
 // בדיקה אם מחובר
-// ==========================
+// =======================
 auth.onAuthStateChanged(user => {
   if (!user) {
     log("משתמש לא מחובר, הפניה ל-login");
@@ -39,14 +37,13 @@ auth.onAuthStateChanged(user => {
   loadAll();
 });
 
-// ==========================
-// פונקציות טעינה
-// ==========================
+// =======================
+// טעינת נתונים
+// =======================
 function loadAll() {
-  log("טוען הרגלים מה-Firestore...");
   Promise.all([loadBaseHabits(), loadTempHabits(), loadDailyStats()])
     .then(render)
-    .catch(err => log("שגיאה בטעינת הרגלים: " + err.message));
+    .catch(err => log("שגיאה בטעינת נתונים: " + err.message));
 }
 
 function loadBaseHabits() {
@@ -79,24 +76,21 @@ function loadDailyStats() {
     .collection("stats")
     .doc(today)
     .get()
-    .then(doc => {
-      dailyStats = doc.exists ? doc.data() : {};
-    });
+    .then(doc => dailyStats = doc.exists ? doc.data() : {});
 }
 
-// ==========================
+// =======================
 // פעולות על הרגלים
-// ==========================
+// =======================
 function toggleHabit(name, value) {
   dailyStats[name] = value;
-
   db.collection("users")
     .doc(userId)
     .collection("stats")
     .doc(today)
     .set(dailyStats)
     .then(() => log("סטטוס הרגל עודכן: " + name + " = " + value))
-    .catch(err => log("שגיאה בעדכון הרגל: " + err.message));
+    .catch(err => log("שגיאה בעדכון סטטוס: " + err.message));
 }
 
 function addTempHabit() {
@@ -144,9 +138,9 @@ function editTempHabit(id, currentText) {
     .catch(err => log("שגיאה בעריכת הרגל יומי: " + err.message));
 }
 
-// ==========================
+// =======================
 // רינדור
-// ==========================
+// =======================
 function render() {
   habitListEl.innerHTML = "";
   let done = 0;
@@ -154,6 +148,7 @@ function render() {
 
   all.forEach(text => {
     const li = document.createElement("li");
+    li.textContent = text;
 
     const cb = document.createElement("input");
     cb.type = "checkbox";
@@ -163,44 +158,51 @@ function render() {
       render();
     };
 
-    li.append(text, cb);
+    li.append(cb);
     habitListEl.appendChild(li);
 
-    if (cb.checked) done++;
-  });
-
-  // הרגלים זמניים עם כפתורי עריכה/מחיקה
-  tempHabits.forEach(h => {
-    const li = document.createElement("li");
-    li.textContent = "🕒 " + h.text;
-
-    const editBtn = document.createElement("button");
-    editBtn.textContent = "✏";
-    editBtn.onclick = () => editTempHabit(h.id, h.text);
-
-    const delBtn = document.createElement("button");
-    delBtn.textContent = "🗑";
-    delBtn.onclick = () => deleteTempHabit(h.id);
-
-    li.append(editBtn, delBtn);
-    habitListEl.appendChild(li);
+    if(cb.checked) done++;
   });
 
   totalHabitsEl.textContent = all.length;
   doneTodayEl.textContent = done;
   progressTodayEl.textContent = `${done}/${all.length}`;
+
+  renderHistory();
 }
 
-// ==========================
-// ניווט לדף ניהול
-// ==========================
+// =======================
+// היסטוריה 14 יום
+// =======================
+function renderHistory() {
+  if(!historyEl) return;
+  historyEl.innerHTML = "";
+  const days = 14;
+
+  db.collection("users")
+    .doc(userId)
+    .collection("stats")
+    .orderBy("__name__", "desc")
+    .limit(days)
+    .get()
+    .then(snap => {
+      snap.docs.reverse().forEach(doc => {
+        const data = doc.data();
+        let habitsDone = Object.values(data).filter(v => v).length;
+        const div = document.createElement("div");
+        div.textContent = `${doc.id}: ${habitsDone}/${baseHabits.length} הושלם`;
+        historyEl.appendChild(div);
+      });
+    });
+}
+
+// =======================
+// ניווט
+// =======================
 function goManage() {
   window.location.href = "manage.html";
 }
 
-// ==========================
-// לוג
-// ==========================
 function log(msg) {
   console.log(msg);
   if(logEl) logEl.textContent = msg;
