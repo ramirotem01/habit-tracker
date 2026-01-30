@@ -5,7 +5,7 @@ const addHabitBtn = document.getElementById("addHabitBtn");
 const goDashboardBtn = document.getElementById("goDashboardBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 
-// יצירת תיבת לוג בחלק התחתון של הדף
+// תיבת לוג
 const logDiv = document.createElement("div");
 logDiv.style.position = "fixed";
 logDiv.style.bottom = "0";
