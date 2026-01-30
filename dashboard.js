@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-  const baseHabitListEl = document.getElementById("baseHabitList");
-  const tempHabitListEl = document.getElementById("tempHabitList");
+  const habitListEl = document.getElementById("habitList");
   const totalHabitsEl = document.getElementById("totalHabits");
   const doneTodayEl = document.getElementById("doneToday");
   const progressTodayEl = document.getElementById("progressToday");
@@ -13,14 +12,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function log(msg) {
     const p = document.createElement("div");
-    p.textContent = msg;
+    p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
     logBox.appendChild(p);
+    logBox.scrollTop = logBox.scrollHeight;
   }
 
-  // תאריך בפורמט בטוח ל-DB
-  const todayDate = new Date();
-  const todayId = todayDate.toISOString().split('T')[0];
-  todayDateEl.textContent = todayDate.toLocaleDateString("he-IL");
+  // תאריך בפורמט בטוח ל-DB (ISO)
+  const todayObj = new Date();
+  const todayDocId = todayObj.toISOString().split('T')[0]; 
+  todayDateEl.textContent = todayObj.toLocaleDateString("he-IL");
 
   let userId = null;
   let baseHabits = [];
@@ -33,89 +33,125 @@ document.addEventListener("DOMContentLoaded", function() {
       return;
     }
     userId = user.uid;
+    log("מחובר כ: " + user.email);
     loadAll();
   });
 
   async function loadAll() {
     try {
-      // טעינת כל הנתונים במקביל
+      log("טוען נתונים מהשרת...");
+      // קריאה מקבילה לכל הנתונים
       const [baseSnap, tempSnap, statsSnap] = await Promise.all([
         db.collection("users").doc(userId).collection("habits").get(),
-        db.collection("users").doc(userId).collection("daily").doc(todayId).collection("tempHabits").get(),
-        db.collection("users").doc(userId).collection("stats").doc(todayId).get()
+        db.collection("users").doc(userId).collection("daily").doc(todayDocId).collection("tempHabits").get(),
+        db.collection("users").doc(userId).collection("stats").doc(todayDocId).get()
       ]);
 
+      // חילוץ הנתונים
       baseHabits = baseSnap.docs.map(d => d.data().text);
-      tempHabits = tempSnap.docs.map(d => d.data().text);
+      tempHabits = tempSnap.docs.map(d => d.data().text); // כאן דאגנו לחלץ את ה-text
       dailyStats = statsSnap.exists ? statsSnap.data() : {};
 
+      log(`נטענו ${baseHabits.length} הרגלים קבועים ו-${tempHabits.length} משימות`);
       render();
     } catch (err) {
       log("שגיאה בטעינה: " + err.message);
+      console.error(err);
     }
   }
 
   function render() {
-    baseHabitListEl.innerHTML = "";
-    tempHabitListEl.innerHTML = "";
+    habitListEl.innerHTML = "";
+    const all = [...baseHabits, ...tempHabits];
 
-    // רינדור הרגלים קבועים
-    baseHabits.forEach(text => {
-      baseHabitListEl.appendChild(createItem(text));
-    });
+    if (all.length === 0) {
+      habitListEl.innerHTML = "<li style='color:gray; padding:10px;'>אין משימות להיום</li>";
+    }
 
-    // רינדור משימות חד פעמיות
-    tempHabits.forEach(text => {
-      tempHabitListEl.appendChild(createItem(text));
+    all.forEach(text => {
+      const li = document.createElement("li");
+      li.style.listStyle = "none";
+      li.style.padding = "8px 0";
+      li.style.borderBottom = "1px solid #eee";
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.style.marginLeft = "10px";
+      cb.checked = dailyStats[text] || false;
+      
+      cb.onchange = () => toggleHabit(text, cb.checked);
+      
+      const span = document.createElement("span");
+      span.textContent = text;
+      if (cb.checked) span.style.textDecoration = "line-through";
+
+      li.append(cb, span);
+      habitListEl.appendChild(li);
     });
 
     updateSummary();
     renderHistory();
   }
 
-  function createItem(text) {
-    const li = document.createElement("li");
-    const cb = document.createElement("input");
-    cb.type = "checkbox";
-    cb.checked = dailyStats[text] || false;
-    cb.onchange = async () => {
-      dailyStats[text] = cb.checked;
-      await db.collection("users").doc(userId).collection("stats").doc(todayId).set(dailyStats);
+  async function toggleHabit(name, isChecked) {
+    dailyStats[name] = isChecked;
+    try {
+      await db.collection("users").doc(userId).collection("stats").doc(todayDocId).set(dailyStats);
       updateSummary();
-    };
-    li.append(cb, " " + text);
-    return li;
+      // עדכון ויזואלי מהיר בלי לרנדר מחדש הכל
+      render(); 
+    } catch (err) {
+      log("שגיאה בעדכון: " + err.message);
+    }
   }
 
   function updateSummary() {
-    const all = [...baseHabits, ...tempHabits];
-    const done = all.filter(t => dailyStats[t] === true).length;
+    const allCount = baseHabits.length + tempHabits.length;
+    const doneCount = [...baseHabits, ...tempHabits].filter(t => dailyStats[t] === true).length;
     
-    totalHabitsEl.textContent = all.length;
-    doneTodayEl.textContent = done;
-    progressTodayEl.textContent = `${done}/${all.length}`;
-  }
-
-  async function renderHistory() {
-    const snap = await db.collection("users").doc(userId).collection("stats").limit(14).get();
-    historyEl.innerHTML = "";
-    snap.docs.forEach(doc => {
-      const d = doc.data();
-      const count = Object.values(d).filter(v => v === true).length;
-      const div = document.createElement("div");
-      div.textContent = `${doc.id}: ${count} משימות בוצעו`;
-      historyEl.appendChild(div);
-    });
+    totalHabitsEl.textContent = allCount;
+    doneTodayEl.textContent = doneCount;
+    progressTodayEl.textContent = `${doneCount}/${allCount}`;
   }
 
   addTempHabitBtn.addEventListener("click", async () => {
-    const val = tempHabitInput.value.trim();
-    if (!val) return;
-    await db.collection("users").doc(userId).collection("daily").doc(todayId).collection("tempHabits").add({ text: val });
-    tempHabitInput.value = "";
-    loadAll();
+    const text = tempHabitInput.value.trim();
+    if (!text) return;
+
+    try {
+      await db.collection("users").doc(userId).collection("daily")
+        .doc(todayDocId).collection("tempHabits").add({ text });
+      tempHabitInput.value = "";
+      log("הוספה משימה חדשה");
+      loadAll(); 
+    } catch (err) {
+      log("שגיאה בהוספה: " + err.message);
+    }
   });
 
-  logoutBtn.addEventListener("click", () => auth.signOut());
-  window.goManage = () => window.location.href = "manage.html";
+  async function renderHistory() {
+    try {
+      const snapshot = await db.collection("users").doc(userId).collection("stats")
+        .orderBy("__name__", "desc").limit(14).get();
+      
+      historyEl.innerHTML = "";
+      snapshot.docs.forEach(doc => {
+        const data = doc.data();
+        const doneCount = Object.values(data).filter(v => v === true).length;
+        const div = document.createElement("div");
+        div.style.fontSize = "14px";
+        div.style.marginBottom = "5px";
+        div.textContent = `${doc.id}: ${doneCount} הושלמו`;
+        historyEl.appendChild(div);
+      });
+    } catch (err) {}
+  }
+
+  logoutBtn.addEventListener("click", () => {
+    auth.signOut().then(() => window.location.href = "login.html");
+  });
+
+  window.goManage = function() {
+    window.location.href = "manage.html";
+  };
 });
