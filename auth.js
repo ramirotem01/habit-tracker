@@ -1,25 +1,25 @@
 function signup() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email = emailInput();
+  const password = passwordInput();
 
   auth.createUserWithEmailAndPassword(email, password)
-    .then(userCredential => {
-      const uid = userCredential.user.uid;
+    .then(userCred => {
+      const uid = userCred.user.uid;
 
-      // יצירת מסמך משתמש במסד
-      db.collection("users").doc(uid).set({
+      return db.collection("users").doc(uid).set({
         allHabits: [],
         dailyStats: {}
       });
-
+    })
+    .then(() => {
       window.location.href = "dashboard.html";
     })
     .catch(err => alert(err.message));
 }
 
 function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email = emailInput();
+  const password = passwordInput();
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
@@ -28,9 +28,17 @@ function login() {
     .catch(err => alert(err.message));
 }
 
-// הגנה: אם כבר מחובר – ישר לדשבורד
+function emailInput() {
+  return document.getElementById("email").value;
+}
+
+function passwordInput() {
+  return document.getElementById("password").value;
+}
+
+// אם כבר מחובר → לדשבורד
 auth.onAuthStateChanged(user => {
-  if (user && window.location.pathname.includes("index.html")) {
+  if (user && location.pathname.includes("index.html")) {
     window.location.href = "dashboard.html";
   }
 });
