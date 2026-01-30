@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Habit Tracker – דשבורד</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    #logBox {
+      background: #f3f4f6;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 20px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
   <div class="app">
@@ -23,9 +36,8 @@
       <h2>משימות חד פעמיות להיום</h2>
       <div class="input-group">
         <input type="text" id="tempHabitInput" placeholder="משימה חד פעמית להיום..." />
-        <button id="addTempBtn">➕ הוסף להיום</button>
+        <button id="addTempHabitBtn">➕ הוסף להיום</button>
       </div>
-      <ul id="tempHabitList"></ul>
     </div>
 
     <div class="card">
@@ -36,11 +48,19 @@
     <button onclick="goManage()">📝 ניהול הרגלים</button>
     <button id="logoutBtn">🚪 התנתק</button>
 
-    <!-- כאן יופיעו לוגים -->
-    <div id="logDiv" style="margin-top:10px;color:red;white-space:pre-wrap;"></div>
+    <!-- תיבת לוג -->
+    <div id="logBox"></div>
   </div>
 
+  <!-- Firebase JS -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <!-- Firebase config -->
   <script src="firebase.js"></script>
+
+  <!-- Dashboard JS -->
   <script src="dashboard.js"></script>
 </body>
 </html>
