@@ -1,155 +1,151 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. הגדרת תאריך היום לשימוש ב-DB
-    const todayObj = new Date();
-    const todayId = todayObj.toISOString().split('T')[0]; // פורמט: YYYY-MM-DD
-    
-    // 2. חיבור אלמנטים מה-HTML
+    // אלמנטים מה-DOM
     const habitListEl = document.getElementById("habitList");
     const totalHabitsEl = document.getElementById("totalHabits");
     const doneTodayEl = document.getElementById("doneToday");
     const progressTodayEl = document.getElementById("progressToday");
     const todayDateEl = document.getElementById("todayDate");
+    const historyEl = document.getElementById("history");
+    const tempHabitInput = document.getElementById("tempHabitInput");
+    const addTempHabitBtn = document.getElementById("addTempHabitBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
     const logBox = document.getElementById("logBox");
 
-    if (todayDateEl) todayDateEl.textContent = todayObj.toLocaleDateString("he-IL");
-
-    let userId = null;
-    let baseHabits = []; // הרגלים קבועים
-    let tempHabits = []; // משימות חד פעמיות
-    let dailyStats = {}; // סטטוס סימוני V
-
     function log(msg) {
-        console.log(msg);
-        if (logBox) {
-            logBox.innerHTML += `<div>[${new Date().toLocaleTimeString()}] ${msg}</div>`;
-            logBox.scrollTop = logBox.scrollHeight;
-        }
+        const p = document.createElement("div");
+        p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        logBox.appendChild(p);
+        logBox.scrollTop = logBox.scrollHeight;
     }
 
-    // 3. האזנה לחיבור המשתמש (Auth)
+    // ניהול תאריכים
+    const todayObj = new Date();
+    const todayDocId = todayObj.toISOString().split('T')[0]; 
+    todayDateEl.textContent = todayObj.toLocaleDateString("he-IL");
+
+    let userId = null;
+    let baseHabits = []; // הרגלים קבועים מהדף השני
+    let tempHabits = []; // משימות חד פעמיות
+    let dailyStats = {}; // סטטוס סימון (V)
+
     auth.onAuthStateChanged(user => {
         if (!user) {
             window.location.href = "login.html";
             return;
         }
         userId = user.uid;
-        log("מחובר בהצלחה: " + user.email);
-        loadAllData();
+        log("מחובר למערכת");
+        loadAll();
     });
 
-    // 4. משיכת כל הנתונים מ-Firestore
-    async function loadAllData() {
+    async function loadAll() {
         try {
-            log("טוען נתונים מהשרת...");
-            
-            // משיכת הרגלים קבועים מדף הניהול
-            const baseSnap = await db.collection("users").doc(userId).collection("habits").get();
-            baseHabits = baseSnap.docs.map(d => d.data().text);
-
-            // משיכת משימות חד פעמיות של היום
-            const tempSnap = await db.collection("users").doc(userId).collection("daily")
-                .doc(todayId).collection("tempHabits").get();
-            tempHabits = tempSnap.docs.map(d => d.data().text);
-
-            // משיכת סימוני הצ'קבוקס של היום
-            const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(todayId).get();
-            dailyStats = statsDoc.exists ? statsDoc.data() : {};
-
-            renderUI();
+            await Promise.all([loadBaseHabits(), loadTempHabits(), loadDailyStats()]);
+            render();
         } catch (err) {
             log("שגיאה בטעינה: " + err.message);
         }
     }
 
-    // 5. רינדור הרשימה והסטטיסטיקה
-    function renderUI() {
-        if (!habitListEl) return;
-        habitListEl.innerHTML = "";
-        
-        // איחוד: קבועים קודם, אז משימות להיום
+    async function loadBaseHabits() {
+        const snap = await db.collection("users").doc(userId).collection("habits").get();
+        baseHabits = snap.docs.map(d => d.data().text);
+    }
+
+    async function loadTempHabits() {
+        const snap = await db.collection("users").doc(userId).collection("daily")
+            .doc(todayDocId).collection("tempHabits").get();
+        tempHabits = snap.docs.map(d => d.data().text);
+    }
+
+    async function loadDailyStats() {
+        const doc = await db.collection("users").doc(userId).collection("stats").doc(todayDocId).get();
+        dailyStats = doc.exists ? doc.data() : {};
+    }
+
+    addTempHabitBtn.addEventListener("click", async () => {
+        const text = tempHabitInput.value.trim();
+        if (!text) return;
+        try {
+            await db.collection("users").doc(userId).collection("daily")
+                .doc(todayDocId).collection("tempHabits").add({ text });
+            tempHabitInput.value = "";
+            log("נוספה משימה חד פעמית");
+            loadAll();
+        } catch (err) {
+            log("שגיאה בהוספה: " + err.message);
+        }
+    });
+
+    async function toggleHabit(name, isChecked) {
+        dailyStats[name] = isChecked;
+        try {
+            await db.collection("users").doc(userId).collection("stats").doc(todayDocId).set(dailyStats);
+            updateSummary(); // עדכון מהיר של המספרים למעלה
+        } catch (err) {
+            log("שגיאה בעדכון: " + err.message);
+        }
+    }
+
+    function updateSummary() {
         const allTasks = [...baseHabits, ...tempHabits];
-        let doneCount = 0;
+        const doneCount = allTasks.filter(t => dailyStats[t] === true).length;
+        
+        totalHabitsEl.textContent = allTasks.length;
+        doneTodayEl.textContent = doneCount;
+        progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
+    }
+
+    function render() {
+        habitListEl.innerHTML = "";
+        // איחוד רשימת המשימות
+        const allTasks = [...baseHabits, ...tempHabits];
+
+        if (allTasks.length === 0) {
+            habitListEl.innerHTML = "<li class='empty-msg'>אין משימות להיום. הוסף משימה או הגדר הרגלים.</li>";
+        }
 
         allTasks.forEach(text => {
-            const isDone = dailyStats[text] === true;
-            if (isDone) doneCount++;
-
             const li = document.createElement("li");
-            li.className = "habit-item"; // וודא שיש לך עיצוב לזה ב-CSS
-            li.style.display = "flex";
-            li.style.alignItems = "center";
-            li.style.margin = "8px 0";
-
+            li.className = "habit-item";
+            
             const cb = document.createElement("input");
             cb.type = "checkbox";
-            cb.checked = isDone;
-            cb.style.marginLeft = "12px";
+            cb.checked = dailyStats[text] || false;
+            cb.onchange = () => toggleHabit(text, cb.checked);
             
-            cb.onchange = async () => {
-                dailyStats[text] = cb.checked;
-                // שמירה לשרת
-                await db.collection("users").doc(userId).collection("stats").doc(todayId).set(dailyStats);
-                renderUI(); // רענון למספרים ועיצוב
-            };
-
             const span = document.createElement("span");
             span.textContent = text;
-            if (isDone) span.style.textDecoration = "line-through";
 
             li.appendChild(cb);
             li.appendChild(span);
             habitListEl.appendChild(li);
         });
 
-        // עדכון קומת הסטטיסטיקה (המספרים למעלה)
-        if (totalHabitsEl) totalHabitsEl.textContent = allTasks.length;
-        if (doneTodayEl) doneTodayEl.textContent = doneCount;
-        if (progressTodayEl) progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
-        
+        updateSummary();
         renderHistory();
     }
 
-    // 6. הוספת משימה חד פעמית
-    document.getElementById("addTempHabitBtn").onclick = async () => {
-        const input = document.getElementById("tempHabitInput");
-        const val = input.value.trim();
-        if (!val) return;
-        
-        try {
-            await db.collection("users").doc(userId).collection("daily")
-                .doc(todayId).collection("tempHabits").add({ text: val });
-            input.value = "";
-            log("משימה חד-פעמית נוספה");
-            loadAllData(); // טעינה מחדש של הכל
-        } catch (e) { 
-            log("שגיאה בהוספה: " + e.message); 
-        }
-    };
-
-    // 7. היסטוריה של ה-14 ימים האחרונים
+    // פונקציית היסטוריה (נשארה דומה)
     async function renderHistory() {
-        const historyEl = document.getElementById("history");
-        if (!historyEl) return;
-        
-        try {
-            const snap = await db.collection("users").doc(userId).collection("stats")
-                .orderBy("__name__", "desc").limit(14).get();
-            
-            historyEl.innerHTML = "";
-            snap.forEach(doc => {
-                const count = Object.values(doc.data()).filter(v => v === true).length;
-                const div = document.createElement("div");
-                div.style.fontSize = "13px";
-                div.style.padding = "4px 0";
-                div.textContent = `${doc.id}: ${count} משימות בוצעו`;
-                historyEl.appendChild(div);
-            });
-        } catch (e) {
-            // שגיאה שקטה בהיסטוריה כדי לא להפריע לדשבורד
-        }
+        const snapshot = await db.collection("users").doc(userId).collection("stats")
+            .orderBy("__name__", "desc").limit(14).get();
+        historyEl.innerHTML = "";
+        snapshot.docs.forEach(doc => {
+            const data = doc.data();
+            const count = Object.values(data).filter(v => v === true).length;
+            const item = document.createElement("div");
+            item.className = "history-row";
+            item.innerHTML = `<span>${doc.id}</span> <strong>${count} משימות</strong>`;
+            historyEl.appendChild(item);
+        });
     }
 
-    // ניווט והתנתקות
-    document.getElementById("logoutBtn").onclick = () => auth.signOut();
-    window.goManage = () => window.location.href = "manage.html";
+    logoutBtn.addEventListener("click", () => {
+        auth.signOut().then(() => window.location.href = "login.html");
+    });
+
+    window.goManage = function() {
+        window.location.href = "manage.html";
+    };
 });
