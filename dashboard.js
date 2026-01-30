@@ -11,16 +11,19 @@ document.addEventListener("DOMContentLoaded", function() {
   const logBox = document.getElementById("logBox");
 
   function log(msg) {
+    if (!logBox) return;
     const p = document.createElement("div");
     p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
     logBox.appendChild(p);
     logBox.scrollTop = logBox.scrollHeight;
   }
 
-  // שימוש בפורמט תאריך בטוח ל-DB (למשל 2023-10-27)
-  const todayObj = new Date();
-  const todayDocId = todayObj.toISOString().split('T')[0]; 
-  todayDateEl.textContent = todayObj.toLocaleDateString("he-IL");
+  // תאריך לתצוגה
+  const now = new Date();
+  todayDateEl.textContent = now.toLocaleDateString("he-IL");
+  
+  // מפתח בטוח ל-DB (ללא סלאשים)
+  const todayDocId = now.toISOString().split('T')[0]; 
 
   let userId = null;
   let baseHabits = [];
@@ -33,42 +36,70 @@ document.addEventListener("DOMContentLoaded", function() {
       return;
     }
     userId = user.uid;
-    log("מחובר כ- " + user.email);
+    log("משתמש מחובר: " + userId);
     loadAll();
   });
 
-  logoutBtn.addEventListener("click", () => {
-    auth.signOut().then(() => window.location.href = "login.html");
-  });
-
-  window.goManage = function() {
-    window.location.href = "manage.html";
-  };
-
   async function loadAll() {
+    log("טוען נתונים...");
     try {
-      log("טוען נתונים...");
-      await Promise.all([loadBaseHabits(), loadTempHabits(), loadDailyStats()]);
+      // טעינת הרגלים קבועים
+      const baseSnap = await db.collection("users").doc(userId).collection("habits").get();
+      baseHabits = baseSnap.docs.map(d => d.data().text);
+
+      // טעינת משימות חד פעמיות
+      const tempSnap = await db.collection("users").doc(userId).collection("daily")
+        .doc(todayDocId).collection("tempHabits").get();
+      tempHabits = tempSnap.docs.map(d => d.data().text);
+
+      // טעינת סטטוס ביצוע
+      const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(todayDocId).get();
+      dailyStats = statsDoc.exists ? statsDoc.data() : {};
+
       render();
     } catch (err) {
       log("שגיאה בטעינה: " + err.message);
     }
   }
 
-  async function loadBaseHabits() {
-    const snap = await db.collection("users").doc(userId).collection("habits").get();
-    baseHabits = snap.docs.map(d => d.data().text);
-  }
+  function render() {
+    habitListEl.innerHTML = "";
+    const all = [...baseHabits, ...tempHabits];
+    let done = 0;
 
-  async function loadTempHabits() {
-    const snap = await db.collection("users").doc(userId).collection("daily")
-      .doc(todayDocId).collection("tempHabits").get();
-    tempHabits = snap.docs.map(d => ({ id: d.id, text: d.data().text }));
-  }
+    all.forEach(text => {
+      const isDone = dailyStats[text] === true;
+      if (isDone) done++;
 
-  async function loadDailyStats() {
-    const doc = await db.collection("users").doc(userId).collection("stats").doc(todayDocId).get();
-    dailyStats = doc.exists ? doc.data() : {};
+      const li = document.createElement("li");
+      li.className = "habit-item";
+      li.style.display = "flex";
+      li.style.justifyContent = "space-between";
+      li.style.padding = "8px";
+      li.style.borderBottom = "1px solid #eee";
+
+      const span = document.createElement("span");
+      span.textContent = text;
+      if (isDone) span.style.textDecoration = "line-through";
+
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = isDone;
+      cb.onchange = async () => {
+        dailyStats[text] = cb.checked;
+        await db.collection("users").doc(userId).collection("stats").doc(todayDocId).set(dailyStats);
+        render(); // רינדור מחדש לעדכון המונים
+      };
+
+      li.append(span, cb);
+      habitListEl.appendChild(li);
+    });
+
+    totalHabitsEl.textContent = all.length;
+    doneTodayEl.textContent = done;
+    progressTodayEl.textContent = `${done}/${all.length}`;
+
+    renderHistory();
   }
 
   addTempHabitBtn.addEventListener("click", async () => {
@@ -79,72 +110,31 @@ document.addEventListener("DOMContentLoaded", function() {
       await db.collection("users").doc(userId).collection("daily")
         .doc(todayDocId).collection("tempHabits").add({ text });
       tempHabitInput.value = "";
-      log("הוסף: " + text);
-      loadAll(); // רענון אחרי הוספה
+      loadAll();
     } catch (err) {
       log("שגיאה בהוספה: " + err.message);
     }
   });
 
-  async function toggleHabit(name, isChecked) {
-    dailyStats[name] = isChecked;
-    try {
-      await db.collection("users").doc(userId).collection("stats").doc(todayDocId).set(dailyStats);
-      log(`עודכן: ${name}`);
-      // כאן אנחנו מעדכנים רק את המספרים ב-UI בלי לרנדר את כל הרשימה מחדש
-      updateSummary(); 
-    } catch (err) {
-      log("שגיאה בעדכון: " + err.message);
-    }
-  }
-
-  function updateSummary() {
-    const allCount = baseHabits.length + tempHabits.length;
-    const doneCount = Object.values(dailyStats).filter(v => v === true).length;
-    
-    totalHabitsEl.textContent = allCount;
-    doneTodayEl.textContent = doneCount;
-    progressTodayEl.textContent = `${doneCount}/${allCount}`;
-  }
-
-  function render() {
-    habitListEl.innerHTML = "";
-    const all = [...baseHabits, ...tempHabits.map(h => h.text)];
-
-    all.forEach(text => {
-      const li = document.createElement("li");
-      const cb = document.createElement("input");
-      cb.type = "checkbox";
-      cb.checked = dailyStats[text] || false;
-      
-      cb.onchange = () => toggleHabit(text, cb.checked);
-      
-      li.append(cb, " " + text);
-      habitListEl.appendChild(li);
-    });
-
-    updateSummary();
-    renderHistory();
-  }
-
   async function renderHistory() {
     try {
-      const snapshot = await db.collection("users").doc(userId).collection("stats")
+      const snap = await db.collection("users").doc(userId).collection("stats")
         .orderBy("__name__", "desc").limit(14).get();
       
       historyEl.innerHTML = "";
-      snapshot.docs.forEach(doc => {
-        const dateStr = doc.id;
+      snap.docs.forEach(doc => {
         const data = doc.data();
         const doneCount = Object.values(data).filter(v => v === true).length;
-        
         const div = document.createElement("div");
         div.className = "history-item";
-        div.textContent = `${dateStr}: ${doneCount} הרגלים בוצעו`;
+        div.textContent = `${doc.id}: ${doneCount} הושלמו`;
         historyEl.appendChild(div);
       });
     } catch (err) {
-      log("שגיאה בהיסטוריה: " + err.message);
+      console.error("History error", err);
     }
   }
+
+  window.goManage = () => window.location.href = "manage.html";
+  logoutBtn.onclick = () => auth.signOut();
 });
