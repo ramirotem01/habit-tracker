@@ -1,28 +1,31 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Habit Tracker – דשבורד</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app">
-    <h1>📋 הדשבורד שלי</h1>
+    <h1>📊 דשבורד יומי</h1>
+    <div>תאריך היום: <span id="todayDate"></span></div>
 
-    <p>תאריך היום: <span id="todayDate"></span></p>
+    <div class="card">
+      <h2>הרגלים שלי</h2>
+      <ul id="habitList"></ul>
+      <div>סה"כ הרגלים: <span id="totalHabits">0</span></div>
+      <div>סיימתי היום: <span id="doneToday">0</span></div>
+      <div>התקדמות: <span id="progressToday">0/0</span></div>
+    </div>
 
-    <ul id="habitList"></ul>
-
-    <p>סך הכל הרגלים: <span id="totalHabits">0</span></p>
-    <p>סומנו היום: <span id="doneToday">0</span></p>
-    <p>התקדמות: <span id="progressToday">0/0</span></p>
-
-    <h2>סטטיסטיקה 14 יום</h2>
-    <div id="history"></div>
+    <div class="card">
+      <h2>סטטיסטיקה 14 יום</h2>
+      <div id="history"></div>
+    </div>
 
     <button onclick="goManage()">📝 ניהול הרגלים</button>
-    <button onclick="auth.signOut()">🚪 התנתק</button>
+    <button id="logoutBtn">🚪 התנתק</button>
   </div>
 
   <script src="firebase.js"></script>
