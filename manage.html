@@ -19,15 +19,8 @@
 
     <button onclick="goDashboard()">🔙 לדשבורד</button>
   </div>
-<script src="firebase.js"></script>
-<script>
-  auth.onAuthStateChanged(user => {
-    if (!user) {
-      window.location.href = "index.html";
-    }
-  });
-</script>
 
+  <script src="firebase.js"></script>
   <script src="manage.js"></script>
 </body>
 </html>
