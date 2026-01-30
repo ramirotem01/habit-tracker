@@ -1,4 +1,5 @@
 // firebase.js
+
 const firebaseConfig = {
   apiKey: "AIzaSyAwduvJv0z1T5dyV724zmkO83hj9SJFKf4",
   authDomain: "habittrackermultiuser.firebaseapp.com",
