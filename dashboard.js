@@ -4,159 +4,164 @@ const doneTodayEl = document.getElementById("doneToday");
 const progressTodayEl = document.getElementById("progressToday");
 const todayDateEl = document.getElementById("todayDate");
 const historyEl = document.getElementById("history");
-const tempHabitInput = document.getElementById("tempHabitInput");
 
 const today = new Date().toLocaleDateString("he-IL");
 todayDateEl.textContent = today;
 
-// 🔹 Load daily stats
-let dailyStats = JSON.parse(localStorage.getItem("dailyStats")) || {};
-if (!dailyStats[today]) dailyStats[today] = {};
+let userId = null;
+let baseHabits = [];
+let tempHabits = [];
+let dailyStats = {};
 
-function saveStats() {
-  localStorage.setItem("dailyStats", JSON.stringify(dailyStats));
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+  userId = user.uid;
+  loadAll();
+});
+
+function loadAll() {
+  Promise.all([
+    loadBaseHabits(),
+    loadTempHabits(),
+    loadDailyStats()
+  ]).then(render);
 }
 
-// ➕ הוספת הרגל חד פעמי
+function loadBaseHabits() {
+  return db.collection("users")
+    .doc(userId)
+    .collection("habits")
+    .get()
+    .then(snap => {
+      baseHabits = snap.docs.map(d => d.data().text);
+    });
+}
+
+function loadTempHabits() {
+  return db.collection("users")
+    .doc(userId)
+    .collection("daily")
+    .doc(today)
+    .collection("tempHabits")
+    .get()
+    .then(snap => {
+      tempHabits = snap.docs.map(d => ({
+        id: d.id,
+        ...d.data()
+      }));
+    });
+}
+
+function loadDailyStats() {
+  return db.collection("users")
+    .doc(userId)
+    .collection("stats")
+    .doc(today)
+    .get()
+    .then(doc => {
+      dailyStats = doc.exists ? doc.data() : {};
+    });
+}
+
+function toggleHabit(name, value) {
+  dailyStats[name] = value;
+
+  db.collection("users")
+    .doc(userId)
+    .collection("stats")
+    .doc(today)
+    .set(dailyStats);
+}
+
 function addTempHabit() {
-  const text = tempHabitInput.value.trim();
+  const input = document.getElementById("tempHabitInput");
+  const text = input.value.trim();
   if (!text) return;
 
-  if (dailyStats[today][text] !== undefined) {
-    alert("הרגל כזה כבר קיים היום");
-    return;
-  }
-
-  dailyStats[today][text] = false;
-  tempHabitInput.value = "";
-  saveStats();
-  render();
+  db.collection("users")
+    .doc(userId)
+    .collection("daily")
+    .doc(today)
+    .collection("tempHabits")
+    .add({ text })
+    .then(() => {
+      input.value = "";
+      loadAll();
+    });
 }
 
-// ✏️ עריכת הרגל חד פעמי
-function editTempHabit(oldName) {
-  const newName = prompt("ערוך הרגל חד פעמי:", oldName);
-  if (newName === null) return;
-
-  const trimmed = newName.trim();
-  if (!trimmed || trimmed === oldName) return;
-
-  if (dailyStats[today][trimmed] !== undefined) {
-    alert("הרגל כזה כבר קיים היום");
-    return;
-  }
-
-  dailyStats[today][trimmed] = dailyStats[today][oldName];
-  delete dailyStats[today][oldName];
-  saveStats();
-  render();
+function deleteTempHabit(id) {
+  db.collection("users")
+    .doc(userId)
+    .collection("daily")
+    .doc(today)
+    .collection("tempHabits")
+    .doc(id)
+    .delete()
+    .then(loadAll);
 }
 
-// 🗑 מחיקת הרגל חד פעמי
-function deleteTempHabit(name) {
-  if (!confirm("למחוק את ההרגל החד פעמי?")) return;
-  delete dailyStats[today][name];
-  saveStats();
-  render();
+function editTempHabit(id, currentText) {
+  const updated = prompt("עדכן משימה:", currentText);
+  if (!updated) return;
+
+  db.collection("users")
+    .doc(userId)
+    .collection("daily")
+    .doc(today)
+    .collection("tempHabits")
+    .doc(id)
+    .update({ text: updated })
+    .then(loadAll);
 }
 
-// 🔄 רנדר
 function render() {
   habitListEl.innerHTML = "";
-
-  const baseHabits = JSON.parse(localStorage.getItem("allHabits")) || [];
-  const baseNames = baseHabits.map(h => h.text);
-
   let done = 0;
-  let total = 0;
+  const all = [...baseHabits, ...tempHabits.map(h => h.text)];
 
-  // הרגלים קבועים
-  baseNames.forEach(name => {
-    if (dailyStats[today][name] === undefined) {
-      dailyStats[today][name] = false;
-    }
+  all.forEach(text => {
+    const li = document.createElement("li");
 
-    const li = createHabitRow(name, false);
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = dailyStats[text] || false;
+    cb.onchange = () => {
+      toggleHabit(text, cb.checked);
+      loadAll();
+    };
+
+    li.append(text, cb);
     habitListEl.appendChild(li);
 
-    if (dailyStats[today][name]) done++;
-    total++;
+    if (cb.checked) done++;
   });
 
-  // הרגלים חד פעמיים
-  Object.keys(dailyStats[today]).forEach(name => {
-    if (!baseNames.includes(name)) {
-      const li = createHabitRow(name, true);
-      habitListEl.appendChild(li);
+  // כפתורים להרגלים חד פעמיים
+  tempHabits.forEach(h => {
+    const li = document.createElement("li");
+    li.textContent = "🕒 " + h.text;
 
-      if (dailyStats[today][name]) done++;
-      total++;
-    }
+    const edit = document.createElement("button");
+    edit.textContent = "✏";
+    edit.onclick = () => editTempHabit(h.id, h.text);
+
+    const del = document.createElement("button");
+    del.textContent = "🗑";
+    del.onclick = () => deleteTempHabit(h.id);
+
+    li.append(edit, del);
+    habitListEl.appendChild(li);
   });
 
-  totalHabitsEl.textContent = total;
+  totalHabitsEl.textContent = all.length;
   doneTodayEl.textContent = done;
-  progressTodayEl.textContent = `${done}/${total}`;
-
-  saveStats();
-  renderHistory();
+  progressTodayEl.textContent = `${done}/${all.length}`;
 }
 
-// יצירת שורת הרגל
-function createHabitRow(name, isTemp) {
-  const li = document.createElement("li");
-
-  const label = document.createElement("span");
-  label.textContent = isTemp ? `${name} (חד פעמי)` : name;
-
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.checked = dailyStats[today][name];
-  checkbox.onchange = () => {
-    dailyStats[today][name] = checkbox.checked;
-    saveStats();
-    render();
-  };
-
-  li.appendChild(label);
-  li.appendChild(checkbox);
-
-  if (isTemp) {
-    const editBtn = document.createElement("button");
-    editBtn.textContent = "✏️";
-    editBtn.onclick = () => editTempHabit(name);
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "🗑";
-    deleteBtn.onclick = () => deleteTempHabit(name);
-
-    li.appendChild(editBtn);
-    li.appendChild(deleteBtn);
-  }
-
-  return li;
-}
-
-// 📈 היסטוריה
-function renderHistory() {
-  historyEl.innerHTML = "";
-  const days = 14;
-  const keys = Object.keys(dailyStats).sort().slice(-days);
-
-  keys.forEach(day => {
-    const values = Object.values(dailyStats[day]);
-    const done = values.filter(v => v).length;
-    const total = values.length;
-
-    const div = document.createElement("div");
-    div.textContent = `${day}: ${done}/${total} הושלם`;
-    historyEl.appendChild(div);
-  });
-}
-
-// ניווט
 function goManage() {
   window.location.href = "manage.html";
 }
-
-render();
