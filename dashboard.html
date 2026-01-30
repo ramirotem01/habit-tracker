@@ -1,36 +1,36 @@
 <div class="app">
     <h1>📊 דשבורד יומי</h1>
-    
-    <div class="card dashboard-summary">
-        <div>תאריך: <strong id="todayDate"></strong></div>
-        <div class="stats-grid">
-            <div class="stat-item">סה"כ משימות: <span id="totalHabits">0</span></div>
-            <div class="stat-item">בוצעו: <span id="doneToday">0</span></div>
-            <div class="stat-item">התקדמות: <span id="progressToday">0/0</span></div>
-        </div>
+    <p>תאריך: <span id="todayDate"></span></p>
+
+    <div class="card summary-card">
+        <div>סה"כ משימות (קבועות + חד פעמיות): <strong id="totalHabits">0</strong></div>
+        <div>סיימתי היום: <strong id="doneToday">0</strong></div>
+        <div>התקדמות: <strong id="progressToday">0/0</strong></div>
     </div>
 
-    <div class="card tasks-section">
-        <h2>🗓 המשימות שלי להיום</h2>
-        
-        <div class="input-group">
-            <input type="text" id="tempHabitInput" placeholder="הוסף משימה חד פעמית להיום..." />
-            <button id="addTempHabitBtn">➕ הוסף</button>
-        </div>
-
-        <ul id="habitList" class="habit-list">
+    <div class="card">
+        <h2>✨ ההרגלים שלי</h2>
+        <ul id="baseHabitList" class="habit-list">
             </ul>
     </div>
 
     <div class="card">
-        <h2>📈 היסטוריה (14 ימים)</h2>
+        <h2>📝 משימות חד פעמיות להיום</h2>
+        <div class="input-group">
+            <input type="text" id="tempHabitInput" placeholder="הוסף משימה להיום..." />
+            <button id="addTempHabitBtn">➕ הוסף</button>
+        </div>
+        <ul id="tempHabitList" class="habit-list">
+            </ul>
+    </div>
+
+    <div class="card">
+        <h3>📈 היסטוריה 14 יום</h3>
         <div id="history"></div>
     </div>
 
     <div class="actions">
-        <button onclick="goManage()">📝 ניהול הרגלים קבועים</button>
-        <button id="logoutBtn" class="secondary">🚪 התנתק</button>
+        <button onclick="goManage()">⚙ ניהול הרגלים</button>
+        <button id="logoutBtn">🚪 התנתק</button>
     </div>
-
-    <div id="logBox"></div>
 </div>
