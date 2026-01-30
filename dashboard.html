@@ -1,15 +1,31 @@
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Tracker – דשבורד</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <h1>📋 הדשבורד שלי</h1>
 
-<script src="firebase.js"></script>
-<script src="dashboard.js"></script>
+    <p>תאריך היום: <span id="todayDate"></span></p>
 
-<script>
-  auth.onAuthStateChanged(user => {
-    if (!user) {
-      window.location.href = "index.html";
-    }
-  });
-</script>
+    <ul id="habitList"></ul>
+
+    <p>סך הכל הרגלים: <span id="totalHabits">0</span></p>
+    <p>סומנו היום: <span id="doneToday">0</span></p>
+    <p>התקדמות: <span id="progressToday">0/0</span></p>
+
+    <h2>סטטיסטיקה 14 יום</h2>
+    <div id="history"></div>
+
+    <button onclick="goManage()">📝 ניהול הרגלים</button>
+    <button onclick="auth.signOut()">🚪 התנתק</button>
+  </div>
+
+  <script src="firebase.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>
