@@ -9,31 +9,32 @@
 <body>
   <div class="app">
     <h1>📊 דשבורד יומי</h1>
-    <div>תאריך היום: <span id="todayDate"></span></div>
+    <p>תאריך היום: <strong id="todayDate"></strong></p>
 
-    <div class="card">
+    <section class="card dashboard">
       <h2>הרגלים שלי</h2>
       <ul id="habitList"></ul>
-      <div>סה"כ הרגלים: <span id="totalHabits">0</span></div>
-      <div>סיימתי היום: <span id="doneToday">0</span></div>
-      <div>התקדמות: <span id="progressToday">0/0</span></div>
-    </div>
+      <p>סה"כ הרגלים: <strong id="totalHabits">0</strong></p>
+      <p>בוצעו היום: <strong id="doneToday">0</strong></p>
+      <p>התקדמות: <strong id="progressToday">0/0</strong></p>
+      <button onclick="goManage()">⚙ ניהול הרגלים</button>
+      <button id="logoutBtn">🚪 התנתק</button>
+    </section>
 
-    <div class="card">
-      <h2>הוסף הרגל יומי</h2>
-      <input type="text" id="tempHabitInput" placeholder="הרגל זמני חדש..." />
-      <button onclick="addTempHabit()">➕ הוסף</button>
-    </div>
+    <section class="card today">
+      <h2>🗓 הוסף הרגל יומי/משימה חד פעמית</h2>
+      <div class="input-group">
+        <input type="text" id="tempHabitInput" placeholder="משימה חד פעמית להיום..." />
+        <button onclick="addTempHabit()">➕ הוסף</button>
+      </div>
+    </section>
 
-    <div class="card">
-      <h2>סטטיסטיקה 14 יום</h2>
+    <section class="card history">
+      <h2>📈 14 ימים אחרונים</h2>
       <div id="history"></div>
-    </div>
+    </section>
 
-    <button onclick="goManage()">📝 ניהול הרגלים</button>
-    <button id="logoutBtn">🚪 התנתק</button>
-
-    <div id="log" style="margin-top:20px; color:blue;"></div>
+    <div id="log" style="margin-top:15px; color:blue;"></div>
   </div>
 
   <script src="firebase.js"></script>
