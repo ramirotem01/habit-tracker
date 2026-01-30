@@ -9,116 +9,134 @@ document.addEventListener("DOMContentLoaded", () => {
   const addTempHabitBtn = document.getElementById("addTempHabitBtn");
   const logoutBtn = document.getElementById("logoutBtn");
 
-  // תאריכים
+  // שימוש בפורמט תאריך בטוח (YYYY-MM-DD) כדי למנוע בעיות ב-Firestore
   const now = new Date();
-  const todayDocId = now.toISOString().split('T')[0]; // פורמט YYYY-MM-DD (בטוח ל-DB)
+  const todayDocId = now.toISOString().split('T')[0]; 
   todayDateEl.textContent = now.toLocaleDateString("he-IL");
 
   let userId = null;
-  let baseHabits = [];
-  let tempHabits = [];
-  let dailyStats = {};
+  let baseHabits = []; // כאן יאוחסנו מחרוזות הטקסט מה-DB
+  let tempHabits = []; // משימות חד פעמיות
+  let dailyStats = {}; // סטטוס הצ'קבוקסים
 
-  // בדיקת חיבור
   auth.onAuthStateChanged(user => {
     if (!user) {
       window.location.href = "login.html";
       return;
     }
     userId = user.uid;
-    loadData();
+    console.log("מחובר כ:", userId);
+    loadAllData();
   });
 
-  // טעינה משולבת
-  async function loadData() {
+  async function loadAllData() {
     try {
-      // 1. הרגלים קבועים (כמו בדף הניהול)
-      const baseSnap = await db.collection("users").doc(userId).collection("habits").get();
-      baseHabits = baseSnap.docs.map(d => d.data().text);
+      console.log("טוען נתונים...");
 
-      // 2. משימות חד פעמיות
+      // 1. טעינת הרגלים קבועים - בדיוק כמו ב-manage.js
+      const baseSnap = await db.collection("users").doc(userId).collection("habits").get();
+      // אנחנו מושכים רק את ה-text מהאובייקט, כדי שנוכל להשוות אותו לסטטיסטיקה
+      baseHabits = baseSnap.docs.map(doc => doc.data().text);
+      console.log("הרגלים קבועים שנטענו:", baseHabits);
+
+      // 2. טעינת משימות חד פעמיות
       const tempSnap = await db.collection("users").doc(userId).collection("daily")
         .doc(todayDocId).collection("tempHabits").get();
-      tempHabits = tempSnap.docs.map(d => d.data().text);
+      tempHabits = tempSnap.docs.map(doc => doc.data().text);
 
-      // 3. סימוני V
+      // 3. טעינת סטטוס הביצוע (הצ'קבוקסים)
       const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(todayDocId).get();
       dailyStats = statsDoc.exists ? statsDoc.data() : {};
 
       render();
     } catch (err) {
-      console.error("Error loading data:", err);
+      console.error("שגיאה בטעינת הנתונים:", err);
     }
   }
 
   function render() {
+    if (!habitListEl) return;
     habitListEl.innerHTML = "";
+    
+    // איחוד כל המשימות לרשימה אחת
     const allTasks = [...baseHabits, ...tempHabits];
     let doneCount = 0;
 
-    allTasks.forEach(text => {
-      const isDone = dailyStats[text] === true;
+    allTasks.forEach(taskText => {
+      // בדיקה אם המשימה סומנה כבוצעה (לפי הטקסט שלה כמפתח)
+      const isDone = dailyStats[taskText] === true;
       if (isDone) doneCount++;
 
       const li = document.createElement("li");
       li.style.display = "flex";
       li.style.alignItems = "center";
-      li.style.padding = "10px 0";
+      li.style.padding = "10px";
       li.style.borderBottom = "1px solid #eee";
 
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.checked = isDone;
-      cb.style.marginLeft = "10px";
+      cb.style.marginLeft = "12px";
       
       cb.onchange = async () => {
-        dailyStats[text] = cb.checked;
+        dailyStats[taskText] = cb.checked;
+        // שמירת המצב החדש ל-Firestore
         await db.collection("users").doc(userId).collection("stats").doc(todayDocId).set(dailyStats);
-        render(); // עדכון מונים ועיצוב
+        render(); // רינדור מחדש לעדכון המונים וקו חוצה
       };
 
       const span = document.createElement("span");
-      span.textContent = text;
+      span.textContent = taskText;
       if (isDone) span.style.textDecoration = "line-through";
 
-      li.append(cb, span);
+      li.appendChild(cb);
+      li.appendChild(span);
       habitListEl.appendChild(li);
     });
 
-    // עדכון סטטיסטיקה למעלה
-    totalHabitsEl.textContent = allTasks.length;
-    doneTodayEl.textContent = doneCount;
-    progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
+    // עדכון מספרי הסיכום ב-HTML
+    if (totalHabitsEl) totalHabitsEl.textContent = allTasks.length;
+    if (doneTodayEl) doneTodayEl.textContent = doneCount;
+    if (progressTodayEl) progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
     
-    loadHistory();
+    renderHistory();
   }
 
-  // הוספת משימה חד פעמית
+  // הוספת משימה חד פעמית (נשמרת תחת תאריך ספציפי)
   addTempHabitBtn.addEventListener("click", async () => {
     const text = tempHabitInput.value.trim();
     if (!text) return;
 
-    await db.collection("users").doc(userId).collection("daily")
-      .doc(todayDocId).collection("tempHabits").add({ text });
-    
-    tempHabitInput.value = "";
-    loadData();
+    try {
+      await db.collection("users").doc(userId).collection("daily")
+        .doc(todayDocId).collection("tempHabits").add({ text: text });
+      tempHabitInput.value = "";
+      loadAllData();
+    } catch (err) {
+      console.error("שגיאה בהוספת משימה:", err);
+    }
   });
 
-  // היסטוריה פשוטה
-  async function loadHistory() {
-    const snap = await db.collection("users").doc(userId).collection("stats")
-      .orderBy("__name__", "desc").limit(14).get();
-    
-    historyEl.innerHTML = "";
-    snap.forEach(doc => {
-      const done = Object.values(doc.data()).filter(v => v === true).length;
-      const div = document.createElement("div");
-      div.style.fontSize = "13px";
-      div.textContent = `${doc.id}: ${done} בוצעו`;
-      historyEl.appendChild(div);
-    });
+  async function renderHistory() {
+    if (!historyEl) return;
+    try {
+      const snap = await db.collection("users").doc(userId).collection("stats")
+        .orderBy("__name__", "desc").limit(14).get();
+      
+      historyEl.innerHTML = "";
+      snap.forEach(doc => {
+        const stats = doc.data();
+        const done = Object.values(stats).filter(v => v === true).length;
+        const div = document.createElement("div");
+        div.style.fontSize = "0.9em";
+        div.style.margin = "4px 0";
+        div.textContent = `${doc.id}: ${done} משימות הושלמו`;
+        historyEl.appendChild(div);
+      });
+    } catch (err) {}
   }
 
-  logoutBtn.onclick = () => auth.signOut();
+  logoutBtn.addEventListener("click", () => {
+    auth.signOut().then(() => window.location.href = "login.html");
+  });
 });
