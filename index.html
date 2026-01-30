@@ -9,18 +9,23 @@
 <body>
   <div class="app login-app">
     <h1>🔐 התחברות / רישום</h1>
+
     <div class="card login-card">
       <input type="email" id="email" placeholder="כתובת אימייל" />
       <input type="password" id="password" placeholder="סיסמה" />
+
       <button id="loginBtn">התחבר</button>
       <button id="registerBtn">רשום משתמש חדש</button>
+
       <p id="message" style="color:red; margin-top:10px;"></p>
     </div>
   </div>
 
+  <!-- Firebase JS -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
   <script src="firebase.js"></script>
   <script src="login.js"></script>
 </body>
