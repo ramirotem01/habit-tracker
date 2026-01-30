@@ -1,6 +1,5 @@
 // firebase.js
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAwduvJv0z1T5dyV724zmkO83hj9SJFKf4",
   authDomain: "habittrackermultiuser.firebaseapp.com",
@@ -11,9 +10,9 @@ const firebaseConfig = {
   measurementId: "G-HWNWP0C8DE"
 };
 
-// Initialize Firebase
+// initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-// Initialize services
+// services
 const auth = firebase.auth();
 const db = firebase.firestore();
