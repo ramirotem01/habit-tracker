@@ -1,16 +1,8 @@
-function signup() {
-  const email = emailInput();
-  const password = passwordInput();
+function register() {
+  const email = email.value;
+  const password = password.value;
 
   auth.createUserWithEmailAndPassword(email, password)
-    .then(userCred => {
-      const uid = userCred.user.uid;
-
-      return db.collection("users").doc(uid).set({
-        allHabits: [],
-        dailyStats: {}
-      });
-    })
     .then(() => {
       window.location.href = "dashboard.html";
     })
@@ -18,8 +10,8 @@ function signup() {
 }
 
 function login() {
-  const email = emailInput();
-  const password = passwordInput();
+  const email = email.value;
+  const password = password.value;
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
@@ -27,18 +19,3 @@ function login() {
     })
     .catch(err => alert(err.message));
 }
-
-function emailInput() {
-  return document.getElementById("email").value;
-}
-
-function passwordInput() {
-  return document.getElementById("password").value;
-}
-
-// אם כבר מחובר → לדשבורד
-auth.onAuthStateChanged(user => {
-  if (user && location.pathname.includes("index.html")) {
-    window.location.href = "dashboard.html";
-  }
-});
