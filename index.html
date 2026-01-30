@@ -1,66 +1,27 @@
-<!-- Firebase App (חובה) -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-
-<!-- Firebase Authentication -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-
-<!-- Firestore Database -->
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-
 <!DOCTYPE html>
 <html lang="he">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Habit Tracker</title>
+  <title>התחברות</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app">
-    <h1>📊 דשבורד</h1>
+    <h1>🔐 Habit Tracker</h1>
 
-    <section class="card dashboard">
-      <p>תאריך היום: <strong id="todayDate"></strong></p>
-      <p>סה״כ הרגלים: <strong id="totalHabits">0</strong></p>
-      <p>בוצעו היום: <strong id="doneToday">0</strong></p>
-      <p>התקדמות היום: <strong id="progressToday">0/0</strong></p>
-      <button onclick="goManage()">⚙ ניהול הרגלים</button>
-    </section>
+    <input type="email" id="email" placeholder="אימייל" />
+    <input type="password" id="password" placeholder="סיסמה" />
 
-    <section class="card today">
-      <h2>🗓 משימות להיום</h2>
-
-      <!-- הוספת משימה חד פעמית -->
-      <div class="input-group">
-        <input type="text" id="tempHabitInput" placeholder="משימה חד פעמית להיום..." />
-        <button onclick="addTempHabit()">➕ הוסף להיום</button>
-      </div>
-
-      <ul id="habitList"></ul>
-    </section>
-
-    <section class="card history">
-      <h2>📈 14 ימים אחרונים</h2>
-      <div id="history"></div>
-    </section>
+    <button onclick="login()">התחבר</button>
+    <button onclick="signup()">הרשמה</button>
   </div>
 
-  <script src="dashboard.js"></script>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <script src="firebase.js"></script>
+  <script src="auth.js"></script>
 </body>
 </html>
-<script src="firebase.js"></script>
-<script>
-  auth.onAuthStateChanged(user => {
-    if (!user) {
-      window.location.href = "index.html";
-    }
-  });
-</script>
-<script src="firebase.js"></script>
-<script>
-  auth.onAuthStateChanged(user => {
-    if (!user) {
-      window.location.href = "index.html";
-    }
-  });
-</script>
