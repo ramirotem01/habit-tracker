@@ -2,23 +2,23 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>Habit Tracker - דשבורד</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>דשבורד הרגלים</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="app">
-    <h1>📊 דשבורד</h1>
-
-    <section class="card summary-section">
-      <p>תאריך היום: <strong id="todayDate"></strong></p>
-      <p>סה״כ הרגלים: <strong id="totalHabits">0</strong></p>
-      <p>בוצעו היום: <strong id="doneToday">0</strong></p>
-      <p>התקדמות היום: <strong id="progressToday">0/0</strong></p>
-      <button onclick="goManage()">⚙ ניהול הרגלים</button>
+    <h1>📊 דשבורד יומי</h1>
+    
+    <section class="card summary-card">
+      <p>תאריך: <strong id="todayDate"></strong></p>
+      <p>סה"כ משימות: <span id="totalHabits">0</span></p>
+      <p>בוצעו היום: <span id="doneToday">0</span></p>
+      <p>התקדמות: <span id="progressToday">0/0</span></p>
     </section>
 
     <section class="card">
-      <h2>🗓 משימות להיום</h2>
+      <h2>🗓 המשימות שלי להיום</h2>
       <div class="input-group">
         <input type="text" id="tempHabitInput" placeholder="משימה חד פעמית להיום..." />
         <button id="addTempHabitBtn">➕ הוסף</button>
@@ -27,18 +27,22 @@
     </section>
 
     <section class="card">
-      <h2>📈 14 ימים אחרונים</h2>
+      <h2>📈 היסטוריה (14 ימים)</h2>
       <div id="history"></div>
     </section>
 
-    <button id="logoutBtn" style="background:#ff4d4d; color:white;">🚪 התנתק</button>
-    
-    <div id="logBox" style="background:#eee; padding:10px; margin-top:20px; font-size:12px; max-height:100px; overflow:auto;"></div>
+    <div class="actions">
+      <button onclick="window.location.href='manage.html'">📝 ניהול הרגלים</button>
+      <button id="logoutBtn" style="background: #ff4b2b; color: white;">🚪 התנתק</button>
+    </div>
+
+    <div id="logBox" style="font-size: 12px; color: gray; margin-top: 20px;"></div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
   <script src="firebase.js"></script>
   <script src="dashboard.js"></script>
 </body>
