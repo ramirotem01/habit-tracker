@@ -1,5 +1,4 @@
 // login.js
-
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const loginBtn = document.getElementById("loginBtn");
@@ -21,7 +20,7 @@ loginBtn.addEventListener("click", () => {
       messageEl.style.color = "green";
       messageEl.textContent = "התחברת בהצלחה!";
       setTimeout(() => {
-        window.location.href = "index.html"; // מעבר לדשבורד
+        window.location.href = "dashboard.html"; // ✅ מעבר לדשבורד
       }, 800);
     })
     .catch(err => {
@@ -45,7 +44,7 @@ registerBtn.addEventListener("click", () => {
       messageEl.style.color = "green";
       messageEl.textContent = "נוצר משתמש חדש בהצלחה!";
       setTimeout(() => {
-        window.location.href = "index.html"; // מעבר לדשבורד
+        window.location.href = "dashboard.html"; // ✅ מעבר לדשבורד
       }, 800);
     })
     .catch(err => {
@@ -54,9 +53,9 @@ registerBtn.addEventListener("click", () => {
     });
 });
 
-// בדיקה אם כבר מחובר
+// אם כבר מחובר, הפניה לדשבורד
 auth.onAuthStateChanged(user => {
   if (user) {
-    window.location.href = "index.html"; // כבר מחובר, כנס ישר לדשבורד
+    window.location.href = "dashboard.html";
   }
 });
