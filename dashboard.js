@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let userId = null;
   let baseHabits = []; // הרגלים קבועים
-  let tempHabits = []; // משימות חד פעמיות
+  let tempHabits = []; // משימות חד פעמיות להיום
   let dailyStats = {}; // סטטוס ביצוע (V)
 
   // =====================
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // =====================
-  // טעינת כל הנתונים
+  // טעינת כל הנתונים מה-DB
   // =====================
   async function loadAllData() {
     try {
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isTemp: false
       }));
 
-      // 2. טעינת משימות חד פעמיות
+      // 2. טעינת משימות חד פעמיות של היום
       const tempSnap = await db.collection("users").doc(userId).collection("daily")
         .doc(todayDocId).collection("tempHabits").get();
       tempHabits = tempSnap.docs.map(doc => ({
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isTemp: true
       }));
 
-      // 3. טעינת סטטוס הביצוע
+      // 3. טעינת סטטוס הביצוע של היום
       const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(todayDocId).get();
       dailyStats = statsDoc.exists ? statsDoc.data() : {};
 
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =====================
-  // הצגת הנתונים במסך
+  // הצגת רשימת המשימות
   // =====================
   function render() {
     if (!habitListEl) return;
@@ -79,7 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const li = document.createElement("li");
       li.style = "display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;";
 
-      // צד ימין: צ'קבוקס וטקסט
       const contentSide = document.createElement("div");
       contentSide.style = "display: flex; align-items: center; gap: 10px;";
 
@@ -100,20 +99,16 @@ document.addEventListener("DOMContentLoaded", () => {
       contentSide.appendChild(cb);
       contentSide.appendChild(span);
 
-      // צד שמאל: כפתורי פעולה (רק למשימות זמניות)
       const actionsSide = document.createElement("div");
-      
       if (task.isTemp) {
-        // כפתור עריכה
         const editBtn = document.createElement("button");
         editBtn.innerHTML = "✏️";
-        editBtn.style = "background:none; border:none; cursor:pointer; font-size: 16px; margin-left: 8px;";
+        editBtn.style = "background:none; border:none; cursor:pointer; margin-left:8px;";
         editBtn.onclick = () => editTempHabit(task.id, task.text);
 
-        // כפתור מחיקה
         const deleteBtn = document.createElement("button");
         deleteBtn.innerHTML = "🗑️";
-        deleteBtn.style = "background:none; border:none; cursor:pointer; font-size: 16px;";
+        deleteBtn.style = "background:none; border:none; cursor:pointer;";
         deleteBtn.onclick = () => deleteTempHabit(task.id, task.text);
 
         actionsSide.appendChild(editBtn);
@@ -125,7 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
       habitListEl.appendChild(li);
     });
 
-    // עדכון מונים
     if (totalHabitsEl) totalHabitsEl.textContent = allTasks.length;
     if (doneTodayEl) doneTodayEl.textContent = doneCount;
     if (progressTodayEl) progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
@@ -134,10 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =====================
-  // פונקציות ניהול משימות זמניות
+  // ניהול משימות זמניות
   // =====================
-
-  // הוספה
   addTempHabitBtn.addEventListener("click", async () => {
     const text = tempHabitInput.value.trim();
     if (!text) return;
@@ -147,18 +139,15 @@ document.addEventListener("DOMContentLoaded", () => {
       tempHabitInput.value = "";
       loadAllData(); 
     } catch (err) {
-      console.error("שגיאה בהוספת משימה:", err);
+      console.error("שגיאה בהוספה:", err);
     }
   });
 
-  // מחיקה
   async function deleteTempHabit(id, text) {
-    if (!confirm(`למחוק את המשימה "${text}"?`)) return;
+    if (!confirm(`למחוק את "${text}"?`)) return;
     try {
       await db.collection("users").doc(userId).collection("daily")
         .doc(todayDocId).collection("tempHabits").doc(id).delete();
-      
-      // ניקוי הסטטוס מה-Stats אם קיים
       if (dailyStats[text] !== undefined) {
         delete dailyStats[text];
         await db.collection("users").doc(userId).collection("stats").doc(todayDocId).set(dailyStats);
@@ -169,18 +158,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // עריכה
   async function editTempHabit(id, oldText) {
-    const newText = prompt("ערוך את המשימה:", oldText);
+    const newText = prompt("ערוך משימה:", oldText);
     if (!newText || newText.trim() === "" || newText === oldText) return;
-
     try {
+      const cleanText = newText.trim();
       await db.collection("users").doc(userId).collection("daily")
-        .doc(todayDocId).collection("tempHabits").doc(id).update({ text: newText.trim() });
-      
-      // עדכון השם בסטטיסטיקה אם כבר סומן ב-V
+        .doc(todayDocId).collection("tempHabits").doc(id).update({ text: cleanText });
       if (dailyStats[oldText] !== undefined) {
-        dailyStats[newText.trim()] = dailyStats[oldText];
+        dailyStats[cleanText] = dailyStats[oldText];
         delete dailyStats[oldText];
         await db.collection("users").doc(userId).collection("stats").doc(todayDocId).set(dailyStats);
       }
@@ -191,36 +177,67 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =====================
-  // היסטוריה וניתוק
+  // היסטוריה (14 יום)
   // =====================
   async function renderHistory() {
     if (!historyEl) return;
     try {
-      const snap = await db.collection("users").doc(userId).collection("stats")
-        .orderBy("__name__", "desc").limit(14).get();
-      
-      historyEl.innerHTML = "";
-      if (snap.empty) {
-        historyEl.innerHTML = "<div style='color:gray; padding:10px;'>אין עדיין נתונים</div>";
-        return;
+      // יצירת 14 תאריכים אחרונים
+      const datesToShow = [];
+      for (let i = 0; i < 14; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        datesToShow.push(d.toISOString().split('T')[0]);
       }
 
-      snap.forEach(doc => {
-        const statsData = doc.data(); 
-        const doneCount = Object.values(statsData).filter(v => v === true).length;
-        const dateParts = doc.id.split('-');
-        const formattedDate = dateParts.length === 3 ? `${dateParts[2]}/${dateParts[1]}` : doc.id;
+      // משיכת נתוני ביצועים (V)
+      const statsSnap = await db.collection("users").doc(userId).collection("stats").get();
+      const allStats = {};
+      statsSnap.forEach(doc => allStats[doc.id] = doc.data());
+
+      historyEl.innerHTML = "";
+
+      // לכל תאריך, נחשב כמה בוצע מתוך סך המשימות
+      for (const dateId of datesToShow) {
+        // 1. הרגלים קבועים
+        const permanentCount = baseHabits.length;
+
+        // 2. משימות זמניות שהיו באותו יום
+        const tempSnap = await db.collection("users").doc(userId).collection("daily")
+                                 .doc(dateId).collection("tempHabits").get();
+        const dailyTempCount = tempSnap.size;
+
+        const totalTasks = permanentCount + dailyTempCount;
+
+        // 3. כמה סומנו ב-V
+        const dayStats = allStats[dateId] || {};
+        const doneCount = Object.values(dayStats).filter(v => v === true).length;
+
+        // עיצוב תאריך
+        const dateParts = dateId.split('-');
+        const formattedDate = `${dateParts[2]}/${dateParts[1]}`;
+        const isToday = dateId === todayDocId;
 
         const div = document.createElement("div");
-        div.style = "padding: 10px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between;";
+        div.style = "padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;";
+        if (isToday) div.style.backgroundColor = "#f0f7ff";
+
         div.innerHTML = `
-          <span style="font-weight:bold;">${formattedDate}</span>
-          <span style="color: #2ecc71;">${doneCount} בוצעו ✅</span>
+          <div>
+            <span style="font-weight:bold;">${formattedDate}</span>
+            ${isToday ? '<small style="color:#007bff; margin-right:5px;">(היום)</small>' : ''}
+          </div>
+          <div style="font-weight: 500;">
+            <span style="color: ${doneCount === totalTasks && totalTasks > 0 ? '#2ecc71' : '#666'};">
+              ${doneCount} מתוך ${totalTasks}
+            </span>
+            <span>${doneCount === totalTasks && totalTasks > 0 ? ' 🏆' : ' ✅'}</span>
+          </div>
         `;
         historyEl.appendChild(div);
-      });
+      }
     } catch (err) {
-      console.error("שגיאה בטעינת היסטוריה:", err);
+      console.error("שגיאה בהיסטוריה:", err);
     }
   }
 
