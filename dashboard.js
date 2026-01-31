@@ -182,7 +182,6 @@ document.addEventListener("DOMContentLoaded", () => {
   async function renderHistory() {
     if (!historyEl) return;
     try {
-      // יצירת 14 תאריכים אחרונים
       const datesToShow = [];
       for (let i = 0; i < 14; i++) {
         const d = new Date();
@@ -190,30 +189,24 @@ document.addEventListener("DOMContentLoaded", () => {
         datesToShow.push(d.toISOString().split('T')[0]);
       }
 
-      // משיכת נתוני ביצועים (V)
       const statsSnap = await db.collection("users").doc(userId).collection("stats").get();
       const allStats = {};
       statsSnap.forEach(doc => allStats[doc.id] = doc.data());
 
       historyEl.innerHTML = "";
 
-      // לכל תאריך, נחשב כמה בוצע מתוך סך המשימות
       for (const dateId of datesToShow) {
-        // 1. הרגלים קבועים
         const permanentCount = baseHabits.length;
 
-        // 2. משימות זמניות שהיו באותו יום
+        // שיפור: טעינת המשימות הזמניות לכל תאריך
         const tempSnap = await db.collection("users").doc(userId).collection("daily")
                                  .doc(dateId).collection("tempHabits").get();
         const dailyTempCount = tempSnap.size;
 
         const totalTasks = permanentCount + dailyTempCount;
-
-        // 3. כמה סומנו ב-V
         const dayStats = allStats[dateId] || {};
         const doneCount = Object.values(dayStats).filter(v => v === true).length;
 
-        // עיצוב תאריך
         const dateParts = dateId.split('-');
         const formattedDate = `${dateParts[2]}/${dateParts[1]}`;
         const isToday = dateId === todayDocId;
@@ -241,7 +234,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // =====================
+  // התנתקות - מתוקן ל-index.html
+  // =====================
   logoutBtn.addEventListener("click", () => {
-    auth.signOut().then(() => window.location.href = "login.html");
+    auth.signOut().then(() => {
+        window.location.href = "index.html";
+    }).catch(err => {
+        console.error("שגיאה בהתנתקות:", err);
+        // למקרה חירום שבו ה-Auth נכשל אך נרצה להוציא את המשתמש
+        window.location.href = "index.html"; 
+    });
   });
 });
