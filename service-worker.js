@@ -3,6 +3,8 @@ const ASSETS = [
   '/',
   '/index.html',
   '/dashboard.html',
+  '/manage.html', // הוספנו את זה
+  '/login.html',  // כדאי שיהיה גם את זה
   '/style.css',
   '/dashboard.js',
   '/firebase.js'
