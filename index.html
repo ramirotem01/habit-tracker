@@ -20,23 +20,31 @@
   <link rel="stylesheet" href="style.css" />
   
   <style>
-    /* עיצוב קליל לכפתור המידע והאנימציה */
+    /* עיצוב כפתור המידע */
     .info-toggle-btn {
       background: none;
       border: 1px solid #3498db;
       color: #3498db;
-      padding: 8px 15px;
+      padding: 8px 18px;
       border-radius: 20px;
       cursor: pointer;
-      margin-top: 20px;
+      margin: 20px auto 10px auto;
       font-weight: bold;
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-left: auto;
-      margin-right: auto;
+      transition: all 0.3s ease; /* אנימציה חלקה לכל השינויים */
+      outline: none;
     }
 
+    /* אפקט ריחף - רקע אפור עדין והגדלה */
+    .info-toggle-btn:hover {
+      background-color: #f0f0f0;
+      transform: scale(1.05); /* הגדלה קלה */
+      border-color: #2980b9;
+    }
+
+    /* תוכן המידע */
     .app-info-content {
       max-height: 0;
       overflow: hidden;
@@ -48,15 +56,23 @@
     }
 
     .app-info-content.open {
-      max-height: 1000px; /* מספיק גדול כדי להכיל את הטקסט */
+      max-height: 1000px;
       margin-top: 15px;
-      padding: 10px;
+      padding: 15px;
       border-top: 1px solid #eee;
     }
 
     .app-info-content ul {
       padding-right: 20px;
       list-style: none;
+      margin: 10px 0;
+    }
+    
+    .tagline {
+      text-align: center;
+      display: block;
+      margin-top: 10px;
+      color: #2c3e50;
     }
   </style>
 </head>
@@ -73,8 +89,9 @@
 
       <p id="message" style="color:red; margin-top:10px;"></p>
 
-      <button class="info-toggle-btn" onclick="toggleInfo()">
-        <span>ℹ️</span> למידע על האפליקציה
+      <button class="info-toggle-btn" id="infoBtn" onclick="toggleInfo()">
+        <span>ℹ️</span>
+        <span id="btnText">למידע על האפליקציה</span>
       </button>
 
       <div id="infoContent" class="app-info-content">
@@ -92,11 +109,9 @@
         כי היא פשוטה באמת. בלי גרפים מבלבלים – רק אתה וההתקדמות שלך.</p>
 
         <p><strong>למי זה מתאים?</strong><br>
-        למי שרוצה להתאמן, לקרוא יותר או פשוט לעשות סדר בשגרה.</p>
+        למי שרוצה להתאמן, לקרוא יותר או לעשות סדר בשגרה.</p>
 
-        <p style="text-align:center; border-top: 1px solid #eee; padding-top: 10px;">
-          <strong>כי שינוי גדול מתחיל בהרגל קטן.</strong>
-        </p>
+        <span class="tagline"><strong>כי שינוי גדול מתחיל בהרגל קטן.</strong></span>
       </div>
     </div>
   </div>
@@ -104,14 +119,15 @@
   <script>
     function toggleInfo() {
       const content = document.getElementById('infoContent');
+      const btnText = document.getElementById('btnText');
+      
       content.classList.toggle('open');
       
-      // שינוי הטקסט בכפתור בהתאם למצב
-      const btn = document.querySelector('.info-toggle-btn span:last-child');
+      // עדכון הטקסט בצורה בטוחה
       if (content.classList.contains('open')) {
-        btn.textContent = ' סגור מידע';
+        btnText.innerText = 'סגור מידע';
       } else {
-        btn.textContent = ' למידע על האפליקציה';
+        btnText.innerText = 'למידע על האפליקציה';
       }
     }
   </script>
