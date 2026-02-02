@@ -18,6 +18,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Habit Tracker – התחברות</title>
   <link rel="stylesheet" href="style.css" />
+  
+  <style>
+    /* עיצוב קליל לכפתור המידע והאנימציה */
+    .info-toggle-btn {
+      background: none;
+      border: 1px solid #3498db;
+      color: #3498db;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .app-info-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out;
+      text-align: right;
+      font-size: 0.9em;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .app-info-content.open {
+      max-height: 1000px; /* מספיק גדול כדי להכיל את הטקסט */
+      margin-top: 15px;
+      padding: 10px;
+      border-top: 1px solid #eee;
+    }
+
+    .app-info-content ul {
+      padding-right: 20px;
+      list-style: none;
+    }
+  </style>
 </head>
 <body>
   <div class="app login-app">
@@ -31,46 +72,49 @@
       <button id="registerBtn">רשום משתמש חדש</button>
 
       <p id="message" style="color:red; margin-top:10px;"></p>
-    </div>
 
-    <section class="app-info">
-      <div class="info-header">
-        <h2>עקביות קטנה. שינוי גדול.</h2>
-        <p><strong>Habit Tracker</strong> היא אפליקציה פשוטה לניהול הרגלים יומיומיים – כזו שעוזרת לך להתקדם צעד־צעד, בלי עומס ובלי רעש.</p>
-      </div>
+      <button class="info-toggle-btn" onclick="toggleInfo()">
+        <span>ℹ️</span> למידע על האפליקציה
+      </button>
 
-      <div class="info-group">
-        <h3>מה עושים בה?</h3>
+      <div id="infoContent" class="app-info-content">
+        <h3>עקביות קטנה. שינוי גדול.</h3>
+        <p><strong>Habit Tracker</strong> עוזרת לך להתקדם צעד־צעד, בלי עומס ובלי רעש.</p>
+        
+        <p><strong>מה עושים בה?</strong></p>
         <ul>
           <li>✔ מגדירים הרגלים אישיים</li>
           <li>✔ מסמנים ביצוע יומי בקליק</li>
-          <li>✔ עוקבים אחרי ההתקדמות לאורך זמן</li>
-          <li>✔ רואים נתונים ברורים – בלי חפירות</li>
+          <li>✔ עוקבים אחרי ההתקדמות</li>
         </ul>
-      </div>
 
-      <div class="info-group">
-        <h3>למה זה עובד?</h3>
-        <p>כי היא פשוטה באמת. אין הגדרות מסובכות, אין גרפים מבלבלים – רק אתה, ההרגלים שלך, והתקדמות יומית אמיתית.</p>
-      </div>
+        <p><strong>למה זה עובד?</strong><br>
+        כי היא פשוטה באמת. בלי גרפים מבלבלים – רק אתה וההתקדמות שלך.</p>
 
-      <div class="info-group">
-        <h3>למי זה מתאים?</h3>
-        <ul>
-          <li>למי שרוצה להתחיל להתאמן</li>
-          <li>למי שרוצה לקרוא יותר</li>
-          <li>למי שרוצה סדר בשגרה</li>
-          <li>ולמי שנמאס מאפליקציות מסובכות</li>
-        </ul>
-      </div>
+        <p><strong>למי זה מתאים?</strong><br>
+        למי שרוצה להתאמן, לקרוא יותר או פשוט לעשות סדר בשגרה.</p>
 
-      <div class="info-footer">
-        <h3>איך מתחילים?</h3>
-        <p>פותחים, מוסיפים הרגל, ומסמנים וי. כל יום. לאט. בעקביות.</p>
-        <p class="tagline"><strong>Habit Tracker – כי שינוי גדול מתחיל בהרגל קטן.</strong></p>
+        <p style="text-align:center; border-top: 1px solid #eee; padding-top: 10px;">
+          <strong>כי שינוי גדול מתחיל בהרגל קטן.</strong>
+        </p>
       </div>
-    </section>
+    </div>
   </div>
+
+  <script>
+    function toggleInfo() {
+      const content = document.getElementById('infoContent');
+      content.classList.toggle('open');
+      
+      // שינוי הטקסט בכפתור בהתאם למצב
+      const btn = document.querySelector('.info-toggle-btn span:last-child');
+      if (content.classList.contains('open')) {
+        btn.textContent = ' סגור מידע';
+      } else {
+        btn.textContent = ' למידע על האפליקציה';
+      }
+    }
+  </script>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
