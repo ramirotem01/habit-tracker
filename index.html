@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
   <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#3498db">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
+  <meta name="theme-color" content="#3498db">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
 
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(() => console.log("PWA Ready"))
-      .catch(err => console.log("PWA Error", err));
-  }
-</script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("PWA Ready"))
+        .catch(err => console.log("PWA Error", err));
+    }
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Habit Tracker – התחברות</title>
@@ -32,9 +32,46 @@
 
       <p id="message" style="color:red; margin-top:10px;"></p>
     </div>
+
+    <section class="app-info">
+      <div class="info-header">
+        <h2>עקביות קטנה. שינוי גדול.</h2>
+        <p><strong>Habit Tracker</strong> היא אפליקציה פשוטה לניהול הרגלים יומיומיים – כזו שעוזרת לך להתקדם צעד־צעד, בלי עומס ובלי רעש.</p>
+      </div>
+
+      <div class="info-group">
+        <h3>מה עושים בה?</h3>
+        <ul>
+          <li>✔ מגדירים הרגלים אישיים</li>
+          <li>✔ מסמנים ביצוע יומי בקליק</li>
+          <li>✔ עוקבים אחרי ההתקדמות לאורך זמן</li>
+          <li>✔ רואים נתונים ברורים – בלי חפירות</li>
+        </ul>
+      </div>
+
+      <div class="info-group">
+        <h3>למה זה עובד?</h3>
+        <p>כי היא פשוטה באמת. אין הגדרות מסובכות, אין גרפים מבלבלים – רק אתה, ההרגלים שלך, והתקדמות יומית אמיתית.</p>
+      </div>
+
+      <div class="info-group">
+        <h3>למי זה מתאים?</h3>
+        <ul>
+          <li>למי שרוצה להתחיל להתאמן</li>
+          <li>למי שרוצה לקרוא יותר</li>
+          <li>למי שרוצה סדר בשגרה</li>
+          <li>ולמי שנמאס מאפליקציות מסובכות</li>
+        </ul>
+      </div>
+
+      <div class="info-footer">
+        <h3>איך מתחילים?</h3>
+        <p>פותחים, מוסיפים הרגל, ומסמנים וי. כל יום. לאט. בעקביות.</p>
+        <p class="tagline"><strong>Habit Tracker – כי שינוי גדול מתחיל בהרגל קטן.</strong></p>
+      </div>
+    </section>
   </div>
 
-  <!-- Firebase JS -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
