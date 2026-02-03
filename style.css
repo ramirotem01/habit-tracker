@@ -10,7 +10,7 @@
 
 body {
   background: #eef2f7;
-  direction: rtl; /* מימין לשמאל */
+  direction: rtl; 
   padding: 0;
   margin: 0;
 }
@@ -28,7 +28,7 @@ body {
 }
 
 /* =======================
-   כרטיסים (דשבורד, היום, היסטוריה)
+   כרטיסים
 ======================= */
 .card {
   background: white;
@@ -87,14 +87,16 @@ li {
   min-height: 40px;
 }
 
+/* תיקון הטקסט - נשאר בשורה אחת עם שלוש נקודות, אבל מוכן ללחיצה */
 li span {
   display: inline-block;
-  max-width: 75%;           /* מספיק מקום להרבה מילים */
+  max-width: 75%;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;   /* אם יותר מדי, יוצג ... */
+  text-overflow: ellipsis;
   font-size: 16px;
   line-height: 1.4;
+  cursor: pointer; /* סימן שהאלמנט לחיץ */
 }
 
 /* =======================
@@ -118,6 +120,7 @@ li input[type="checkbox"] {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 /* =======================
