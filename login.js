@@ -3,6 +3,10 @@ const passwordInput = document.getElementById("password");
 const loginBtn = document.getElementById("loginBtn");
 const registerBtn = document.getElementById("registerBtn");
 const messageEl = document.getElementById("message");
+const captchaContainer = document.getElementById("captcha-container");
+
+// משתנה למעקב אחרי נסיונות כושלים
+let failedAttempts = 0;
 
 // התחברות
 loginBtn.addEventListener("click", () => {
@@ -14,17 +18,42 @@ loginBtn.addEventListener("click", () => {
     return;
   }
 
+  // בדיקה: האם הגענו ל-5 נסיונות וצריך לבדוק קפצ'ה?
+  if (failedAttempts >= 5) {
+    const captchaResponse = grecaptcha.getResponse(); // פונקציה מובנית של גוגל
+    if (captchaResponse.length === 0) {
+      messageEl.style.color = "red";
+      messageEl.textContent = "אנא אמת/י שאינך רובוט";
+      return;
+    }
+  }
+
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
       messageEl.style.color = "green";
       messageEl.textContent = "התחברת בהצלחה!";
+      // איפוס מונה במקרה של הצלחה
+      failedAttempts = 0; 
+      
       setTimeout(() => {
-        window.location.href = "dashboard.html"; // ✅ מעבר לדשבורד
+        window.location.href = "dashboard.html";
       }, 800);
     })
     .catch(err => {
+      failedAttempts++; // העלאת המונה בכל כישלון
+      
+      // הצגת הקפצ'ה אם הגענו ל-5 נסיונות
+      if (failedAttempts >= 5) {
+        captchaContainer.style.display = "block";
+      }
+
       messageEl.style.color = "red";
       messageEl.textContent = "שגיאה בהתחברות: " + err.message;
+      
+      // איפוס הקפצ'ה אם המשתמש נכשל שוב (כדי שיצטרך לסמן שוב)
+      if (typeof grecaptcha !== 'undefined' && failedAttempts > 5) {
+        grecaptcha.reset();
+      }
     });
 });
 
@@ -43,7 +72,7 @@ registerBtn.addEventListener("click", () => {
       messageEl.style.color = "green";
       messageEl.textContent = "נוצר משתמש חדש בהצלחה!";
       setTimeout(() => {
-        window.location.href = "dashboard.html"; // ✅ מעבר לדשבורד
+        window.location.href = "dashboard.html";
       }, 800);
     })
     .catch(err => {
