@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
     auth.signOut()
       .then(() => {
         console.log("התנתקות בוצעה");
-        window.location.href = "login.html";
+        window.location.href = "index.html";
       })
       .catch(err => console.error("שגיאה בהתנתקות:", err));
   });
