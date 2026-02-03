@@ -7,6 +7,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
 
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
@@ -33,18 +35,16 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.3s ease; /* אנימציה חלקה לכל השינויים */
+      transition: all 0.3s ease;
       outline: none;
     }
 
-    /* אפקט ריחף - רקע אפור עדין והגדלה */
     .info-toggle-btn:hover {
       background-color: #f0f0f0;
-      transform: scale(1.05); /* הגדלה קלה */
+      transform: scale(1.05);
       border-color: #2980b9;
     }
 
-    /* תוכן המידע */
     .app-info-content {
       max-height: 0;
       overflow: hidden;
@@ -74,6 +74,13 @@
       margin-top: 10px;
       color: #2c3e50;
     }
+
+    /* עיצוב קונטיינר הקפצ'ה */
+    #captcha-container {
+      display: none; /* מוסתר כברירת מחדל */
+      margin: 15px 0;
+      transform: scale(0.9); /* התאמה קלה לגודל המובייל */
+    }
   </style>
 </head>
 <body>
@@ -83,6 +90,10 @@
     <div class="card login-card">
       <input type="email" id="email" placeholder="כתובת אימייל" />
       <input type="password" id="password" placeholder="סיסמה" />
+
+      <div id="captcha-container">
+        <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
+      </div>
 
       <button id="loginBtn">התחבר</button>
       <button id="registerBtn">רשום משתמש חדש</button>
@@ -97,20 +108,12 @@
       <div id="infoContent" class="app-info-content">
         <h3>עקביות קטנה. שינוי גדול.</h3>
         <p><strong>Habit Tracker</strong> אפליקציה חינמית שעוזרת לך להתקדם צעד־צעד, בלי עומס ובלי רעש.</p>
-        
         <p><strong>מה עושים בה?</strong></p>
         <ul>
           <li>✔ מגדירים הרגלים אישיים</li>
           <li>✔ מסמנים ביצוע יומי בקליק</li>
           <li>✔ עוקבים אחרי ההתקדמות</li>
         </ul>
-
-        <p><strong>למה זה עובד?</strong><br>
-        כי היא פשוטה באמת. רק אתה וההתקדמות שלך.</p>
-
-        <p><strong>למי זה מתאים?</strong><br>
-        למי שרוצה להתאמן, לקרוא יותר או לעשות סדר בשגרה.</p>
-
         <span class="tagline"><strong>כי שינוי גדול מתחיל בהרגל קטן.</strong></span>
       </div>
     </div>
@@ -120,15 +123,30 @@
     function toggleInfo() {
       const content = document.getElementById('infoContent');
       const btnText = document.getElementById('btnText');
-      
       content.classList.toggle('open');
-      
-      // עדכון הטקסט בצורה בטוחה
-      if (content.classList.contains('open')) {
-        btnText.innerText = 'סגור מידע';
-      } else {
-        btnText.innerText = 'למידע על האפליקציה';
+      btnText.innerText = content.classList.contains('open') ? 'סגור מידע' : 'למידע על האפליקציה';
+    }
+
+    // משתנה לספירת נסיונות
+    let loginAttempts = 0;
+
+    // פונקציית העזר שתשלב בתוך ה-login.js שלך (או כאן)
+    function handleFailedLogin() {
+      loginAttempts++;
+      if (loginAttempts >= 5) {
+        document.getElementById('captcha-container').style.display = 'block';
       }
+    }
+
+    function checkCaptcha() {
+      if (loginAttempts >= 5) {
+        const response = grecaptcha.getResponse();
+        if (response.length === 0) {
+          document.getElementById('message').innerText = "אנא אמת שאינך רובוט";
+          return false;
+        }
+      }
+      return true;
     }
   </script>
 
