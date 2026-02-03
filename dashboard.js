@@ -57,10 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isDone) doneCount++;
 
       const li = document.createElement("li");
-      // הסרנו את ה-style הדינמי כדי להשתמש ב-CSS החיצוני
 
       const contentSide = document.createElement("div");
-      contentSide.style = "display: flex; align-items: center; gap: 10px; overflow: hidden; flex: 1;";
+      contentSide.style = "display: flex; align-items: center; overflow: hidden; flex: 1; padding-left: 10px;";
 
       const cb = document.createElement("input");
       cb.type = "checkbox";
@@ -74,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const span = document.createElement("span");
       span.textContent = task.text;
       
-      // הצגת שם מלא בלחיצה
+      // הצגת שם מלא בלחיצה על הטקסט
       span.onclick = () => alert(task.text);
       
       if (isDone) span.style.textDecoration = "line-through";
@@ -88,12 +87,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (task.isTemp) {
         const editBtn = document.createElement("button");
         editBtn.innerHTML = "✏️";
-        editBtn.style = "background:none; border:none; cursor:pointer; margin-left:8px; padding: 5px;";
+        editBtn.style = "background:none; border:none; cursor:pointer; margin-left:8px; padding: 5px; font-size: 16px;";
         editBtn.onclick = () => editTempHabit(task.id, task.text);
 
         const deleteBtn = document.createElement("button");
         deleteBtn.innerHTML = "🗑️";
-        deleteBtn.style = "background:none; border:none; cursor:pointer; padding: 5px;";
+        deleteBtn.style = "background:none; border:none; cursor:pointer; padding: 5px; font-size: 16px;";
         deleteBtn.onclick = () => deleteTempHabit(task.id, task.text);
 
         actionsSide.appendChild(editBtn);
