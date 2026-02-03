@@ -1,5 +1,6 @@
 // firebase.js
 
+// הגדרות הפרויקט שלך מה-Firebase Console
 const firebaseConfig = {
   apiKey: "AIzaSyAwduvJv0z1T5dyV724zmkO83hj9SJFKf4",
   authDomain: "habittrackermultiuser.firebaseapp.com",
@@ -10,9 +11,13 @@ const firebaseConfig = {
   measurementId: "G-HWNWP0C8DE"
 };
 
-// initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// אתחול Firebase - מוודא שהספרייה קיימת לפני האתחול
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 
-// services
-const auth = firebase.auth();
-const db = firebase.firestore();
+// הגדרת השירותים כמשתנים גלובליים (window) כדי שיהיו זמינים בקבצים אחרים (כמו login.js)
+window.auth = firebase.auth();
+window.db = firebase.firestore();
+
+console.log("Firebase initialized successfully");
