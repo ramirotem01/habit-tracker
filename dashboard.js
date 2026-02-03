@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let baseHabits = [];
   let tempHabits = [];
   let dailyStats = {};
-  let myChart = null; // משתנה לשמירת האובייקט של הגרף
+  let myChart = null; 
 
   auth.onAuthStateChanged(user => {
     if (!user) {
@@ -57,10 +57,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isDone) doneCount++;
 
       const li = document.createElement("li");
-      li.style = "display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #eee;";
+      // הסרנו את ה-style הדינמי כדי להשתמש ב-CSS החיצוני
 
       const contentSide = document.createElement("div");
-      contentSide.style = "display: flex; align-items: center; gap: 10px;";
+      contentSide.style = "display: flex; align-items: center; gap: 10px; overflow: hidden; flex: 1;";
 
       const cb = document.createElement("input");
       cb.type = "checkbox";
@@ -73,21 +73,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const span = document.createElement("span");
       span.textContent = task.text;
+      
+      // הצגת שם מלא בלחיצה
+      span.onclick = () => alert(task.text);
+      
       if (isDone) span.style.textDecoration = "line-through";
 
       contentSide.appendChild(cb);
       contentSide.appendChild(span);
 
       const actionsSide = document.createElement("div");
+      actionsSide.style = "display: flex; align-items: center; flex-shrink: 0;";
+
       if (task.isTemp) {
         const editBtn = document.createElement("button");
         editBtn.innerHTML = "✏️";
-        editBtn.style = "background:none; border:none; cursor:pointer; margin-left:8px;";
+        editBtn.style = "background:none; border:none; cursor:pointer; margin-left:8px; padding: 5px;";
         editBtn.onclick = () => editTempHabit(task.id, task.text);
 
         const deleteBtn = document.createElement("button");
         deleteBtn.innerHTML = "🗑️";
-        deleteBtn.style = "background:none; border:none; cursor:pointer;";
+        deleteBtn.style = "background:none; border:none; cursor:pointer; padding: 5px;";
         deleteBtn.onclick = () => deleteTempHabit(task.id, task.text);
 
         actionsSide.appendChild(editBtn);
@@ -103,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (doneTodayEl) doneTodayEl.textContent = doneCount;
     if (progressTodayEl) progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
     
-    renderChart(); // קריאה לגרף במקום לרשימה
+    renderChart();
   }
 
   async function renderChart() {
