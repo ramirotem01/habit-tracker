@@ -18,9 +18,9 @@ loginBtn.addEventListener("click", () => {
     return;
   }
 
-  // בדיקה: האם הגענו ל-5 נסיונות וצריך לבדוק קפצ'ה?
+  // בדיקת קפצ'ה אחרי 5 כשלונות
   if (failedAttempts >= 5) {
-    const captchaResponse = grecaptcha.getResponse(); // פונקציה מובנית של גוגל
+    const captchaResponse = grecaptcha.getResponse();
     if (captchaResponse.length === 0) {
       messageEl.style.color = "red";
       messageEl.textContent = "אנא אמת/י שאינך רובוט";
@@ -32,7 +32,6 @@ loginBtn.addEventListener("click", () => {
     .then(() => {
       messageEl.style.color = "green";
       messageEl.textContent = "התחברת בהצלחה!";
-      // איפוס מונה במקרה של הצלחה
       failedAttempts = 0; 
       
       setTimeout(() => {
@@ -40,17 +39,13 @@ loginBtn.addEventListener("click", () => {
       }, 800);
     })
     .catch(err => {
-      failedAttempts++; // העלאת המונה בכל כישלון
-      
-      // הצגת הקפצ'ה אם הגענו ל-5 נסיונות
+      failedAttempts++;
       if (failedAttempts >= 5) {
         captchaContainer.style.display = "block";
       }
-
       messageEl.style.color = "red";
-      messageEl.textContent = "שגיאה בהתחברות: " + err.message;
+      messageEl.textContent = "שגיאה בהתחברות: פרטים שגויים";
       
-      // איפוס הקפצ'ה אם המשתמש נכשל שוב (כדי שיצטרך לסמן שוב)
       if (typeof grecaptcha !== 'undefined' && failedAttempts > 5) {
         grecaptcha.reset();
       }
@@ -81,9 +76,12 @@ registerBtn.addEventListener("click", () => {
     });
 });
 
-// אם כבר מחובר, כנס ישר לדשבורד
+// בדיקה אם המשתמש כבר מחובר
 auth.onAuthStateChanged(user => {
   if (user) {
-    window.location.href = "dashboard.html";
+    // אם המשתמש מחובר ונמצא בדף הכניסה, העבר אותו לדשבורד
+    if (window.location.pathname.includes("index.html") || window.location.pathname.endsWith("/")) {
+       window.location.href = "dashboard.html";
+    }
   }
 });
