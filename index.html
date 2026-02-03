@@ -139,7 +139,7 @@
     }
 
     function checkCaptcha() {
-      if (loginAttempts >= 5) {
+      if (loginAttempts >= 3) {
         const response = grecaptcha.getResponse();
         if (response.length === 0) {
           document.getElementById('message').innerText = "אנא אמת שאינך רובוט";
