@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =====================
   auth.onAuthStateChanged(user => {
     if (!user) {
-      console.log("משתמש לא מחובר, מפנה ל-login.html");
+      console.log("משתמש לא מחובר, מפנה ל-index.html");
       window.location.href = "index.html";
       return;
     }
