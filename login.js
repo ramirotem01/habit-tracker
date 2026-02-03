@@ -19,7 +19,7 @@ loginBtn.addEventListener("click", () => {
   }
 
   // בדיקה: האם הגענו ל-5 נסיונות וצריך לבדוק קפצ'ה?
-  if (failedAttempts >= 5) {
+  if (failedAttempts >= 3) {
     const captchaResponse = grecaptcha.getResponse(); // פונקציה מובנית של גוגל
     if (captchaResponse.length === 0) {
       messageEl.style.color = "red";
