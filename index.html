@@ -14,38 +14,114 @@
   <link rel="stylesheet" href="style.css" />
   
   <style>
-    /* העיצוב המקורי שלך */
+    /* שדרוג העיצוב בדומה לדף הרישום */
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px; /* מרווח נקי בין השדות */
+      margin-top: 20px;
+    }
+
+    .login-card {
+      padding: 30px !important;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 1.8em;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    /* כפתור התחברות בולט (כמו כפתור הרישום) */
+    .action-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: background 0.3s;
+      margin-top: 10px;
+    }
+
+    .action-btn:hover {
+      background-color: #2980b9;
+    }
+
+    /* כפתור מעבר לרישום ושכחתי סיסמה - במראה העדין החדש */
+    .secondary-btn {
+      background: none;
+      border: none;
+      color: #34495e;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9em;
+      font-weight: normal; /* כיתוב רגיל כפי שביקשת */
+      transition: all 0.3s ease;
+      display: inline-block;
+      width: fit-content;
+      margin: 5px auto;
+      text-decoration: none;
+    }
+
+    .secondary-btn:hover {
+      background-color: #f5f6f7;
+      color: #000;
+    }
+
+    /* עיצוב המידע על האפליקציה */
     .info-toggle-btn {
       background: none;
-      border: 1px solid #3498db;
-      color: #3498db;
+      border: 1px solid #eee;
+      color: #7f8c8d;
       padding: 8px 18px;
       border-radius: 20px;
       cursor: pointer;
       margin: 20px auto 10px auto;
-      font-weight: bold;
+      font-weight: normal;
       display: flex;
       align-items: center;
       gap: 8px;
       transition: all 0.3s ease;
-      outline: none;
     }
-    .info-toggle-btn:hover { background-color: #f0f0f0; transform: scale(1.05); border-color: #2980b9; }
-    .app-info-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; text-align: right; font-size: 0.9em; line-height: 1.6; color: #333; }
-    .app-info-content.open { max-height: 1000px; margin-top: 15px; padding: 15px; border-top: 1px solid #eee; }
+
+    .info-toggle-btn:hover {
+      background-color: #fafafa;
+      border-color: #ddd;
+    }
+
+    .app-info-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out;
+      text-align: right;
+      font-size: 0.9em;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .app-info-content.open {
+      max-height: 1000px;
+      margin-top: 15px;
+      padding: 15px;
+      border-top: 1px solid #eee;
+    }
+
     .app-info-content ul { padding-right: 20px; list-style: none; margin: 10px 0; }
-    .tagline { text-align: center; display: block; margin-top: 10px; color: #2c3e50; }
-    #captcha-container { display: none; margin: 15px 0; transform: scale(0.9); }
+    .tagline { text-align: center; display: block; margin-top: 10px; color: #2c3e50; font-weight: bold; }
     
-    /* הלינק החדש לשכחתי סיסמה */
-    .forgot-link {
-      display: block;
-      margin: 10px 0;
-      color: #3498db;
-      text-decoration: none;
-      font-size: 0.85em;
-      cursor: pointer;
-    }
+    #captcha-container { display: none; margin: 10px 0; transform: scale(0.9); }
+    #message { min-height: 20px; text-align: center; font-size: 0.9em; }
   </style>
 </head>
 <body>
@@ -53,35 +129,41 @@
     <h1>🔐 התחברות</h1>
 
     <div class="card login-card">
-      <input type="email" id="email" placeholder="כתובת אימייל" />
-      <input type="password" id="password" placeholder="סיסמה" />
-
-      <div id="captcha-container">
-        <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
-      </div>
-
-      <button id="loginBtn">התחבר</button>
-      <button id="goToRegisterBtn" onclick="window.location.href='register.html'">רשום משתמש חדש</button>
+      <p style="text-align: center; color: #666; margin-bottom: 20px;">הזן פרטים כדי להמשיך לעקוב אחר ההרגלים שלך</p>
       
-      <a class="forgot-link" id="forgotPasswordLink">שכחתי סיסמה? לחץ כאן לאיפוס</a>
+      <div class="login-container">
+        <input type="email" id="email" placeholder="כתובת אימייל" />
+        <input type="password" id="password" placeholder="סיסמה" />
 
-      <p id="message" style="color:red; margin-top:10px;"></p>
+        <div id="captcha-container">
+          <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
+        </div>
 
-      <button class="info-toggle-btn" id="infoBtn" onclick="toggleInfo()">
-        <span>ℹ️</span>
-        <span id="btnText">למידע על האפליקציה</span>
-      </button>
+        <button id="loginBtn" class="action-btn">התחבר למערכת</button>
+        
+        <div style="text-align: center; display: flex; flex-direction: column; gap: 5px;">
+            <button id="goToRegisterBtn" class="secondary-btn" onclick="window.location.href='register.html'">רשום משתמש חדש</button>
+            <button id="forgotPasswordLink" class="secondary-btn">שכחתי סיסמה? לחץ לאיפוס</button>
+        </div>
 
-      <div id="infoContent" class="app-info-content">
-        <h3>עקביות קטנה. שינוי גדול.</h3>
-        <p><strong>Habit Tracker</strong> אפליקציה חינמית שעוזרת לך להתקדם צעד־צעד, בלי עומס ובלי רעש.</p>
-        <p><strong>מה עושים בה?</strong></p>
-        <ul>
-          <li>✔ מגדירים הרגלים אישיים</li>
-          <li>✔ מסמנים ביצוע יומי בקליק</li>
-          <li>✔ עוקבים אחרי ההתקדמות</li>
-        </ul>
-        <span class="tagline"><strong>כי שינוי גדול מתחיל בהרגל קטן.</strong></span>
+        <p id="message" style="color:red;"></p>
+
+        <button class="info-toggle-btn" id="infoBtn" onclick="toggleInfo()">
+          <span>ℹ️</span>
+          <span id="btnText">למידע על האפליקציה</span>
+        </button>
+
+        <div id="infoContent" class="app-info-content">
+          <h3>עקביות קטנה. שינוי גדול.</h3>
+          <p><strong>Habit Tracker</strong> אפליקציה חינמית שעוזרת לך להתקדם צעד־צעד, בלי עומס ובלי רעש.</p>
+          <p><strong>מה עושים בה?</strong></p>
+          <ul>
+            <li>✔ מגדירים הרגלים אישיים</li>
+            <li>✔ מסמנים ביצוע יומי בקליק</li>
+            <li>✔ עוקבים אחרי ההתקדמות</li>
+          </ul>
+          <span class="tagline">כי שינוי גדול מתחיל בהרגל קטן.</span>
+        </div>
       </div>
     </div>
   </div>
