@@ -42,7 +42,7 @@
       background-color: #27ae60;
     }
     
-    /* הכפתור עם הכיתוב הכהה והרקע העדין */
+    /* כפתור חזרה עם כיתוב רגיל (לא Bold) ורקע עדין */
     .back-btn {
       background: none;
       border: none;
@@ -52,21 +52,22 @@
       cursor: pointer;
       margin: 15px auto 0 auto;
       font-size: 0.9em;
-      font-weight: bold;
+      font-weight: normal; /* ביטול ה-Bold */
       transition: all 0.3s ease;
       display: inline-block;
       width: fit-content;
+      text-decoration: none;
     }
 
     .back-btn:hover {
-      background-color: #f5f6f7; /* רקע אפור בהיר ועדין מאוד */
-      color: #000; /* הכיתוב מתחזק לשחור */
+      background-color: #f5f6f7; /* רקע אפור עדין מאוד */
+      color: #000;
     }
 
     #regMessage {
       min-height: 20px;
-      font-weight: bold;
       text-align: center;
+      font-size: 0.9em;
     }
   </style>
 </head>
