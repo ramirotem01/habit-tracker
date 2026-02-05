@@ -6,31 +6,26 @@
   <title>Habit Tracker – רישום משתמש</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* שיפורים ספציפיים לדף הרישום כדי למנוע צפיפות */
     .register-container {
       display: flex;
       flex-direction: column;
-      gap: 15px; /* מרווח קבוע בין כל שדה */
+      gap: 15px;
       margin-top: 20px;
     }
-
     .register-card {
-      padding: 30px !important; /* יותר מרחב פנימי לכרטיסייה */
+      padding: 30px !important;
     }
-
     h1 {
       margin-bottom: 25px;
       font-size: 1.8em;
     }
-
     input {
       width: 100%;
       padding: 12px;
       border: 1px solid #ddd;
       border-radius: 8px;
-      box-sizing: border-box; /* מבטיח שהפדינג לא ינפח את השדה */
+      box-sizing: border-box;
     }
-
     .action-btn {
       background-color: #2ecc71;
       color: white;
@@ -43,43 +38,41 @@
       transition: background 0.3s;
       margin-top: 10px;
     }
-
     .action-btn:hover {
       background-color: #27ae60;
     }
-
     .back-btn {
       background: none;
       border: none;
       color: #7f8c8d;
       text-decoration: underline;
       cursor: pointer;
-      margin-top: 10px;
+      margin-top: 15px;
       font-size: 0.9em;
+      transition: color 0.3s ease;
     }
-
+    .back-btn:hover {
+      color: #bdc3c7;
+      text-decoration: none;
+    }
     #regMessage {
       min-height: 20px;
       font-weight: bold;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <div class="app login-app">
     <h1>📝 יצירת חשבון חדש</h1>
-    
     <div class="card login-card register-card">
       <p style="text-align: center; color: #666; margin-bottom: 20px;">הצטרף אלינו והתחל לעקוב אחר ההרגלים שלך</p>
-      
       <div class="register-container">
         <input type="email" id="regEmail" placeholder="כתובת אימייל" />
         <input type="password" id="regPassword" placeholder="בחר סיסמה (6+ תווים)" />
         <input type="password" id="confirmPassword" placeholder="הקלד שוב את הסיסמה" />
-
         <button id="executeRegisterBtn" class="action-btn">צור חשבון והתחל</button>
-        
-        <p id="regMessage" style="color:red; text-align:center;"></p>
-        
+        <p id="regMessage" style="color:red;"></p>
         <button class="back-btn" onclick="window.location.href='index.html'">כבר יש לי חשבון? חזרה להתחברות</button>
       </div>
     </div>
