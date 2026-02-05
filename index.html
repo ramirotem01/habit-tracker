@@ -1,18 +1,51 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3498db">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Habit Tracker – התחברות</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  
   <style>
-    .info-toggle-btn { background: none; border: 1px solid #3498db; color: #3498db; padding: 8px 18px; border-radius: 20px; cursor: pointer; margin: 20px auto 10px auto; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
+    /* העיצוב המקורי שלך */
+    .info-toggle-btn {
+      background: none;
+      border: 1px solid #3498db;
+      color: #3498db;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      margin: 20px auto 10px auto;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+    .info-toggle-btn:hover { background-color: #f0f0f0; transform: scale(1.05); border-color: #2980b9; }
     .app-info-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; text-align: right; font-size: 0.9em; line-height: 1.6; color: #333; }
     .app-info-content.open { max-height: 1000px; margin-top: 15px; padding: 15px; border-top: 1px solid #eee; }
+    .app-info-content ul { padding-right: 20px; list-style: none; margin: 10px 0; }
+    .tagline { text-align: center; display: block; margin-top: 10px; color: #2c3e50; }
     #captcha-container { display: none; margin: 15px 0; transform: scale(0.9); }
-    .forgot-link { display: block; margin-top: 15px; color: #3498db; text-decoration: none; font-size: 0.9em; cursor: pointer; }
-    .forgot-link:hover { text-decoration: underline; }
+    
+    /* הלינק החדש לשכחתי סיסמה */
+    .forgot-link {
+      display: block;
+      margin: 10px 0;
+      color: #3498db;
+      text-decoration: none;
+      font-size: 0.85em;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -28,9 +61,9 @@
       </div>
 
       <button id="loginBtn">התחבר</button>
-      <button id="goToRegister" onclick="window.location.href='register.html'">ליצירת משתמש חדש</button>
-
-      <a class="forgot-link" id="forgotPasswordLink">שכחתי סיסמה...</a>
+      <button id="goToRegisterBtn" onclick="window.location.href='register.html'">רשום משתמש חדש</button>
+      
+      <a class="forgot-link" id="forgotPasswordLink">שכחתי סיסמה? לחץ כאן לאיפוס</a>
 
       <p id="message" style="color:red; margin-top:10px;"></p>
 
@@ -41,7 +74,14 @@
 
       <div id="infoContent" class="app-info-content">
         <h3>עקביות קטנה. שינוי גדול.</h3>
-        <p><strong>Habit Tracker</strong> עוזרת לך להתקדם צעד־צעד.</p>
+        <p><strong>Habit Tracker</strong> אפליקציה חינמית שעוזרת לך להתקדם צעד־צעד, בלי עומס ובלי רעש.</p>
+        <p><strong>מה עושים בה?</strong></p>
+        <ul>
+          <li>✔ מגדירים הרגלים אישיים</li>
+          <li>✔ מסמנים ביצוע יומי בקליק</li>
+          <li>✔ עוקבים אחרי ההתקדמות</li>
+        </ul>
+        <span class="tagline"><strong>כי שינוי גדול מתחיל בהרגל קטן.</strong></span>
       </div>
     </div>
   </div>
