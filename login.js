@@ -13,49 +13,44 @@ loginBtn.addEventListener("click", () => {
   const password = passwordInput.value;
 
   if (!email || !password) {
+    messageEl.style.color = "red";
     messageEl.textContent = "אנא מלא/י אימייל וסיסמה";
     return;
-  }
-
-  if (failedAttempts >= 5) {
-    const captchaResponse = grecaptcha.getResponse();
-    if (captchaResponse.length === 0) {
-      messageEl.textContent = "אנא אמת/י שאינך רובוט";
-      return;
-    }
   }
 
   auth.signInWithEmailAndPassword(email, password)
     .then(() => {
       messageEl.style.color = "green";
       messageEl.textContent = "התחברת בהצלחה!";
-      window.location.href = "dashboard.html";
+      setTimeout(() => { window.location.href = "dashboard.html"; }, 800);
     })
     .catch(err => {
       failedAttempts++;
       if (failedAttempts >= 5) captchaContainer.style.display = "block";
       messageEl.style.color = "red";
-      messageEl.textContent = "פרטים שגויים. נסה שוב.";
+      messageEl.textContent = "שגיאה בהתחברות: פרטים שגויים";
     });
 });
 
-// שכחתי סיסמה
+// מנגנון שכחתי סיסמה
 forgotPasswordLink.addEventListener("click", (e) => {
     e.preventDefault();
     const email = emailInput.value.trim();
+    
     if (!email) {
         messageEl.style.color = "red";
-        messageEl.textContent = "הזן אימייל בשדה למעלה כדי לקבל קישור לאיפוס";
+        messageEl.textContent = "כדי לאפס סיסמה, הזן קודם את כתובת המייל שלך בשדה למעלה.";
         return;
     }
+
     auth.sendPasswordResetEmail(email)
         .then(() => {
             messageEl.style.color = "green";
-            messageEl.textContent = "אימייל לאיפוס נשלח! בדוק את תיבת הדואר.";
+            messageEl.textContent = "איפוס סיסמה נשלח בהצלחה למייל! בדוק את תיבת הדואר (וגם את הספאם).";
         })
         .catch(err => {
             messageEl.style.color = "red";
-            messageEl.textContent = "שגיאה: " + err.message;
+            messageEl.textContent = "שגיאה בשליחת האיפוס: " + err.message;
         });
 });
 
