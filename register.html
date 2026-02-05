@@ -16,7 +16,7 @@
       padding: 30px !important;
     }
     h1 {
-      margin-bottom: 25px;
+      margin-bottom: 10px;
       font-size: 1.8em;
     }
     input {
@@ -41,21 +41,28 @@
     .action-btn:hover {
       background-color: #27ae60;
     }
-    /* הכפתור המתוקן */
+    
+    /* הכפתור עם הכיתוב הכהה והרקע העדין */
     .back-btn {
       background: none;
       border: none;
-      color: #bdc3c7; /* אפור בהיר עדין */
-      text-decoration: none;
+      color: #34495e; /* כיתוב כהה */
+      padding: 8px 15px;
+      border-radius: 20px;
       cursor: pointer;
-      margin-top: 15px;
+      margin: 15px auto 0 auto;
       font-size: 0.9em;
+      font-weight: bold;
       transition: all 0.3s ease;
+      display: inline-block;
+      width: fit-content;
     }
+
     .back-btn:hover {
-      color: #7f8c8d; /* הופך לכהה יותר */
-      text-decoration: underline;
+      background-color: #f5f6f7; /* רקע אפור בהיר ועדין מאוד */
+      color: #000; /* הכיתוב מתחזק לשחור */
     }
+
     #regMessage {
       min-height: 20px;
       font-weight: bold;
@@ -74,7 +81,9 @@
         <input type="password" id="confirmPassword" placeholder="הקלד שוב את הסיסמה" />
         <button id="executeRegisterBtn" class="action-btn">צור חשבון והתחל</button>
         <p id="regMessage" style="color:red;"></p>
-        <button class="back-btn" onclick="window.location.href='index.html'">כבר יש לי חשבון? חזרה להתחברות</button>
+        <div style="text-align: center;">
+          <button class="back-btn" onclick="window.location.href='index.html'">כבר יש לי חשבון? חזרה להתחברות</button>
+        </div>
       </div>
     </div>
   </div>
