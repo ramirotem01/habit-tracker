@@ -1,1 +1,206 @@
 
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>הבלוג של Habit Tracker - טיפים להצלחה</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2c3e50;
+      --text-muted: #7f8c8d;
+      --bg-light: #f4f7f6;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    .blog-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    header h1 {
+      color: var(--secondary-color);
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.1em;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* תשתית המאמרים */
+    .articles-list {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .article-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .article-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+
+    .article-content {
+      padding: 25px;
+    }
+
+    .article-category {
+      color: var(--primary-color);
+      font-size: 0.85em;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .article-card h2 {
+      margin: 0 0 12px 0;
+      color: var(--secondary-color);
+      font-size: 1.6em;
+    }
+
+    .article-excerpt {
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .article-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9em;
+      color: var(--text-muted);
+      border-top: 1px solid #eee;
+      padding-top: 15px;
+    }
+
+    .read-more {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .read-more:hover {
+      text-decoration: underline;
+    }
+
+    /* עיצוב לניוזלטר בתחתית */
+    .newsletter {
+      background: var(--secondary-color);
+      color: white;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .newsletter input {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      width: 60%;
+      margin: 10px 0;
+    }
+
+    .newsletter button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="blog-container">
+    <a href="index.html" class="back-link">← חזרה לאפליקציה</a>
+    
+    <header>
+      <h1>הבלוג שלנו ✍️</h1>
+      <p>כלים, טיפים ומחקרים על בניית הרגלים ושיפור הפרודוקטיביות</p>
+    </header>
+
+    <div class="articles-list">
+      
+      <article class="article-card">
+        <div class="article-content">
+          <span class="article-category">טיפים למתחילים</span>
+          <h2>איך לבנות הרגל חדש ב-21 יום?</h2>
+          <p class="article-excerpt">
+            רבים שואלים כמה זמן באמת לוקח להטמיע הרגל חדש. במאמר זה נבין את המדע שמאחורי הנושא וניתן לכם 3 כלים פרקטיים להתחלה חזקה...
+          </p>
+          <div class="article-meta">
+            <span>📅 7 בפברואר 2026</span>
+            <a href="articles/habit-building.html" class="read-more">קרא עוד</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="article-card">
+        <div class="article-content">
+          <span class="article-category">פרודוקטיביות</span>
+          <h2>ניהול זמן מול ניהול אנרגיה</h2>
+          <p class="article-excerpt">
+            האם אי פעם הרגשתם שיש לכם זמן אבל אין לכם כוח? גלו למה כדאי לכם להתחיל לנהל את רמות האנרגיה שלכם במקום את הדקות בלוח השנה...
+          </p>
+          <div class="article-meta">
+            <span>📅 1 בפברואר 2026</span>
+            <a href="articles/energy-management.html" class="read-more">קרא עוד</a>
+          </div>
+        </div>
+      </article>
+
+      </div>
+
+    <section class="newsletter">
+      <h3>רוצים לקבל טיפים למייל?</h3>
+      <p>הירשמו לניוזלטר שלנו (מבטיחים שלא להציק!)</p>
+      <input type="email" placeholder="הכנס אימייל שלך...">
+      <br>
+      <button>אני רוצה להירשם</button>
+    </section>
+
+    <footer style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.9em;">
+      Habit Tracker Blog &copy; 2026
+    </footer>
+  </div>
+
+</body>
+</html>
