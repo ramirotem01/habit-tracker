@@ -24,6 +24,14 @@
       z-index: 1001;
       color: #34495e;
       user-select: none;
+      background: white;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     .sidebar {
@@ -56,7 +64,6 @@
       color: #3498db;
     }
 
-    /* שכבת רקע כהה כשהתפריט פתוח */
     .overlay {
       display: none;
       position: fixed;
@@ -175,8 +182,8 @@
 <body>
 
   <div id="sideMenu" class="sidebar">
-    <a href="about.html">מידע על האפליקציה</a>
-    <a href="blog.html">בלוג</a>
+    <a href="info.html">ℹ️ מידע על האפליקציה</a>
+    <a href="blog.html">✍️ בלוג</a>
   </div>
   
   <div id="overlay" class="overlay" onclick="closeMenu()"></div>
@@ -208,7 +215,7 @@
 
         <button class="info-toggle-btn" id="infoBtn" onclick="toggleInfo()">
           <span>ℹ️</span>
-          <span id="btnText">למידע על האפליקציה</span>
+          <span id="btnText">למידע מהיר (כאן בדף)</span>
         </button>
 
         <div id="infoContent" class="app-info-content">
@@ -232,7 +239,6 @@
   <script src="firebase.js"></script>
   <script src="login.js"></script>
   <script>
-    // פונקציות לתפריט ההמבורגר
     function toggleMenu() {
       const menu = document.getElementById("sideMenu");
       const overlay = document.getElementById("overlay");
@@ -249,12 +255,11 @@
       document.getElementById("overlay").style.display = "none";
     }
 
-    // פונקציית המידע המקורית
     function toggleInfo() {
       const content = document.getElementById('infoContent');
       const btnText = document.getElementById('btnText');
       content.classList.toggle('open');
-      btnText.innerText = content.classList.contains('open') ? 'סגור מידע' : 'למידע על האפליקציה';
+      btnText.innerText = content.classList.contains('open') ? 'סגור מידע' : 'למידע מהיר (כאן בדף)';
     }
   </script>
 </body>
