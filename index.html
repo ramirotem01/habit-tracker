@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -14,69 +15,11 @@
   <link rel="stylesheet" href="style.css" />
   
   <style>
-    /* --- עיצוב תפריט המבורגר --- */
-    .menu-icon {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      font-size: 30px;
-      cursor: pointer;
-      z-index: 1001;
-      color: #34495e;
-      user-select: none;
-      background: white;
-      width: 45px;
-      height: 45px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    .sidebar {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      z-index: 1000;
-      top: 0;
-      right: 0;
-      background-color: #fff;
-      overflow-x: hidden;
-      transition: 0.4s;
-      padding-top: 80px;
-      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-      text-align: right;
-    }
-
-    .sidebar a {
-      padding: 15px 25px;
-      text-decoration: none;
-      font-size: 1.2em;
-      color: #2c3e50;
-      display: block;
-      transition: 0.3s;
-      border-bottom: 1px solid #f5f5f5;
-    }
-
-    .sidebar a:hover {
-      background-color: #f8f9fa;
-      color: #3498db;
-    }
-
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.3);
-      z-index: 999;
-    }
-
     /* שדרוג העיצוב בדומה לדף הרישום */
     .login-container {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 15px; /* מרווח נקי בין השדות */
       margin-top: 20px;
     }
 
@@ -97,6 +40,7 @@
       box-sizing: border-box;
     }
 
+    /* כפתור התחברות בולט (כמו כפתור הרישום) */
     .action-btn {
       background-color: #3498db;
       color: white;
@@ -114,6 +58,7 @@
       background-color: #2980b9;
     }
 
+    /* כפתור מעבר לרישום ושכחתי סיסמה - במראה העדין החדש */
     .secondary-btn {
       background: none;
       border: none;
@@ -122,7 +67,7 @@
       border-radius: 20px;
       cursor: pointer;
       font-size: 0.9em;
-      font-weight: normal;
+      font-weight: normal; /* כיתוב רגיל כפי שביקשת */
       transition: all 0.3s ease;
       display: inline-block;
       width: fit-content;
@@ -135,6 +80,7 @@
       color: #000;
     }
 
+    /* עיצוב המידע על האפליקציה */
     .info-toggle-btn {
       background: none;
       border: 1px solid #eee;
@@ -180,16 +126,6 @@
   </style>
 </head>
 <body>
-
-  <div id="sideMenu" class="sidebar">
-    <a href="info.html">ℹ️ מידע על האפליקציה</a>
-    <a href="blog.html">✍️ בלוג</a>
-  </div>
-  
-  <div id="overlay" class="overlay" onclick="closeMenu()"></div>
-
-  <div class="menu-icon" onclick="toggleMenu()">☰</div>
-
   <div class="app login-app">
     <h1>🔐 התחברות</h1>
 
@@ -215,7 +151,7 @@
 
         <button class="info-toggle-btn" id="infoBtn" onclick="toggleInfo()">
           <span>ℹ️</span>
-          <span id="btnText">למידע מהיר (כאן בדף)</span>
+          <span id="btnText">למידע על האפליקציה</span>
         </button>
 
         <div id="infoContent" class="app-info-content">
@@ -239,27 +175,11 @@
   <script src="firebase.js"></script>
   <script src="login.js"></script>
   <script>
-    function toggleMenu() {
-      const menu = document.getElementById("sideMenu");
-      const overlay = document.getElementById("overlay");
-      if (menu.style.width === "250px") {
-        closeMenu();
-      } else {
-        menu.style.width = "250px";
-        overlay.style.display = "block";
-      }
-    }
-
-    function closeMenu() {
-      document.getElementById("sideMenu").style.width = "0";
-      document.getElementById("overlay").style.display = "none";
-    }
-
     function toggleInfo() {
       const content = document.getElementById('infoContent');
       const btnText = document.getElementById('btnText');
       content.classList.toggle('open');
-      btnText.innerText = content.classList.contains('open') ? 'סגור מידע' : 'למידע מהיר (כאן בדף)';
+      btnText.innerText = content.classList.contains('open') ? 'סגור מידע' : 'למידע על האפליקציה';
     }
   </script>
 </body>
