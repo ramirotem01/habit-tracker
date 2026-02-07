@@ -1,1 +1,173 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מידע על Habit Tracker - לצמוח בפשטות</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2c3e50;
+      --bg-color: #f9f9f9;
+      --white: #ffffff;
+    }
 
+    body {
+      background-color: var(--bg-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: var(--secondary-color);
+    }
+
+    .info-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: bold;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 20px;
+      transition: transform 0.2s;
+    }
+
+    .back-btn:hover {
+      transform: translateX(5px);
+    }
+
+    .hero-section {
+      text-align: center;
+      padding: 30px 20px;
+      background: var(--white);
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      margin-bottom: 30px;
+    }
+
+    .hero-section h1 {
+      color: var(--primary-color);
+      font-size: 2.2em;
+      margin-bottom: 10px;
+    }
+
+    .hero-section p {
+      font-size: 1.2em;
+      color: #7f8c8d;
+    }
+
+    .features-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--white);
+      padding: 20px;
+      border-radius: 12px;
+      border-right: 5px solid var(--primary-color);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+
+    .feature-card h3 {
+      margin-top: 0;
+      color: var(--secondary-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .feature-card p {
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 0;
+    }
+
+    .cta-section {
+      text-align: center;
+      margin-top: 40px;
+      padding: 30px;
+      background: var(--secondary-color);
+      color: white;
+      border-radius: 15px;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: var(--primary-color);
+      color: white;
+      padding: 12px 30px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 15px;
+      transition: background 0.3s;
+    }
+
+    .cta-btn:hover {
+      background: #2980b9;
+    }
+
+    .free-badge {
+      display: inline-block;
+      background: #27ae60;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="info-container">
+    <a href="index.html" class="back-btn">→ חזרה להתחברות</a>
+
+    <section class="hero-section">
+      <span class="free-badge">100% חינמית</span>
+      <h1>Habit Tracker</h1>
+      <p>הופכים פעולות קטנות להצלחות גדולות.</p>
+    </section>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>🎯 פשטות היא שם המשחק</h3>
+        <p>בלי טפסים מורכבים ובלי הגדרות מעיקות. פשוט מגדירים הרגל, ומסמנים V. הממשק נקי כדי שתוכלו להתרכז במה שחשוב – הביצוע שלכם.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>📈 מעקב צמיחה אישי</h3>
+        <p>צפו בהתקדמות שלכם בזמן אמת. האפליקציה עוזרת לכם לראות את הרצף (Streak) שלכם, מה שמעלה את המוטיבציה להמשיך ולא להפסיק.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>⚡ ניהול משימות חכם</h3>
+        <p>לא רק הרגלים – גם משימות יומיות. רכזו את כל מה שחשוב לכם במקום אחד, נגיש ומהיר, מכל מכשיר.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>🌱 שינוי מתוך התמדה</h3>
+        <p>מחקרים מראים ששינוי אמיתי מגיע מהתמדה בפעולות קטנות. Habit Tracker נבנתה בדיוק בשביל הצעדים הקטנים האלו שמרכיבים חיים טובים יותר.</p>
+      </div>
+    </div>
+
+    <section class="cta-section">
+      <h2>מוכנים להתחיל את השינוי?</h2>
+      <p>הצטרפו למשתמשים שכבר מנהלים את היום שלהם נכון יותר.</p>
+      <a href="register.html" class="cta-btn">צרו חשבון בחינם עכשיו</a>
+    </section>
+
+    <p style="text-align: center; font-size: 0.8em; color: #bdc3c7; margin-top: 30px;">
+      Habit Tracker &copy; 2026 | כל הזכויות שמורות
+    </p>
+  </div>
+
+</body>
+</html>
