@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3498db">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,7 +15,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Habit Tracker – התחברות</title>
-  <link rel="stylesheet" href="style.css" />
+  
+  <link rel="stylesheet" href="style.css?v=1.1" />
   
   <style>
     /* --- עיצוב תפריט המבורגר --- */
@@ -56,7 +61,6 @@
       color: #3498db;
     }
 
-    /* שכבת רקע כהה כשהתפריט פתוח */
     .overlay {
       display: none;
       position: fixed;
@@ -65,7 +69,6 @@
       z-index: 999;
     }
 
-    /* שדרוג העיצוב בדומה לדף הרישום */
     .login-container {
       display: flex;
       flex-direction: column;
@@ -229,10 +232,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  <script src="firebase.js"></script>
-  <script src="login.js"></script>
+  <script src="firebase.js?v=1.1"></script>
+  <script src="login.js?v=1.1"></script>
   <script>
-    // פונקציות לתפריט ההמבורגר
     function toggleMenu() {
       const menu = document.getElementById("sideMenu");
       const overlay = document.getElementById("overlay");
@@ -249,7 +251,6 @@
       document.getElementById("overlay").style.display = "none";
     }
 
-    // פונקציית המידע המקורית
     function toggleInfo() {
       const content = document.getElementById('infoContent');
       const btnText = document.getElementById('btnText');
