@@ -83,7 +83,7 @@ forgotPasswordLink.addEventListener("click", (e) => {
                     messageEl.textContent = "כתובת האימייל אינה תקינה.";
                     break;
                 case "auth/unauthorized-domain":
-                    messageEl.textContent = "שגיאת אבטחה: הדומיין (GitHub) לא מאושר ב-Firebase Console.";
+                    messageEl.textContent = "שגיאת אבטחה: הדומיין לא מאושר ב-Firebase Console.";
                     break;
                 default:
                     messageEl.textContent = "שגיאה בשליחת האיפוס: " + err.message;
@@ -98,3 +98,16 @@ auth.onAuthStateChanged(user => {
         window.location.href = "dashboard.html";
     }
 });
+
+/**
+ * מנגנון "השמדה עצמית" ל-Cache
+ * אם הקובץ הזה נטען, אנחנו מוודאים שהדפדפן לא מחזיק Service Workers ישנים מהעבר
+ */
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+        for (let registration of registrations) {
+            registration.unregister();
+            console.log("Service Worker cleared to prevent old version caching.");
+        }
+    });
+}
