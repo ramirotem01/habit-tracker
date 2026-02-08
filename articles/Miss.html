@@ -4,147 +4,184 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Quest - האתגר היומי</title>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #007aff;
             --accent: #ff2d55;
-            --bg: #eef7ff;
+            --bg: #f0f9ff;
             --card-white: #ffffff;
+            --text-main: #0c4a6e;
         }
 
         body {
             font-family: 'Heebo', sans-serif;
-            background-color: var(--bg);
-            background-image: radial-gradient(#d1e9ff 1px, transparent 1px);
-            background-size: 20px 20px;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
             margin: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         .game-container {
             text-align: center;
             width: 100%;
-            max-width: 450px;
+            max-width: 500px;
             padding: 20px;
-            position: relative;
         }
 
-        /* כותרת בסגנון Level Up */
+        /* כותרת LEVEL UP */
         .level-up-title {
-            font-size: 3.5rem;
+            font-size: 3.8rem;
             font-weight: 900;
             color: var(--primary);
-            text-transform: uppercase;
             margin: 0;
             line-height: 1;
-            text-shadow: 3px 3px 0px #fff, 6px 6px 0px rgba(0,122,255,0.2);
-            margin-bottom: 5px;
+            text-shadow: 4px 4px 0px #fff;
+            letter-spacing: -2px;
         }
 
+        /* כותרת משנה משופרת - גדולה ובולטת */
         .subtitle {
-            font-weight: 400;
-            color: #5580aa;
-            margin-bottom: 30px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0369a1;
+            margin-top: 10px;
+            margin-bottom: 35px;
+            display: block;
         }
 
-        /* חלון המשימה - עיצוב משחקי */
+        /* חלון המשימה */
         .quest-card {
             background: var(--card-white);
             border-radius: 30px;
-            padding: 40px 20px;
-            box-shadow: 0 20px 0px #bcdffb, 0 30px 50px rgba(0,0,0,0.1);
-            border: 4px solid var(--primary);
+            padding: 50px 25px;
+            box-shadow: 0 15px 35px rgba(0, 122, 255, 0.15);
+            border: 3px solid var(--primary);
             position: relative;
-            min-height: 150px;
+            min-height: 160px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+            cursor: pointer;
         }
 
-        /* תגית "QUEST" בצד */
+        /* אפקט תזוזה לכרטיס */
+        .quest-card:hover {
+            transform: scale(1.03) translateY(-5px);
+            box-shadow: 0 20px 45px rgba(0, 122, 255, 0.25);
+        }
+
         .quest-tag {
             position: absolute;
             top: -15px;
-            right: 20px;
+            right: 25px;
             background: var(--accent);
             color: white;
-            padding: 5px 15px;
-            border-radius: 10px;
-            font-weight: 800;
+            padding: 6px 18px;
+            border-radius: 12px;
+            font-weight: 900;
             transform: rotate(5deg);
             box-shadow: 3px 3px 0px #800;
+            font-size: 0.9rem;
         }
 
         #challenge-text {
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             font-weight: 800;
             color: #1a2b3c;
-            transition: opacity 0.3s;
+            line-height: 1.4;
         }
 
-        /* כפתור הגרלה */
+        /* כפתור הגרלה משופר */
         .draw-btn {
-            margin-top: 40px;
+            margin-top: 35px;
             background: var(--primary);
             color: white;
             border: none;
-            padding: 18px 40px;
-            font-size: 1.4rem;
+            padding: 20px 50px;
+            font-size: 1.5rem;
             font-weight: 800;
-            border-radius: 20px;
+            border-radius: 100px;
             cursor: pointer;
-            box-shadow: 0 8px 0px #0056b3;
-            transition: all 0.1s;
-            width: 100%;
+            box-shadow: 0 10px 20px rgba(0, 122, 255, 0.3);
+            transition: all 0.3s ease;
+            width: 90%;
+        }
+
+        .draw-btn:hover {
+            transform: scale(1.05);
+            background: #0063cc;
+            box-shadow: 0 15px 25px rgba(0, 122, 255, 0.4);
         }
 
         .draw-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 4px 0px #0056b3;
+            transform: scale(0.98);
         }
 
-        /* קריאה לפעולה */
-        .cta-footer {
+        /* חלק תחתון - החזרת העיצוב מהגרסה הקודמת */
+        .cta-box {
             margin-top: 50px;
-            background: rgba(255, 255, 255, 0.6);
-            padding: 15px;
-            border-radius: 20px;
-            border: 2px dashed var(--primary);
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            border: 1px solid rgba(0, 122, 255, 0.1);
         }
 
-        .cta-footer a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 800;
+        .cta-box p {
+            margin: 0;
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        .cta-box strong {
             display: block;
             margin-top: 5px;
+            color: var(--text-main);
+            font-size: 1.1rem;
+        }
+
+        .cta-link {
+            color: #ffffff;
+            background-color: #0369a1;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 25px;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .cta-link:hover {
+            background: #0c4a6e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(3, 105, 161, 0.3);
         }
 
         /* אנימציות */
         .shake { animation: shakeAnim 0.4s infinite; }
         @keyframes shakeAnim {
             0% { transform: translate(0,0); }
-            25% { transform: translate(2px, 2px); }
-            50% { transform: translate(-2px, -2px); }
-            75% { transform: translate(2px, -2px); }
+            25% { transform: translate(3px, 3px); }
+            50% { transform: translate(-3px, -3px); }
+            75% { transform: translate(3px, -3px); }
         }
 
-        /* ניצוצות */
         .confetti {
             position: absolute;
             width: 10px; height: 10px;
             border-radius: 2px;
-            animation: confettiFall 2s ease-out forwards;
+            pointer-events: none;
+            animation: confettiFall 2.5s ease-out forwards;
+            z-index: 100;
         }
         @keyframes confettiFall {
             0% { transform: translateY(0) rotate(0); opacity: 1; }
-            100% { transform: translateY(500px) rotate(720deg); opacity: 0; }
+            100% { transform: translateY(800px) rotate(720deg); opacity: 0; }
         }
     </style>
 </head>
@@ -152,22 +189,24 @@
 
     <div class="game-container">
         <h1 class="level-up-title">LEVEL UP!</h1>
-        <p class="subtitle">המשימה היומית שתקדם אותך להצלחה</p>
+        <span class="subtitle">המשימה היומית שתקדם אותך להצלחה</span>
 
-        <div class="quest-card" id="card">
-            <div class="quest-tag">QUEST</div>
-            <div id="challenge-text">מוכן לאתגר?</div>
+        <div class="quest-card" id="card" onclick="startQuest()">
+            <div class="quest-tag">DAILY QUEST</div>
+            <div id="challenge-text">מוכן לאתגר של היום?</div>
         </div>
 
-        <button class="draw-btn" onclick="startQuest()">הגרל משימה עכשיו</button>
+        <button class="draw-btn" onclick="startQuest()" id="drawBtn">הגרל משימה עכשיו</button>
 
-        <div class="cta-footer">
-            נהלו את המשימות וההרגלים שלכם באפליקציה שלנו
-            <a href="https://pcs365.co.il/index.html">לחצו כאן למעבר לאפליקציה</a>
+        <div class="cta-box">
+            <p>רוצה לעקוב אחרי ההתקדמות שלך?</p>
+            <strong>נהל את המשימות וההרגלים שלך באפליקציה</strong>
+            <a href="https://pcs365.co.il/index.html" class="cta-link">לחץ כאן למעבר לאפליקציה</a>
         </div>
     </div>
 
     <script>
+        // בנק המשימות - תוכל להוסיף כאן משימות חדשות בקלות
         const quests = [
             "קרא/י 10 דפים בספר התפתחות אישית",
             "בצע/י אימון ספורט של 30 דקות",
@@ -184,29 +223,33 @@
         function startQuest() {
             const card = document.getElementById('card');
             const text = document.getElementById('challenge-text');
+            const btn = document.getElementById('drawBtn');
             
+            if(btn.disabled) return;
+            btn.disabled = true;
+
             card.classList.add('shake');
-            text.style.opacity = "0.3";
-            text.innerText = "מגריל...";
+            text.innerText = "מגריל משימה...";
 
             setTimeout(() => {
                 card.classList.remove('shake');
                 const randomQuest = quests[Math.floor(Math.random() * quests.length)];
                 text.innerText = randomQuest;
-                text.style.opacity = "1";
+                btn.disabled = false;
+                btn.innerText = "הגרל משימה חדשה";
                 createConfetti();
-            }, 1000);
+            }, 1100);
         }
 
         function createConfetti() {
-            for(let i=0; i<30; i++) {
+            for(let i=0; i<40; i++) {
                 const c = document.createElement('div');
                 c.className = 'confetti';
-                c.style.left = Math.random() * 100 + "%";
-                c.style.top = "0";
-                c.style.backgroundColor = ['#007aff','#ff2d55','#ffcc00','#4cd964'][Math.floor(Math.random()*4)];
+                c.style.left = Math.random() * 100 + "vw";
+                c.style.top = "-20px";
+                c.style.backgroundColor = ['#007aff','#ff2d55','#ffcc00','#4cd964','#a855f7'][Math.floor(Math.random()*5)];
                 document.body.appendChild(c);
-                setTimeout(() => c.remove(), 2000);
+                setTimeout(() => c.remove(), 2500);
             }
         }
     </script>
