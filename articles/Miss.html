@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +32,6 @@
             padding: 20px;
         }
 
-        /* כותרת LEVEL UP */
         .level-up-title {
             font-size: 3.8rem;
             font-weight: 900;
@@ -43,7 +42,6 @@
             letter-spacing: -2px;
         }
 
-        /* כותרת משנה משופרת - גדולה ובולטת */
         .subtitle {
             font-size: 1.4rem;
             font-weight: 700;
@@ -53,7 +51,6 @@
             display: block;
         }
 
-        /* חלון המשימה */
         .quest-card {
             background: var(--card-white);
             border-radius: 30px;
@@ -69,7 +66,6 @@
             cursor: pointer;
         }
 
-        /* אפקט תזוזה לכרטיס */
         .quest-card:hover {
             transform: scale(1.03) translateY(-5px);
             box-shadow: 0 20px 45px rgba(0, 122, 255, 0.25);
@@ -96,7 +92,6 @@
             line-height: 1.4;
         }
 
-        /* כפתור הגרלה משופר */
         .draw-btn {
             margin-top: 35px;
             background: var(--primary);
@@ -118,31 +113,39 @@
             box-shadow: 0 15px 25px rgba(0, 122, 255, 0.4);
         }
 
-        .draw-btn:active {
-            transform: scale(0.98);
+        /* עיצוב לאזור הפרסומת */
+        .ad-container {
+            margin: 40px auto;
+            max-width: 100%;
+            overflow: hidden;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* חלק תחתון - החזרת העיצוב מהגרסה הקודמת */
+        .ad-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: opacity 0.3s;
+        }
+
+        .ad-container img:hover {
+            opacity: 0.9;
+        }
+
         .cta-box {
-            margin-top: 50px;
+            margin-top: 20px;
             padding: 25px;
             background: rgba(255, 255, 255, 0.5);
             border-radius: 24px;
             border: 1px solid rgba(0, 122, 255, 0.1);
         }
 
-        .cta-box p {
-            margin: 0;
-            color: #64748b;
-            font-size: 1rem;
-        }
-
-        .cta-box strong {
-            display: block;
-            margin-top: 5px;
-            color: var(--text-main);
-            font-size: 1.1rem;
-        }
+        .cta-box p { margin: 0; color: #64748b; font-size: 1rem; }
+        .cta-box strong { display: block; margin-top: 5px; color: var(--text-main); font-size: 1.1rem; }
 
         .cta-link {
             color: #ffffff;
@@ -159,10 +162,8 @@
         .cta-link:hover {
             background: #0c4a6e;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(3, 105, 161, 0.3);
         }
 
-        /* אנימציות */
         .shake { animation: shakeAnim 0.4s infinite; }
         @keyframes shakeAnim {
             0% { transform: translate(0,0); }
@@ -198,6 +199,9 @@
 
         <button class="draw-btn" onclick="startQuest()" id="drawBtn">הגרל משימה עכשיו</button>
 
+        <div class="ad-container" id="ad-slot">
+            </div>
+
         <div class="cta-box">
             <p>רוצה לעקוב אחרי ההתקדמות שלך?</p>
             <strong>נהל את המשימות וההרגלים שלך באפליקציה</strong>
@@ -206,7 +210,22 @@
     </div>
 
     <script>
-        // בנק המשימות - תוכל להוסיף כאן משימות חדשות בקלות
+        // --- ניהול פרסומות למתכנת ---
+        const adConfig = {
+            link: "https://s.click.aliexpress.com/e/_c3qgJNNV?bz=725*90",
+            imgSrc: "https://ae-pic-a1.aliexpress-media.com/kf/S95f1050ce39f4a63950ff77cce6f47a4q.png",
+            alt: "AliExpress Deal"
+        };
+
+        function injectAd() {
+            const adSlot = document.getElementById('ad-slot');
+            adSlot.innerHTML = `<a href="${adConfig.link}" target="_blank">
+                                   <img src="${adConfig.imgSrc}" alt="${adConfig.alt}">
+                                </a>`;
+        }
+        injectAd();
+        // ---------------------------
+
         const quests = [
             "קרא/י 10 דפים בספר התפתחות אישית",
             "בצע/י אימון ספורט של 30 דקות",
@@ -217,53 +236,24 @@
             "שתה/י 2 ליטר מים במהלך היום",
             "תכנן/י את 3 המשימות הכי חשובות למחר",
             "התנתק/י מהרשתות החברתיות לשעתיים",
-            "כתוב/י 3 דברים שאת/ה מודה עליהם היום",
             "צא/י להליכה של 20 דקות בלי מוזיקה ובלי טלפון",
             "פרגן/י לעצמך בקול על משהו שעשית טוב השבוע",
             "שתה/י כוס מים לפני הקפה הראשון",
             "סדר/י מגירה אחת בלבד – עד הסוף",
-            "כתוב/י מטרה אחת קטנה לשבוע הקרוב",
             "נשום/י עמוק 5 פעמים לפני תגובה אימפולסיבית",
-            "שלח/י הודעה לאדם שלא דיברת איתו זמן מה",
             "כבה/י התראות לא נחוצות בטלפון",
-        "הקדש/י 10 דקות לקריאה שמעשירה אותך",
-        "אמור/י ״לא״ למשהו שלא מתאים לך",
-"קום/י 10 דקות מוקדם יותר מחר",
-"כתוב/י מה מעסיק אותך ואז קרע/י את הדף",
-"עשה/י משהו טוב למישהו בלי שיידע",
-"הקשב/י לשיר אחד עד הסוף, בלי הסחות",
-"ציין/י הצלחה קטנה שהייתה לך היום",
-"נקה/י את שולחן העבודה שלך",
-"כתוב/י משפט אחד שמייצג את הערך הכי חשוב לך",
-"צא/י לשמש ל־5 דקות",
-"הימנע/י מביקורת עצמית למשך שעה",
-"נסה/י דבר חדש קטן שלא ניסית בעבר",
-"כתוב/י רשימה של 5 דברים שעושים לך טוב",
-"שתף/י מישהו במשהו שעובר עליך",
-"צפה/י במשהו מעורר השראה במקום גלילה",
-"השאר/י את הטלפון בחדר אחר בזמן ארוחה",
-"כתוב/י לעצמך הודעה מעודדת",
-"הזכר/י לעצמך שאת/ה בתהליך – לא במרוץ",
-"סלח/י לעצמך על טעות קטנה",
-"עשה/י הפסקה אמיתית של 10 דקות בלי מסך",
-"כתוב/י מה את/ה רוצה יותר ממנו השנה",
-"הקשב/י באמת למישהו בלי להפריע",
-"סיים/י משימה אחת שדחית",
-"אמור/י תודה למישהו פנים אל פנים",
-"כתוב/י מה את/ה צריך/ה עכשיו",
-"עשה/י מתיחה קלה לגוף",
-"נשום/י רגע לפני השינה",
-"שים/י לב למחשבה שלילית – ואל תאמין/י לה מיד",
-"ציין/י דבר אחד שאת/ה גאה בו",
-"עשה/י משהו בשביל עצמך בלי רגשות אשם",
-"הפחת/י רעש סביבך למשך חצי שעה",
-"כתוב/י מכתב קצר לעצמך בעוד שנה",
-"צא/י מאזור הנוחות בצעד אחד קטן",
-"החלף/י ביקורת עצמית בחמלה",
-"התמקד/י במשימה אחת בלבד",
-"שים/י גבול קטן ובריא",
-"סיים/י את היום בלי השוואות לאחרים",
-"הזכר/י לעצמך שלא הכול חייב להיסגר היום",
+            "אמור/י ״לא״ למשהו שלא מתאים לך",
+            "קום/י 10 דקות מוקדם יותר מחר",
+            "הקשב/י לשיר אחד עד הסוף, בלי הסחות",
+            "ציין/י הצלחה קטנה שהייתה לך היום",
+            "נסה/י דבר חדש קטן שלא ניסית בעבר",
+            "הזכר/י לעצמך שאת/ה בתהליך – לא במרוץ",
+            "סלח/י לעצמך על טעות קטנה",
+            "עשה/י הפסקה אמיתית של 10 דקות בלי מסך",
+            "הקשב/י באמת למישהו בלי להפריע",
+            "סיים/י משימה אחת שדחית",
+            "עשה/י מתיחה קלה לגוף",
+            "נשום/י רגע לפני השינה",
             "פרגן/י לאדם קרוב במילה טובה"
         ];
 
