@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =====================
-  // הצגת הרגלים (מעודכן עם פתיחה ואייקונים)
+  // הצגת הרגלים
   // =====================
   function renderHabits() {
     habitList.innerHTML = "";
@@ -117,31 +117,31 @@ document.addEventListener("DOMContentLoaded", () => {
       const li = document.createElement("li");
       li.className = "habit-item";
       
-      // לחיצה על השורה פותחת/סוגרת אותה
       li.onclick = (e) => {
-        // מונע פתיחה אם לחצו על אחד הכפתורים
         if (e.target.closest('.icon-btn')) return;
         li.classList.toggle('open');
       };
 
+      // התיקון כאן: שימוש ב-flexbox ו-min-width כדי למנוע דחיקת אייקונים
       li.innerHTML = `
-        <div class="habit-header">
-          <span class="habit-text">${habit.text}</span>
-          <div class="habit-actions">
+        <div class="habit-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <span class="habit-text" style="flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            ${habit.text}
+          </span>
+          <div class="habit-actions" style="display: flex; gap: 10px; flex-shrink: 0; margin-right: 10px;">
             <button class="icon-btn edit-btn">✏️</button>
             <button class="icon-btn delete-btn">🗑️</button>
           </div>
         </div>
       `;
 
-      // חיבור פונקציות לכפתורים
       li.querySelector(".edit-btn").onclick = (e) => {
-        e.stopPropagation(); // מונע פתיחת השורה
+        e.stopPropagation();
         editHabit(habit.id, habit.text);
       };
 
       li.querySelector(".delete-btn").onclick = (e) => {
-        e.stopPropagation(); // מונע פתיחת השורה
+        e.stopPropagation();
         deleteHabit(habit.id);
       };
 
@@ -149,28 +149,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // =====================
-  // כפתור לדשבורד
-  // =====================
   if (goDashboardBtn) {
     goDashboardBtn.addEventListener("click", () => {
-      console.log("עובר לדשבורד");
       window.location.href = "dashboard.html";
     });
   }
 
-  // =====================
-  // כפתור התנתקות
-  // =====================
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
-      console.log("מתנתק...");
-      auth.signOut()
-        .then(() => {
-          console.log("התנתקות בוצעה");
-          window.location.href = "index.html";
-        })
-        .catch(err => console.error("שגיאה בהתנתקות:", err));
+      auth.signOut().then(() => {
+        window.location.href = "index.html";
+      });
     });
   }
 });
