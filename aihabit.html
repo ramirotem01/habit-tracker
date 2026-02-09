@@ -10,12 +10,10 @@
     .ai-card { padding: 30px !important; }
     h1 { margin-bottom: 10px; font-size: 1.8em; text-align: center; }
     textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; resize: none; font-size: 1em; outline: none; min-height: 100px; }
-    textarea:focus { border-color: #2ecc71; }
     .action-btn { background-color: #2ecc71; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1em; transition: background 0.3s; margin-top: 10px; width: 100%; }
     .action-btn:hover { background-color: #27ae60; }
     .action-btn:disabled { background-color: #bdc3c7; cursor: not-allowed; }
     .back-btn { background: none; border: none; color: #34495e; padding: 8px 15px; border-radius: 20px; cursor: pointer; margin: 15px auto 0 auto; font-size: 0.9em; transition: all 0.3s ease; display: inline-block; width: fit-content; text-decoration: none; }
-    .back-btn:hover { background-color: #f5f6f7; color: #000; }
     .suggestions-list { list-style: none; padding: 0; margin: 20px 0; }
     .suggestions-list li { background: #f8f9fa; padding: 12px; margin-bottom: 8px; border-right: 4px solid #2ecc71; border-radius: 4px; font-size: 0.95em; text-align: right; }
     .loading-spinner { text-align: center; color: #7f8c8d; font-size: 0.9em; margin: 10px 0; display: none; }
@@ -23,24 +21,20 @@
 </head>
 <body>
   <div class="app login-app">
-    <h1> עוזר AI אישי</h1>
+    <h1>🤖 עוזר AI אישי</h1>
     <div class="card login-card ai-card">
-      <p style="text-align: center; color: #666; margin-bottom: 20px;">מה המטרה השנתית שלך? אני אפרק אותה ל-5 הרגלים יומיים</p>
+      <p style="text-align: center; color: #666; margin-bottom: 20px;">רשום מטרה, ואני אמצא עבורך את המודל הנכון ואייצר הרגלים</p>
       
       <div class="ai-container">
-        <textarea id="goalInput" placeholder="למשל: אני רוצה ללמוד תכנות מאפס..." rows="3"></textarea>
+        <textarea id="goalInput" placeholder="למשל: אני רוצה לרוץ 5 קילומטר..." rows="3"></textarea>
         <button id="generateBtn" class="action-btn">✨ צור תוכנית הרגלים</button>
-        
-        <div id="loadingMsg" class="loading-spinner">ה-AI מנתח את המטרה ומייצר הרגלים... ⚡</div>
-
+        <div id="loadingMsg" class="loading-spinner">מתקשר עם גוגל... ⚡</div>
         <div id="previewArea" style="display: none;">
-          <h3 style="font-size: 1.1em; margin-bottom: 10px;">התוכנית שהכנתי עבורך:</h3>
           <ul id="suggestedList" class="suggestions-list"></ul>
-          <button id="approveBtn" class="action-btn" style="background-color: #3498db;">✅ אשר והוסף הכל לרשימה שלי</button>
+          <button id="approveBtn" class="action-btn" style="background-color: #3498db;">✅ אשר והוסף הכל</button>
         </div>
-
         <div style="text-align: center;">
-          <button class="back-btn" onclick="window.location.href='manage.html'">🔙 חזרה לניהול הרגלים</button>
+          <button class="back-btn" onclick="window.location.href='manage.html'">🔙 חזרה</button>
         </div>
       </div>
     </div>
@@ -53,88 +47,81 @@
 
   <script>
     const GEMINI_API_KEY = "AIzaSyAhOzuUV7gWvI86y_UDQbAS7WAU5IgnPSY";
-
-    const goalInput = document.getElementById("goalInput");
-    const generateBtn = document.getElementById("generateBtn");
-    const loadingMsg = document.getElementById("loadingMsg");
-    const previewArea = document.getElementById("previewArea");
-    const suggestedList = document.getElementById("suggestedList");
-    const approveBtn = document.getElementById("approveBtn");
-
-    let currentSuggestions = [];
     let userId = null;
 
-    auth.onAuthStateChanged(user => {
-      if (!user) window.location.href = "index.html";
-      else userId = user.uid;
-    });
+    auth.onAuthStateChanged(user => { if (!user) window.location.href = "index.html"; else userId = user.uid; });
 
-    async function getHabitsFromGemini(goal) {
-      const prompt = `המטרה שלי היא: "${goal}". תחזיר בדיוק 5 הרגלים יומיים קצרים וספציפיים בפורמט JSON בלבד: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי שום טקסט נוסף.`;
-      
-      // שימוש בגרסה ודגם ספציפיים ביותר
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    // פונקציה למציאת המודל הזמין הראשון
+    async function getAvailableModel() {
+        try {
+            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${GEMINI_API_KEY}`);
+            const data = await resp.json();
+            // מחפש מודל שתומך ביצירת תוכן
+            const model = data.models.find(m => m.supportedGenerationMethods.includes("generateContent"));
+            return model ? model.name : "models/gemini-1.5-flash"; 
+        } catch (e) {
+            return "models/gemini-1.5-flash";
+        }
+    }
+
+    async function generateWithAI(goal) {
+      const modelName = await getAvailableModel();
+      console.log("Using model:", modelName);
+
+      const prompt = `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים קצרים: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי הסברים.`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
 
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{ text: prompt }]
-          }]
-        })
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        // אם גוגל מחזירה 404, זה אומר שהשם "gemini-1.5-flash" לא מזוהה, ננסה "gemini-pro" חלופי אוטומטית
-        console.error("Server Error:", errorData);
-        throw new Error(errorData.error.message || "שגיאת תקשורת");
-      }
-
       const data = await response.json();
-      let textResponse = data.candidates[0].content.parts[0].text;
-      
-      // ניקוי תגיות Markdown
-      const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
-      return JSON.parse(cleanJson);
+      if (!response.ok) throw new Error(data.error.message);
+
+      let text = data.candidates[0].content.parts[0].text;
+      return JSON.parse(text.replace(/```json/g, "").replace(/```/g, "").trim());
     }
 
-    generateBtn.addEventListener("click", async () => {
-      const goal = goalInput.value.trim();
-      if (!goal) return alert("בבקשה רשום מטרה קודם.");
+    document.getElementById("generateBtn").addEventListener("click", async () => {
+      const goal = document.getElementById("goalInput").value.trim();
+      if (!goal) return;
 
-      loadingMsg.style.display = "block";
-      generateBtn.disabled = true;
-      previewArea.style.display = "none";
+      const btn = document.getElementById("generateBtn");
+      const loader = document.getElementById("loadingMsg");
+      const preview = document.getElementById("previewArea");
+
+      btn.disabled = true;
+      loader.style.display = "block";
+      preview.style.display = "none";
 
       try {
-        currentSuggestions = await getHabitsFromGemini(goal);
-        suggestedList.innerHTML = "";
-        currentSuggestions.forEach(habit => {
+        const habits = await generateWithAI(goal);
+        const list = document.getElementById("suggestedList");
+        list.innerHTML = "";
+        habits.forEach(h => {
           const li = document.createElement("li");
-          li.textContent = habit;
-          suggestedList.appendChild(li);
+          li.textContent = h;
+          list.appendChild(li);
         });
-        previewArea.style.display = "block";
+        preview.style.display = "block";
+        window.currentHabits = habits;
       } catch (error) {
-        console.error("Full error stack:", error);
-        alert("שגיאה: " + error.message);
+        alert("שגיאה סופית: " + error.message);
       } finally {
-        loadingMsg.style.display = "none";
-        generateBtn.disabled = false;
+        loader.style.display = "none";
+        btn.disabled = false;
       }
     });
 
-    approveBtn.addEventListener("click", async () => {
-      if (!userId || currentSuggestions.length === 0) return;
+    document.getElementById("approveBtn").addEventListener("click", async () => {
       const batch = db.batch();
-      currentSuggestions.forEach(text => {
-        const docRef = db.collection("users").doc(userId).collection("habits").doc();
-        batch.set(docRef, { text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+      window.currentHabits.forEach(text => {
+        const ref = db.collection("users").doc(userId).collection("habits").doc();
+        batch.set(ref, { text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
       });
       await batch.commit();
-      alert("ההרגלים נוספו בהצלחה!");
       window.location.href = "manage.html";
     });
   </script>
