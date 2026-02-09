@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =====================
-  // הצגת הרגלים
+  // הצגת הרגלים - גרסה סופית עם פתיחה וחיתוך חכם
   // =====================
   function renderHabits() {
     habitList.innerHTML = "";
@@ -117,31 +117,43 @@ document.addEventListener("DOMContentLoaded", () => {
       const li = document.createElement("li");
       li.className = "habit-item";
       
+      // לחיצה על השורה פותחת/סוגרת אותה דינמית
       li.onclick = (e) => {
+        // מונע פתיחה אם לחצו על אחד הכפתורים
         if (e.target.closest('.icon-btn')) return;
-        li.classList.toggle('open');
+        
+        const isOpen = li.classList.toggle('open');
+        const textSpan = li.querySelector('.habit-text');
+        
+        if (isOpen) {
+          textSpan.style.whiteSpace = "normal";
+          textSpan.style.overflow = "visible";
+        } else {
+          textSpan.style.whiteSpace = "nowrap";
+          textSpan.style.overflow = "hidden";
+        }
       };
 
-      // התיקון כאן: שימוש ב-flexbox ו-min-width כדי למנוע דחיקת אייקונים
       li.innerHTML = `
-        <div class="habit-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-          <span class="habit-text" style="flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+        <div class="habit-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 45px;">
+          <span class="habit-text" style="flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-left: 10px;">
             ${habit.text}
           </span>
-          <div class="habit-actions" style="display: flex; gap: 10px; flex-shrink: 0; margin-right: 10px;">
+          <div class="habit-actions" style="display: flex; gap: 12px; flex-shrink: 0; margin-right: 5px;">
             <button class="icon-btn edit-btn">✏️</button>
             <button class="icon-btn delete-btn">🗑️</button>
           </div>
         </div>
       `;
 
+      // חיבור אירועים לכפתורים
       li.querySelector(".edit-btn").onclick = (e) => {
-        e.stopPropagation();
+        e.stopPropagation(); // מונע פתיחת השורה
         editHabit(habit.id, habit.text);
       };
 
       li.querySelector(".delete-btn").onclick = (e) => {
-        e.stopPropagation();
+        e.stopPropagation(); // מונע פתיחת השורה
         deleteHabit(habit.id);
       };
 
@@ -149,17 +161,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // =====================
+  // כפתור לדשבורד
+  // =====================
   if (goDashboardBtn) {
     goDashboardBtn.addEventListener("click", () => {
       window.location.href = "dashboard.html";
     });
   }
 
+  // =====================
+  // כפתור התנתקות
+  // =====================
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
-      auth.signOut().then(() => {
-        window.location.href = "index.html";
-      });
+      auth.signOut()
+        .then(() => {
+          window.location.href = "index.html";
+        })
+        .catch(err => console.error("שגיאה בהתנתקות:", err));
     });
   }
 });
