@@ -16,28 +16,29 @@
     .manage-card { padding: 30px !important; }
     h1 { margin-bottom: 10px; font-size: 1.8em; text-align: center; }
     
-    /* 1. כפתור AI עם טקסט שחור ומסגרת ירוקה */
+    /* כפתור AI - ירוק מלא, טקסט לבן, בולט ומעוצב */
     .ai-btn {
-      background-color: transparent;
-      color: #000; /* טקסט שחור כפי שביקשת */
-      border: 2px solid #2ecc71;
-      padding: 10px;
+      background-color: #2ecc71; 
+      color: white; 
+      border: none;
+      padding: 14px;
       border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
       width: 100%;
       margin-bottom: 15px;
-      transition: all 0.3s;
-      font-size: 0.95em;
+      transition: background 0.3s ease;
+      font-size: 1.1em;
+      font-family: inherit;
+      box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
     }
     .ai-btn:hover {
-      background-color: #2ecc71;
-      color: white; /* בהובר הוא הופך לירוק מלא עם טקסט לבן */
+      background-color: #27ae60;
+      box-shadow: 0 6px 8px rgba(39, 174, 96, 0.3);
     }
 
     input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
 
-    /* 2. כפתור הוספה עם אפקט Hover */
     #addHabitBtn {
       background: #2ecc71;
       color: white;
@@ -45,10 +46,10 @@
       border-radius: 8px;
       padding: 0 15px;
       cursor: pointer;
-      transition: background 0.3s; /* מעבר חלק */
+      transition: background 0.3s;
     }
     #addHabitBtn:hover {
-      background: #27ae60; /* צבע ירוק כהה יותר במעבר עכבר */
+      background: #27ae60;
     }
 
     /* רשימת הרגלים חכמה */
