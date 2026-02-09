@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>יצירת הרגלים חכמה</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* עיצוב קטן להודעת טעינה */
+    .loading { display: none; color: #3498db; font-weight: bold; margin: 10px 0; }
+    .habit-preview { background: #f9f9f9; border-radius: 8px; padding: 10px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>🤖 עוזר ההרגלים האישי</h1>
+    <p>מה המטרה הגדולה שלך לשנה הקרובה?</p>
+
+    <div class="input-group">
+      <textarea id="goalInput" placeholder="למשל: אני רוצה לרוץ מרתון או ללמוד תכנות..." rows="3"></textarea>
+      <button id="generateBtn">✨ צור 5 הרגלים מנצחים</button>
+    </div>
+
+    <div id="loadingMsg" class="loading">ה-AI חושב על הרגלים עבורך... ⏳</div>
+    
+    <div id="previewArea" class="habit-preview" style="display:none;">
+      <h3>הצעות להרגלים:</h3>
+      <ul id="suggestedList"></ul>
+      <button id="approveBtn" style="background-color: #27ae60;">✅ אשר והוסף הכל</button>
+    </div>
+
+    <button id="goBackBtn" class="secondary">🔙 חזרה לניהול</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  
+  <script src="firebase.js"></script>
+
+  <script>
+    const GEMINI_API_KEY = "הכנס_כאן_את_המפתח_שלך"; // <--- שים לב להחליף כאן!
+
+    const goalInput = document.getElementById("goalInput");
+    const generateBtn = document.getElementById("generateBtn");
+    const loadingMsg = document.getElementById("loadingMsg");
+    const previewArea = document.getElementById("previewArea");
+    const suggestedList = document.getElementById("suggestedList");
+    const approveBtn = document.getElementById("approveBtn");
+
+    let currentSuggestions = [];
+    let userId = null;
+
+    // בדיקת חיבור משתמש
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "index.html";
+      } else {
+        userId = user.uid;
+      }
+    });
+
+    // פונקציה לקריאה ל-Gemini
+    async function getHabitsFromGemini(goal) {
+      const prompt = `המטרה שלי היא: "${goal}". 
+      תחזיר לי רשימה של בדיוק 5 הרגלים יומיים קטנים וספציפיים שיעזרו לי להשיג אותה. 
+      תחזיר רק את רשימת ההרגלים בפורמט JSON ככה: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. 
+      בלי טקסט נוסף לפני או אחרי.`;
+
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
+      });
+
+      const data = await response.json();
+      const textResponse = data.candidates[0].content.parts[0].text;
+      
+      // ניקוי התוצאה למקרה שה-AI הוסיף סימני Markdown
+      const jsonString = textResponse.replace(/```json|```/g, "").trim();
+      return JSON.parse(jsonString);
+    }
+
+    // כפתור יצירת הרגלים
+    generateBtn.addEventListener("click", async () => {
+      const goal = goalInput.value.trim();
+      if (!goal) return alert("אנא הזן מטרה");
+
+      loadingMsg.style.display = "block";
+      generateBtn.disabled = true;
+      previewArea.style.display = "none";
+
+      try {
+        currentSuggestions = await getHabitsFromGemini(goal);
+        
+        suggestedList.innerHTML = "";
+        currentSuggestions.forEach(h => {
+          const li = document.createElement("li");
+          li.textContent = h;
+          suggestedList.appendChild(li);
+        });
+
+        previewArea.style.display = "block";
+      } catch (error) {
+        console.error("Error:", error);
+        alert("אופס, משהו השתבש ביצירת ההרגלים.");
+      } finally {
+        loadingMsg.style.display = "none";
+        generateBtn.disabled = false;
+      }
+    });
+
+    // אישור ושמירה ל-Firebase
+    approveBtn.addEventListener("click", async () => {
+      if (!userId || currentSuggestions.length === 0) return;
+
+      const batch = db.batch(); // שימוש ב-Batch כדי להוסיף הכל בבת אחת
+      
+      currentSuggestions.forEach(habitText => {
+        const docRef = db.collection("users").doc(userId).collection("habits").doc();
+        batch.set(docRef, {
+          text: habitText,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      });
+
+      try {
+        await batch.commit();
+        alert("כל ההרגלים נוספו בהצלחה!");
+        window.location.href = "manage.html";
+      } catch (error) {
+        console.error("Save error:", error);
+        alert("שגיאה בשמירת ההרגלים.");
+      }
+    });
+
+    document.getElementById("goBackBtn").onclick = () => window.location.href = "manage.html";
+  </script>
+</body>
+</html>
