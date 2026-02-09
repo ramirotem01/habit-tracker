@@ -73,6 +73,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // מחיקת הרגל
   // =====================
   function deleteHabit(id) {
+    if (!confirm("האם למחוק את ההרגל?")) return;
+    
     console.log("מוחק הרגל:", id);
     db.collection("users")
       .doc(userId)
@@ -91,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =====================
   function editHabit(id, currentText) {
     const updated = prompt("עדכן הרגל:", currentText);
-    if (!updated) return;
+    if (!updated || updated === currentText) return;
     console.log("מעודכן הרגל:", updated);
 
     db.collection("users")
@@ -107,24 +109,42 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =====================
-  // הצגת הרגלים
+  // הצגת הרגלים (מעודכן עם פתיחה ואייקונים)
   // =====================
   function renderHabits() {
     habitList.innerHTML = "";
     habits.forEach(habit => {
       const li = document.createElement("li");
-      li.textContent = habit.text;
+      li.className = "habit-item";
+      
+      // לחיצה על השורה פותחת/סוגרת אותה
+      li.onclick = (e) => {
+        // מונע פתיחה אם לחצו על אחד הכפתורים
+        if (e.target.closest('.icon-btn')) return;
+        li.classList.toggle('open');
+      };
 
-      const editBtn = document.createElement("button");
-      editBtn.textContent = "✏ עריכה";
-      editBtn.onclick = () => editHabit(habit.id, habit.text);
+      li.innerHTML = `
+        <div class="habit-header">
+          <span class="habit-text">${habit.text}</span>
+          <div class="habit-actions">
+            <button class="icon-btn edit-btn">✏️</button>
+            <button class="icon-btn delete-btn">🗑️</button>
+          </div>
+        </div>
+      `;
 
-      const delBtn = document.createElement("button");
-      delBtn.textContent = "🗑 מחיקה";
-      delBtn.onclick = () => deleteHabit(habit.id);
+      // חיבור פונקציות לכפתורים
+      li.querySelector(".edit-btn").onclick = (e) => {
+        e.stopPropagation(); // מונע פתיחת השורה
+        editHabit(habit.id, habit.text);
+      };
 
-      li.appendChild(editBtn);
-      li.appendChild(delBtn);
+      li.querySelector(".delete-btn").onclick = (e) => {
+        e.stopPropagation(); // מונע פתיחת השורה
+        deleteHabit(habit.id);
+      };
+
       habitList.appendChild(li);
     });
   }
@@ -132,21 +152,25 @@ document.addEventListener("DOMContentLoaded", () => {
   // =====================
   // כפתור לדשבורד
   // =====================
-  goDashboardBtn.addEventListener("click", () => {
-    console.log("עובר לדשבורד");
-    window.location.href = "dashboard.html";
-  });
+  if (goDashboardBtn) {
+    goDashboardBtn.addEventListener("click", () => {
+      console.log("עובר לדשבורד");
+      window.location.href = "dashboard.html";
+    });
+  }
 
   // =====================
   // כפתור התנתקות
   // =====================
-  logoutBtn.addEventListener("click", () => {
-    console.log("מתנתק...");
-    auth.signOut()
-      .then(() => {
-        console.log("התנתקות בוצעה");
-        window.location.href = "index.html";
-      })
-      .catch(err => console.error("שגיאה בהתנתקות:", err));
-  });
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      console.log("מתנתק...");
+      auth.signOut()
+        .then(() => {
+          console.log("התנתקות בוצעה");
+          window.location.href = "index.html";
+        })
+        .catch(err => console.error("שגיאה בהתנתקות:", err));
+    });
+  }
 });
