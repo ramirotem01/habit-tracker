@@ -1,27 +1,71 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
   <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#3498db">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
+  <meta name="theme-color" content="#3498db">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
 
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(() => console.log("PWA Ready"))
-      .catch(err => console.log("PWA Error", err));
-  }
-</script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("PWA Ready"))
+        .catch(err => console.log("PWA Error", err));
+    }
+  </script>
+  
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ניהול הרגלים</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* עיצוב כפתור ה-AI החדש */
+    .ai-helper-btn {
+      background-color: #9b59b6; /* סגול בינה מלאכותית */
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1.05em;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(155, 89, 182, 0.2);
+    }
+
+    .ai-helper-btn:hover {
+      background-color: #8e44ad;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(155, 89, 182, 0.3);
+    }
+
+    /* תיקון ריווחים לכפתורי התחתית */
+    .nav-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    #logoutBtn {
+      background-color: #e74c3c;
+    }
+  </style>
 </head>
 <body>
   <div class="app">
     <h1>📝 ניהול הרגלים</h1>
+
+    <button class="ai-helper-btn" onclick="window.location.href='aihabit.html'">
+      <span>🤖 יצירת הרגלים חכמה (AI)</span>
+    </button>
 
     <div class="input-group">
       <input type="text" id="newHabit" placeholder="הוסף הרגל חדש..." />
@@ -30,11 +74,12 @@
 
     <ul id="habitList"></ul>
 
-    <button id="goDashboardBtn">🔙 לדשבורד</button>
-    <button id="logoutBtn">🔓 התנתק</button>
+    <div class="nav-buttons">
+      <button id="goDashboardBtn">🔙 לדשבורד</button>
+      <button id="logoutBtn" onclick="auth.signOut().then(() => window.location.href='index.html')">🔓 התנתק</button>
+    </div>
   </div>
 
-  <!-- Firebase JS -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
