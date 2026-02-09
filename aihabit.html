@@ -143,18 +143,15 @@
     let userId = null;
 
     auth.onAuthStateChanged(user => {
-      if (!user) {
-        window.location.href = "index.html";
-      } else {
-        userId = user.uid;
-      }
+      if (!user) window.location.href = "index.html";
+      else userId = user.uid;
     });
 
     async function getHabitsFromGemini(goal) {
-      const prompt = `המטרה שלי היא: "${goal}". תחזיר בדיוק 5 הרגלים יומיים קצרים וספציפיים בפורמט JSON בלבד: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי טקסט נוסף.`;
+      const prompt = `המטרה שלי היא: "${goal}". תחזיר בדיוק 5 הרגלים יומיים קצרים בפורמט JSON בלבד: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי טקסט נוסף.`;
       
-      // הכתובת המעודכנת לגרסה 1
-      const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+      // שימוש בדגם gemini-pro ובגרסת v1beta - השילוב הכי יציב למפתחות חדשים
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -170,7 +167,11 @@
       }
 
       const data = await response.json();
+      
+      // שליפת הטקסט (במבנה של Gemini Pro)
       let textResponse = data.candidates[0].content.parts[0].text;
+      
+      // ניקוי תגיות
       const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
       return JSON.parse(cleanJson);
     }
@@ -193,7 +194,7 @@
         });
         previewArea.style.display = "block";
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Error details:", error);
         alert("אופס! קרתה שגיאה: " + error.message);
       } finally {
         loadingMsg.style.display = "none";
