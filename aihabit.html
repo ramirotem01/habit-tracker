@@ -1,45 +1,129 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>יצירת הרגלים חכמה</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Tracker – עוזר AI</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
-    /* עיצוב קטן להודעת טעינה */
-    .loading { display: none; color: #3498db; font-weight: bold; margin: 10px 0; }
-    .habit-preview { background: #f9f9f9; border-radius: 8px; padding: 10px; margin-top: 20px; }
+    .ai-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .ai-card {
+      padding: 30px !important;
+    }
+    h1 {
+      margin-bottom: 10px;
+      font-size: 1.8em;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-family: inherit;
+      resize: none;
+      font-size: 1em;
+    }
+    .action-btn {
+      background-color: #2ecc71;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: background 0.3s;
+      margin-top: 10px;
+    }
+    .action-btn:hover {
+      background-color: #27ae60;
+    }
+    .action-btn:disabled {
+      background-color: #bdc3c7;
+      cursor: not-allowed;
+    }
+    
+    .back-btn {
+      background: none;
+      border: none;
+      color: #34495e;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      margin: 15px auto 0 auto;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+      display: inline-block;
+      width: fit-content;
+    }
+    .back-btn:hover {
+      background-color: #f5f6f7;
+      color: #000;
+    }
+
+    /* עיצוב רשימת ההצעות מה-AI */
+    .suggestions-list {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+    }
+    .suggestions-list li {
+      background: #f8f9fa;
+      padding: 12px;
+      margin-bottom: 8px;
+      border-right: 4px solid #2ecc71;
+      border-radius: 4px;
+      font-size: 0.95em;
+    }
+
+    .loading-spinner {
+      text-align: center;
+      color: #7f8c8d;
+      font-size: 0.9em;
+      margin: 10px 0;
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <div class="app">
-    <h1>🤖 עוזר ההרגלים האישי</h1>
-    <p>מה המטרה הגדולה שלך לשנה הקרובה?</p>
+  <div class="app login-app">
+    <h1>🤖 עוזר AI אישי</h1>
+    <div class="card login-card ai-card">
+      <p style="text-align: center; color: #666; margin-bottom: 20px;">רשום את המטרה השנתית שלך, ואני אבנה לך תוכנית הרגלים</p>
+      
+      <div class="ai-container">
+        <textarea id="goalInput" placeholder="למשל: השנה אני רוצה להיכנס לכושר שיא..." rows="3"></textarea>
+        <button id="generateBtn" class="action-btn">✨ צור 5 הרגלים מנצחים</button>
+        
+        <div id="loadingMsg" class="loading-spinner">ה-AI בונה לך תוכנית... ⚡</div>
 
-    <div class="input-group">
-      <textarea id="goalInput" placeholder="למשל: אני רוצה לרוץ מרתון או ללמוד תכנות..." rows="3"></textarea>
-      <button id="generateBtn">✨ צור 5 הרגלים מנצחים</button>
+        <div id="previewArea" style="display: none;">
+          <h3 style="font-size: 1.1em; margin-bottom: 10px;">זה מה שכדאי לך לעשות:</h3>
+          <ul id="suggestedList" class="suggestions-list"></ul>
+          <button id="approveBtn" class="action-btn" style="background-color: #3498db; width: 100%;">✅ אשר והוסף הכל למערכת</button>
+        </div>
+
+        <div style="text-align: center;">
+          <button class="back-btn" onclick="window.location.href='manage.html'">חזרה לניהול הרגלים</button>
+        </div>
+      </div>
     </div>
-
-    <div id="loadingMsg" class="loading">ה-AI חושב על הרגלים עבורך... ⏳</div>
-    
-    <div id="previewArea" class="habit-preview" style="display:none;">
-      <h3>הצעות להרגלים:</h3>
-      <ul id="suggestedList"></ul>
-      <button id="approveBtn" style="background-color: #27ae60;">✅ אשר והוסף הכל</button>
-    </div>
-
-    <button id="goBackBtn" class="secondary">🔙 חזרה לניהול</button>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  
   <script src="firebase.js"></script>
 
   <script>
-    const GEMINI_API_KEY = "AIzaSyAhOzuUV7gWvI86y_UDQbAS7WAU5IgnPSY"
+    const GEMINI_API_KEY = "הכנס_כאן_את_המפתח_שלך";
 
     const goalInput = document.getElementById("goalInput");
     const generateBtn = document.getElementById("generateBtn");
@@ -51,44 +135,29 @@
     let currentSuggestions = [];
     let userId = null;
 
-    // בדיקת חיבור משתמש
     auth.onAuthStateChanged(user => {
-      if (!user) {
-        window.location.href = "index.html";
-      } else {
-        userId = user.uid;
-      }
+      if (!user) window.location.href = "index.html";
+      else userId = user.uid;
     });
 
-    // פונקציה לקריאה ל-Gemini
     async function getHabitsFromGemini(goal) {
-      const prompt = `המטרה שלי היא: "${goal}". 
-      תחזיר לי רשימה של בדיוק 5 הרגלים יומיים קטנים וספציפיים שיעזרו לי להשיג אותה. 
-      תחזיר רק את רשימת ההרגלים בפורמט JSON ככה: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. 
-      בלי טקסט נוסף לפני או אחרי.`;
-
+      const prompt = `המטרה שלי היא: "${goal}". תחזיר בדיוק 5 הרגלים יומיים קטנים בפורמט JSON: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי טקסט נוסף.`;
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
       });
 
       const data = await response.json();
       const textResponse = data.candidates[0].content.parts[0].text;
-      
-      // ניקוי התוצאה למקרה שה-AI הוסיף סימני Markdown
-      const jsonString = textResponse.replace(/```json|```/g, "").trim();
-      return JSON.parse(jsonString);
+      return JSON.parse(textResponse.replace(/```json|```/g, "").trim());
     }
 
-    // כפתור יצירת הרגלים
     generateBtn.addEventListener("click", async () => {
       const goal = goalInput.value.trim();
-      if (!goal) return alert("אנא הזן מטרה");
+      if (!goal) return;
 
       loadingMsg.style.display = "block";
       generateBtn.disabled = true;
@@ -96,49 +165,30 @@
 
       try {
         currentSuggestions = await getHabitsFromGemini(goal);
-        
         suggestedList.innerHTML = "";
         currentSuggestions.forEach(h => {
           const li = document.createElement("li");
           li.textContent = h;
           suggestedList.appendChild(li);
         });
-
         previewArea.style.display = "block";
-      } catch (error) {
-        console.error("Error:", error);
-        alert("אופס, משהו השתבש ביצירת ההרגלים.");
+      } catch (e) {
+        alert("שגיאה ביצירת הרגלים. בדוק את מפתח ה-API.");
       } finally {
         loadingMsg.style.display = "none";
         generateBtn.disabled = false;
       }
     });
 
-    // אישור ושמירה ל-Firebase
     approveBtn.addEventListener("click", async () => {
-      if (!userId || currentSuggestions.length === 0) return;
-
-      const batch = db.batch(); // שימוש ב-Batch כדי להוסיף הכל בבת אחת
-      
-      currentSuggestions.forEach(habitText => {
-        const docRef = db.collection("users").doc(userId).collection("habits").doc();
-        batch.set(docRef, {
-          text: habitText,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+      const batch = db.batch();
+      currentSuggestions.forEach(text => {
+        const ref = db.collection("users").doc(userId).collection("habits").doc();
+        batch.set(ref, { text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
       });
-
-      try {
-        await batch.commit();
-        alert("כל ההרגלים נוספו בהצלחה!");
-        window.location.href = "manage.html";
-      } catch (error) {
-        console.error("Save error:", error);
-        alert("שגיאה בשמירת ההרגלים.");
-      }
+      await batch.commit();
+      window.location.href = "manage.html";
     });
-
-    document.getElementById("goBackBtn").onclick = () => window.location.href = "manage.html";
   </script>
 </body>
 </html>
