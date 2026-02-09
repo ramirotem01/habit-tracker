@@ -6,97 +6,19 @@
   <title>Habit Tracker – עוזר AI</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    .ai-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
-    }
-    .ai-card {
-      padding: 30px !important;
-    }
-    h1 {
-      margin-bottom: 10px;
-      font-size: 1.8em;
-      text-align: center;
-    }
-    textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-family: inherit;
-      resize: none;
-      font-size: 1em;
-      outline: none;
-      min-height: 100px;
-    }
-    textarea:focus {
-      border-color: #2ecc71;
-    }
-    .action-btn {
-      background-color: #2ecc71;
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1.1em;
-      transition: background 0.3s;
-      margin-top: 10px;
-      width: 100%;
-    }
-    .action-btn:hover {
-      background-color: #27ae60;
-    }
-    .action-btn:disabled {
-      background-color: #bdc3c7;
-      cursor: not-allowed;
-    }
-    
-    .back-btn {
-      background: none;
-      border: none;
-      color: #34495e;
-      padding: 8px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-      margin: 15px auto 0 auto;
-      font-size: 0.9em;
-      transition: all 0.3s ease;
-      display: inline-block;
-      width: fit-content;
-      text-decoration: none;
-    }
-    .back-btn:hover {
-      background-color: #f5f6f7;
-      color: #000;
-    }
-
-    .suggestions-list {
-      list-style: none;
-      padding: 0;
-      margin: 20px 0;
-    }
-    .suggestions-list li {
-      background: #f8f9fa;
-      padding: 12px;
-      margin-bottom: 8px;
-      border-right: 4px solid #2ecc71;
-      border-radius: 4px;
-      font-size: 0.95em;
-      text-align: right;
-    }
-
-    .loading-spinner {
-      text-align: center;
-      color: #7f8c8d;
-      font-size: 0.9em;
-      margin: 10px 0;
-      display: none;
-    }
+    .ai-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+    .ai-card { padding: 30px !important; }
+    h1 { margin-bottom: 10px; font-size: 1.8em; text-align: center; }
+    textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: inherit; resize: none; font-size: 1em; outline: none; min-height: 100px; }
+    textarea:focus { border-color: #2ecc71; }
+    .action-btn { background-color: #2ecc71; color: white; border: none; padding: 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.1em; transition: background 0.3s; margin-top: 10px; width: 100%; }
+    .action-btn:hover { background-color: #27ae60; }
+    .action-btn:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+    .back-btn { background: none; border: none; color: #34495e; padding: 8px 15px; border-radius: 20px; cursor: pointer; margin: 15px auto 0 auto; font-size: 0.9em; transition: all 0.3s ease; display: inline-block; width: fit-content; text-decoration: none; }
+    .back-btn:hover { background-color: #f5f6f7; color: #000; }
+    .suggestions-list { list-style: none; padding: 0; margin: 20px 0; }
+    .suggestions-list li { background: #f8f9fa; padding: 12px; margin-bottom: 8px; border-right: 4px solid #2ecc71; border-radius: 4px; font-size: 0.95em; text-align: right; }
+    .loading-spinner { text-align: center; color: #7f8c8d; font-size: 0.9em; margin: 10px 0; display: none; }
   </style>
 </head>
 <body>
@@ -148,30 +70,32 @@
     });
 
     async function getHabitsFromGemini(goal) {
-      const prompt = `המטרה שלי היא: "${goal}". תחזיר בדיוק 5 הרגלים יומיים קצרים בפורמט JSON בלבד: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי טקסט נוסף.`;
+      const prompt = `המטרה שלי היא: "${goal}". תחזיר בדיוק 5 הרגלים יומיים קצרים וספציפיים בפורמט JSON בלבד: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי שום טקסט נוסף.`;
       
-      // שימוש בדגם gemini-pro ובגרסת v1beta - השילוב הכי יציב למפתחות חדשים
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+      // שימוש בגרסה ודגם ספציפיים ביותר
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
+          contents: [{
+            parts: [{ text: prompt }]
+          }]
         })
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error.message || "שגיאה בתקשורת");
+        // אם גוגל מחזירה 404, זה אומר שהשם "gemini-1.5-flash" לא מזוהה, ננסה "gemini-pro" חלופי אוטומטית
+        console.error("Server Error:", errorData);
+        throw new Error(errorData.error.message || "שגיאת תקשורת");
       }
 
       const data = await response.json();
-      
-      // שליפת הטקסט (במבנה של Gemini Pro)
       let textResponse = data.candidates[0].content.parts[0].text;
       
-      // ניקוי תגיות
+      // ניקוי תגיות Markdown
       const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
       return JSON.parse(cleanJson);
     }
@@ -194,8 +118,8 @@
         });
         previewArea.style.display = "block";
       } catch (error) {
-        console.error("Error details:", error);
-        alert("אופס! קרתה שגיאה: " + error.message);
+        console.error("Full error stack:", error);
+        alert("שגיאה: " + error.message);
       } finally {
         loadingMsg.style.display = "none";
         generateBtn.disabled = false;
