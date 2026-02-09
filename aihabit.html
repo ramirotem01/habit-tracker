@@ -29,6 +29,10 @@
       font-family: inherit;
       resize: none;
       font-size: 1em;
+      outline: none;
+    }
+    textarea:focus {
+      border-color: #2ecc71;
     }
     .action-btn {
       background-color: #2ecc71;
@@ -68,7 +72,6 @@
       color: #000;
     }
 
-    /* עיצוב רשימת ההצעות מה-AI */
     .suggestions-list {
       list-style: none;
       padding: 0;
@@ -81,6 +84,7 @@
       border-right: 4px solid #2ecc71;
       border-radius: 4px;
       font-size: 0.95em;
+      text-align: right;
     }
 
     .loading-spinner {
@@ -96,18 +100,18 @@
   <div class="app login-app">
     <h1>🤖 עוזר AI אישי</h1>
     <div class="card login-card ai-card">
-      <p style="text-align: center; color: #666; margin-bottom: 20px;">רשום את המטרה השנתית שלך, ואני אבנה לך תוכנית הרגלים</p>
+      <p style="text-align: center; color: #666; margin-bottom: 20px;">מה המטרה שלך? אני אפרק אותה ל-5 הרגלים יומיים</p>
       
       <div class="ai-container">
-        <textarea id="goalInput" placeholder="למשל: השנה אני רוצה להיכנס לכושר שיא..." rows="3"></textarea>
-        <button id="generateBtn" class="action-btn">✨ צור 5 הרגלים מנצחים</button>
+        <textarea id="goalInput" placeholder="למשל: אני רוצה לחיות אורח חיים בריא יותר..." rows="3"></textarea>
+        <button id="generateBtn" class="action-btn">✨ צור תוכנית הרגלים</button>
         
-        <div id="loadingMsg" class="loading-spinner">ה-AI בונה לך תוכנית... ⚡</div>
+        <div id="loadingMsg" class="loading-spinner">ה-AI מנתח את המטרה שלך... ⚡</div>
 
         <div id="previewArea" style="display: none;">
-          <h3 style="font-size: 1.1em; margin-bottom: 10px;">זה מה שכדאי לך לעשות:</h3>
+          <h3 style="font-size: 1.1em; margin-bottom: 10px;">ההצעות שלי עבורך:</h3>
           <ul id="suggestedList" class="suggestions-list"></ul>
-          <button id="approveBtn" class="action-btn" style="background-color: #3498db; width: 100%;">✅ אשר והוסף הכל למערכת</button>
+          <button id="approveBtn" class="action-btn" style="background-color: #3498db; width: 100%;">✅ אשר והוסף הכל לרשימה שלי</button>
         </div>
 
         <div style="text-align: center;">
@@ -117,12 +121,14 @@
     </div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="[https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js](https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js)"></script>
+  <script src="[https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js](https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js)"></script>
+  <script src="[https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js](https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js)"></script>
+  
   <script src="firebase.js"></script>
 
   <script>
+    // המפתח שלך מוטמע כאן בתוך מרכאות
     const GEMINI_API_KEY = "AIzaSyAhOzuUV7gWvI86y_UDQbAS7WAU5IgnPSY";
 
     const goalInput = document.getElementById("goalInput");
@@ -135,29 +141,44 @@
     let currentSuggestions = [];
     let userId = null;
 
+    // בדיקת חיבור משתמש
     auth.onAuthStateChanged(user => {
-      if (!user) window.location.href = "index.html";
-      else userId = user.uid;
+      if (!user) {
+        window.location.href = "index.html";
+      } else {
+        userId = user.uid;
+      }
     });
 
     async function getHabitsFromGemini(goal) {
-      const prompt = `המטרה שלי היא: "${goal}". תחזיר בדיוק 5 הרגלים יומיים קטנים בפורמט JSON: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי טקסט נוסף.`;
+      const prompt = `המטרה שלי היא: "${goal}". תחזיר בדיוק 5 הרגלים יומיים קטנים בפורמט JSON בלבד: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. אל תוסיף שום הסבר או טקסט אחר.`;
+      
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }]
+        })
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error.message || "שגיאה בתקשורת עם גוגל");
+      }
+
       const data = await response.json();
-      const textResponse = data.candidates[0].content.parts[0].text;
-      return JSON.parse(textResponse.replace(/```json|```/g, "").trim());
+      let textResponse = data.candidates[0].content.parts[0].text;
+      
+      // ניקוי תגיות Markdown של JSON אם קיימות
+      const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
+      return JSON.parse(cleanJson);
     }
 
     generateBtn.addEventListener("click", async () => {
       const goal = goalInput.value.trim();
-      if (!goal) return;
+      if (!goal) return alert("בבקשה תכתוב מטרה כלשהי");
 
       loadingMsg.style.display = "block";
       generateBtn.disabled = true;
@@ -165,15 +186,18 @@
 
       try {
         currentSuggestions = await getHabitsFromGemini(goal);
+        
         suggestedList.innerHTML = "";
         currentSuggestions.forEach(h => {
           const li = document.createElement("li");
           li.textContent = h;
           suggestedList.appendChild(li);
         });
+
         previewArea.style.display = "block";
-      } catch (e) {
-        alert("שגיאה ביצירת הרגלים. בדוק את מפתח ה-API.");
+      } catch (error) {
+        console.error("Gemini Error:", error);
+        alert("שגיאה ביצירת הרגלים: " + error.message);
       } finally {
         loadingMsg.style.display = "none";
         generateBtn.disabled = false;
@@ -181,13 +205,25 @@
     });
 
     approveBtn.addEventListener("click", async () => {
+      if (!userId || currentSuggestions.length === 0) return;
+
       const batch = db.batch();
+      
       currentSuggestions.forEach(text => {
-        const ref = db.collection("users").doc(userId).collection("habits").doc();
-        batch.set(ref, { text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        const docRef = db.collection("users").doc(userId).collection("habits").doc();
+        batch.set(docRef, {
+          text: text,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
       });
-      await batch.commit();
-      window.location.href = "manage.html";
+
+      try {
+        await batch.commit();
+        alert("ההרגלים נוספו בהצלחה!");
+        window.location.href = "manage.html";
+      } catch (error) {
+        alert("שגיאה בשמירה ל-Firebase: " + error.message);
+      }
     });
   </script>
 </body>
