@@ -127,11 +127,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  
   <script src="firebase.js"></script>
 
   <script>
-    // המפתח ששלחת לי
     const GEMINI_API_KEY = "AIzaSyAhOzuUV7gWvI86y_UDQbAS7WAU5IgnPSY";
 
     const goalInput = document.getElementById("goalInput");
@@ -144,23 +142,19 @@
     let currentSuggestions = [];
     let userId = null;
 
-    // 1. בדיקת חיבור משתמש (חובה כדי לשמור ב-Firebase)
     auth.onAuthStateChanged(user => {
       if (!user) {
-        console.log("משתמש לא מחובר, מפנה לדף כניסה");
         window.location.href = "index.html";
       } else {
         userId = user.uid;
-        console.log("משתמש מחובר ב-AI Page:", userId);
       }
     });
 
-    // 2. פונקציית הקריאה ל-Gemini
     async function getHabitsFromGemini(goal) {
-      console.log("שולח בקשה לגוגל...");
-      const prompt = `המטרה שלי היא: "${goal}". תחזיר בדיוק 5 הרגלים יומיים קצרים וספציפיים. החזר אך ורק פורמט JSON של מערך מחרוזות. דוגמה: ["הרגל 1", "הרגל 2"]. בלי שום טקסט נוסף.`;
+      const prompt = `המטרה שלי היא: "${goal}". תחזיר בדיוק 5 הרגלים יומיים קצרים וספציפיים בפורמט JSON בלבד: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי טקסט נוסף.`;
       
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+      // הכתובת המעודכנת לגרסה 1
+      const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -172,45 +166,34 @@
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error.message || "שגיאה בתקשורת עם השרת");
+        throw new Error(errorData.error.message || "שגיאה בתקשורת");
       }
 
       const data = await response.json();
       let textResponse = data.candidates[0].content.parts[0].text;
-      console.log("תשובה גולמית מה-AI:", textResponse);
-      
-      // ניקוי תגיות של JSON אם ה-AI הוסיף אותן
       const cleanJson = textResponse.replace(/```json/g, "").replace(/```/g, "").trim();
       return JSON.parse(cleanJson);
     }
 
-    // 3. אירוע לחיצה על כפתור יצירה
     generateBtn.addEventListener("click", async () => {
       const goal = goalInput.value.trim();
-      if (!goal) {
-        alert("בבקשה רשום מטרה קודם.");
-        return;
-      }
+      if (!goal) return alert("בבקשה רשום מטרה קודם.");
 
-      console.log("מתחיל תהליך יצירה...");
       loadingMsg.style.display = "block";
       generateBtn.disabled = true;
       previewArea.style.display = "none";
 
       try {
         currentSuggestions = await getHabitsFromGemini(goal);
-        console.log("הרגלים שהתקבלו:", currentSuggestions);
-        
         suggestedList.innerHTML = "";
         currentSuggestions.forEach(habit => {
           const li = document.createElement("li");
           li.textContent = habit;
           suggestedList.appendChild(li);
         });
-
         previewArea.style.display = "block";
       } catch (error) {
-        console.error("שגיאה:", error);
+        console.error("Error:", error);
         alert("אופס! קרתה שגיאה: " + error.message);
       } finally {
         loadingMsg.style.display = "none";
@@ -218,30 +201,16 @@
       }
     });
 
-    // 4. שמירה ל-Firebase
     approveBtn.addEventListener("click", async () => {
       if (!userId || currentSuggestions.length === 0) return;
-
-      console.log("מתחיל שמירה ל-Firebase...");
       const batch = db.batch();
-      
       currentSuggestions.forEach(text => {
         const docRef = db.collection("users").doc(userId).collection("habits").doc();
-        batch.set(docRef, {
-          text: text,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        batch.set(docRef, { text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
       });
-
-      try {
-        await batch.commit();
-        console.log("השמירה הצליחה!");
-        alert("כל ההרגלים נוספו בהצלחה!");
-        window.location.href = "manage.html";
-      } catch (error) {
-        console.error("שגיאת שמירה:", error);
-        alert("שגיאה בשמירת הנתונים.");
-      }
+      await batch.commit();
+      alert("ההרגלים נוספו בהצלחה!");
+      window.location.href = "manage.html";
     });
   </script>
 </body>
