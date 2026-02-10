@@ -61,46 +61,39 @@
     });
 
     async function generateWithAI(goal) {
-      // ניסיון עם המודל הכי חזק ויציב בגרסה v1
-      const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`;
+      const prompt = `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים יומיים קצרים: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. תחזיר אך ורק את הרשימה, בלי הסברים.`;
+      
+      // רשימת מודלים פוטנציאליים לפי סדר עדיפות לעבודה ב-2026
+      const models = [
+        "gemini-1.5-flash-latest", 
+        "gemini-1.5-pro-latest",
+        "gemini-pro"
+      ];
 
-      const prompt = `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים יומיים קצרים: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. תחזיר אך ורק את הרשימה, בלי הסברים ובלי מילים נוספות.`;
-
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }]
-          })
-        });
-
-        const data = await response.json();
-        
-        if (!response.ok) {
-          console.error("Gemini Error Detail:", data);
-          throw new Error(data.error ? data.error.message : "שגיאת API כללית");
-        }
-
-        return extractJson(data);
-      } catch (err) {
-        // אם gemini-1.5-pro נכשל, ננסה את flash בגרסת v1 המדויקת
-        return await retryWithFlash(goal);
-      }
-    }
-
-    async function retryWithFlash(goal) {
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-        const prompt = `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים יומיים: ["1", "2", "3", "4", "5"]. רק JSON.`;
-        
-        const response = await fetch(url, {
+      for (const model of models) {
+        try {
+          console.log(`Trying model: ${model}...`);
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+          
+          const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error ? data.error.message : "חיבור נכשל");
-        return extractJson(data);
+          });
+
+          const data = await response.json();
+          
+          if (response.ok) {
+            return extractJson(data);
+          } else {
+            console.warn(`Model ${model} failed:`, data.error.message);
+          }
+        } catch (err) {
+          console.error(`Error with ${model}:`, err);
+        }
+      }
+      
+      throw new Error("כל ניסיונות החיבור ל-AI נכשלו. אנא בדוק את ה-API Key או נסה שוב מאוחר יותר.");
     }
 
     function extractJson(data) {
@@ -110,7 +103,7 @@
             if (!jsonMatch) throw new Error();
             return JSON.parse(jsonMatch[0]);
         } catch (e) {
-            throw new Error("ה-AI החזיר תשובה בפורמט לא תקין, נסה שנית");
+            throw new Error("ה-AI החזיר תשובה בפורמט לא תקין.");
         }
     }
 
@@ -138,7 +131,7 @@
         preview.style.display = "block";
         window.currentHabits = habits;
       } catch (error) {
-        alert("שגיאה: " + error.message);
+        alert(error.message);
       } finally {
         loader.style.display = "none";
         btn.disabled = false;
