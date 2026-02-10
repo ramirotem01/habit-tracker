@@ -61,35 +61,37 @@
     });
 
     async function generateWithAI(goal) {
-      // שימוש בגרסה היציבה v1 ובנתיב המעודכן של גוגל
-      const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+      // ניסיון עם המודל הכי חזק ויציב בגרסה v1
+      const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`;
 
       const prompt = `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים יומיים קצרים: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. תחזיר אך ורק את הרשימה, בלי הסברים ובלי מילים נוספות.`;
 
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
-      });
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }]
+          })
+        });
 
-      const data = await response.json();
-      
-      if (!response.ok) {
-        // אם v1 לא עבד, נסיון אחרון עם שם המודל הישן ב-v1beta
-        if (response.status === 404) {
-             return await retryWithBeta(goal);
+        const data = await response.json();
+        
+        if (!response.ok) {
+          console.error("Gemini Error Detail:", data);
+          throw new Error(data.error ? data.error.message : "שגיאת API כללית");
         }
-        throw new Error(data.error ? data.error.message : "שגיאה בתקשורת");
-      }
 
-      return extractJson(data);
+        return extractJson(data);
+      } catch (err) {
+        // אם gemini-1.5-pro נכשל, ננסה את flash בגרסת v1 המדויקת
+        return await retryWithFlash(goal);
+      }
     }
 
-    async function retryWithBeta(goal) {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
-        const prompt = `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים יומיים קצרים: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. תחזיר אך ורק את הרשימה.`;
+    async function retryWithFlash(goal) {
+        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const prompt = `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים יומיים: ["1", "2", "3", "4", "5"]. רק JSON.`;
         
         const response = await fetch(url, {
             method: 'POST',
@@ -97,7 +99,7 @@
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
         const data = await response.json();
-        if (!response.ok) throw new Error("API Error");
+        if (!response.ok) throw new Error(data.error ? data.error.message : "חיבור נכשל");
         return extractJson(data);
     }
 
@@ -108,7 +110,7 @@
             if (!jsonMatch) throw new Error();
             return JSON.parse(jsonMatch[0]);
         } catch (e) {
-            throw new Error("לא הצלחתי לעבד את תשובת ה-AI");
+            throw new Error("ה-AI החזיר תשובה בפורמט לא תקין, נסה שנית");
         }
     }
 
