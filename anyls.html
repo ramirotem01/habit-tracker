@@ -151,7 +151,7 @@
         const modelName = await getAvailableModel(apiKey);
         const data = await collectWeeklyData();
         
-        const prompt = `אתה מאמן ביצועים. 
+        const prompt = `אתה פסיכולוג התנהגותי ומאמן ביצועים. 
           המטרה של המשתמש: "${data.goal}". 
           להלן נתוני השבוע האחרון (משימות יומיות והרגלים):
           ${JSON.stringify(data.dailyDetails)}
