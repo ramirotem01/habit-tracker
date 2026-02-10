@@ -1,141 +1,4 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Habit Tracker – עוזר AI</title>
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    /* עיצוב המכולה והכרטיס לפי השפה העיצובית שלך */
-    .ai-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
-    }
-    .ai-card {
-      padding: 30px !important;
-    }
-    h1 {
-      margin-bottom: 10px;
-      font-size: 1.8em;
-      text-align: center;
-    }
-    textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-family: inherit;
-      resize: none;
-      font-size: 1em;
-      outline: none;
-      min-height: 100px;
-    }
-    textarea:focus {
-      border-color: #2ecc71;
-    }
-
-    /* כפתורי פעולה ראשיים */
-    .action-btn {
-      background-color: #2ecc71;
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1.1em;
-      transition: background 0.3s;
-      margin-top: 10px;
-      width: 100%;
-    }
-    .action-btn:hover {
-      background-color: #27ae60;
-    }
-    .action-btn:disabled {
-      background-color: #bdc3c7;
-      cursor: not-allowed;
-    }
-
-    /* כפתור חזרה כקישור עדין - בדיוק כמו שביקשת */
-    .back-btn {
-      background: none;
-      border: none;
-      color: #34495e; /* כיתוב כהה */
-      padding: 8px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-      margin: 15px auto 0 auto;
-      font-size: 0.9em;
-      font-weight: normal; /* ביטול ה-Bold */
-      transition: all 0.3s ease;
-      display: inline-block;
-      width: fit-content;
-      text-decoration: none;
-    }
-    .back-btn:hover {
-      background-color: #f5f6f7; /* רקע אפור עדין מאוד */
-      color: #000;
-    }
-
-    /* רשימת ההצעות */
-    .suggestions-list {
-      list-style: none;
-      padding: 0;
-      margin: 20px 0;
-    }
-    .suggestions-list li {
-      background: #f8f9fa;
-      padding: 12px;
-      margin-bottom: 8px;
-      border-right: 4px solid #2ecc71;
-      border-radius: 4px;
-      font-size: 0.95em;
-      text-align: right;
-    }
-
-    .loading-spinner {
-      text-align: center;
-      color: #7f8c8d;
-      font-size: 0.9em;
-      margin: 10px 0;
-      display: none;
-    }
-  </style>
-</head>
-<body>
-  <div class="app login-app">
-    <h1> עוזר AI אישי</h1>
-    <div class="card login-card ai-card">
-      <p style="text-align: center; color: #666; margin-bottom: 20px;">רשום את המטרה שלך, והמערכת תבנה עבורך 5 הרגלים מנצחים</p>
-      
-      <div class="ai-container">
-        <textarea id="goalInput" placeholder="למשל: אני רוצה להיכנס לכושר השנה..." rows="3"></textarea>
-        <button id="generateBtn" class="action-btn">✨ צור תוכנית הרגלים</button>
-        
-        <div id="loadingMsg" class="loading-spinner">מתחבר ל-AI... ⚡</div>
-
-        <div id="previewArea" style="display: none;">
-          <h3 style="font-size: 1.1em; margin-bottom: 10px;">ההרגלים החדשים שלך:</h3>
-          <ul id="suggestedList" class="suggestions-list"></ul>
-          <button id="approveBtn" class="action-btn" style="background-color: #3498db;">✅ אשר והוסף הכל למערכת</button>
-        </div>
-
-        <div style="text-align: center;">
-          <button class="back-btn" onclick="window.location.href='manage.html'">חזרה לניהול הרגלים</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  <script src="firebase.js"></script>
-
-  <script>
+<script>
     const GEMINI_API_KEY = "AIzaSyAhOzuUV7gWvI86y_UDQbAS7WAU5IgnPSY";
     let userId = null;
 
@@ -144,13 +7,18 @@
       else userId = user.uid; 
     });
 
+    // פונקציה משופרת שמבטיחה פורמט שם נקי
     async function getAvailableModel() {
         try {
-            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${GEMINI_API_KEY}`);
+            const resp = await fetch(`https://generativelanguage.googleapis.com/v1/models?key=${GEMINI_API_KEY}`);
+            if (!resp.ok) throw new Error();
             const data = await resp.json();
-            const model = data.models.find(m => m.supportedGenerationMethods.includes("generateContent"));
+            // מחפש את פלאש ברשימה
+            const model = data.models.find(m => m.name.includes("gemini-1.5-flash"));
+            // מחזיר רק את השם (למשל models/gemini-1.5-flash) בלי תוספות
             return model ? model.name : "models/gemini-1.5-flash"; 
         } catch (e) {
+            // אם נכשל, חוזר לברירת המחדל היציבה
             return "models/gemini-1.5-flash";
         }
     }
@@ -158,7 +26,9 @@
     async function generateWithAI(goal) {
       const modelName = await getAvailableModel();
       const prompt = `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים יומיים קצרים: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי שום טקסט נוסף.`;
-      const url = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
+      
+      // שימוש בגרסה v1 היציבה במקום v1beta
+      const url = `https://generativelanguage.googleapis.com/v1/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -167,11 +37,30 @@
       });
 
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error.message);
+      if (!response.ok) {
+          // אם v1 נכשל, ננסה פעם אחרונה עם v1beta כגיבוי
+          if (response.status === 404) {
+              const retryUrl = url.replace("/v1/", "/v1beta/");
+              const retryResp = await fetch(retryUrl, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+              });
+              const retryData = await retryResp.json();
+              if (!retryResp.ok) throw new Error(retryData.error.message);
+              return parseGeminiResponse(retryData);
+          }
+          throw new Error(data.error.message);
+      }
 
-      let text = data.candidates[0].content.parts[0].text;
-      const cleanJson = text.replace(/```json/g, "").replace(/```/g, "").trim();
-      return JSON.parse(cleanJson);
+      return parseGeminiResponse(data);
+    }
+
+    // פונקציית עזר לחילוץ הטקסט מה-JSON של גוגל
+    function parseGeminiResponse(data) {
+        let text = data.candidates[0].content.parts[0].text;
+        const cleanJson = text.replace(/```json/g, "").replace(/```/g, "").trim();
+        return JSON.parse(cleanJson);
     }
 
     document.getElementById("generateBtn").addEventListener("click", async () => {
@@ -198,7 +87,8 @@
         preview.style.display = "block";
         window.currentHabits = habits;
       } catch (error) {
-        alert("שגיאה ביצירת הרגלים: " + error.message);
+        console.error(error);
+        alert("שגיאה ביצירת הרגלים. וודא שהמטרה ברורה ונסה שוב.");
       } finally {
         loader.style.display = "none";
         btn.disabled = false;
@@ -206,6 +96,7 @@
     });
 
     document.getElementById("approveBtn").addEventListener("click", async () => {
+      if (!window.currentHabits) return;
       const batch = db.batch();
       window.currentHabits.forEach(text => {
         const ref = db.collection("users").doc(userId).collection("habits").doc();
@@ -215,5 +106,3 @@
       window.location.href = "manage.html";
     });
   </script>
-</body>
-</html>
