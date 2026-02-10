@@ -1,82 +1,4 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>אנליטיקה AI - Habit Tracker</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .analytics-container { display: flex; flex-direction: column; gap: 20px; }
-    .ai-response {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      line-height: 1.6;
-      border-right: 5px solid #9b59b6;
-      display: none;
-      white-space: pre-wrap;
-    }
-    .loading-container {
-      text-align: center;
-      padding: 40px;
-      display: none;
-    }
-    .loader {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #9b59b6;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 10px;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    
-    .insight-card {
-      background: #fdfaff;
-      border: 1px solid #e0d0eb;
-      padding: 15px;
-      border-radius: 10px;
-      margin-top: 15px;
-    }
-    .action-btn-ai {
-      background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
-      color: white; border: none; padding: 15px; border-radius: 8px;
-      font-weight: bold; cursor: pointer; font-size: 1.1em; width: 100%;
-    }
-  </style>
-</head>
-<body>
-  <div class="app">
-    <h1>🧠 תובנות AI</h1>
-
-    <div class="analytics-container">
-      <section class="card">
-        <h3>ניתוח התקדמות חכם</h3>
-        <p>המערכת תנתח את ההרגלים והביצועים שלך אל מול המטרה הגדולה שהצבת.</p>
-        <button id="analyzeBtn" class="action-btn-ai">✨ צור דוח תובנות עכשיו</button>
-      </section>
-
-      <div id="loadingArea" class="loading-container">
-        <div class="loader"></div>
-        <p>ה-AI מנתח את הנתונים שלך...</p>
-      </div>
-
-      <div id="resultArea" class="ai-response">
-        </div>
-
-      <div class="actions">
-        <button onclick="window.location.href='dashboard.html'">🏠 חזרה לדשבורד</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  <script src="firebase.js"></script>
-
-  <script>
+<script>
     let userId = null;
 
     auth.onAuthStateChanged(user => {
@@ -86,8 +8,14 @@
 
     // 1. שליפת מפתח ה-API
     async function getApiKey() {
-      const doc = await db.collection("system_config").doc("gemini_settings").get();
-      return doc.exists ? doc.data().apiKey : null;
+      try {
+        const doc = await db.collection("system_config").doc("gemini_settings").get();
+        if (!doc.exists) throw new Error("מפתח API לא הוגדר במסד הנתונים");
+        return doc.data().apiKey;
+      } catch (e) {
+        console.error("שגיאה בשליפת המפתח:", e);
+        return null;
+      }
     }
 
     // 2. איסוף כל המידע מה-DB
@@ -97,7 +25,7 @@
       // שליפת מטרה
       const goalSnap = await db.collection("users").doc(userId).collection("goals")
         .orderBy("createdAt", "desc").limit(1).get();
-      const goal = goalSnap.empty ? "לא הוגדרה מטרה" : goalSnap.docs[0].data().text;
+      const goal = goalSnap.empty ? "שיפור איכות החיים" : goalSnap.docs[0].data().text;
 
       // שליפת הרגלים קבועים
       const habitSnap = await db.collection("users").doc(userId).collection("habits").get();
@@ -122,10 +50,14 @@
 
       try {
         const apiKey = await getApiKey();
+        if (!apiKey) throw new Error("לא נמצא מפתח API תקין");
+
         const data = await collectUserData();
         
         // הכנת פירוט הביצועים
-        const performance = data.habits.map(h => `${h}: ${data.stats[h] ? 'בוצע ✅' : 'לא בוצע ❌'}`).join('\n');
+        const performance = data.habits.length > 0 
+          ? data.habits.map(h => `${h}: ${data.stats[h] ? 'בוצע ✅' : 'לא בוצע ❌'}`).join('\n')
+          : "אין עדיין הרגלים מוגדרים.";
 
         const prompt = `
           אתה מאמן אישי מומחה לשינוי הרגלים. 
@@ -143,20 +75,34 @@
           כתוב בעברית מעודדת, בגובה העיניים ובצורה תמציתית (עד 150 מילים).
         `;
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        // שימוש בשם המודל המלא
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+        const response = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
 
         const resData = await response.json();
-        const aiText = resData.candidates[0].content.parts[0].text;
 
-        resultArea.innerHTML = `<h3>דוח התקדמות אישי:</h3>${aiText}`;
-        resultArea.style.display = "block";
+        // בדיקה אם ה-API החזיר שגיאה (כמו מפתח לא תקין)
+        if (resData.error) {
+           throw new Error(resData.error.message);
+        }
+
+        // בדיקה אם יש תשובה תקינה ב-candidates
+        if (resData.candidates && resData.candidates[0] && resData.candidates[0].content) {
+          const aiText = resData.candidates[0].content.parts[0].text;
+          resultArea.innerHTML = `<h3>דוח התקדמות אישי:</h3><div class="insight-card">${aiText}</div>`;
+          resultArea.style.display = "block";
+        } else {
+          throw new Error("ה-AI לא הצליח לגבש תשובה. נסה שוב.");
+        }
 
       } catch (err) {
-        alert("שגיאה בהפקת הדוח: " + err.message);
+        console.error("Full Error:", err);
+        alert("שגיאה: " + err.message);
       } finally {
         loader.style.display = "none";
         btn.disabled = false;
@@ -165,5 +111,3 @@
 
     document.getElementById("analyzeBtn").addEventListener("click", generateAnalytics);
   </script>
-</body>
-</html>
