@@ -1,29 +1,55 @@
-
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
   <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#3498db">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
+  <meta name="theme-color" content="#3498db">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
 
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(() => console.log("PWA Ready"))
-      .catch(err => console.log("PWA Error", err));
-  }
-</script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("PWA Ready"))
+        .catch(err => console.log("PWA Error", err));
+    }
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>דשבורד הרגלים</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* עיצוב ייעודי לכרטיס המטרה */
+    .goal-card {
+      background: linear-gradient(135deg, #f1f9ff 0%, #ffffff 100%);
+      border-right: 5px solid #3498db;
+      text-align: center;
+      padding: 20px !important;
+    }
+    .goal-card h2 {
+      font-size: 0.9em;
+      color: #7f8c8d;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    #userGoalText {
+      font-size: 1.3em;
+      color: #2c3e50;
+      font-weight: bold;
+      font-style: italic;
+    }
+  </style>
 </head>
 <body>
   <div class="app">
     <h1>📊 דשבורד יומי</h1>
     
+    <section class="card goal-card" id="goalSection" style="display: none;">
+      <h2>היעד הגדול שלי:</h2>
+      <p id="userGoalText">טוען מטרה...</p>
+    </section>
+
     <section class="card summary-card">
       <p>תאריך: <strong id="todayDate"></strong></p>
       <p>סה"כ משימות: <span id="totalHabits">0</span></p>
@@ -49,6 +75,7 @@
 
     <div class="actions">
       <button onclick="window.location.href='manage.html'">📝 ניהול הרגלים</button>
+      <button onclick="window.location.href='aihabit.html'" style="background: #2ecc71; color: white;">✨ עוזר AI</button>
       <button id="logoutBtn" style="background: #ff4b2b; color: white;">🚪 התנתק</button>
     </div>
 
@@ -58,10 +85,36 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <script src="firebase.js"></script>
+
+  <script>
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        loadUserGoal(user.uid);
+      }
+    });
+
+    async function loadUserGoal(uid) {
+      try {
+        // שליפת המטרה האחרונה שנשמרה (לפי זמן יצירה בסדר יורד)
+        const snapshot = await db.collection("users").doc(uid)
+          .collection("goals")
+          .orderBy("createdAt", "desc")
+          .limit(1)
+          .get();
+
+        if (!snapshot.empty) {
+          const goalData = snapshot.docs[0].data();
+          document.getElementById("userGoalText").textContent = `"${goalData.text}"`;
+          document.getElementById("goalSection").style.display = "block";
+        }
+      } catch (e) {
+        console.error("Error loading goal:", e);
+      }
+    }
+  </script>
+
   <script src="dashboard.js"></script>
 </body>
 </html>
