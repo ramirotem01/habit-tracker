@@ -169,7 +169,6 @@
     }
 
     async function generateWithAI(goal) {
-      // שליפת המפתח לפני תחילת העבודה
       const apiKey = await fetchApiKey();
       const modelName = await getAvailableModel(apiKey);
       
@@ -223,13 +222,31 @@
 
     document.getElementById("approveBtn").addEventListener("click", async () => {
       if (!window.currentHabits || !userId) return;
+      
+      // שליפת המטרה מה-input
+      const goalText = document.getElementById("goalInput").value.trim();
       const batch = db.batch();
+
+      // 1. שמירת המטרה הכללית
+      const goalRef = db.collection("users").doc(userId).collection("goals").doc();
+      batch.set(goalRef, { 
+        text: goalText, 
+        createdAt: firebase.firestore.FieldValue.serverTimestamp() 
+      });
+
+      // 2. שמירת ההרגלים
       window.currentHabits.forEach(text => {
         const ref = db.collection("users").doc(userId).collection("habits").doc();
         batch.set(ref, { text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
       });
-      await batch.commit();
-      window.location.href = "manage.html";
+
+      try {
+        await batch.commit();
+        window.location.href = "manage.html";
+      } catch (e) {
+        console.error("שגיאה בשמירה:", e);
+        alert("הייתה בעיה בשמירת המטרה והרגלים.");
+      }
     });
   </script>
 </body>
