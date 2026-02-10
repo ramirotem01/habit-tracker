@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>אנליטיקה שבועית עמוקה AI</title>
+  <title>אנליטיקה שבועית AI - Habit Tracker</title>
   <link rel="stylesheet" href="style.css">
   <style>
     .analytics-container { display: flex; flex-direction: column; gap: 20px; }
@@ -41,14 +41,12 @@
 </head>
 <body>
   <div class="app">
-    <h1>🧠 תובנות עומק שבועיות</h1>
+        <h1> ניתוח שבועי חכם</h1>
     <div class="analytics-container">
       <section class="card">
-        <h3 style="text-align: center;">מה השבוע שלך מלמד עליך?</h3>
-        <p style="text-align: center; color: #666; margin-bottom: 20px;">
-          ה-AI ינתח את המטרות, ההרגלים והמשימות היומיות שלך מהשבוע האחרון כדי לחשוף דפוסים נסתרים.
-        </p>
-        <button id="analyzeBtn" class="action-btn-ai">✨ התחל ניתוח עומק</button>
+        <h3 style="text-align: center;">תובנות על השבוע האחרון</h3>
+        <p style="text-align: center; color: #666; margin-bottom: 20px;">ה-AI ינתח את המגמות שלך ב-7 הימים האחרונים וימליץ על צעדים להמשך.</p>
+        <button id="analyzeBtn" class="action-btn-ai">✨ נתח את השבוע שלי</button>
       </section>
 
       <div id="loadingArea" class="loading-container">
@@ -147,7 +145,7 @@
         const modelName = await getAvailableModel(apiKey);
         const data = await collectWeeklyData();
         
-        const prompt = `אתה פסיכולוג התנהגותי ומאמן ביצועים. 
+        const prompt = `אתה מאמן ביצועים. 
           המטרה של המשתמש: "${data.goal}". 
           להלן נתוני השבוע האחרון (משימות יומיות והרגלים):
           ${JSON.stringify(data.dailyDetails)}
