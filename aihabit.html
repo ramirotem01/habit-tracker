@@ -6,7 +6,7 @@
   <title>Habit Tracker – עוזר AI</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* עיצוב המכולה והכרטיס לפי השפה העיצובית שלך */
+    /* עיצוב המכולה והכרטיס */
     .ai-container {
       display: flex;
       flex-direction: column;
@@ -37,7 +37,7 @@
       border-color: #2ecc71;
     }
 
-    /* כפתורי פעולה ראשיים */
+    /* כפתורי פעולה */
     .action-btn {
       background-color: #2ecc71;
       color: white;
@@ -59,24 +59,23 @@
       cursor: not-allowed;
     }
 
-    /* כפתור חזרה כקישור עדין - בדיוק כמו שביקשת */
     .back-btn {
       background: none;
       border: none;
-      color: #34495e; /* כיתוב כהה */
+      color: #34495e;
       padding: 8px 15px;
       border-radius: 20px;
       cursor: pointer;
       margin: 15px auto 0 auto;
       font-size: 0.9em;
-      font-weight: normal; /* ביטול ה-Bold */
+      font-weight: normal;
       transition: all 0.3s ease;
       display: inline-block;
       width: fit-content;
       text-decoration: none;
     }
     .back-btn:hover {
-      background-color: #f5f6f7; /* רקע אפור עדין מאוד */
+      background-color: #f5f6f7;
       color: #000;
     }
 
@@ -136,7 +135,6 @@
   <script src="firebase.js"></script>
 
   <script>
-    const GEMINI_API_KEY = "AIzaSyAXBHsuufDEZB9EA-1WfPZpjqeLJ3XR138";
     let userId = null;
 
     auth.onAuthStateChanged(user => { 
@@ -144,21 +142,39 @@
       else userId = user.uid; 
     });
 
-    async function getAvailableModel() {
-        try {
-            const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${GEMINI_API_KEY}`);
-            const data = await resp.json();
-            const model = data.models.find(m => m.supportedGenerationMethods.includes("generateContent"));
-            return model ? model.name : "models/gemini-1.5-flash"; 
-        } catch (e) {
-            return "models/gemini-1.5-flash";
+    // שלב א: שליפת המפתח מה-Firestore
+    async function fetchApiKey() {
+      try {
+        const doc = await db.collection("system_config").doc("gemini_settings").get();
+        if (doc.exists) {
+          return doc.data().apiKey;
+        } else {
+          throw new Error("מפתח AI לא נמצא ב-Database");
         }
+      } catch (e) {
+        console.error("שגיאה בשליפת המפתח:", e);
+        throw e;
+      }
+    }
+
+    async function getAvailableModel(apiKey) {
+      try {
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+        const data = await resp.json();
+        const model = data.models.find(m => m.supportedGenerationMethods.includes("generateContent"));
+        return model ? model.name : "models/gemini-1.5-flash"; 
+      } catch (e) {
+        return "models/gemini-1.5-flash";
+      }
     }
 
     async function generateWithAI(goal) {
-      const modelName = await getAvailableModel();
+      // שליפת המפתח לפני תחילת העבודה
+      const apiKey = await fetchApiKey();
+      const modelName = await getAvailableModel(apiKey);
+      
       const prompt = `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים יומיים קצרים: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי שום טקסט נוסף.`;
-      const url = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${apiKey}`;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -206,6 +222,7 @@
     });
 
     document.getElementById("approveBtn").addEventListener("click", async () => {
+      if (!window.currentHabits || !userId) return;
       const batch = db.batch();
       window.currentHabits.forEach(text => {
         const ref = db.collection("users").doc(userId).collection("habits").doc();
