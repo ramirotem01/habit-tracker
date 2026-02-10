@@ -61,8 +61,8 @@
     });
 
     async function generateWithAI(goal) {
-      // שימוש בגרסה היציבה ביותר ובדגם הסטנדרטי
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+      // שימוש בגרסה היציבה v1 ובנתיב המעודכן של גוגל
+      const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
       const prompt = `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים יומיים קצרים: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. תחזיר אך ורק את הרשימה, בלי הסברים ובלי מילים נוספות.`;
 
@@ -77,21 +77,39 @@
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.error ? data.error.message : "שגיאה בתקשורת עם השרת");
+        // אם v1 לא עבד, נסיון אחרון עם שם המודל הישן ב-v1beta
+        if (response.status === 404) {
+             return await retryWithBeta(goal);
+        }
+        throw new Error(data.error ? data.error.message : "שגיאה בתקשורת");
       }
 
-      try {
-        let rawText = data.candidates[0].content.parts[0].text;
+      return extractJson(data);
+    }
+
+    async function retryWithBeta(goal) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+        const prompt = `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים יומיים קצרים: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. תחזיר אך ורק את הרשימה.`;
         
-        // ניקוי אגרסיבי של הטקסט כדי למצוא רק את ה-JSON
-        const jsonMatch = rawText.match(/\[[\s\S]*\]/);
-        if (!jsonMatch) throw new Error("ה-AI לא החזיר פורמט תקין");
-        
-        return JSON.parse(jsonMatch[0]);
-      } catch (e) {
-        console.error("Parsing error:", e);
-        throw new Error("לא הצלחתי לעבד את תשובת ה-AI");
-      }
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error("API Error");
+        return extractJson(data);
+    }
+
+    function extractJson(data) {
+        try {
+            let rawText = data.candidates[0].content.parts[0].text;
+            const jsonMatch = rawText.match(/\[[\s\S]*\]/);
+            if (!jsonMatch) throw new Error();
+            return JSON.parse(jsonMatch[0]);
+        } catch (e) {
+            throw new Error("לא הצלחתי לעבד את תשובת ה-AI");
+        }
     }
 
     document.getElementById("generateBtn").addEventListener("click", async () => {
@@ -131,10 +149,7 @@
         const batch = db.batch();
         window.currentHabits.forEach(text => {
           const ref = db.collection("users").doc(userId).collection("habits").doc();
-          batch.set(ref, { 
-            text: text, 
-            createdAt: firebase.firestore.FieldValue.serverTimestamp() 
-          });
+          batch.set(ref, { text: text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
         });
         await batch.commit();
         window.location.href = "manage.html";
