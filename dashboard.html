@@ -25,13 +25,31 @@
       border-right: 5px solid #3498db;
       text-align: center;
       padding: 20px !important;
+      position: relative;
+    }
+    .goal-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
     }
     .goal-card h2 {
       font-size: 0.9em;
       color: #7f8c8d;
-      margin-bottom: 8px;
+      margin: 0;
       text-transform: uppercase;
       letter-spacing: 1px;
+    }
+    .edit-goal-btn {
+      text-decoration: none;
+      font-size: 1.2em;
+      color: #3498db;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .edit-goal-btn:hover {
+      opacity: 0.7;
     }
     #userGoalText {
       font-size: 1.3em;
@@ -52,7 +70,10 @@
     <h1>📊 דשבורד יומי</h1>
     
     <section class="card goal-card" id="goalSection" style="display: none;">
-      <h2>היעד הגדול שלי:</h2>
+      <div class="goal-header">
+        <h2>היעד הגדול שלי:</h2>
+        <a href="mygoal.html" class="edit-goal-btn" title="עדכן מטרה">✏️</a>
+      </div>
       <p id="userGoalText">טוען מטרה...</p>
     </section>
 
