@@ -3,43 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>בדיקת נתוני היום - Debug</title>
+  <title>בדיקת הצלבת נתונים - Debug</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    body { background-color: #f4f7f6; padding: 20px; }
+    body { background-color: #f4f7f6; padding: 20px; font-family: sans-serif; }
     .debug-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    .task-item { border-bottom: 1px solid #eee; padding: 15px; margin-bottom: 10px; background: #fafafa; border-radius: 8px; }
-    .task-header { font-weight: bold; font-size: 1.1em; color: #2c3e50; margin-bottom: 10px; display: block; }
-    .field-info { display: inline-block; background: #e9ecef; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 0.9em; margin: 4px; }
-    .status-v { color: #2ecc71; font-weight: bold; }
-    .status-x { color: #e74c3c; font-weight: bold; }
+    .task-row { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+    .status-v { color: #2ecc71; font-weight: bold; background: #eafff2; padding: 2px 8px; border-radius: 4px; }
+    .status-x { color: #e74c3c; font-weight: bold; background: #fff2f2; padding: 2px 8px; border-radius: 4px; }
     .raw-json { background: #273e47; color: #f1f1f1; padding: 15px; border-radius: 8px; font-size: 13px; direction: ltr; text-align: left; overflow-x: auto; }
-    .btn-test { background-color: #2ecc71; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.1em; }
+    .btn-test { background-color: #3498db; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.1em; }
+    h3 { border-bottom: 2px solid #3498db; padding-bottom: 5px; margin-top: 20px; }
   </style>
 </head>
 <body>
   <div class="app">
-    <h1>🔍 בודק משימות של היום (Debug)</h1>
-    <p>דף זה מציג את המבנה המדויק של המשימות הזמניות (tempHabits) מה-Database.</p>
+    <h1>🔍 בודק הצלבת נתונים 1.1(V-Check)</h1>
+    <p>דף זה בודק האם המשימות מ-tempHabits מסומנות כבוצעו בתוך קולקציית stats (בדיוק כמו בדשבורד).</p>
 
-    <button id="runTestBtn" class="btn-test">🚀 בדוק משימות של היום</button>
+    <button id="runTestBtn" class="btn-test">🚀 בדוק סנכרון להיום</button>
 
-    <div id="loadingStatus" style="display:none; text-align: center; margin: 20px;">שולף נתונים...</div>
+    <div id="loadingStatus" style="display:none; text-align: center; margin: 20px;">מבצע הצלבת נתונים...</div>
 
     <div id="debugResult" style="display:none; margin-top: 20px;">
       <section class="debug-card">
         <h3>📅 תאריך נבדק: <span id="currentDateId"></span></h3>
-        <div id="tasksList"></div>
+        
+        <div id="resultsContent">
+          <h4>משימות זמניות (tempHabits) והסטטוס שלהן ב-Stats:</h4>
+          <div id="tasksList"></div>
+        </div>
       </section>
 
       <section class="debug-card">
-        <h3>📄 JSON גולמי של המשימות:</h3>
+        <h3>📄 מה ה-AI יראה (JSON הגולמי):</h3>
         <pre id="rawJson" class="raw-json"></pre>
       </section>
-    </div>
-
-    <div class="actions" style="margin-top: 20px;">
-      <button onclick="window.location.href='dashboard.html'" style="width: 100%; background-color: #34495e; color: white;">🏠 חזרה לדשבורד</button>
     </div>
   </div>
 
@@ -60,7 +59,7 @@
       }
     });
 
-    async function checkTodayTasks() {
+    async function checkSync() {
       const btn = document.getElementById("runTestBtn");
       const loader = document.getElementById("loadingStatus");
       const resultDiv = document.getElementById("debugResult");
@@ -76,46 +75,49 @@
         const dateId = now.toISOString().split('T')[0];
         document.getElementById("currentDateId").textContent = dateId;
 
-        // שליפת משימות מהנתיב המדויק של האנליטיקה
+        // 1. שליפת הסטטיסטיקה של היום (שם שמור ה-V)
+        const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(dateId).get();
+        const dailyStats = statsDoc.exists ? statsDoc.data() : {};
+
+        // 2. שליפת רשימת המשימות הזמניות
         const tempSnap = await db.collection("users").doc(userId).collection("daily").doc(dateId).collection("tempHabits").get();
         
-        const allTasksData = [];
+        const outputForAi = [];
 
         if (tempSnap.empty) {
-          tasksList.innerHTML = "<p>לא נמצאו משימות זמניות להיום ב-Database.</p>";
+          tasksList.innerHTML = "<p>לא נמצאו משימות זמניות להיום.</p>";
         } else {
           tempSnap.forEach(doc => {
-            const data = doc.data();
-            allTasksData.push({ id: doc.id, ...data });
+            const taskText = doc.data().text;
+            // ההצלבה הקריטית: האם הטקסט של המשימה מופיע כ-true ב-stats
+            const isDone = dailyStats[taskText] === true;
 
-            // יצירת תצוגה לכל משימה
-            const taskDiv = document.createElement("div");
-            taskDiv.className = "task-item";
-            
-            let fieldsHtml = "";
-            for (const [key, value] of Object.entries(data)) {
-              const valDisplay = typeof value === 'boolean' 
-                ? `<span class="${value ? 'status-v' : 'status-x'}">${value}</span>` 
-                : value;
-              fieldsHtml += `<div class="field-info"><strong>${key}:</strong> ${valDisplay}</div>`;
-            }
+            outputForAi.push({
+              text: taskText,
+              statusInStats: isDone ? "בוצע ✅" : "לא בוצע ❌"
+            });
 
-            taskDiv.innerHTML = `
-              <span class="task-header">משימה: ${data.text || 'ללא שם'}</span>
-              <div>${fieldsHtml}</div>
-              <p style="margin-top:10px; font-size:0.9em;">
-                <strong>האם הקוד מזהה כבוצע?</strong> 
-                ${(data.done === true || data.completed === true) ? '<span class="status-v">כן ✅</span>' : '<span class="status-x">לא ❌</span>'}
-              </p>
+            const row = document.createElement("div");
+            row.className = "task-row";
+            row.innerHTML = `
+              <span>${taskText}</span>
+              <span class="${isDone ? 'status-v' : 'status-x'}">${isDone ? 'בוצע (V)' : 'לא בוצע'}</span>
             `;
-            tasksList.appendChild(taskDiv);
+            tasksList.appendChild(row);
           });
         }
 
-        document.getElementById("rawJson").textContent = JSON.stringify(allTasksData, null, 2);
+        // הצגת ה-JSON שה-AI יקבל בסוף
+        document.getElementById("rawJson").textContent = JSON.stringify({
+          date: dateId,
+          dataSentToAi: outputForAi,
+          fullStatsObject: dailyStats // מציג גם את כל האובייקט ליתר ביטחון
+        }, null, 2);
+
         resultDiv.style.display = "block";
 
       } catch (err) {
+        console.error(err);
         alert("שגיאה: " + err.message);
       } finally {
         loader.style.display = "none";
@@ -123,7 +125,7 @@
       }
     }
 
-    document.getElementById("runTestBtn").addEventListener("click", checkTodayTasks);
+    document.getElementById("runTestBtn").addEventListener("click", checkSync);
   </script>
 </body>
 </html>
