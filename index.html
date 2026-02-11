@@ -236,22 +236,6 @@
   <script src="firebase.js?v=1.1"></script>
   <script src="login.js?v=1.1"></script>
   <script>
-    // ניתוב מותנה לפי קיום מטרה לאחר התחברות
-    auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        try {
-          const goalSnap = await db.collection("users").doc(user.uid).collection("goals").limit(1).get();
-          if (!goalSnap.empty) {
-            window.location.href = 'dashboard.html';
-          } else {
-            window.location.href = 'firstgoal.html';
-          }
-        } catch (e) {
-          console.error("Error checking goals:", e);
-        }
-      }
-    });
-
     function toggleMenu() {
       const menu = document.getElementById("sideMenu");
       const overlay = document.getElementById("overlay");
