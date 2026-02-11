@@ -171,6 +171,11 @@
 
         const resData = await response.json();
         
+        // בדיקה אם חזרה שגיאה מה-API של גוגל
+        if (resData.error) {
+          throw new Error(`שגיאת API: ${resData.error.message} (${resData.error.status})`);
+        }
+
         if (resData.candidates && resData.candidates[0].content) {
           let fullText = resData.candidates[0].content.parts[0].text;
           const parts = fullText.split("TASK:");
@@ -185,7 +190,10 @@
           }
           resultArea.style.display = "block";
         }
-      } catch (err) { alert("שגיאה בניתוח: " + err.message); }
+      } catch (err) { 
+        alert("שגיאה בניתוח: " + err.message); 
+        console.error("AI Error:", err);
+      }
       finally { loader.style.display = "none"; btn.disabled = false; }
     }
 
