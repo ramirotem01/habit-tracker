@@ -1,113 +1,279 @@
-// קישור לאלמנטים מה-HTML
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const loginBtn = document.getElementById("loginBtn");
-const forgotPasswordLink = document.getElementById("forgotPasswordLink");
-const messageEl = document.getElementById("message");
-const captchaContainer = document.getElementById("captcha-container");
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
 
-let failedAttempts = 0;
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3498db">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-// --- מנגנון התחברות ---
-loginBtn.addEventListener("click", () => {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-
-    if (!email || !password) {
-        messageEl.style.color = "red";
-        messageEl.textContent = "אנא מלא/י אימייל וסיסמה";
-        return;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Tracker – התחברות</title>
+  
+  <link rel="stylesheet" href="style.css?v=1.1" />
+  
+  <style>
+    /* --- עיצוב תפריט המבורגר --- */
+    .menu-icon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: 30px;
+      cursor: pointer;
+      z-index: 1001;
+      color: #34495e;
+      user-select: none;
     }
 
-    auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-            messageEl.style.color = "green";
-            messageEl.textContent = "התחברת בהצלחה! מעביר לדאשבורד...";
-            setTimeout(() => { 
-                window.location.href = "dashboard.html"; 
-            }, 800);
-        })
-        .catch(err => {
-            console.error("Login Error:", err.code, err.message);
-            failedAttempts++;
-            
-            // הצגת קאפצ'ה אחרי 5 נסיונות כושלים
-            if (failedAttempts >= 5) {
-                captchaContainer.style.display = "block";
-            }
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      right: 0;
+      background-color: #fff;
+      overflow-x: hidden;
+      transition: 0.4s;
+      padding-top: 80px;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+      text-align: right;
+    }
 
-            messageEl.style.color = "red";
-            // טיפול בשגיאות נפוצות
-            if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
-                messageEl.textContent = "אימייל או סיסמה שגויים";
-            } else if (err.code === "auth/too-many-requests") {
-                messageEl.textContent = "יותר מדי נסיונות כושלים. החשבון ננעל זמנית.";
-            } else {
-                messageEl.textContent = "שגיאה בהתחברות: " + err.message;
-            }
-        });
-});
+    .sidebar a {
+      padding: 15px 25px;
+      text-decoration: none;
+      font-size: 1.2em;
+      color: #2c3e50;
+      display: block;
+      transition: 0.3s;
+      border-bottom: 1px solid #f5f5f5;
+    }
 
-// --- מנגנון שכחתי סיסמה ---
-forgotPasswordLink.addEventListener("click", (e) => {
-    e.preventDefault(); // מניעת רענון הדף
+    .sidebar a:hover {
+      background-color: #f8f9fa;
+      color: #3498db;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.3);
+      z-index: 999;
+    }
+
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .login-card {
+      padding: 30px !important;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 1.8em;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .action-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: background 0.3s;
+      margin-top: 10px;
+    }
+
+    .action-btn:hover {
+      background-color: #2980b9;
+    }
+
+    .secondary-btn {
+      background: none;
+      border: none;
+      color: #34495e;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9em;
+      font-weight: normal;
+      transition: all 0.3s ease;
+      display: inline-block;
+      width: fit-content;
+      margin: 5px auto;
+      text-decoration: none;
+    }
+
+    .secondary-btn:hover {
+      background-color: #f5f6f7;
+      color: #000;
+    }
+
+    .info-toggle-btn {
+      background: none;
+      border: 1px solid #eee;
+      color: #7f8c8d;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      margin: 20px auto 10px auto;
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .info-toggle-btn:hover {
+      background-color: #fafafa;
+      border-color: #ddd;
+    }
+
+    .app-info-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out;
+      text-align: right;
+      font-size: 0.9em;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .app-info-content.open {
+      max-height: 1000px;
+      margin-top: 15px;
+      padding: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    .app-info-content ul { padding-right: 20px; list-style: none; margin: 10px 0; }
+    .tagline { text-align: center; display: block; margin-top: 10px; color: #2c3e50; font-weight: bold; }
     
-    const email = emailInput.value.trim();
-    
-    // בדיקה שהמשתמש הזין מייל לפני הלחיצה
-    if (!email) {
-        messageEl.style.color = "red";
-        messageEl.textContent = "כדי לאפס סיסמה, הזן קודם את כתובת המייל שלך בשדה למעלה.";
-        emailInput.focus(); // שם את הסמן בשדה המייל
-        return;
-    }
+    #captcha-container { display: none; margin: 10px 0; transform: scale(0.9); }
+    #message { min-height: 20px; text-align: center; font-size: 0.9em; }
+  </style>
+</head>
+<body>
 
-    console.log("מנסה לשלוח בקשת איפוס סיסמה ל-:", email);
+  <div id="sideMenu" class="sidebar">
+    <a href="about.html">מידע על האפליקציה</a>
+    <a href="blog.html">בלוג</a>
+  </div>
+  
+  <div id="overlay" class="overlay" onclick="closeMenu()"></div>
 
-    auth.sendPasswordResetEmail(email)
-        .then(() => {
-            console.log("Reset email sent successfully!");
-            messageEl.style.color = "green";
-            messageEl.textContent = "אימייל לאיפוס סיסמה נשלח! בדוק את תיבת הדואר (וגם את הספאם).";
-        })
-        .catch(err => {
-            console.error("Forgot Password Error:", err.code, err.message);
-            messageEl.style.color = "red";
+  <div class="menu-icon" onclick="toggleMenu()">☰</div>
 
-            // הסבר על שגיאות נפוצות בשחזור
-            switch (err.code) {
-                case "auth/user-not-found":
-                    messageEl.textContent = "לא נמצא משתמש עם כתובת אימייל זו.";
-                    break;
-                case "auth/invalid-email":
-                    messageEl.textContent = "כתובת האימייל אינה תקינה.";
-                    break;
-                case "auth/unauthorized-domain":
-                    messageEl.textContent = "שגיאת אבטחה: הדומיין לא מאושר ב-Firebase Console.";
-                    break;
-                default:
-                    messageEl.textContent = "שגיאה בשליחת האיפוס: " + err.message;
-            }
-        });
-});
+  <div class="app login-app">
+    <h1>🔐 התחברות</h1>
 
-// --- בדיקת מצב התחברות (אם המשתמש כבר מחובר) ---
-auth.onAuthStateChanged(user => {
-    if (user && (window.location.pathname.includes("index.html") || window.location.pathname.endsWith("/"))) {
-        console.log("User already logged in, redirecting...");
-        window.location.href = "dashboard.html";
-    }
-});
+    <div class="card login-card">
+      <p style="text-align: center; color: #666; margin-bottom: 20px;">הזן פרטים כדי להמשיך לעקוב אחר ההרגלים שלך</p>
+      
+      <div class="login-container">
+        <input type="email" id="email" placeholder="כתובת אימייל" />
+        <input type="password" id="password" placeholder="סיסמה" />
 
-/**
- * מנגנון "השמדה עצמית" ל-Cache
- * אם הקובץ הזה נטען, אנחנו מוודאים שהדפדפן לא מחזיק Service Workers ישנים מהעבר
- */
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(registrations => {
-        for (let registration of registrations) {
-            registration.unregister();
-            console.log("Service Worker cleared to prevent old version caching.");
+        <div id="captcha-container">
+          <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
+        </div>
+
+        <button id="loginBtn" class="action-btn">התחבר למערכת</button>
+        
+        <div style="text-align: center; display: flex; flex-direction: column; gap: 5px;">
+            <button id="goToRegisterBtn" class="secondary-btn" onclick="window.location.href='register.html'">רשום משתמש חדש</button>
+            <button id="forgotPasswordLink" class="secondary-btn">שכחתי סיסמה? לחץ לאיפוס</button>
+        </div>
+
+        <p id="message" style="color:red;"></p>
+
+        <button class="info-toggle-btn" id="infoBtn" onclick="toggleInfo()">
+          <span>ℹ️</span>
+          <span id="btnText">למידע על האפליקציה</span>
+        </button>
+
+        <div id="infoContent" class="app-info-content">
+          <h3>עקביות קטנה. שינוי גדול.</h3>
+          <p><strong>Habit Tracker</strong> אפליקציה חינמית שעוזרת לך להתקדם צעד־צעד, בלי עומס ובלי רעש.</p>
+          <p><strong>מה עושים בה?</strong></p>
+          <ul>
+            <li>✔ מגדירים הרגלים אישיים</li>
+            <li>✔ מסמנים ביצוע יומי בקליק</li>
+            <li>✔ עוקבים אחרי ההתקדמות</li>
+            <li>✔ מייצר הרגלים ומשימות באמצעות AI</li>
+          </ul>
+          <span class="tagline">כי שינוי גדול מתחיל בהרגל קטן.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="firebase.js?v=1.1"></script>
+  <script src="login.js?v=1.1"></script>
+  <script>
+    // ניתוב מותנה לפי קיום מטרה לאחר התחברות
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        try {
+          const goalSnap = await db.collection("users").doc(user.uid).collection("goals").limit(1).get();
+          if (!goalSnap.empty) {
+            window.location.href = 'dashboard.html';
+          } else {
+            window.location.href = 'firstgoal.html';
+          }
+        } catch (e) {
+          console.error("Error checking goals:", e);
         }
+      }
     });
-}
+
+    function toggleMenu() {
+      const menu = document.getElementById("sideMenu");
+      const overlay = document.getElementById("overlay");
+      if (menu.style.width === "250px") {
+        closeMenu();
+      } else {
+        menu.style.width = "250px";
+        overlay.style.display = "block";
+      }
+    }
+
+    function closeMenu() {
+      document.getElementById("sideMenu").style.width = "0";
+      document.getElementById("overlay").style.display = "none";
+    }
+
+    function toggleInfo() {
+      const content = document.getElementById('infoContent');
+      const btnText = document.getElementById('btnText');
+      content.classList.toggle('open');
+      btnText.innerText = content.classList.contains('open') ? 'סגור מידע' : 'למידע על האפליקציה';
+    }
+  </script>
+</body>
+</html>
