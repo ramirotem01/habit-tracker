@@ -8,6 +8,24 @@ const captchaContainer = document.getElementById("captcha-container");
 
 let failedAttempts = 0;
 
+/**
+ * פונקציה לבדיקת קיום מטרה וניתוב המשתמש
+ */
+async function redirectBasedOnGoal(user) {
+    try {
+        const goalSnap = await db.collection("users").doc(user.uid).collection("goals").limit(1).get();
+        if (!goalSnap.empty) {
+            window.location.href = "dashboard.html";
+        } else {
+            window.location.href = "firstgoal.html";
+        }
+    } catch (e) {
+        console.error("Error checking goals:", e);
+        // במקרה של שגיאה, נבריח לדף הראשי כדי לא לתקוע את המשתמש
+        window.location.href = "dashboard.html";
+    }
+}
+
 // --- מנגנון התחברות ---
 loginBtn.addEventListener("click", () => {
     const email = emailInput.value.trim();
@@ -20,24 +38,22 @@ loginBtn.addEventListener("click", () => {
     }
 
     auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
+        .then((userCredential) => {
             messageEl.style.color = "green";
-            messageEl.textContent = "התחברת בהצלחה! מעביר לדאשבורד...";
-            setTimeout(() => { 
-                window.location.href = "dashboard.html"; 
-            }, 800);
+            messageEl.textContent = "התחברת בהצלחה! בודק נתונים...";
+            
+            // במקום לעבור ישר לדאשבורד, בודקים מטרה
+            redirectBasedOnGoal(userCredential.user);
         })
         .catch(err => {
             console.error("Login Error:", err.code, err.message);
             failedAttempts++;
             
-            // הצגת קאפצ'ה אחרי 5 נסיונות כושלים
             if (failedAttempts >= 5) {
                 captchaContainer.style.display = "block";
             }
 
             messageEl.style.color = "red";
-            // טיפול בשגיאות נפוצות
             if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
                 messageEl.textContent = "אימייל או סיסמה שגויים";
             } else if (err.code === "auth/too-many-requests") {
@@ -50,64 +66,41 @@ loginBtn.addEventListener("click", () => {
 
 // --- מנגנון שכחתי סיסמה ---
 forgotPasswordLink.addEventListener("click", (e) => {
-    e.preventDefault(); // מניעת רענון הדף
-    
+    e.preventDefault();
     const email = emailInput.value.trim();
-    
-    // בדיקה שהמשתמש הזין מייל לפני הלחיצה
     if (!email) {
         messageEl.style.color = "red";
         messageEl.textContent = "כדי לאפס סיסמה, הזן קודם את כתובת המייל שלך בשדה למעלה.";
-        emailInput.focus(); // שם את הסמן בשדה המייל
+        emailInput.focus();
         return;
     }
 
-    console.log("מנסה לשלוח בקשת איפוס סיסמה ל-:", email);
-
     auth.sendPasswordResetEmail(email)
         .then(() => {
-            console.log("Reset email sent successfully!");
             messageEl.style.color = "green";
-            messageEl.textContent = "אימייל לאיפוס סיסמה נשלח! בדוק את תיבת הדואר (וגם את הספאם).";
+            messageEl.textContent = "אימייל לאיפוס סיסמה נשלח! בדוק את תיבת הדואר.";
         })
         .catch(err => {
-            console.error("Forgot Password Error:", err.code, err.message);
             messageEl.style.color = "red";
-
-            // הסבר על שגיאות נפוצות בשחזור
-            switch (err.code) {
-                case "auth/user-not-found":
-                    messageEl.textContent = "לא נמצא משתמש עם כתובת אימייל זו.";
-                    break;
-                case "auth/invalid-email":
-                    messageEl.textContent = "כתובת האימייל אינה תקינה.";
-                    break;
-                case "auth/unauthorized-domain":
-                    messageEl.textContent = "שגיאת אבטחה: הדומיין לא מאושר ב-Firebase Console.";
-                    break;
-                default:
-                    messageEl.textContent = "שגיאה בשליחת האיפוס: " + err.message;
-            }
+            messageEl.textContent = "שגיאה בשליחת האיפוס: " + err.message;
         });
 });
 
 // --- בדיקת מצב התחברות (אם המשתמש כבר מחובר) ---
 auth.onAuthStateChanged(user => {
     if (user && (window.location.pathname.includes("index.html") || window.location.pathname.endsWith("/"))) {
-        console.log("User already logged in, redirecting...");
-        window.location.href = "dashboard.html";
+        console.log("User already logged in, checking goals...");
+        redirectBasedOnGoal(user);
     }
 });
 
 /**
  * מנגנון "השמדה עצמית" ל-Cache
- * אם הקובץ הזה נטען, אנחנו מוודאים שהדפדפן לא מחזיק Service Workers ישנים מהעבר
  */
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(registrations => {
         for (let registration of registrations) {
             registration.unregister();
-            console.log("Service Worker cleared to prevent old version caching.");
         }
     });
 }
