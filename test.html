@@ -3,49 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>בדיקת נתוני AI - Debug Mode</title>
+  <title>בדיקת נתוני היום - Debug</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    body { background-color: #f4f7f6; font-family: sans-serif; }
-    .debug-card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    .day-block { border-bottom: 2px solid #eee; padding: 15px 0; }
-    .day-title { font-weight: bold; color: #2c3e50; font-size: 1.2em; margin-bottom: 10px; }
+    body { background-color: #f4f7f6; padding: 20px; }
+    .debug-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .task-item { border-bottom: 1px solid #eee; padding: 15px; margin-bottom: 10px; background: #fafafa; border-radius: 8px; }
+    .task-header { font-weight: bold; font-size: 1.1em; color: #2c3e50; margin-bottom: 10px; display: block; }
+    .field-info { display: inline-block; background: #e9ecef; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 0.9em; margin: 4px; }
     .status-v { color: #2ecc71; font-weight: bold; }
     .status-x { color: #e74c3c; font-weight: bold; }
-    pre { background: #273e47; color: #f1f1f1; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 13px; direction: ltr; text-align: left; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: right; }
-    th { background-color: #f8f9fa; }
-    .raw-data-section { margin-top: 30px; }
+    .raw-json { background: #273e47; color: #f1f1f1; padding: 15px; border-radius: 8px; font-size: 13px; direction: ltr; text-align: left; overflow-x: auto; }
+    .btn-test { background-color: #2ecc71; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.1em; }
   </style>
 </head>
 <body>
   <div class="app">
-    <h1>🔍 בודק נתוני שליפה (Debug)</h1>
-    <p>דף זה מציג בדיוק את מה שה-AI אמור לקבל כקלט.</p>
+    <h1>🔍 בודק משימות של היום (Debug)</h1>
+    <p>דף זה מציג את המבנה המדויק של המשימות הזמניות (tempHabits) מה-Database.</p>
 
-    <div class="actions">
-      <button id="runTestBtn" style="background-color: #3498db; color: white; width: 100%; padding: 15px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
-        🚀 הרץ בדיקת שליפה ל-7 ימים אחרונים
-      </button>
-    </div>
+    <button id="runTestBtn" class="btn-test">🚀 בדוק משימות של היום</button>
 
-    <div id="loadingStatus" style="display:none; text-align: center; margin: 20px;">טוען נתונים מה-Database...</div>
+    <div id="loadingStatus" style="display:none; text-align: center; margin: 20px;">שולף נתונים...</div>
 
-    <div id="debugResult" style="display:none;">
+    <div id="debugResult" style="display:none; margin-top: 20px;">
       <section class="debug-card">
-        <h2>🎯 מטרה שנשלפה:</h2>
-        <p id="debugGoal" style="font-size: 1.3em; font-weight: bold; color: #3498db;"></p>
+        <h3>📅 תאריך נבדק: <span id="currentDateId"></span></h3>
+        <div id="tasksList"></div>
       </section>
 
       <section class="debug-card">
-        <h2>📊 פירוט לפי ימים (ויזואלי):</h2>
-        <div id="daysVisual"></div>
-      </section>
-
-      <section class="debug-card raw-data-section">
-        <h2>📄 ה-JSON הגולמי (זה מה שנשלח ל-AI):</h2>
-        <pre id="rawJson"></pre>
+        <h3>📄 JSON גולמי של המשימות:</h3>
+        <pre id="rawJson" class="raw-json"></pre>
       </section>
     </div>
 
@@ -64,104 +53,77 @@
 
     auth.onAuthStateChanged(user => {
       if (!user) {
-        alert("יש להתחבר למערכת!");
+        alert("נא להתחבר!");
         window.location.href = "index.html";
       } else {
         userId = user.uid;
       }
     });
 
-    async function runDebugCheck() {
+    async function checkTodayTasks() {
       const btn = document.getElementById("runTestBtn");
       const loader = document.getElementById("loadingStatus");
       const resultDiv = document.getElementById("debugResult");
+      const tasksList = document.getElementById("tasksList");
       
       btn.disabled = true;
       loader.style.display = "block";
       resultDiv.style.display = "none";
+      tasksList.innerHTML = "";
 
       try {
         const now = new Date();
+        const dateId = now.toISOString().split('T')[0];
+        document.getElementById("currentDateId").textContent = dateId;
+
+        // שליפת משימות מהנתיב המדויק של האנליטיקה
+        const tempSnap = await db.collection("users").doc(userId).collection("daily").doc(dateId).collection("tempHabits").get();
         
-        // 1. שליפת מטרה
-        let goal = "לא נמצאה מטרה";
-        const goalSnap = await db.collection("users").doc(userId).collection("goals").orderBy("createdAt", "desc").limit(1).get();
-        if (!goalSnap.empty) goal = goalSnap.docs[0].data().text;
-        document.getElementById("debugGoal").textContent = `"${goal}"`;
+        const allTasksData = [];
 
-        const dailyDetails = [];
-        let visualHtml = "";
+        if (tempSnap.empty) {
+          tasksList.innerHTML = "<p>לא נמצאו משימות זמניות להיום ב-Database.</p>";
+        } else {
+          tempSnap.forEach(doc => {
+            const data = doc.data();
+            allTasksData.push({ id: doc.id, ...data });
 
-        // 2. לולאת 7 ימים אחורה (לא כולל היום)
-        for (let i = 1; i <= 7; i++) {
-          const d = new Date();
-          d.setDate(now.getDate() - i);
-          const dateId = d.toISOString().split('T')[0];
-          
-          visualHtml += `<div class="day-block"><div class="day-title">תאריך: ${dateId}</div>`;
-
-          // שליפת הרגלים (stats)
-          const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(dateId).get();
-          const dayStats = statsDoc.exists ? statsDoc.data() : {};
-          
-          visualHtml += `<strong>הרגלים קבועים (Stats):</strong>`;
-          if (Object.keys(dayStats).length === 0) {
-            visualHtml += `<p style="color:gray;">אין נתונים ליום זה</p>`;
-          } else {
-            visualHtml += `<table><tr><th>שם ההרגל</th><th>סטטוס</th></tr>`;
-            for (const [name, done] of Object.entries(dayStats)) {
-              visualHtml += `<tr><td>${name}</td><td class="${done ? 'status-v' : 'status-x'}">${done ? 'בוצע ✅' : 'לא בוצע ❌'}</td></tr>`;
+            // יצירת תצוגה לכל משימה
+            const taskDiv = document.createElement("div");
+            taskDiv.className = "task-item";
+            
+            let fieldsHtml = "";
+            for (const [key, value] of Object.entries(data)) {
+              const valDisplay = typeof value === 'boolean' 
+                ? `<span class="${value ? 'status-v' : 'status-x'}">${value}</span>` 
+                : value;
+              fieldsHtml += `<div class="field-info"><strong>${key}:</strong> ${valDisplay}</div>`;
             }
-            visualHtml += `</table>`;
-          }
 
-          // שליפת משימות זמניות (tempHabits)
-          const tempSnap = await db.collection("users").doc(userId).collection("daily").doc(dateId).collection("tempHabits").get();
-          const tempsForAi = [];
-          
-          visualHtml += `<br><strong>משימות זמניות (tempHabits):</strong>`;
-          if (tempSnap.empty) {
-            visualHtml += `<p style="color:gray;">אין משימות זמניות</p>`;
-          } else {
-            visualHtml += `<table><tr><th>משימה</th><th>סטטוס במאגר (done/completed)</th></tr>`;
-            tempSnap.forEach(t => {
-              const data = t.data();
-              // בדיקה האם המערכת מזהה "בוצע"
-              const isDone = data.done === true || data.completed === true;
-              tempsForAi.push(`${data.text} (${isDone ? 'בוצע' : 'לא בוצע'})`);
-              
-              visualHtml += `<tr>
-                <td>${data.text}</td>
-                <td class="${isDone ? 'status-v' : 'status-x'}">${isDone ? 'בוצע ✅' : 'לא בוצע ❌'} (ערך ב-DB: ${data.done || data.completed || 'false'})</td>
-              </tr>`;
-            });
-            visualHtml += `</table>`;
-          }
-
-          visualHtml += `</div>`;
-
-          dailyDetails.push({
-            date: dateId,
-            habits: dayStats,
-            tempTasks: tempsForAi
+            taskDiv.innerHTML = `
+              <span class="task-header">משימה: ${data.text || 'ללא שם'}</span>
+              <div>${fieldsHtml}</div>
+              <p style="margin-top:10px; font-size:0.9em;">
+                <strong>האם הקוד מזהה כבוצע?</strong> 
+                ${(data.done === true || data.completed === true) ? '<span class="status-v">כן ✅</span>' : '<span class="status-x">לא ❌</span>'}
+              </p>
+            `;
+            tasksList.appendChild(taskDiv);
           });
         }
 
-        // הצגת ה-JSON הגולמי
-        document.getElementById("rawJson").textContent = JSON.stringify({ goal, dailyDetails }, null, 2);
-        document.getElementById("daysVisual").innerHTML = visualHtml;
+        document.getElementById("rawJson").textContent = JSON.stringify(allTasksData, null, 2);
         resultDiv.style.display = "block";
 
       } catch (err) {
-        console.error(err);
-        alert("שגיאה בשליפת נתונים: " + err.message);
+        alert("שגיאה: " + err.message);
       } finally {
         loader.style.display = "none";
         btn.disabled = false;
       }
     }
 
-    document.getElementById("runTestBtn").addEventListener("click", runDebugCheck);
+    document.getElementById("runTestBtn").addEventListener("click", checkTodayTasks);
   </script>
 </body>
 </html>
