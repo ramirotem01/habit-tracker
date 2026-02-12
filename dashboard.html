@@ -63,20 +63,32 @@
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-    /* התאמת הקבוצה להכיל 3 אלמנטים */
+    /* עיצוב מעודכן לשורת הוספת משימה - כפתורים מתחת לאינפוט */
     .input-group {
       display: flex;
-      gap: 5px;
+      flex-direction: column; /* גורם לאלמנטים לרדת שורה */
+      gap: 8px;
     }
     .input-group input {
-      flex: 2;
+      width: 100%;
+      box-sizing: border-box;
     }
-    .input-group button {
+    .button-row {
+      display: flex;
+      gap: 8px;
+    }
+    .button-row button {
       flex: 1;
       white-space: nowrap;
       padding: 10px 5px;
       font-size: 0.9em;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      color: white;
     }
+    #addTempHabitBtn { background-color: #3498db; }
+    #addTomorrowHabitBtn { background-color: #34495e; }
   </style>
 </head>
 <body>
@@ -102,8 +114,10 @@
       <h2>🗓 המשימות שלי להיום</h2>
       <div class="input-group">
         <input type="text" id="tempHabitInput" placeholder="הוסף משימה חד פעמית..." />
-        <button id="addTempHabitBtn">➕ היום</button>
-        <button id="addTomorrowHabitBtn" style="background-color: #34495e;">🕒 מחר</button>
+        <div class="button-row">
+          <button id="addTempHabitBtn">➕ היום</button>
+          <button id="addTomorrowHabitBtn">🕒 מחר</button>
+        </div>
       </div>
       <ul id="habitList"></ul>
     </section>
