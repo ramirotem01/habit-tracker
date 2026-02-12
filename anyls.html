@@ -26,6 +26,15 @@
       width: 100%; transition: all 0.3s ease;
     }
     .action-btn-ai:hover { background-color: #27ae60; transform: translateY(-2px); }
+    
+    /* עיצוב לכפתור ה-PRO החדש */
+    .action-btn-pro-nav {
+      background-color: #9b59b6; color: white; border: none; padding: 16px;
+      border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.2em;
+      width: 100%; transition: all 0.3s ease; margin-top: 10px;
+    }
+    .action-btn-pro-nav:hover { background-color: #8e44ad; transform: translateY(-2px); }
+
     .recommendation-box {
       margin-top: 25px; padding: 20px; background: #f9fdfa;
       border-radius: 10px; border: 2px dashed #2ecc71; text-align: center; display: none;
@@ -45,6 +54,8 @@
         <h3 style="text-align: center;">תובנות על השבוע האחרון</h3>
         <p style="text-align: center; color: #666; margin-bottom: 20px;">ה-AI ינתח את המגמות שלך ב-7 הימים האחרונים וימליץ על צעדים להמשך.</p>
         <button id="analyzeBtn" class="action-btn-ai">✨ נתח את השבוע שלי</button>
+        
+        <button onclick="window.location.href='proanyls.html'" class="action-btn-pro-nav">💎 ניתוח עומק היסטורי (PRO)</button>
       </section>
 
       <div id="loadingArea" class="loading-container">
@@ -148,7 +159,6 @@
         const apiKey = await fetchApiKey();
         const data = await collectWeeklyData();
 
-        // בדיקה: אם יש 3 ימים ומעלה שהם ריקים (פחות מ-5 ימים פעילים)
         const activeDaysCount = data.dailyDetails.filter(day => day.tasks.length > 0).length;
         if (activeDaysCount < 5) {
           textContent.innerHTML = `<p>אין מספיק מידע מהימים האחרונים כדי לנתח ולהמליץ על פעולות, הקפד למלא משימות והרגלים במשך השבוע מומלץ גם להזין מטרה. וחזור לניתוח הנתונים האישיים שלך והמלצות AI שיכולות להזניק אותך קדימה!</p>`;
