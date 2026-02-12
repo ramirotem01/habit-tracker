@@ -63,6 +63,20 @@
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
+    /* התאמת הקבוצה להכיל 3 אלמנטים */
+    .input-group {
+      display: flex;
+      gap: 5px;
+    }
+    .input-group input {
+      flex: 2;
+    }
+    .input-group button {
+      flex: 1;
+      white-space: nowrap;
+      padding: 10px 5px;
+      font-size: 0.9em;
+    }
   </style>
 </head>
 <body>
@@ -87,8 +101,9 @@
     <section class="card">
       <h2>🗓 המשימות שלי להיום</h2>
       <div class="input-group">
-        <input type="text" id="tempHabitInput" placeholder="משימה חד פעמית להיום..." />
-        <button id="addTempHabitBtn">➕ הוסף</button>
+        <input type="text" id="tempHabitInput" placeholder="משימה חד פעמית..." />
+        <button id="addTempHabitBtn">➕ היום</button>
+        <button id="addTomorrowHabitBtn" style="background-color: #34495e;">🕒 מחר</button>
       </div>
       <ul id="habitList"></ul>
     </section>
