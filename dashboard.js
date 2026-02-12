@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const todayDateEl = document.getElementById("todayDate");
   const tempHabitInput = document.getElementById("tempHabitInput");
   const addTempHabitBtn = document.getElementById("addTempHabitBtn");
+  const addTomorrowHabitBtn = document.getElementById("addTomorrowHabitBtn"); // כפתור מחר
   const logoutBtn = document.getElementById("logoutBtn");
 
   const now = new Date();
@@ -73,7 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const span = document.createElement("span");
       span.textContent = task.text;
       
-      // הצגת שם מלא בלחיצה על הטקסט
       span.onclick = () => alert(task.text);
       
       if (isDone) span.style.textDecoration = "line-through";
@@ -161,12 +161,33 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // הוספה להיום
   addTempHabitBtn.addEventListener("click", async () => {
     const text = tempHabitInput.value.trim();
     if (!text) return;
     await db.collection("users").doc(userId).collection("daily").doc(todayDocId).collection("tempHabits").add({ text });
     tempHabitInput.value = "";
     loadAllData();
+  });
+
+  // הוספה למחר
+  addTomorrowHabitBtn.addEventListener("click", async () => {
+    const text = tempHabitInput.value.trim();
+    if (!text) return;
+
+    // חישוב התאריך של מחר
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowDocId = tomorrow.toISOString().split('T')[0];
+
+    try {
+      await db.collection("users").doc(userId).collection("daily").doc(tomorrowDocId).collection("tempHabits").add({ text });
+      alert(`המשימה "${text}" נוספה למחר!`);
+      tempHabitInput.value = "";
+    } catch (err) {
+      console.error("שגיאה בהוספה למחר:", err);
+      alert("שגיאה בהוספת המשימה.");
+    }
   });
 
   async function deleteTempHabit(id, text) {
