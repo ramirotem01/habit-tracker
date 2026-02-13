@@ -48,25 +48,21 @@
       cursor: pointer;
       transition: opacity 0.2s;
     }
-    .edit-goal-btn:hover {
-      opacity: 0.7;
-    }
+    .edit-goal-btn:hover { opacity: 0.7; }
     #userGoalText {
       font-size: 1.3em;
       color: #2c3e50;
       font-weight: bold;
       font-style: italic;
     }
-    /* התאמת כפתורים צפופים במובייל */
     .actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-    /* עיצוב מעודכן לשורת הוספת משימה - כפתורים מתחת לאינפוט */
     .input-group {
       display: flex;
-      flex-direction: column; /* גורם לאלמנטים לרדת שורה */
+      flex-direction: column;
       gap: 8px;
     }
     .input-group input {
@@ -89,6 +85,45 @@
     }
     #addTempHabitBtn { background-color: #3498db; }
     #addTomorrowHabitBtn { background-color: #34495e; }
+
+    /* עיצוב רכיב הכרת תודה */
+    .gratitude-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: #fffdf2;
+      border-right: 5px solid #f1c40f;
+    }
+    .gratitude-progress {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+    }
+    .gratitude-progress svg {
+      transform: rotate(-90deg);
+      width: 60px;
+      height: 60px;
+    }
+    .gratitude-progress circle {
+      fill: none;
+      stroke-width: 6;
+      stroke-linecap: round;
+    }
+    .bg-circle { stroke: #eee; }
+    .fg-circle {
+      stroke: #f1c40f;
+      transition: stroke-dasharray 0.5s ease;
+    }
+    .count-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: bold;
+      font-size: 0.9em;
+      color: #d4ac0d;
+    }
   </style>
 </head>
 <body>
@@ -120,6 +155,20 @@
         </div>
       </div>
       <ul id="habitList"></ul>
+    </section>
+
+    <section class="card gratitude-card">
+      <div class="gratitude-progress">
+        <svg>
+          <circle class="bg-circle" cx="30" cy="30" r="25"></circle>
+          <circle id="fgCircle" class="fg-circle" cx="30" cy="30" r="25" stroke-dasharray="0 157"></circle>
+        </svg>
+        <div id="gratitudeCount" class="count-text">0/3</div>
+      </div>
+      <div style="flex-grow: 1;">
+        <h2 style="margin: 0 0 5px 0; font-size: 1.1em;">רגע של הודיה ✨</h2>
+        <input type="text" id="gratitudeInput" placeholder="על מה אתה מודה היום?" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" />
+      </div>
     </section>
 
     <section class="card">
