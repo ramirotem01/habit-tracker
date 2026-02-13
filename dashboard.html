@@ -89,6 +89,48 @@
     }
     #addTempHabitBtn { background-color: #3498db; }
     #addTomorrowHabitBtn { background-color: #34495e; }
+
+    /* עיצוב פיצ'ר הודיה */
+    .gratitude-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+    .gratitude-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .gratitude-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.8em;
+      transition: all 0.5s ease;
+      border: 3px solid #eee;
+    }
+    .circle-low { background-color: #f1c40f; color: #fff; border-color: #f39c12; }
+    .circle-full { background-color: #2ecc71; color: #fff; border-color: #27ae60; }
+    
+    .gratitude-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+    .gratitude-list li {
+      background: #f9f9f9;
+      margin-bottom: 5px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.95em;
+      border-right: 3px solid #f1c40f;
+    }
   </style>
 </head>
 <body>
@@ -120,6 +162,20 @@
         </div>
       </div>
       <ul id="habitList"></ul>
+    </section>
+
+    <section class="card gratitude-section">
+      <div class="gratitude-header">
+        <h2>רגע של הודיה ✨</h2>
+        <div id="gratitudeCircle" class="gratitude-circle circle-low">0/3</div>
+      </div>
+      <div id="gratitudeInputGroup" class="input-group">
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="gratitudeInput" placeholder="על מה אתם מודים עכשיו?" style="flex: 1;" />
+          <button id="addGratitudeBtn" style="background: #f1c40f; color: white; border: none; border-radius: 5px; padding: 0 15px; cursor: pointer;">➕</button>
+        </div>
+      </div>
+      <ul id="gratitudeList" class="gratitude-list"></ul>
     </section>
 
     <section class="card">
