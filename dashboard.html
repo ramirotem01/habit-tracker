@@ -45,9 +45,7 @@
       font-size: 1.2em;
       color: #3498db;
       cursor: pointer;
-      transition: opacity 0.2s;
     }
-    .edit-goal-btn:hover { opacity: 0.7; }
     #userGoalText {
       font-size: 1.3em;
       color: #2c3e50;
@@ -64,17 +62,12 @@
       flex-direction: column;
       gap: 8px;
     }
-    .input-group input {
-      width: 100%;
-      box-sizing: border-box;
-    }
     .button-row {
       display: flex;
       gap: 8px;
     }
     .button-row button {
       flex: 1;
-      white-space: nowrap;
       padding: 10px 5px;
       font-size: 0.9em;
       cursor: pointer;
@@ -133,7 +126,7 @@
       padding: 0 15px;
       cursor: pointer;
       font-weight: bold;
-      font-size: 1.2em;
+      font-size: 1.5em;
     }
     #addGratitudeBtn:disabled { background: #ccc; }
   </style>
@@ -180,8 +173,8 @@
       <div style="flex-grow: 1;">
         <h2 style="margin: 0 0 5px 0; font-size: 1.1em;">רגע של הודיה ✨</h2>
         <div style="display: flex; gap: 5px;">
-          <input type="text" id="gratitudeInput" placeholder="על מה אתם מודים?" style="flex-grow: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" />
-          <button id="addGratitudeBtn">+</button>
+          <input type="text" id="gratitudeInput" placeholder="על מה אתם מודים?" style="flex-grow: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" />
+          <button id="addGratitudeBtn" type="button">+</button>
         </div>
       </div>
     </section>
