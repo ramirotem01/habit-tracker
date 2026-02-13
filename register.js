@@ -33,7 +33,7 @@ registerBtn.addEventListener("click", () => {
             messageEl.style.color = "green";
             messageEl.textContent = "החשבון נוצר בהצלחה! מעביר אותך...";
             setTimeout(() => {
-                window.location.href = "dashboard.html";
+                window.location.href = "firstgoal.html";
             }, 1500);
         })
         .catch(err => {
