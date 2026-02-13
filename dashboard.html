@@ -19,7 +19,6 @@
   <title>דשבורד הרגלים</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* עיצוב ייעודי לכרטיס המטרה */
     .goal-card {
       background: linear-gradient(135deg, #f1f9ff 0%, #ffffff 100%);
       border-right: 5px solid #3498db;
@@ -48,20 +47,17 @@
       cursor: pointer;
       transition: opacity 0.2s;
     }
-    .edit-goal-btn:hover { opacity: 0.7; }
     #userGoalText {
       font-size: 1.3em;
       color: #2c3e50;
       font-weight: bold;
       font-style: italic;
     }
-    /* התאמת כפתורים צפופים במובייל */
     .actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-    /* עיצוב מעודכן לשורת הוספת משימה */
     .input-group {
       display: flex;
       flex-direction: column;
@@ -136,9 +132,7 @@
       font-weight: bold;
       font-size: 1.2em;
     }
-    #addGratitudeBtn:disabled {
-      background: #ccc;
-    }
+    #addGratitudeBtn:disabled { background: #ccc; cursor: not-allowed; }
   </style>
 </head>
 <body>
@@ -184,15 +178,13 @@
         <h2 style="margin: 0 0 5px 0; font-size: 1.1em;">רגע של הודיה ✨</h2>
         <div style="display: flex; gap: 5px;">
           <input type="text" id="gratitudeInput" placeholder="על מה אתה מודה היום?" style="flex-grow: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" />
-          <button id="addGratitudeBtn" title="הוסף הודיה">+</button>
+          <button id="addGratitudeBtn" type="button">+</button>
         </div>
       </div>
     </section>
 
     <section class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h2>📈 התקדמות שבועית</h2>
-      </div>
+      <h2>📈 התקדמות שבועית</h2>
       <canvas id="habitsChart" width="400" height="200"></canvas>
     </section>
 
@@ -202,8 +194,6 @@
       <button onclick="window.location.href='anyls.html'" style="background: #9b59b6; color: white;">🧠 תובנות שבועיות</button>
       <button id="logoutBtn" style="background: #ff4b2b; color: white;">🚪 התנתק</button>
     </div>
-
-    <div id="logBox" style="font-size: 12px; color: gray; margin-top: 20px;"></div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -214,30 +204,19 @@
 
   <script>
     auth.onAuthStateChanged(user => {
-      if (user) {
-        loadUserGoal(user.uid);
-      }
+      if (user) { loadUserGoal(user.uid); }
     });
-
     async function loadUserGoal(uid) {
       try {
-        const snapshot = await db.collection("users").doc(uid)
-          .collection("goals")
-          .orderBy("createdAt", "desc")
-          .limit(1)
-          .get();
-
+        const snapshot = await db.collection("users").doc(uid).collection("goals").orderBy("createdAt", "desc").limit(1).get();
         if (!snapshot.empty) {
           const goalData = snapshot.docs[0].data();
           document.getElementById("userGoalText").textContent = `"${goalData.text}"`;
           document.getElementById("goalSection").style.display = "block";
         }
-      } catch (e) {
-        console.error("Error loading goal:", e);
-      }
+      } catch (e) { console.error(e); }
     }
   </script>
-
   <script src="dashboard.js"></script>
 </body>
 </html>
