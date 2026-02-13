@@ -6,8 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const todayDateEl = document.getElementById("todayDate");
   const tempHabitInput = document.getElementById("tempHabitInput");
   const addTempHabitBtn = document.getElementById("addTempHabitBtn");
-  const addTomorrowHabitBtn = document.getElementById("addTomorrowHabitBtn"); // כפתור מחר
+  const addTomorrowHabitBtn = document.getElementById("addTomorrowHabitBtn");
   const logoutBtn = document.getElementById("logoutBtn");
+
+  // אלמנטים חדשים של הכרת תודה
+  const gratitudeInput = document.getElementById("gratitudeInput");
+  const addGratitudeBtn = document.getElementById("addGratitudeBtn");
+  const fgCircle = document.getElementById("fgCircle");
+  const gratitudeCountText = document.getElementById("gratitudeCount");
 
   const now = new Date();
   const todayDocId = now.toISOString().split('T')[0]; 
@@ -26,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     userId = user.uid;
     loadAllData();
+    loadGratitude(); // טעינת הכרת תודה בחיבור
   });
 
   async function loadAllData() {
@@ -45,6 +52,70 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("שגיאה בטעינה:", err);
     }
   }
+
+  // --- לוגיקת הכרת תודה (הוספה חדשה) ---
+  async function loadGratitude() {
+    if (!userId) return;
+    try {
+      const gratSnap = await db.collection("users").doc(userId).collection("gratitude").doc(todayDocId).get();
+      const list = gratSnap.exists ? gratSnap.data().items || [] : [];
+      updateGratitudeUI(list.length);
+    } catch (err) {
+      console.error("שגיאה בטעינת הכרת תודה:", err);
+    }
+  }
+
+  function updateGratitudeUI(count) {
+    const safeCount = Math.min(count, 3);
+    const radius = 25;
+    const circumference = 2 * Math.PI * radius; // 157.08
+    const offset = (safeCount / 3) * circumference;
+    
+    if (fgCircle) {
+      fgCircle.style.strokeDasharray = `${offset} ${circumference}`;
+    }
+    if (gratitudeCountText) {
+      gratitudeCountText.textContent = `${safeCount}/3`;
+    }
+    
+    if (safeCount >= 3) {
+      if (gratitudeInput) {
+        gratitudeInput.disabled = true;
+        gratitudeInput.placeholder = "תודה על הכל! ✨";
+      }
+      if (addGratitudeBtn) addGratitudeBtn.disabled = true;
+    }
+  }
+
+  async function saveGratitude() {
+    const text = gratitudeInput.value.trim();
+    if (!text || !userId) return;
+
+    try {
+      const docRef = db.collection("users").doc(userId).collection("gratitude").doc(todayDocId);
+      const doc = await docRef.get();
+      let items = doc.exists ? doc.data().items || [] : [];
+      
+      if (items.length < 3) {
+        items.push(text);
+        await docRef.set({ items }, { merge: true });
+        gratitudeInput.value = "";
+        updateGratitudeUI(items.length); // עדכון מיידי של הגלגל
+      }
+    } catch (err) {
+      console.error("שגיאה בשמירת הודיה:", err);
+    }
+  }
+
+  if (addGratitudeBtn) {
+    addGratitudeBtn.addEventListener("click", saveGratitude);
+  }
+  if (gratitudeInput) {
+    gratitudeInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") saveGratitude();
+    });
+  }
+  // --- סוף לוגיקת הכרת תודה ---
 
   function render() {
     if (!habitListEl) return;
@@ -161,7 +232,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // הוספה להיום
   addTempHabitBtn.addEventListener("click", async () => {
     const text = tempHabitInput.value.trim();
     if (!text) return;
@@ -170,23 +240,18 @@ document.addEventListener("DOMContentLoaded", () => {
     loadAllData();
   });
 
-  // הוספה למחר
   addTomorrowHabitBtn.addEventListener("click", async () => {
     const text = tempHabitInput.value.trim();
     if (!text) return;
-
-    // חישוב התאריך של מחר
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowDocId = tomorrow.toISOString().split('T')[0];
-
     try {
       await db.collection("users").doc(userId).collection("daily").doc(tomorrowDocId).collection("tempHabits").add({ text });
       alert(`המשימה "${text}" נוספה למחר!`);
       tempHabitInput.value = "";
     } catch (err) {
       console.error("שגיאה בהוספה למחר:", err);
-      alert("שגיאה בהוספת המשימה.");
     }
   });
 
