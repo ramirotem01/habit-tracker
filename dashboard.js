@@ -6,8 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const todayDateEl = document.getElementById("todayDate");
   const tempHabitInput = document.getElementById("tempHabitInput");
   const addTempHabitBtn = document.getElementById("addTempHabitBtn");
-  const addTomorrowHabitBtn = document.getElementById("addTomorrowHabitBtn"); // כפתור מחר
+  const addTomorrowHabitBtn = document.getElementById("addTomorrowHabitBtn");
   const logoutBtn = document.getElementById("logoutBtn");
+
+  // אלמנטים של הכרת תודה
+  const gratitudeInput = document.getElementById("gratitudeInput");
+  const addGratitudeBtn = document.getElementById("addGratitudeBtn");
+  const fgCircle = document.getElementById("fgCircle");
+  const gratitudeCountText = document.getElementById("gratitudeCount");
 
   const now = new Date();
   const todayDocId = now.toISOString().split('T')[0]; 
@@ -26,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     userId = user.uid;
     loadAllData();
+    loadGratitudeData(); // טעינת הכרת תודה
   });
 
   async function loadAllData() {
@@ -46,6 +53,66 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // --- לוגיקת הכרת תודה ---
+  async function loadGratitudeData() {
+    if (!userId) return;
+    try {
+      const doc = await db.collection("users").doc(userId).collection("gratitude").doc(todayDocId).get();
+      const items = doc.exists ? doc.data().items || [] : [];
+      updateGratitudeUI(items.length);
+    } catch (err) {
+      console.error("Error loading gratitude:", err);
+    }
+  }
+
+  function updateGratitudeUI(count) {
+    const safeCount = Math.min(count, 3);
+    const circumference = 157; // 2 * PI * R (25)
+    const offset = circumference - (safeCount / 3) * circumference;
+    
+    if (fgCircle) {
+      fgCircle.style.strokeDashoffset = offset;
+    }
+    if (gratitudeCountText) {
+      gratitudeCountText.textContent = `${safeCount}/3`;
+    }
+    if (safeCount >= 3) {
+      gratitudeInput.disabled = true;
+      addGratitudeBtn.disabled = true;
+      gratitudeInput.placeholder = "הודית על 3 דברים היום! ✨";
+    }
+  }
+
+  async function saveGratitude() {
+    const text = gratitudeInput.value.trim();
+    if (!text || !userId) return;
+
+    try {
+      const docRef = db.collection("users").doc(userId).collection("gratitude").doc(todayDocId);
+      const doc = await docRef.get();
+      let items = doc.exists ? doc.data().items || [] : [];
+      
+      if (items.length < 3) {
+        items.push(text);
+        await docRef.set({ items, updatedAt: new Date() }, { merge: true });
+        gratitudeInput.value = "";
+        updateGratitudeUI(items.length);
+      }
+    } catch (err) {
+      console.error("Error saving gratitude:", err);
+    }
+  }
+
+  if (addGratitudeBtn) {
+    addGratitudeBtn.addEventListener("click", saveGratitude);
+  }
+  if (gratitudeInput) {
+    gratitudeInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") saveGratitude();
+    });
+  }
+  // --- סוף לוגיקת הכרת תודה ---
+
   function render() {
     if (!habitListEl) return;
     habitListEl.innerHTML = "";
@@ -58,7 +125,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isDone) doneCount++;
 
       const li = document.createElement("li");
-
       const contentSide = document.createElement("div");
       contentSide.style = "display: flex; align-items: center; overflow: hidden; flex: 1; padding-left: 10px;";
 
@@ -73,9 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const span = document.createElement("span");
       span.textContent = task.text;
-      
       span.onclick = () => alert(task.text);
-      
       if (isDone) span.style.textDecoration = "line-through";
 
       contentSide.appendChild(cb);
@@ -161,7 +225,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // הוספה להיום
   addTempHabitBtn.addEventListener("click", async () => {
     const text = tempHabitInput.value.trim();
     if (!text) return;
@@ -170,23 +233,18 @@ document.addEventListener("DOMContentLoaded", () => {
     loadAllData();
   });
 
-  // הוספה למחר
   addTomorrowHabitBtn.addEventListener("click", async () => {
     const text = tempHabitInput.value.trim();
     if (!text) return;
-
-    // חישוב התאריך של מחר
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowDocId = tomorrow.toISOString().split('T')[0];
-
     try {
       await db.collection("users").doc(userId).collection("daily").doc(tomorrowDocId).collection("tempHabits").add({ text });
       alert(`המשימה "${text}" נוספה למחר!`);
       tempHabitInput.value = "";
     } catch (err) {
       console.error("שגיאה בהוספה למחר:", err);
-      alert("שגיאה בהוספת המשימה.");
     }
   });
 
