@@ -6,11 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const todayDateEl = document.getElementById("todayDate");
   const tempHabitInput = document.getElementById("tempHabitInput");
   const addTempHabitBtn = document.getElementById("addTempHabitBtn");
-  const addTomorrowHabitBtn = document.getElementById("addTomorrowHabitBtn"); // כפתור מחר
+  const addTomorrowHabitBtn = document.getElementById("addTomorrowHabitBtn");
   const logoutBtn = document.getElementById("logoutBtn");
 
-  // אלמנטים חדשים להכרת תודה
+  // אלמנטים להכרת תודה
   const gratitudeInput = document.getElementById("gratitudeInput");
+  const addGratitudeBtn = document.getElementById("addGratitudeBtn");
   const fgCircle = document.getElementById("fgCircle");
   const gratitudeCountText = document.getElementById("gratitudeCount");
 
@@ -31,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     userId = user.uid;
     loadAllData();
-    loadGratitude(); // טעינת הכרת תודה
+    loadGratitude(); // טעינת הכרת תודה בחיבור
   });
 
   async function loadAllData() {
@@ -52,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // לוגיקת הכרת תודה
+  // --- לוגיקת הכרת תודה ---
   async function loadGratitude() {
     if (!userId) return;
     try {
@@ -70,42 +71,45 @@ document.addEventListener("DOMContentLoaded", () => {
     const circumference = 2 * Math.PI * radius;
     const offset = (safeCount / 3) * circumference;
     
-    if (fgCircle) {
-      fgCircle.style.strokeDasharray = `${offset} ${circumference}`;
-    }
-    if (gratitudeCountText) {
-      gratitudeCountText.textContent = `${safeCount}/3`;
-    }
+    if (fgCircle) fgCircle.style.strokeDasharray = `${offset} ${circumference}`;
+    if (gratitudeCountText) gratitudeCountText.textContent = `${safeCount}/3`;
     
-    if (safeCount >= 3 && gratitudeInput) {
-      gratitudeInput.disabled = true;
-      gratitudeInput.placeholder = "תודה על הכל! נתראה מחר ✨";
+    if (safeCount >= 3) {
+      if (gratitudeInput) {
+        gratitudeInput.disabled = true;
+        gratitudeInput.placeholder = "תודה על הכל! ✨";
+      }
+      if (addGratitudeBtn) addGratitudeBtn.disabled = true;
     }
   }
 
-  if (gratitudeInput) {
-    gratitudeInput.addEventListener("keypress", async (e) => {
-      if (e.key === "Enter") {
-        const text = gratitudeInput.value.trim();
-        if (!text) return;
+  async function saveGratitude() {
+    const text = gratitudeInput.value.trim();
+    if (!text || !userId) return;
 
-        try {
-          const docRef = db.collection("users").doc(userId).collection("gratitude").doc(todayDocId);
-          const doc = await docRef.get();
-          let items = doc.exists ? doc.data().items || [] : [];
-          
-          if (items.length < 3) {
-            items.push(text);
-            await docRef.set({ items, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
-            gratitudeInput.value = "";
-            updateGratitudeUI(items.length);
-          }
-        } catch (err) {
-          console.error("Error saving gratitude:", err);
-        }
+    try {
+      const docRef = db.collection("users").doc(userId).collection("gratitude").doc(todayDocId);
+      const doc = await docRef.get();
+      let items = doc.exists ? doc.data().items || [] : [];
+      
+      if (items.length < 3) {
+        items.push(text);
+        await docRef.set({ items, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        gratitudeInput.value = "";
+        updateGratitudeUI(items.length);
       }
+    } catch (err) {
+      console.error("Error saving gratitude:", err);
+    }
+  }
+
+  if (addGratitudeBtn) addGratitudeBtn.addEventListener("click", saveGratitude);
+  if (gratitudeInput) {
+    gratitudeInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") saveGratitude();
     });
   }
+  // --- סוף לוגיקת הכרת תודה ---
 
   function render() {
     if (!habitListEl) return;
