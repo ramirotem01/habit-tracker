@@ -55,11 +55,13 @@
       font-weight: bold;
       font-style: italic;
     }
+    /* התאמת כפתורים צפופים במובייל */
     .actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
+    /* עיצוב מעודכן לשורת הוספת משימה */
     .input-group {
       display: flex;
       flex-direction: column;
@@ -124,6 +126,19 @@
       font-size: 0.9em;
       color: #d4ac0d;
     }
+    #addGratitudeBtn {
+      background: #f1c40f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 0 15px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    #addGratitudeBtn:disabled {
+      background: #ccc;
+    }
   </style>
 </head>
 <body>
@@ -167,7 +182,10 @@
       </div>
       <div style="flex-grow: 1;">
         <h2 style="margin: 0 0 5px 0; font-size: 1.1em;">רגע של הודיה ✨</h2>
-        <input type="text" id="gratitudeInput" placeholder="על מה אתה מודה היום?" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" />
+        <div style="display: flex; gap: 5px;">
+          <input type="text" id="gratitudeInput" placeholder="על מה אתה מודה היום?" style="flex-grow: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px;" />
+          <button id="addGratitudeBtn" title="הוסף הודיה">+</button>
+        </div>
       </div>
     </section>
 
