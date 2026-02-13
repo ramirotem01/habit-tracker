@@ -142,7 +142,6 @@
       else userId = user.uid; 
     });
 
-    // שלב א: שליפת המפתח מה-Firestore
     async function fetchApiKey() {
       try {
         const doc = await db.collection("system_config").doc("gemini_settings").get();
@@ -193,6 +192,14 @@
       const goal = document.getElementById("goalInput").value.trim();
       if (!goal) return;
 
+      // בדיקת הגבלה יומית לפני הפנייה ל-API
+      const today = new Date().toISOString().split('T')[0];
+      const userDoc = await db.collection("users").doc(userId).get();
+      if (userDoc.exists && userDoc.data().lastHabitGenerationDate === today) {
+        alert("כבר יצרת תוכנית הרגלים היום. ניתן להשתמש בעוזר ה-AI פעם ביום.");
+        return;
+      }
+
       const btn = document.getElementById("generateBtn");
       const loader = document.getElementById("loadingMsg");
       const preview = document.getElementById("previewArea");
@@ -203,6 +210,12 @@
 
       try {
         const habits = await generateWithAI(goal);
+        
+        // עדכון תאריך השימוש מיד לאחר קבלת תוצאה מוצלחת מה-API
+        await db.collection("users").doc(userId).set({ 
+          lastHabitGenerationDate: today 
+        }, { merge: true });
+
         const list = document.getElementById("suggestedList");
         list.innerHTML = "";
         habits.forEach(h => {
@@ -223,7 +236,6 @@
     document.getElementById("approveBtn").addEventListener("click", async () => {
       if (!window.currentHabits || !userId) return;
       
-      // שליפת המטרה מה-input
       const goalText = document.getElementById("goalInput").value.trim();
       const batch = db.batch();
 
