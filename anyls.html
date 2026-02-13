@@ -26,8 +26,8 @@
       width: 100%; transition: all 0.3s ease;
     }
     .action-btn-ai:hover { background-color: #27ae60; transform: translateY(-2px); }
+    .action-btn-ai:disabled { background-color: #bdc3c7; cursor: not-allowed; transform: none; }
     
-    /* עיצוב לכפתור ה-PRO החדש */
     .action-btn-pro-nav {
       background-color: #9b59b6; color: white; border: none; padding: 16px;
       border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.2em;
@@ -54,7 +54,6 @@
         <h3 style="text-align: center;">תובנות על השבוע האחרון</h3>
         <p style="text-align: center; color: #666; margin-bottom: 20px;">ה-AI ינתח את המגמות שלך ב-7 הימים האחרונים וימליץ על צעדים להמשך.</p>
         <button id="analyzeBtn" class="action-btn-ai">✨ נתח את השבוע שלי</button>
-        
         <button onclick="window.location.href='proanyls.html'" class="action-btn-pro-nav">💎 ניתוח עומק היסטורי (PRO)</button>
       </section>
 
@@ -151,6 +150,14 @@
       const recBox = document.getElementById("recommendationBox");
       const textContent = document.getElementById("aiTextContent");
 
+      // בדיקת הגבלת פעם ביום
+      const today = new Date().toISOString().split('T')[0];
+      const userDoc = await db.collection("users").doc(userId).get();
+      if (userDoc.exists && userDoc.data().lastAnalysisDate === today) {
+        alert("כבר ביצעת ניתוח היום. ניתן לבצע ניתוח חדש פעם ביום כדי לשמור על המיקוד.");
+        return;
+      }
+
       btn.disabled = true;
       loader.style.display = "block";
       resultArea.style.display = "none";
@@ -197,6 +204,9 @@
         }
 
         if (resData.candidates && resData.candidates[0].content) {
+          // עדכון תאריך ניתוח אחרון ב-Firebase למניעת שימוש חוזר היום
+          await db.collection("users").doc(userId).set({ lastAnalysisDate: today }, { merge: true });
+
           let fullText = resData.candidates[0].content.parts[0].text;
           const parts = fullText.split("TASK:");
           const feedback = parts[0].replace(/\*/g, '').trim();
