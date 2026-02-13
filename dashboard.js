@@ -9,6 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const addTomorrowHabitBtn = document.getElementById("addTomorrowHabitBtn"); // כפתור מחר
   const logoutBtn = document.getElementById("logoutBtn");
 
+  // אלמנטים חדשים להכרת תודה
+  const gratitudeInput = document.getElementById("gratitudeInput");
+  const fgCircle = document.getElementById("fgCircle");
+  const gratitudeCountText = document.getElementById("gratitudeCount");
+
   const now = new Date();
   const todayDocId = now.toISOString().split('T')[0]; 
   todayDateEl.textContent = now.toLocaleDateString("he-IL");
@@ -26,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     userId = user.uid;
     loadAllData();
+    loadGratitude(); // טעינת הכרת תודה
   });
 
   async function loadAllData() {
@@ -44,6 +50,61 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error("שגיאה בטעינה:", err);
     }
+  }
+
+  // לוגיקת הכרת תודה
+  async function loadGratitude() {
+    if (!userId) return;
+    try {
+      const gratSnap = await db.collection("users").doc(userId).collection("gratitude").doc(todayDocId).get();
+      const list = gratSnap.exists ? gratSnap.data().items || [] : [];
+      updateGratitudeUI(list.length);
+    } catch (err) {
+      console.error("שגיאה בטעינת הכרת תודה:", err);
+    }
+  }
+
+  function updateGratitudeUI(count) {
+    const safeCount = Math.min(count, 3);
+    const radius = 25;
+    const circumference = 2 * Math.PI * radius;
+    const offset = (safeCount / 3) * circumference;
+    
+    if (fgCircle) {
+      fgCircle.style.strokeDasharray = `${offset} ${circumference}`;
+    }
+    if (gratitudeCountText) {
+      gratitudeCountText.textContent = `${safeCount}/3`;
+    }
+    
+    if (safeCount >= 3 && gratitudeInput) {
+      gratitudeInput.disabled = true;
+      gratitudeInput.placeholder = "תודה על הכל! נתראה מחר ✨";
+    }
+  }
+
+  if (gratitudeInput) {
+    gratitudeInput.addEventListener("keypress", async (e) => {
+      if (e.key === "Enter") {
+        const text = gratitudeInput.value.trim();
+        if (!text) return;
+
+        try {
+          const docRef = db.collection("users").doc(userId).collection("gratitude").doc(todayDocId);
+          const doc = await docRef.get();
+          let items = doc.exists ? doc.data().items || [] : [];
+          
+          if (items.length < 3) {
+            items.push(text);
+            await docRef.set({ items, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            gratitudeInput.value = "";
+            updateGratitudeUI(items.length);
+          }
+        } catch (err) {
+          console.error("Error saving gratitude:", err);
+        }
+      }
+    });
   }
 
   function render() {
@@ -175,7 +236,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const text = tempHabitInput.value.trim();
     if (!text) return;
 
-    // חישוב התאריך של מחר
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowDocId = tomorrow.toISOString().split('T')[0];
