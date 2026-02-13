@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     userId = user.uid;
     loadAllData();
-    loadGratitude(); // טעינת הכרת תודה בחיבור
+    loadGratitude(); 
   });
 
   async function loadAllData() {
@@ -48,9 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
       dailyStats = statsDoc.exists ? statsDoc.data() : {};
 
       render();
-    } catch (err) {
-      console.error("שגיאה בטעינה:", err);
-    }
+    } catch (err) { console.error("Error loading habits:", err); }
   }
 
   // --- לוגיקת הכרת תודה ---
@@ -60,9 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const gratSnap = await db.collection("users").doc(userId).collection("gratitude").doc(todayDocId).get();
       const list = gratSnap.exists ? gratSnap.data().items || [] : [];
       updateGratitudeUI(list.length);
-    } catch (err) {
-      console.error("שגיאה בטעינת הכרת תודה:", err);
-    }
+    } catch (err) { console.error(err); }
   }
 
   function updateGratitudeUI(count) {
@@ -75,10 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (gratitudeCountText) gratitudeCountText.textContent = `${safeCount}/3`;
     
     if (safeCount >= 3) {
-      if (gratitudeInput) {
-        gratitudeInput.disabled = true;
-        gratitudeInput.placeholder = "תודה על הכל! ✨";
-      }
+      if (gratitudeInput) { gratitudeInput.disabled = true; gratitudeInput.placeholder = "תודה על הכל! ✨"; }
       if (addGratitudeBtn) addGratitudeBtn.disabled = true;
     }
   }
@@ -94,39 +87,32 @@ document.addEventListener("DOMContentLoaded", () => {
       
       if (items.length < 3) {
         items.push(text);
-        await docRef.set({ items, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+        await docRef.set({ items: items }, { merge: true });
         gratitudeInput.value = "";
         updateGratitudeUI(items.length);
       }
-    } catch (err) {
-      console.error("Error saving gratitude:", err);
-    }
+    } catch (err) { console.error(err); }
   }
 
   if (addGratitudeBtn) addGratitudeBtn.addEventListener("click", saveGratitude);
   if (gratitudeInput) {
-    gratitudeInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") saveGratitude();
-    });
+    gratitudeInput.addEventListener("keypress", (e) => { if (e.key === "Enter") saveGratitude(); });
   }
-  // --- סוף לוגיקת הכרת תודה ---
 
+  // --- ניהול הרגלים וגרף ---
   function render() {
     if (!habitListEl) return;
     habitListEl.innerHTML = "";
-    
     const allTasks = [...baseHabits, ...tempHabits];
     let doneCount = 0;
 
     allTasks.forEach(task => {
       const isDone = dailyStats[task.text] === true;
       if (isDone) doneCount++;
-
       const li = document.createElement("li");
-
       const contentSide = document.createElement("div");
       contentSide.style = "display: flex; align-items: center; overflow: hidden; flex: 1; padding-left: 10px;";
-
+      
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.checked = isDone;
@@ -138,95 +124,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const span = document.createElement("span");
       span.textContent = task.text;
-      
-      span.onclick = () => alert(task.text);
-      
       if (isDone) span.style.textDecoration = "line-through";
-
       contentSide.appendChild(cb);
       contentSide.appendChild(span);
 
       const actionsSide = document.createElement("div");
       actionsSide.style = "display: flex; align-items: center; flex-shrink: 0;";
-
       if (task.isTemp) {
-        const editBtn = document.createElement("button");
-        editBtn.innerHTML = "✏️";
-        editBtn.style = "background:none; border:none; cursor:pointer; margin-left:8px; padding: 5px; font-size: 16px;";
-        editBtn.onclick = () => editTempHabit(task.id, task.text);
-
-        const deleteBtn = document.createElement("button");
-        deleteBtn.innerHTML = "🗑️";
-        deleteBtn.style = "background:none; border:none; cursor:pointer; padding: 5px; font-size: 16px;";
-        deleteBtn.onclick = () => deleteTempHabit(task.id, task.text);
-
-        actionsSide.appendChild(editBtn);
-        actionsSide.appendChild(deleteBtn);
+        const delBtn = document.createElement("button");
+        delBtn.innerHTML = "🗑️";
+        delBtn.style = "background:none; border:none; cursor:pointer;";
+        delBtn.onclick = () => deleteTempHabit(task.id, task.text);
+        actionsSide.appendChild(delBtn);
       }
-
       li.appendChild(contentSide);
       li.appendChild(actionsSide);
       habitListEl.appendChild(li);
     });
 
-    if (totalHabitsEl) totalHabitsEl.textContent = allTasks.length;
-    if (doneTodayEl) doneTodayEl.textContent = doneCount;
-    if (progressTodayEl) progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
-    
+    totalHabitsEl.textContent = allTasks.length;
+    doneTodayEl.textContent = doneCount;
+    progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
     renderChart();
   }
 
   async function renderChart() {
     const ctx = document.getElementById('habitsChart');
     if (!ctx) return;
-
     try {
       const dates = [];
       const labels = [];
       for (let i = 6; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
+        const d = new Date(); d.setDate(d.getDate() - i);
         dates.push(d.toISOString().split('T')[0]);
         labels.push(d.toLocaleDateString("he-IL", { weekday: 'short' }));
       }
-
       const statsSnap = await db.collection("users").doc(userId).collection("stats").get();
       const allStats = {};
       statsSnap.forEach(doc => allStats[doc.id] = doc.data());
-
       const dataPoints = dates.map(dateId => {
         const dayData = allStats[dateId] || {};
         return Object.values(dayData).filter(v => v === true).length;
       });
-
       if (myChart) myChart.destroy();
       myChart = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: labels,
-          datasets: [{
-            label: 'משימות שבוצעו',
-            data: dataPoints,
-            backgroundColor: '#3498db',
-            borderColor: '#2980b9',
-            borderWidth: 1,
-            borderRadius: 5
-          }]
+          datasets: [{ label: 'משימות', data: dataPoints, backgroundColor: '#3498db', borderRadius: 5 }]
         },
-        options: {
-          responsive: true,
-          scales: {
-            y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } }
-          },
-          plugins: { legend: { display: false } }
-        }
+        options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } }
       });
-    } catch (err) {
-      console.error("שגיאה בגרף:", err);
-    }
+    } catch (err) { console.error(err); }
   }
 
-  // הוספה להיום
   addTempHabitBtn.addEventListener("click", async () => {
     const text = tempHabitInput.value.trim();
     if (!text) return;
@@ -235,45 +186,19 @@ document.addEventListener("DOMContentLoaded", () => {
     loadAllData();
   });
 
-  // הוספה למחר
   addTomorrowHabitBtn.addEventListener("click", async () => {
     const text = tempHabitInput.value.trim();
     if (!text) return;
-
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowDocId = tomorrow.toISOString().split('T')[0];
-
-    try {
-      await db.collection("users").doc(userId).collection("daily").doc(tomorrowDocId).collection("tempHabits").add({ text });
-      alert(`המשימה "${text}" נוספה למחר!`);
-      tempHabitInput.value = "";
-    } catch (err) {
-      console.error("שגיאה בהוספה למחר:", err);
-      alert("שגיאה בהוספת המשימה.");
-    }
+    await db.collection("users").doc(userId).collection("daily").doc(tomorrowDocId).collection("tempHabits").add({ text });
+    alert("נוסף למחר!");
+    tempHabitInput.value = "";
   });
 
   async function deleteTempHabit(id, text) {
     if (!confirm(`למחוק את "${text}"?`)) return;
     await db.collection("users").doc(userId).collection("daily").doc(todayDocId).collection("tempHabits").doc(id).delete();
-    if (dailyStats[text] !== undefined) {
-      delete dailyStats[text];
-      await db.collection("users").doc(userId).collection("stats").doc(todayDocId).set(dailyStats);
-    }
-    loadAllData();
-  }
-
-  async function editTempHabit(id, oldText) {
-    const newText = prompt("ערוך משימה:", oldText);
-    if (!newText || newText.trim() === "" || newText === oldText) return;
-    const cleanText = newText.trim();
-    await db.collection("users").doc(userId).collection("daily").doc(todayDocId).collection("tempHabits").doc(id).update({ text: cleanText });
-    if (dailyStats[oldText] !== undefined) {
-      dailyStats[cleanText] = dailyStats[oldText];
-      delete dailyStats[oldText];
-      await db.collection("users").doc(userId).collection("stats").doc(todayDocId).set(dailyStats);
-    }
     loadAllData();
   }
 
