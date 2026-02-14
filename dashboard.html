@@ -214,7 +214,21 @@
 </head>
 <body>
   <div class="app">
-    <h1>📊 דשבורד יומי</h1>
+    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+      <div class="chart-icon-box" style="width: 40px; height: 40px; background: linear-gradient(135deg, #3498db, #2471a3); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); flex-shrink: 0;">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 26px; height: 26px;">
+          <rect x="3" y="15" width="4" height="5" rx="1" fill="white" fill-opacity="0.3"/>
+          <rect x="9" y="12" width="4" height="8" rx="1" fill="white" fill-opacity="0.6"/>
+          <rect x="15" y="9" width="4" height="11" rx="1" fill="white"/>
+          <path d="M3 12L7 8L10 10L18 3M18 3H13.5M18 3V7.5" 
+                stroke="white" 
+                stroke-width="2.2" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 style="margin: 0;">דשבורד יומי</h1>
+    </div>
     
     <section class="card goal-card" id="goalSection" style="display: none;">
       <div class="goal-header">
