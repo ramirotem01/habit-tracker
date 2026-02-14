@@ -19,6 +19,31 @@
   <title>דשבורד הרגלים</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    /* עיצוב האייקון החדשני בכותרת */
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .pulse-icon-container {
+      display: inline-flex;
+      background: white;
+      padding: 8px 12px;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(46, 204, 113, 0.2);
+      align-items: center;
+      justify-content: center;
+    }
+    .pulse-icon {
+      color: #2ecc71;
+      font-size: 24px;
+      letter-spacing: -2px;
+      font-weight: bold;
+      line-height: 1;
+    }
+
     /* עיצוב ייעודי לכרטיס המטרה */
     .goal-card {
       background: linear-gradient(135deg, #f1f9ff 0%, #ffffff 100%);
@@ -86,7 +111,7 @@
     .task-circle-low { border-color: #f1c40f; color: #f39c12; }
     .task-circle-done { border-color: #2ecc71; color: #27ae60; background-color: #fafffa; }
 
-    /* ניווט בין ימים - עיצוב חדשני */
+    /* ניווט בין ימים */
     .date-nav {
       display: flex;
       align-items: center;
@@ -125,18 +150,12 @@
       background: #3498db;
       color: #fff;
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
-    }
-    .nav-btn:active {
-      transform: translateY(0);
     }
     .nav-btn:disabled {
       opacity: 0;
-      cursor: not-allowed;
       pointer-events: none;
     }
 
-    /* התאמת כפתורים צפופים במובייל */
     .actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -214,7 +233,12 @@
 </head>
 <body>
   <div class="app">
-    <h1>📊 דשבורד יומי</h1>
+    <div class="dashboard-header">
+      <div class="pulse-icon-container">
+        <span class="pulse-icon">∿∿</span>
+      </div>
+      <h1>דשבורד יומי</h1>
+    </div>
     
     <section class="card goal-card" id="goalSection" style="display: none;">
       <div class="goal-header">
