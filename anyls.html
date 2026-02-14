@@ -113,27 +113,34 @@
       if (!goalSnap.empty) goal = goalSnap.docs[0].data().text;
 
       const dailyDetails = [];
+      // שומרים את כל אובייקט ההרגל כדי לקבל את תאריך היצירה (createdAt)
       const baseSnap = await db.collection("users").doc(userId).collection("habits").get();
-      const baseHabitNames = baseSnap.docs.map(doc => doc.data().text);
+      const habitsData = baseSnap.docs.map(doc => ({
+        name: doc.data().text,
+        created: doc.data().createdAt ? doc.data().createdAt.toDate() : new Date(0)
+      }));
 
       for (let i = 1; i <= 7; i++) {
         const d = new Date();
         d.setDate(now.getDate() - i);
+        d.setHours(23, 59, 59, 999); // סוף היום הנבדק
         const dateId = d.toISOString().split('T')[0];
         
         const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(dateId).get();
         const tempSnap = await db.collection("users").doc(userId).collection("daily").doc(dateId).collection("tempHabits").get();
 
-        // בדיקה קריטית: האם יש בכלל מסמך סטטיסטיקה (ביצוע) או משימות זמניות ליום הזה?
         const hasRealData = statsDoc.exists || !tempSnap.empty;
 
         if (hasRealData) {
           const dailyStats = statsDoc.exists ? statsDoc.data() : {};
           const dayTasks = [];
           
-          baseHabitNames.forEach(name => {
-             const done = dailyStats[name] === true;
-             dayTasks.push(`${name} (קבוע) - ${done ? 'בוצע ✅' : 'לא בוצע ❌'}`);
+          // סינון: הוסף להרגל רק אם הוא נוצר לפני או במהלך היום הנבדק
+          habitsData.forEach(habit => {
+             if (habit.created <= d) {
+               const done = dailyStats[habit.name] === true;
+               dayTasks.push(`${habit.name} (קבוע) - ${done ? 'בוצע ✅' : 'לא בוצע ❌'}`);
+             }
           });
 
           tempSnap.forEach(t => {
@@ -155,7 +162,6 @@
       const recBox = document.getElementById("recommendationBox");
       const textContent = document.getElementById("aiTextContent");
 
-      // בדיקת הגבלת פעם ביום
       const today = new Date().toISOString().split('T')[0];
       const userDoc = await db.collection("users").doc(userId).get();
       if (userDoc.exists && userDoc.data().lastAnalysisDate === today) {
@@ -170,8 +176,6 @@
       try {
         const apiKey = await fetchApiKey();
         const data = await collectWeeklyData();
-
-        // ספירה רק של ימים שסומנו כבעלי נתונים אמיתיים (isReal)
         const activeDaysCount = data.dailyDetails.length;
 
         if (activeDaysCount < 3) {
