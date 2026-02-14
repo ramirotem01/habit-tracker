@@ -86,28 +86,55 @@
     .task-circle-low { border-color: #f1c40f; color: #f39c12; }
     .task-circle-done { border-color: #2ecc71; color: #27ae60; background-color: #fafffa; }
 
-    /* ניווט בין ימים */
+    /* ניווט בין ימים - עיצוב חדשני */
     .date-nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 12px;
+    }
+    .tasks-title-container {
+      flex: 1;
+      text-align: center;
+    }
+    .tasks-title-container h2 {
+      margin: 0;
+      font-size: 1.1em;
+      color: #2c3e50;
     }
     .nav-btn {
-      background: #f1f1f1;
+      background: #ffffff;
       border: none;
       border-radius: 50%;
-      width: 30px;
-      height: 30px;
+      width: 38px;
+      height: 38px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      transition: background 0.2s;
+      font-size: 16px;
+      font-weight: bold;
+      color: #3498db;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
     }
-    .nav-btn:hover { background: #e0e0e0; }
-    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .nav-btn:hover {
+      background: #3498db;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+    }
+    .nav-btn:active {
+      transform: translateY(0);
+    }
+    .nav-btn:disabled {
+      opacity: 0;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
 
     /* התאמת כפתורים צפופים במובייל */
     .actions {
@@ -211,9 +238,11 @@
 
     <section class="card">
       <div class="date-nav">
-        <button id="prevDayBtn" class="nav-btn" title="היום">➡️</button>
-        <h2 id="tasksTitle">🗓 המשימות שלי להיום</h2>
-        <button id="nextDayBtn" class="nav-btn" title="מחר">⬅️</button>
+        <button id="prevDayBtn" class="nav-btn" title="חזור להיום"><span>&#10095;</span></button>
+        <div class="tasks-title-container">
+            <h2 id="tasksTitle">🗓 המשימות שלי להיום</h2>
+        </div>
+        <button id="nextDayBtn" class="nav-btn" title="עבור למחר"><span>&#10094;</span></button>
       </div>
       
       <div class="input-group">
