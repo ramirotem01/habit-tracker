@@ -19,74 +19,72 @@
   <title>דשבורד הרגלים</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* עיצוב ייעודי לכרטיס המטרה */
+    /* --- עיצוב כותרת דשבורד חדשנית --- */
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start; /* יישור לימין */
+      gap: 12px;
+      margin-bottom: 25px;
+      padding-right: 5px;
+    }
+    
+    .chart-icon-box {
+      width: 42px;
+      height: 42px;
+      background: #3498db;
+      border-radius: 10px; /* פינות מעוגלות קלות למראה מודרני */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+      flex-shrink: 0; /* מונע מהריבוע להתעוות */
+    }
+
+    .chart-icon-box svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.6em;
+      color: #2c3e50;
+    }
+
+    /* תיקון עיגולים שיוצאים אליפסה */
+    .task-progress-circle, .gratitude-circle {
+      width: 65px !important;
+      height: 65px !important;
+      min-width: 65px;
+      min-height: 65px;
+      border-radius: 50% !important; /* עיגול מושלם */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+
+    .gratitude-circle {
+      width: 55px !important;
+      height: 55px !important;
+      min-width: 55px;
+      min-height: 55px;
+    }
+
+    /* --- שאר העיצוב --- */
     .goal-card {
       background: linear-gradient(135deg, #f1f9ff 0%, #ffffff 100%);
       border-right: 5px solid #3498db;
       text-align: center;
       padding: 20px !important;
-      position: relative;
     }
-    .goal-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .goal-card h2 {
-      font-size: 0.9em;
-      color: #7f8c8d;
-      margin: 0;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .edit-goal-btn {
-      text-decoration: none;
-      font-size: 1.2em;
-      color: #3498db;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    .edit-goal-btn:hover {
-      opacity: 0.7;
-    }
-    #userGoalText {
-      font-size: 1.3em;
-      color: #2c3e50;
-      font-weight: bold;
-      font-style: italic;
-    }
-
-    /* עיצוב כרטיס סיכום עם עיגול התקדמות */
     .summary-card {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .summary-info {
-      flex: 1;
-    }
-    .progress-circle-container {
-      margin-right: 15px;
-    }
-    .task-progress-circle {
-      width: 65px;
-      height: 65px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1em;
-      background-color: #fff;
-      border: 5px solid #eee;
-      transition: all 0.4s ease;
-    }
-    .task-circle-low { border-color: #f1c40f; color: #f39c12; }
-    .task-circle-done { border-color: #2ecc71; color: #27ae60; background-color: #fafffa; }
-
-    /* ניווט בין ימים - עיצוב חדשני */
     .date-nav {
       display: flex;
       align-items: center;
@@ -95,15 +93,6 @@
       background: #f8f9fa;
       padding: 10px;
       border-radius: 12px;
-    }
-    .tasks-title-container {
-      flex: 1;
-      text-align: center;
-    }
-    .tasks-title-container h2 {
-      margin: 0;
-      font-size: 1.1em;
-      color: #2c3e50;
     }
     .nav-btn {
       background: #ffffff;
@@ -115,113 +104,40 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
-      font-weight: bold;
       color: #3498db;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: all 0.2s ease;
     }
-    .nav-btn:hover {
-      background: #3498db;
-      color: #fff;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
-    }
-    .nav-btn:active {
-      transform: translateY(0);
-    }
-    .nav-btn:disabled {
-      opacity: 0;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    /* התאמת כפתורים צפופים במובייל */
     .actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
-    .input-group {
-      display: flex;
-      flex-direction: column; 
-      gap: 8px;
-    }
-    .input-group input {
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .button-row {
-      display: flex;
-      gap: 8px;
-    }
-    .button-row button {
-      flex: 1;
-      white-space: nowrap;
-      padding: 10px 5px;
-      font-size: 0.9em;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      color: white;
-    }
+    .button-row { display: flex; gap: 8px; }
+    .button-row button { flex: 1; padding: 10px 5px; border-radius: 5px; border: none; color: white; cursor: pointer; }
     #addTempHabitBtn { background-color: #3498db; }
     #addTomorrowHabitBtn { background-color: #34495e; }
-
-    /* עיצוב פיצ'ר הודיה */
-    .gratitude-section {
-      background: #fff;
-      border-radius: 12px;
-      padding: 15px;
-      margin-top: 15px;
-    }
-    .gratitude-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-    .gratitude-circle {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 0.9em;
-      transition: all 0.5s ease;
-      background-color: #ffffff;
-      border: 4px solid #eee;
-    }
-    .circle-low { border-color: #f1c40f; color: #f39c12; }
-    .circle-full { border-color: #2ecc71; color: #27ae60; box-shadow: 0 0 10px rgba(46, 204, 113, 0.2); }
-    
-    .gratitude-list {
-      list-style: none;
-      padding: 0;
-      margin: 10px 0;
-    }
-    .gratitude-list li {
-      background: #f9f9f9;
-      margin-bottom: 5px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 0.95em;
-      border-right: 3px solid #f1c40f;
-    }
+    .gratitude-list { list-style: none; padding: 0; }
+    .gratitude-list li { background: #f9f9f9; margin-bottom: 5px; padding: 8px 12px; border-radius: 8px; border-right: 3px solid #f1c40f; }
   </style>
 </head>
 <body>
   <div class="app">
-    <h1>📊 דשבורד יומי</h1>
+    
+    <header class="dashboard-header">
+      <div class="chart-icon-box">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 19h14V5H5v14zm2-12h2v10H7V7zm4 4h2v6h-2v-6zm4-2h2v8h-2V9z"/>
+        </svg>
+      </div>
+      <h1>דשבורד יומי</h1>
+    </header>
     
     <section class="card goal-card" id="goalSection" style="display: none;">
-      <div class="goal-header">
-        <h2>היעד הגדול שלי:</h2>
-        <a href="mygoal.html" class="edit-goal-btn" title="עדכן מטרה">✏️</a>
+      <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+        <h2 style="font-size: 0.9em; color: #7f8c8d; margin: 0;">היעד הגדול שלי:</h2>
+        <a href="mygoal.html" style="text-decoration:none; font-size:1.2em;">✏️</a>
       </div>
-      <p id="userGoalText">טוען מטרה...</p>
+      <p id="userGoalText" style="font-size: 1.3em; font-weight: bold; font-style: italic;">טוען מטרה...</p>
     </section>
 
     <section class="card summary-card">
@@ -229,61 +145,55 @@
         <p>תאריך: <strong id="todayDate"></strong></p>
         <p>סה"כ משימות: <span id="totalHabits">0</span></p>
         <p>בוצעו היום: <span id="doneToday">0</span></p>
-        <p>התקדמות: <span id="progressToday">0/0</span></p>
       </div>
       <div class="progress-circle-container">
-        <div id="taskProgressCircle" class="task-progress-circle task-circle-low">0%</div>
+        <div id="taskProgressCircle" class="task-progress-circle" style="border: 5px solid #eee; font-weight: bold; color: #3498db;">0%</div>
       </div>
     </section>
 
     <section class="card">
       <div class="date-nav">
-        <button id="prevDayBtn" class="nav-btn" title="חזור להיום"><span>&#10094;</span></button>
-        <div class="tasks-title-container">
-            <h2 id="tasksTitle">🗓 המשימות שלי להיום</h2>
+        <button id="prevDayBtn" class="nav-btn"><span>&#10094;</span></button>
+        <div style="flex: 1; text-align: center;">
+            <h2 id="tasksTitle" style="margin: 0; font-size: 1.1em;">🗓 המשימות שלי להיום</h2>
         </div>
-        <button id="nextDayBtn" class="nav-btn" title="עבור למחר"><span>&#10095;</span></button>
+        <button id="nextDayBtn" class="nav-btn"><span>&#10095;</span></button>
       </div>
       
-      <div class="input-group">
-        <input type="text" id="tempHabitInput" placeholder="הוסף משימה חד פעמית..." />
+      <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+        <input type="text" id="tempHabitInput" placeholder="הוסף משימה חד פעמית..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;" />
         <div class="button-row">
-          <button id="addTempHabitBtn">➕ הוסף לרשימה</button>
-          <button id="addTomorrowHabitBtn">🕒 תזמן למחר</button>
+          <button id="addTempHabitBtn">➕ הוסף להיום</button>
+          <button id="addTomorrowHabitBtn">🕒 למחר</button>
         </div>
       </div>
-      <ul id="habitList"></ul>
+      <ul id="habitList" style="list-style: none; padding: 0;"></ul>
     </section>
 
-    <section class="card gratitude-section">
-      <div class="gratitude-header">
-        <h2>רגע של הודיה ✨</h2>
-        <div id="gratitudeCircle" class="gratitude-circle circle-low">0/3</div>
+    <section class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2 style="margin: 0; font-size: 1.1em;">רגע של הודיה ✨</h2>
+        <div id="gratitudeCircle" class="gratitude-circle" style="border: 4px solid #eee; font-weight: bold; font-size: 0.9em;">0/3</div>
       </div>
-      <div id="gratitudeInputGroup" class="input-group">
-        <div style="display: flex; gap: 8px;">
-          <input type="text" id="gratitudeInput" placeholder="על מה אתה מודה היום?" style="flex: 1;" />
-          <button id="addGratitudeBtn" style="background: #f1c40f; color: white; border: none; border-radius: 5px; padding: 0 15px; cursor: pointer;">➕</button>
-        </div>
+      <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+        <input type="text" id="gratitudeInput" placeholder="על מה אתה מודה?" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px;" />
+        <button id="addGratitudeBtn" style="background: #f1c40f; color: white; border: none; border-radius: 8px; padding: 0 15px; cursor: pointer;">➕</button>
       </div>
       <ul id="gratitudeList" class="gratitude-list"></ul>
     </section>
 
     <section class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h2>📈 התקדמות שבועית</h2>
-      </div>
+      <h2>📈 התקדמות שבועית</h2>
       <canvas id="habitsChart" width="400" height="200"></canvas>
     </section>
 
     <div class="actions">
-      <button onclick="window.location.href='manage.html'">📝 ניהול הרגלים</button>
-      <button onclick="window.location.href='aihabit.html'" style="background: #2ecc71; color: white;">✨ עוזר AI</button>
-      <button onclick="window.location.href='anyls.html'" style="background: #9b59b6; color: white;">🧠 תובנות שבועיות</button>
+      <button onclick="window.location.href='manage.html'">📝 ניהול</button>
+      <button onclick="window.location.href='aihabit.html'" style="background: #2ecc71; color: white;">✨ AI</button>
+      <button onclick="window.location.href='anyls.html'" style="background: #9b59b6; color: white;">🧠 תובנות</button>
       <button id="logoutBtn" style="background: #ff4b2b; color: white;">🚪 התנתק</button>
     </div>
 
-    <div id="logBox" style="font-size: 12px; color: gray; margin-top: 20px;"></div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -294,30 +204,20 @@
 
   <script>
     auth.onAuthStateChanged(user => {
-      if (user) {
-        loadUserGoal(user.uid);
-      }
+      if (user) { loadUserGoal(user.uid); }
     });
 
     async function loadUserGoal(uid) {
       try {
-        const snapshot = await db.collection("users").doc(uid)
-          .collection("goals")
-          .orderBy("createdAt", "desc")
-          .limit(1)
-          .get();
-
+        const snapshot = await db.collection("users").doc(uid).collection("goals")
+          .orderBy("createdAt", "desc").limit(1).get();
         if (!snapshot.empty) {
-          const goalData = snapshot.docs[0].data();
-          document.getElementById("userGoalText").textContent = `"${goalData.text}"`;
+          document.getElementById("userGoalText").textContent = `"${snapshot.docs[0].data().text}"`;
           document.getElementById("goalSection").style.display = "block";
         }
-      } catch (e) {
-        console.error("Error loading goal:", e);
-      }
+      } catch (e) { console.error(e); }
     }
   </script>
-
   <script src="dashboard.js"></script>
 </body>
 </html>
