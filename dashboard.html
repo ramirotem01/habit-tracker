@@ -86,6 +86,29 @@
     .task-circle-low { border-color: #f1c40f; color: #f39c12; }
     .task-circle-done { border-color: #2ecc71; color: #27ae60; background-color: #fafffa; }
 
+    /* ניווט בין ימים */
+    .date-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+    .nav-btn {
+      background: #f1f1f1;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: #e0e0e0; }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
     /* התאמת כפתורים צפופים במובייל */
     .actions {
       display: grid;
@@ -187,12 +210,17 @@
     </section>
 
     <section class="card">
-      <h2>🗓 המשימות שלי להיום</h2>
+      <div class="date-nav">
+        <button id="prevDayBtn" class="nav-btn" title="היום">➡️</button>
+        <h2 id="tasksTitle">🗓 המשימות שלי להיום</h2>
+        <button id="nextDayBtn" class="nav-btn" title="מחר">⬅️</button>
+      </div>
+      
       <div class="input-group">
         <input type="text" id="tempHabitInput" placeholder="הוסף משימה חד פעמית..." />
         <div class="button-row">
-          <button id="addTempHabitBtn">➕ היום</button>
-          <button id="addTomorrowHabitBtn">🕒 מחר</button>
+          <button id="addTempHabitBtn">➕ הוסף לרשימה</button>
+          <button id="addTomorrowHabitBtn">🕒 תזמן למחר</button>
         </div>
       </div>
       <ul id="habitList"></ul>
