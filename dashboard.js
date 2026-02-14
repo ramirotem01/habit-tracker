@@ -29,8 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return date.toISOString().split('T')[0];
   }
 
-  todayDateEl.textContent = new Date().toLocaleDateString("he-IL");
-
   let userId = null;
   let baseHabits = [];
   let tempHabits = [];
@@ -50,7 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
   async function loadAllData() {
     const viewDocId = getDocId(currentViewDate);
     
-    // עדכון כותרת התצוגה
+    // עדכון התאריך בסיכום למעלה והכותרת
+    todayDateEl.textContent = currentViewDate.toLocaleDateString("he-IL");
+    
     if (viewDocId === realTodayStr) {
       tasksTitle.textContent = "🗓 המשימות שלי להיום";
       prevDayBtn.style.visibility = "hidden";
@@ -85,11 +85,13 @@ document.addEventListener("DOMContentLoaded", () => {
   nextDayBtn.addEventListener("click", () => {
     currentViewDate.setDate(currentViewDate.getDate() + 1);
     loadAllData();
+    loadGratitude(); // עדכון הודיות לתאריך החדש
   });
 
   prevDayBtn.addEventListener("click", () => {
     currentViewDate.setDate(currentViewDate.getDate() - 1);
     loadAllData();
+    loadGratitude(); // עדכון הודיות לתאריך החדש
   });
 
   async function loadGratitude() {
