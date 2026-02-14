@@ -15,6 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const gratitudeListEl = document.getElementById("gratitudeList");
   const gratitudeCircle = document.getElementById("gratitudeCircle");
 
+  // אלמנט עיגול התקדמות משימות
+  const taskProgressCircle = document.getElementById("taskProgressCircle");
+
   const now = new Date();
   const todayDocId = now.toISOString().split('T')[0]; 
   todayDateEl.textContent = now.toLocaleDateString("he-IL");
@@ -154,9 +157,22 @@ document.addEventListener("DOMContentLoaded", () => {
       habitListEl.appendChild(li);
     });
 
-    if (totalHabitsEl) totalHabitsEl.textContent = allTasks.length;
+    const total = allTasks.length;
+    if (totalHabitsEl) totalHabitsEl.textContent = total;
     if (doneTodayEl) doneTodayEl.textContent = doneCount;
-    if (progressTodayEl) progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
+    if (progressTodayEl) progressTodayEl.textContent = `${doneCount}/${total}`;
+
+    // עדכון עיגול התקדמות משימות
+    if (taskProgressCircle) {
+      const percent = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+      taskProgressCircle.textContent = percent + "%";
+      
+      if (total > 0 && doneCount === total) {
+        taskProgressCircle.className = "task-progress-circle task-circle-done";
+      } else {
+        taskProgressCircle.className = "task-progress-circle task-circle-low";
+      }
+    }
     
     renderChart();
   }
