@@ -8,6 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const addTempHabitBtn = document.getElementById("addTempHabitBtn");
   const addTomorrowHabitBtn = document.getElementById("addTomorrowHabitBtn"); 
   const logoutBtn = document.getElementById("logoutBtn");
+  const tasksTitle = document.getElementById("tasksTitle");
+  const prevDayBtn = document.getElementById("prevDayBtn");
+  const nextDayBtn = document.getElementById("nextDayBtn");
 
   // אלמנטים של הודיה
   const gratitudeInput = document.getElementById("gratitudeInput");
@@ -18,9 +21,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // אלמנט עיגול התקדמות משימות
   const taskProgressCircle = document.getElementById("taskProgressCircle");
 
-  const now = new Date();
-  const todayDocId = now.toISOString().split('T')[0]; 
-  todayDateEl.textContent = now.toLocaleDateString("he-IL");
+  // ניהול תאריכים
+  let currentViewDate = new Date(); // התאריך שבו המשתמש צופה כרגע
+  const realTodayStr = new Date().toISOString().split('T')[0];
+  
+  function getDocId(date) {
+    return date.toISOString().split('T')[0];
+  }
+
+  todayDateEl.textContent = new Date().toLocaleDateString("he-IL");
 
   let userId = null;
   let baseHabits = [];
@@ -35,19 +44,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     userId = user.uid;
     loadAllData();
-    loadGratitude(); // טעינת הודיות
+    loadGratitude(); 
   });
 
   async function loadAllData() {
+    const viewDocId = getDocId(currentViewDate);
+    
+    // עדכון כותרת התצוגה
+    if (viewDocId === realTodayStr) {
+      tasksTitle.textContent = "🗓 המשימות שלי להיום";
+      prevDayBtn.style.visibility = "hidden";
+      nextDayBtn.style.visibility = "visible";
+    } else {
+      tasksTitle.textContent = "🗓 המשימות שלי למחר";
+      prevDayBtn.style.visibility = "visible";
+      nextDayBtn.style.visibility = "hidden";
+    }
+
     try {
+      // טעינת הרגלים קבועים
       const baseSnap = await db.collection("users").doc(userId).collection("habits").get();
       baseHabits = baseSnap.docs.map(doc => ({ text: doc.data().text, isTemp: false }));
 
+      // טעינת משימות זמניות ליום הנבחר
       const tempSnap = await db.collection("users").doc(userId).collection("daily")
-        .doc(todayDocId).collection("tempHabits").get();
+        .doc(viewDocId).collection("tempHabits").get();
       tempHabits = tempSnap.docs.map(doc => ({ id: doc.id, text: doc.data().text, isTemp: true }));
 
-      const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(todayDocId).get();
+      // טעינת סטטיסטיקות (ביצועים) ליום הנבחר
+      const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(viewDocId).get();
       dailyStats = statsDoc.exists ? statsDoc.data() : {};
 
       render();
@@ -56,9 +81,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // פונקציות פיצ'ר הודיה
+  // חצים לניווט
+  nextDayBtn.addEventListener("click", () => {
+    currentViewDate.setDate(currentViewDate.getDate() + 1);
+    loadAllData();
+  });
+
+  prevDayBtn.addEventListener("click", () => {
+    currentViewDate.setDate(currentViewDate.getDate() - 1);
+    loadAllData();
+  });
+
   async function loadGratitude() {
-    const snap = await db.collection("users").doc(userId).collection("daily").doc(todayDocId).collection("gratitude").get();
+    const viewDocId = getDocId(currentViewDate);
+    const snap = await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("gratitude").get();
     const gratitudes = snap.docs.map(doc => doc.data().text);
     renderGratitude(gratitudes);
   }
@@ -86,9 +122,10 @@ document.addEventListener("DOMContentLoaded", () => {
   addGratitudeBtn.addEventListener("click", async () => {
     const text = gratitudeInput.value.trim();
     if (!text) return;
+    const viewDocId = getDocId(currentViewDate);
 
     try {
-      await db.collection("users").doc(userId).collection("daily").doc(todayDocId).collection("gratitude").add({
+      await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("gratitude").add({
         text,
         createdAt: new Date()
       });
@@ -102,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function render() {
     if (!habitListEl) return;
     habitListEl.innerHTML = "";
+    const viewDocId = getDocId(currentViewDate);
     
     const allTasks = [...baseHabits, ...tempHabits];
     let doneCount = 0;
@@ -111,7 +149,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isDone) doneCount++;
 
       const li = document.createElement("li");
-
       const contentSide = document.createElement("div");
       contentSide.style = "display: flex; align-items: center; overflow: hidden; flex: 1; padding-left: 10px;";
 
@@ -120,15 +157,12 @@ document.addEventListener("DOMContentLoaded", () => {
       cb.checked = isDone;
       cb.onchange = async () => {
         dailyStats[task.text] = cb.checked;
-        await db.collection("users").doc(userId).collection("stats").doc(todayDocId).set(dailyStats);
+        await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
         render(); 
       };
 
       const span = document.createElement("span");
       span.textContent = task.text;
-      
-      span.onclick = () => alert(task.text);
-      
       if (isDone) span.style.textDecoration = "line-through";
 
       contentSide.appendChild(cb);
@@ -162,16 +196,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (doneTodayEl) doneTodayEl.textContent = doneCount;
     if (progressTodayEl) progressTodayEl.textContent = `${doneCount}/${total}`;
 
-    // עדכון עיגול התקדמות משימות
     if (taskProgressCircle) {
       const percent = total > 0 ? Math.round((doneCount / total) * 100) : 0;
       taskProgressCircle.textContent = percent + "%";
-      
-      if (total > 0 && doneCount === total) {
-        taskProgressCircle.className = "task-progress-circle task-circle-done";
-      } else {
-        taskProgressCircle.className = "task-progress-circle task-circle-low";
-      }
+      taskProgressCircle.className = (total > 0 && doneCount === total) ? 
+        "task-progress-circle task-circle-done" : "task-progress-circle task-circle-low";
     }
     
     renderChart();
@@ -180,26 +209,22 @@ document.addEventListener("DOMContentLoaded", () => {
   async function renderChart() {
     const ctx = document.getElementById('habitsChart');
     if (!ctx) return;
-
     try {
       const dates = [];
       const labels = [];
       for (let i = 6; i >= 0; i--) {
         const d = new Date();
         d.setDate(d.getDate() - i);
-        dates.push(d.toISOString().split('T')[0]);
+        dates.push(getDocId(d));
         labels.push(d.toLocaleDateString("he-IL", { weekday: 'short' }));
       }
-
       const statsSnap = await db.collection("users").doc(userId).collection("stats").get();
       const allStats = {};
       statsSnap.forEach(doc => allStats[doc.id] = doc.data());
-
       const dataPoints = dates.map(dateId => {
         const dayData = allStats[dateId] || {};
         return Object.values(dayData).filter(v => v === true).length;
       });
-
       if (myChart) myChart.destroy();
       myChart = new Chart(ctx, {
         type: 'bar',
@@ -216,21 +241,18 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         options: {
           responsive: true,
-          scales: {
-            y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } }
-          },
+          scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
           plugins: { legend: { display: false } }
         }
       });
-    } catch (err) {
-      console.error("שגיאה בגרף:", err);
-    }
+    } catch (err) { console.error("שגיאה בגרף:", err); }
   }
 
   addTempHabitBtn.addEventListener("click", async () => {
     const text = tempHabitInput.value.trim();
     if (!text) return;
-    await db.collection("users").doc(userId).collection("daily").doc(todayDocId).collection("tempHabits").add({ text });
+    const viewDocId = getDocId(currentViewDate);
+    await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("tempHabits").add({ text });
     tempHabitInput.value = "";
     loadAllData();
   });
@@ -238,27 +260,24 @@ document.addEventListener("DOMContentLoaded", () => {
   addTomorrowHabitBtn.addEventListener("click", async () => {
     const text = tempHabitInput.value.trim();
     if (!text) return;
-
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowDocId = tomorrow.toISOString().split('T')[0];
-
+    const tomorrowDocId = getDocId(tomorrow);
     try {
       await db.collection("users").doc(userId).collection("daily").doc(tomorrowDocId).collection("tempHabits").add({ text });
       alert(`המשימה "${text}" נוספה למחר!`);
       tempHabitInput.value = "";
-    } catch (err) {
-      console.error("שגיאה בהוספה למחר:", err);
-      alert("שגיאה בהוספת המשימה.");
-    }
+      if (getDocId(currentViewDate) === tomorrowDocId) loadAllData();
+    } catch (err) { console.error(err); }
   });
 
   async function deleteTempHabit(id, text) {
     if (!confirm(`למחוק את "${text}"?`)) return;
-    await db.collection("users").doc(userId).collection("daily").doc(todayDocId).collection("tempHabits").doc(id).delete();
+    const viewDocId = getDocId(currentViewDate);
+    await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("tempHabits").doc(id).delete();
     if (dailyStats[text] !== undefined) {
       delete dailyStats[text];
-      await db.collection("users").doc(userId).collection("stats").doc(todayDocId).set(dailyStats);
+      await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
     }
     loadAllData();
   }
@@ -267,11 +286,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const newText = prompt("ערוך משימה:", oldText);
     if (!newText || newText.trim() === "" || newText === oldText) return;
     const cleanText = newText.trim();
-    await db.collection("users").doc(userId).collection("daily").doc(todayDocId).collection("tempHabits").doc(id).update({ text: cleanText });
+    const viewDocId = getDocId(currentViewDate);
+    await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("tempHabits").doc(id).update({ text: cleanText });
     if (dailyStats[oldText] !== undefined) {
       dailyStats[cleanText] = dailyStats[oldText];
       delete dailyStats[oldText];
-      await db.collection("users").doc(userId).collection("stats").doc(todayDocId).set(dailyStats);
+      await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
     }
     loadAllData();
   }
