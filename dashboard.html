@@ -19,7 +19,7 @@
   <title>דשבורד הרגלים</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* --- כותרת דשבורד עם האייקון מהסקיצה --- */
+    /* --- כותרת דשבורד עם האייקון המבוקש --- */
     .dashboard-header {
       display: flex;
       align-items: center;
@@ -30,10 +30,10 @@
     }
     
     .chart-icon-box {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, #3498db, #2980b9);
-      border-radius: 14px;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #3498db, #2471a3);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -41,21 +41,20 @@
       flex-shrink: 0;
     }
 
-    /* ה-SVG המדויק של גרף + חץ צומח */
+    /* ה-SVG המדויק: 3 קוביות + חץ עולה-יורד-עולה */
     .chart-icon-box svg {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
     }
 
     h1 {
       margin: 0;
       font-size: 1.8em;
       color: #2c3e50;
-      font-weight: 900;
-      letter-spacing: -0.5px;
+      font-weight: 800;
     }
 
-    /* תיקון העיגולים שיישארו מושלמים */
+    /* תיקון העיגולים - מבנה עיגול ברזל */
     .task-progress-circle, .gratitude-circle {
       width: 65px !important;
       height: 65px !important;
@@ -69,7 +68,7 @@
       box-sizing: border-box;
     }
 
-    /* שאר העיצוב */
+    /* שאר העיצוב המעודכן */
     .goal-card {
       background: linear-gradient(135deg, #f1f9ff 0%, #ffffff 100%);
       border-right: 5px solid #3498db;
@@ -111,8 +110,15 @@
     <header class="dashboard-header">
       <div class="chart-icon-box">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 20V10M12 20V4M6 20V14" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 4L16 8M12 4L8 8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="3" y="14" width="4" height="6" rx="1" fill="white" fill-opacity="0.3"/>
+          <rect x="9" y="10" width="4" height="10" rx="1" fill="white" fill-opacity="0.6"/>
+          <rect x="15" y="6" width="4" height="14" rx="1" fill="white"/>
+          
+          <path d="M3 16L7 12L10 14L18 6M18 6H14M18 6V10" 
+                stroke="white" 
+                stroke-width="2" 
+                stroke-linecap="round" 
+                stroke-linejoin="round"/>
         </svg>
       </div>
       <h1>דשבורד יומי</h1>
