@@ -3,83 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>תנאי שימוש ותקנון - אפליקציית הרגלים</title>
+  <title>תנאי שימוש מחייבים - אפליקציית הרגלים</title>
   <link rel="stylesheet" href="style.css">
   <style>
     .terms-container {
       max-width: 800px;
       margin: 20px auto;
-      padding: 20px;
+      padding: 30px;
       background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      line-height: 1.6;
-      color: #2c3e50;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      line-height: 1.8;
+      color: #1a1a1a;
+      text-align: justify;
     }
-    h1 { color: #3498db; text-align: center; border-bottom: 2px solid #f1f1f1; padding-bottom: 10px; }
-    h2 { color: #2980b9; font-size: 1.2em; margin-top: 25px; }
-    p, li { font-size: 0.95em; }
-    .back-btn {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #3498db;
-      color: white;
+    h1 { color: #c0392b; text-align: center; border-bottom: 3px solid #f1f1f1; padding-bottom: 15px; font-size: 1.8em; }
+    h2 { color: #2c3e50; font-size: 1.1em; margin-top: 25px; border-right: 4px solid #c0392b; padding-right: 10px; }
+    p, li { font-size: 0.9em; margin-bottom: 10px; }
+    
+    .back-link-container {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    .login-link {
+      color: #7f8c8d;
       text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: background 0.3s;
+      font-size: 0.95em;
+      padding: 8px 16px;
+      border-radius: 5px;
+      transition: all 0.3s ease;
     }
-    .back-btn:hover { background-color: #2980b9; }
-    .last-update { font-size: 0.8em; color: #95a5a6; text-align: center; margin-top: 10px; }
+    .login-link:hover {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    .urgent-note {
+      background-color: #fdf2f2;
+      padding: 15px;
+      border-right: 5px solid #c0392b;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="app">
     <div class="terms-container">
-      <h1>תנאי שימוש ותקנון האתר</h1>
-      <p class="last-update">עדכון אחרון: פברואר 2026</p>
+      <h1>תנאי שימוש ותקנון משפטי מחייב</h1>
+      
+      <div class="urgent-note">
+        השימוש במערכת מהווה הסכמה בלתי חוזרת לתנאים המוצגים להלן. אם אינך מסכים לאחד התנאים, עליך לחדול מהשימוש במערכת באופן מיידי.
+      </div>
 
       <section>
-        <h2>1. כללי</h2>
-        <p>השימוש באפליקציית ניהול ההרגלים (להלן: "המערכת") מותנה בהסכמתך לתנאים המפורטים להלן. עצם השימוש במערכת מהווה הצהרה כי קראת, הבנת ואתה מסכים לכל תנאי השימוש.</p>
+        <h2>1. היעדר אחריות מוחלט (Disclaimer)</h2>
+        <p>המערכת ניתנת לשימוש כפי שהיא ("As-Is"). הנהלת האתר, מפתחיה ושותפיה אינם נושאים ולא יישאו באחריות מכל סוג שהוא, ישירה או עקיפה, בגין כל נזק, אובדן נתונים, פגיעה בפרטיות, או הפסד כספי הנובע מהשימוש במערכת או מהסתמכות על תכניה (לרבות תכני AI).</p>
       </section>
 
       <section>
-        <h2>2. חשבון משתמש ופרטיות</h2>
+        <h2>2. שימוש במידע למטרות שיווק ומסחר</h2>
+        <p>בעצם הרישום למערכת, המשתמש נותן את הסכמתו המלאה והמפורשת להנהלת האתר לעשות שימוש בפרטיו (לרבות כתובת דוא"ל) לצורכי דיוור ישיר, שיווק, מכירות ושיפור שירותים. הנהלת האתר רשאית להעביר פרטים אלו לצדדים שלישיים לצרכים מסחריים על פי שיקול דעתה הבלעדי.</p>
+      </section>
+
+      <section>
+        <h2>3. איסור שימוש מסחרי וטכנולוגי</h2>
         <ul>
-          <li>השימוש במערכת דורש הרשמה באמצעות דואר אלקטרוני. המשתמש אחראי לשמור על סודיות פרטי הגישה לחשבונו.</li>
-          <li>הנתונים המוזנים במערכת (משימות, יעדים, רגעי הודיה) נשמרים במסדי נתונים מאובטחים (Firebase) לצורך תפעול המערכת בלבד.</li>
-          <li>אנו מתחייבים לא להעביר את פרטיך האישיים לצד ג' ללא הסכמתך, למעט במקרים הנדרשים על פי חוק.</li>
+          <li>השימוש במערכת מותר למטרות פרטיות ואישיות בלבד. חל איסור מוחלט על שימוש מסחרי כלשהו ללא אישור בכתב.</li>
+          <li>חל איסור מוחלט על הפעלת רובוטים (Bots), סורקים (Crawlers), או כל אמצעי אוטומטי לניטור, ניתוח, העתקה או כריית נתונים מהמערכת.</li>
+          <li>אין לבצע פעולות של הנדסה לאחור (Reverse Engineering) או ניסיונות לפרוץ את הגנות המערכת.</li>
         </ul>
       </section>
 
       <section>
-        <h2>3. שימוש בטכנולוגיית AI</h2>
-        <p>המערכת עושה שימוש במודלי שפה מתקדמים (AI) לצורך מתן תובנות ועזרה בבניית הרגלים.</p>
-        <ul>
-          <li>התובנות המופקות על ידי ה-AI הן בגדר המלצה בלבד ואינן מהוות ייעוץ מקצועי, רפואי או פסיכולוגי.</li>
-          <li>הנהלת האתר אינה אחראית לדיוק התכנים המיוצרים על ידי ה-AI או לכל תוצאה הנובעת מהסתמכות עליהם.</li>
-        </ul>
+        <h2>4. הגנה משפטית ותביעות</h2>
+        <p>כל הפרה של תנאי השימוש לעיל תחשוף את המשתמש לתביעות משפטיות, לרבות תביעות נזיקין ופיצויים ללא הוכחת נזק, ככל שהחוק מאפשר זאת. הנהלת האתר שומרת לעצמה את הזכות לחסום משתמשים ולמסור את פרטיהם לרשויות החוק במקרה של חשד לשימוש לרעה.</p>
       </section>
 
       <section>
-        <h2>4. הגבלת אחריות</h2>
-        <p>המערכת ניתנת לשימוש כפי שהיא (As-Is). הנהלת האתר לא תישא באחריות לכל נזק, ישיר או עקיף, שיגרם כתוצאה משימוש במערכת, הפסקת פעילותה או אובדן נתונים.</p>
+        <h2>5. סמכות שיפוט</h2>
+        <p>על תקנון זה יחולו אך ורק חוקי מדינת ישראל. סמכות השיפוט הבלעדית בכל עניין הנובע מהסכם זה תהיה לבתי המשפט המוסמכים במחוז תל אביב-יפו.</p>
       </section>
 
-      <section>
-        <h2>5. קניין רוחני</h2>
-        <p>כל זכויות הקניין הרוחני בעיצוב המערכת, בקוד המקור ובסימני המסחר שייכים לבעלי האתר בלבד. אין להעתיק, להפיץ או לעשות שימוש מסחרי בתכני המערכת ללא אישור מראש ובכתב.</p>
-      </section>
-
-      <section>
-        <h2>6. שינויים בתקנון</h2>
-        <p>הנהלת האתר שומרת לעצמה את הזכות לעדכן את תנאי השימוש מעת לעת. המשך השימוש במערכת לאחר שינוי התנאים מהווה הסכמה לתנאים החדשים.</p>
-      </section>
-
-      <div style="text-align: center;">
-        <a href="dashboard.html" class="back-btn">חזרה לדשבורד</a>
+      <div class="back-link-container">
+        <a href="index.html" class="login-link">חזרה למסך הכניסה</a>
       </div>
     </div>
   </div>
