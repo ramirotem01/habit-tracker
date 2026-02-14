@@ -122,23 +122,28 @@
         const dateId = d.toISOString().split('T')[0];
         
         const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(dateId).get();
-        const dailyStats = statsDoc.exists ? statsDoc.data() : {};
-        
         const tempSnap = await db.collection("users").doc(userId).collection("daily").doc(dateId).collection("tempHabits").get();
-        
-        const dayTasks = [];
-        baseHabitNames.forEach(name => {
-           const done = dailyStats[name] === true;
-           dayTasks.push(`${name} (קבוע) - ${done ? 'בוצע ✅' : 'לא בוצע ❌'}`);
-        });
 
-        tempSnap.forEach(t => {
-          const taskText = t.data().text;
-          const done = dailyStats[taskText] === true;
-          dayTasks.push(`${taskText} (זמני) - ${done ? 'בוצע ✅' : 'לא בוצע ❌'}`);
-        });
+        // בדיקה קריטית: האם יש בכלל מסמך סטטיסטיקה (ביצוע) או משימות זמניות ליום הזה?
+        const hasRealData = statsDoc.exists || !tempSnap.empty;
 
-        dailyDetails.push({ date: dateId, tasks: dayTasks });
+        if (hasRealData) {
+          const dailyStats = statsDoc.exists ? statsDoc.data() : {};
+          const dayTasks = [];
+          
+          baseHabitNames.forEach(name => {
+             const done = dailyStats[name] === true;
+             dayTasks.push(`${name} (קבוע) - ${done ? 'בוצע ✅' : 'לא בוצע ❌'}`);
+          });
+
+          tempSnap.forEach(t => {
+            const taskText = t.data().text;
+            const done = dailyStats[taskText] === true;
+            dayTasks.push(`${taskText} (זמני) - ${done ? 'בוצע ✅' : 'לא בוצע ❌'}`);
+          });
+
+          dailyDetails.push({ date: dateId, tasks: dayTasks, isReal: true });
+        }
       }
       return { goal, dailyDetails };
     }
@@ -166,9 +171,16 @@
         const apiKey = await fetchApiKey();
         const data = await collectWeeklyData();
 
-        const activeDaysCount = data.dailyDetails.filter(day => day.tasks.length > 0).length;
-        if (activeDaysCount < 5) {
-          textContent.innerHTML = `<p>אין מספיק מידע מהימים האחרונים כדי לנתח ולהמליץ על פעולות, הקפד למלא משימות והרגלים במשך השבוע מומלץ גם להזין מטרה. וחזור לניתוח הנתונים האישיים שלך והמלצות AI שיכולות להזניק אותך קדימה!</p>`;
+        // ספירה רק של ימים שסומנו כבעלי נתונים אמיתיים (isReal)
+        const activeDaysCount = data.dailyDetails.length;
+
+        if (activeDaysCount < 3) {
+          textContent.innerHTML = `
+            <div style="text-align: center; padding: 10px;">
+              <h3 style="color: #e67e22;">חסר לנו מידע... 🔍</h3>
+              <p>כדי שה-AI יבצע ניתוח מדויק, עליך לצבור נתונים של לפחות <b>3 ימים</b> בשבוע האחרון.</p>
+              <p>כרגע מצאתי רק ${activeDaysCount} ימים פעילים. המשך לעדכן את המשימות שלך וחזור לכאן בקרוב!</p>
+            </div>`;
           resultArea.style.display = "block";
           loader.style.display = "none";
           btn.disabled = false;
@@ -200,11 +212,10 @@
         const resData = await response.json();
         
         if (resData.error) {
-          throw new Error(`שגיאת API: ${resData.error.message} (${resData.error.status})`);
+          throw new Error(`שגיאת API: ${resData.error.message}`);
         }
 
         if (resData.candidates && resData.candidates[0].content) {
-          // עדכון תאריך ניתוח אחרון ב-Firebase למניעת שימוש חוזר היום
           await db.collection("users").doc(userId).set({ lastAnalysisDate: today }, { merge: true });
 
           let fullText = resData.candidates[0].content.parts[0].text;
