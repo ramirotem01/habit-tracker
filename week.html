@@ -6,142 +6,54 @@
   <title>תכנון שבועי - Habit Tracker</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* עיצוב ניווט וחצים מהדשבורד */
-    .date-nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      background: #f8f9fa;
-      padding: 10px;
-      border-radius: 12px;
-    }
-    .tasks-title-container {
-      flex: 1;
-      text-align: center;
-    }
-    .tasks-title-container h2 {
-      margin: 0;
-      font-size: 1.1em;
-      color: #2c3e50;
-    }
-    .nav-btn {
-      background: #ffffff;
-      border: none;
-      border-radius: 50%;
-      width: 38px;
-      height: 38px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: bold;
-      color: #3498db;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: all 0.2s ease;
-    }
-    .nav-btn:hover {
-      background: #3498db;
-      color: #fff;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
-    }
-
-    /* עיצוב כרטיס סיכום ועיגול התקדמות */
-    .summary-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .summary-info { flex: 1; }
-    .progress-circle-container { margin-right: 15px; }
-    .task-progress-circle {
-      width: 65px; height: 65px;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: bold; font-size: 1em;
-      background-color: #fff; border: 5px solid #eee;
-      transition: all 0.4s ease;
-    }
+    .date-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: #f8f9fa; padding: 10px; border-radius: 12px; }
+    .tasks-title-container { flex: 1; text-align: center; }
+    .tasks-title-container h2 { margin: 0; font-size: 1.1em; color: #2c3e50; }
+    .nav-btn { background: #ffffff; border: none; border-radius: 50%; width: 38px; height: 38px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: #3498db; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: all 0.2s ease; }
+    .summary-card { display: flex; justify-content: space-between; align-items: center; }
+    .task-progress-circle { width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 5px solid #eee; }
     .task-circle-low { border-color: #f1c40f; color: #f39c12; }
     .task-circle-done { border-color: #2ecc71; color: #27ae60; background-color: #fafffa; }
-
-    /* עיצוב רשימת יעדים */
-    .goal-item {
-      display: flex; align-items: center; gap: 10px;
-      background: #f9f9f9; padding: 12px;
-      margin-bottom: 8px; border-radius: 8px;
-      border-right: 4px solid #3498db;
-    }
+    .goal-item { display: flex; align-items: center; gap: 10px; background: #f9f9f9; padding: 12px; margin-bottom: 8px; border-radius: 8px; border-right: 4px solid #3498db; }
     .goal-text { flex: 1; font-size: 0.95em; }
     .goal-done { text-decoration: line-through; color: #95a5a6; }
-
-    /* אזור ה-AI */
-    .ai-btn {
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-      color: white; border: none; padding: 15px;
-      border-radius: 10px; width: 100%;
-      font-weight: bold; margin-top: 15px; cursor: pointer;
-    }
-    .ai-btn:disabled { opacity: 0.7; cursor: not-allowed; }
-    .ai-breakdown-area {
-      background: #f0f7ff; border: 2px dashed #3498db;
-      border-radius: 12px; padding: 15px; margin-top: 20px; display: none;
-    }
-    .suggested-task-item {
-      background: white; padding: 10px; margin: 5px 0;
-      border-radius: 8px; display: flex; justify-content: space-between;
-      align-items: center; font-size: 0.85em; border: 1px solid #e0e0e0;
-    }
-    .add-task-btn {
-      background: #2ecc71; color: white; border: none;
-      padding: 5px 10px; border-radius: 4px; cursor: pointer;
-    }
+    .ai-btn { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-weight: bold; margin-top: 15px; cursor: pointer; }
+    .ai-breakdown-area { background: #f0f7ff; border: 2px dashed #3498db; border-radius: 12px; padding: 15px; margin-top: 20px; display: none; }
+    .suggested-task-item { background: white; padding: 10px; margin: 5px 0; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; border: 1px solid #e0e0e0; }
+    .add-task-btn { background: #2ecc71; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
   </style>
 </head>
 <body>
   <div class="app">
     <h1>📅 תכנון שבועי</h1>
-
     <section class="card summary-card">
       <div class="summary-info">
         <p>טווח: <strong id="weekDatesDisplay">טוען...</strong></p>
-        <p>יעדים לשבוע: <span id="totalGoals">0</span></p>
-        <p>בוצעו: <span id="completedGoals">0</span></p>
+        <p>יעדים: <span id="totalGoals">0</span> | בוצעו: <span id="completedGoals">0</span></p>
       </div>
-      <div class="progress-circle-container">
-        <div id="weekProgressCircle" class="task-progress-circle task-circle-low">0%</div>
-      </div>
+      <div id="weekProgressCircle" class="task-progress-circle task-circle-low">0%</div>
     </section>
 
     <section class="card">
       <div class="date-nav">
         <button onclick="changeWeek(-1)" class="nav-btn"><span>&#10094;</span></button>
-        <div class="tasks-title-container">
-            <h2 id="tasksTitle">🎯 יעדי השבוע</h2>
-        </div>
+        <div class="tasks-title-container"><h2>🎯 יעדי השבוע</h2></div>
         <button onclick="changeWeek(1)" class="nav-btn"><span>&#10095;</span></button>
       </div>
-      
-      <div class="input-group" style="display:flex; flex-direction: row; gap:8px; margin-bottom:15px;">
-        <input type="text" id="weekGoalInput" placeholder="הוסף יעד שבועי..." style="flex:1; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+      <div style="display:flex; gap:8px; margin-bottom:15px;">
+        <input type="text" id="weekGoalInput" placeholder="הוסף יעד לשבוע זה..." style="flex:1; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
         <button onclick="addWeekGoal()" style="background:#3498db; color:white; border:none; padding:0 15px; border-radius:5px; cursor:pointer;">➕</button>
       </div>
-
       <div id="weekGoalsList"></div>
-      
       <button id="aiBreakdownBtn" class="ai-btn">✨ פירוק יעדים למשימות יומיות (AI)</button>
     </section>
 
     <div id="aiResultArea" class="ai-breakdown-area">
-      <h4 style="margin-top:0; color: #2c3e50;">🤖 הצעת ה-AI לפירוק חכם:</h4>
+      <h4 style="margin:0 0 10px 0;">🤖 הצעת ה-AI לפירוק חכם:</h4>
       <div id="aiSuggestions"></div>
     </div>
 
-    <div class="actions" style="margin-top:20px;">
-      <button onclick="window.location.href='dashboard.html'" style="width:100%; background:#34495e; color:white;">🏠 חזרה לדשבורד</button>
-    </div>
+    <button onclick="window.location.href='dashboard.html'" style="width:100%; margin-top:20px; padding:12px; background:#34495e; color:white; border:none; border-radius:8px; cursor:pointer;">🏠 חזרה לדשבורד</button>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -157,176 +69,119 @@
 
     auth.onAuthStateChanged(user => {
       if (!user) window.location.href = "index.html";
-      else {
-        userId = user.uid;
-        loadWeekData();
-      }
+      else { userId = user.uid; loadWeekData(); }
     });
 
-    function getWeekId(date) {
-      const d = new Date(date);
-      d.setHours(0,0,0,0);
-      return d.toISOString().split('T')[0];
-    }
-
     async function loadWeekData() {
-      const weekId = getWeekId(currentWeekStart);
-      const endOfWeek = new Date(currentWeekStart);
-      endOfWeek.setDate(endOfWeek.getDate() + 6);
-      
-      document.getElementById("weekDatesDisplay").textContent = 
-        `${currentWeekStart.getDate()}/${currentWeekStart.getMonth()+1} - ${endOfWeek.getDate()}/${endOfWeek.getMonth()+1}`;
-
-      const snapshot = await db.collection("users").doc(userId).collection("weekly_goals")
-        .where("weekId", "==", weekId).get();
-
+      const weekId = currentWeekStart.toISOString().split('T')[0];
+      const snapshot = await db.collection("users").doc(userId).collection("weekly_goals").where("weekId", "==", weekId).get();
       const list = document.getElementById("weekGoalsList");
       list.innerHTML = "";
-      let total = 0; let done = 0;
-
+      let total = 0, done = 0;
       snapshot.forEach(doc => {
         total++;
         const data = doc.data();
         if (data.completed) done++;
-
         const div = document.createElement("div");
         div.className = "goal-item";
-        div.innerHTML = `
-          <input type="checkbox" ${data.completed ? 'checked' : ''} onchange="toggleGoal('${doc.id}', ${data.completed})">
-          <span class="goal-text ${data.completed ? 'goal-done' : ''}">${data.text}</span>
-          <span onclick="deleteGoal('${doc.id}')" style="cursor:pointer; opacity: 0.5;">🗑️</span>
-        `;
+        div.innerHTML = `<input type="checkbox" ${data.completed ? 'checked' : ''} onchange="toggleGoal('${doc.id}', ${data.completed})"> <span class="goal-text ${data.completed ? 'goal-done' : ''}">${data.text}</span> <span onclick="deleteGoal('${doc.id}')" style="cursor:pointer;">🗑️</span>`;
         list.appendChild(div);
       });
-
+      const percent = total > 0 ? Math.round((done / total) * 100) : 0;
       document.getElementById("totalGoals").textContent = total;
       document.getElementById("completedGoals").textContent = done;
-      const percent = total > 0 ? Math.round((done / total) * 100) : 0;
       const circle = document.getElementById("weekProgressCircle");
       circle.textContent = percent + "%";
       circle.className = `task-progress-circle ${percent === 100 ? 'task-circle-done' : 'task-circle-low'}`;
+      const endOfWeek = new Date(currentWeekStart); endOfWeek.setDate(endOfWeek.getDate() + 6);
+      document.getElementById("weekDatesDisplay").textContent = `${currentWeekStart.getDate()}/${currentWeekStart.getMonth()+1} - ${endOfWeek.getDate()}/${endOfWeek.getMonth()+1}`;
     }
 
     async function addWeekGoal() {
-      const input = document.getElementById("weekGoalInput");
-      if (!input.value.trim()) return;
+      const val = document.getElementById("weekGoalInput").value.trim();
+      if (!val) return;
       await db.collection("users").doc(userId).collection("weekly_goals").add({
-        weekId: getWeekId(currentWeekStart),
-        text: input.value.trim(),
-        completed: false,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        weekId: currentWeekStart.toISOString().split('T')[0], text: val, completed: false, createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-      input.value = "";
-      loadWeekData();
+      document.getElementById("weekGoalInput").value = ""; loadWeekData();
     }
 
-    async function toggleGoal(id, currentStatus) {
-      await db.collection("users").doc(userId).collection("weekly_goals").doc(id).update({ completed: !currentStatus });
-      loadWeekData();
-    }
+    async function toggleGoal(id, status) { await db.collection("users").doc(userId).collection("weekly_goals").doc(id).update({ completed: !status }); loadWeekData(); }
+    async function deleteGoal(id) { if (confirm("למחוק?")) { await db.collection("users").doc(userId).collection("weekly_goals").doc(id).delete(); loadWeekData(); } }
+    function changeWeek(dir) { currentWeekStart.setDate(currentWeekStart.getDate() + (dir * 7)); loadWeekData(); document.getElementById("aiResultArea").style.display = "none"; }
 
-    async function deleteGoal(id) {
-      if (confirm("למחוק יעד זה?")) {
-        await db.collection("users").doc(userId).collection("weekly_goals").doc(id).delete();
-        loadWeekData();
-      }
-    }
-
-    function changeWeek(direction) {
-      currentWeekStart.setDate(currentWeekStart.getDate() + (direction * 7));
-      loadWeekData();
-      document.getElementById("aiResultArea").style.display = "none";
-    }
-
+    // --- החלק המתוקן ל-AI ---
     document.getElementById("aiBreakdownBtn").onclick = async function() {
-      const today = new Date().toISOString().split('T')[0];
-      const userRef = db.collection("users").doc(userId);
-      const userDoc = await userRef.get();
-      
-      if (userDoc.exists && userDoc.data().lastAiBreakdownDate === today) {
-        alert("ביצעת פירוק היום. ניתן להשתמש בפיצ'ר זה פעם ביום.");
-        return;
-      }
-
       const goals = Array.from(document.querySelectorAll(".goal-text")).map(el => el.textContent);
       if (goals.length === 0) return alert("אנא הוסף יעדים קודם");
 
       this.disabled = true;
-      this.textContent = "מתחבר ל-AI... ⏳";
+      this.textContent = "מפרק למשימות... ⏳";
 
       try {
         const config = await db.collection("system_config").doc("gemini_settings").get();
-        if (!config.exists) throw new Error("API Key Missing");
         const apiKey = config.data().apiKey;
 
-        // שימוש ב-URL המעודכן ביותר (גרסה 1)
-        const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // שינוי URL למבנה של מודל יציב יותר
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
-        const prompt = `פרק את היעדים השבועיים האלה למשימות יומיות ל-7 הימים הקרובים: ${goals.join(", ")}. 
-        החזר רשימת JSON בלבד במבנה: [{"dayOffset": 0, "task": "שם המשימה", "explanation": "הסבר"}]
-        dayOffset 0 זה היום. אל תוסיף מלל נוסף.`;
+        const promptText = `Return a JSON array of daily tasks for these goals: ${goals.join(", ")}. 
+        Structure: [{"dayOffset": 0, "task": "task name", "explanation": "why"}]. 
+        dayOffset 0-6. Hebrew language only for task and explanation. No markdown.`;
 
-        const response = await fetch(apiUrl, {
+        const response = await fetch(url, {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ 
-            contents: [{ parts: [{ text: prompt }] }]
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: promptText }] }]
           })
         });
 
-        if (!response.ok) {
-            const err = await response.json();
-            console.error("Gemini Error Detail:", err);
-            throw new Error("שגיאת תקשורת עם גוגל (404/400)");
+        const data = await response.json();
+        
+        // בדיקת שגיאה ספציפית מגוגל
+        if (data.error) {
+            throw new Error(data.error.message || "Unknown API Error");
         }
 
-        const resData = await response.json();
-        const rawText = resData.candidates[0].content.parts[0].text;
-        const cleanJson = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+        const rawText = data.candidates[0].content.parts[0].text;
+        // ניקוי JSON אגרסיבי
+        const cleanJson = rawText.replace(/```json|```/g, "").trim();
         const suggestions = JSON.parse(cleanJson);
 
         const container = document.getElementById("aiSuggestions");
         container.innerHTML = "";
         suggestions.forEach(item => {
-          const targetDate = new Date();
-          targetDate.setDate(targetDate.getDate() + (item.dayOffset || 0));
-          const dateStr = targetDate.toISOString().split('T')[0];
-          const displayDate = targetDate.toLocaleDateString('he-IL', {weekday: 'short', day: 'numeric', month: 'numeric'});
+          const d = new Date();
+          d.setDate(d.getDate() + (item.dayOffset || 0));
+          const dateStr = d.toISOString().split('T')[0];
+          const displayDate = d.toLocaleDateString('he-IL', {weekday: 'short', day: 'numeric'});
 
           const div = document.createElement("div");
           div.className = "suggested-task-item";
           div.innerHTML = `
-            <div style="flex:1">
-              <strong>${item.task}</strong> <br>
-              <small>${displayDate} | ${item.explanation}</small>
-            </div>
+            <div style="flex:1"><strong>${item.task}</strong><br><small>${displayDate} | ${item.explanation}</small></div>
             <button class="add-task-btn" onclick="addToDaily('${dateStr}', '${item.task.replace(/'/g, "\\'")}', this)">➕</button>
           `;
           container.appendChild(div);
         });
 
         document.getElementById("aiResultArea").style.display = "block";
-        await userRef.set({ lastAiBreakdownDate: today }, { merge: true });
 
       } catch (e) {
         console.error("AI Error:", e);
-        alert("שגיאה: " + e.message);
+        alert("שגיאה מה-AI: " + e.message);
       } finally {
         this.disabled = false;
         this.textContent = "✨ פירוק יעדים למשימות יומיות (AI)";
       }
     };
 
-    async function addToDaily(dateId, taskText, btn) {
-      try {
-        await db.collection("users").doc(userId).collection("daily").doc(dateId).collection("tempHabits").add({
-          text: taskText,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        btn.textContent = "✅"; btn.disabled = true; btn.style.background = "#bdc3c7";
-      } catch (e) {
-        alert("שגיאה בשמירה.");
-      }
+    async function addToDaily(dateId, task, btn) {
+      await db.collection("users").doc(userId).collection("daily").doc(dateId).collection("tempHabits").add({
+        text: task, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      btn.textContent = "✅"; btn.disabled = true; btn.style.background = "#bdc3c7";
     }
   </script>
 </body>
