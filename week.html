@@ -6,7 +6,7 @@
   <title>תכנון שבועי - Habit Tracker</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* העתקת עיצוב הניווט והחצים מהדשבורד */
+    /* עיצוב ניווט וחצים מהדשבורד */
     .date-nav {
       display: flex;
       align-items: center;
@@ -125,7 +125,7 @@
       </div>
       
       <div class="input-group" style="display:flex; flex-direction: row; gap:8px; margin-bottom:15px;">
-        <input type="text" id="weekGoalInput" placeholder="הוסף יעד לשבוע זה..." style="flex:1; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+        <input type="text" id="weekGoalInput" placeholder="הוסף יעד שבועי (למשל: לקרוא 70 עמודים)" style="flex:1; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
         <button onclick="addWeekGoal()" style="background:#3498db; color:white; border:none; padding:0 15px; border-radius:5px; cursor:pointer;">➕</button>
       </div>
 
@@ -139,8 +139,8 @@
       <div id="aiSuggestions"></div>
     </div>
 
-    <div class="actions" style="margin-top:20px; display: grid; grid-template-columns: 1fr;">
-      <button onclick="window.location.href='dashboard.html'" style="background:#34495e; color:white;">🏠 חזרה לדשבורד</button>
+    <div class="actions" style="margin-top:20px;">
+      <button onclick="window.location.href='dashboard.html'" style="width:100%; background:#34495e; color:white;">🏠 חזרה לדשבורד</button>
     </div>
   </div>
 
@@ -252,7 +252,7 @@
       if (goals.length === 0) return alert("אנא הוסף יעדים קודם");
 
       this.disabled = true;
-      this.textContent = "ה-AI מפרק משימות... ⏳";
+      this.textContent = "מנתח יעדים... ⏳";
 
       try {
         const config = await db.collection("system_config").doc("gemini_settings").get();
@@ -261,31 +261,29 @@
 
         const prompt = `פרק את היעדים השבועיים האלה למשימות יומיות ל-7 הימים הקרובים: ${goals.join(", ")}. 
         החזר רשימת JSON בלבד במבנה הבא:
-        [{"dayOffset": 0, "task": "שם המשימה", "explanation": "הסבר קצר"}]
-        dayOffset 0 הוא היום, 1 מחר וכן הלאה. אל תוסיף מלל הסברי.`;
+        [{"dayOffset": 0, "task": "שם המשימה", "explanation": "הסבר"}]
+        dayOffset 0 זה היום. אל תוסיף שום טקסט אחר.`;
 
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ 
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-                response_mime_type: "application/json"
-            }
+            contents: [{ parts: [{ text: prompt }] }]
           })
         });
 
         const resData = await response.json();
-        if (!resData.candidates) throw new Error("Invalid API Response");
+        if (!resData.candidates || !resData.candidates[0].content) throw new Error("API Response Error");
         
-        const rawText = resData.candidates[0].content.parts[0].text;
-        const suggestions = JSON.parse(rawText.replace(/```json|```/g, "").trim());
+        let rawText = resData.candidates[0].content.parts[0].text;
+        let cleanJson = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+        const suggestions = JSON.parse(cleanJson);
 
         const container = document.getElementById("aiSuggestions");
         container.innerHTML = "";
         suggestions.forEach(item => {
           const targetDate = new Date();
-          targetDate.setDate(targetDate.getDate() + item.dayOffset);
+          targetDate.setDate(targetDate.getDate() + (item.dayOffset || 0));
           const dateStr = targetDate.toISOString().split('T')[0];
           const displayDate = targetDate.toLocaleDateString('he-IL', {weekday: 'short', day: 'numeric', month: 'numeric'});
 
@@ -296,7 +294,7 @@
               <strong>${item.task}</strong> <br>
               <small>${displayDate} | ${item.explanation}</small>
             </div>
-            <button class="add-task-btn" onclick="addToDaily('${dateStr}', '${item.task}', this)">➕</button>
+            <button class="add-task-btn" onclick="addToDaily('${dateStr}', '${item.task.replace(/'/g, "\\'")}', this)">➕</button>
           `;
           container.appendChild(div);
         });
@@ -306,7 +304,7 @@
 
       } catch (e) {
         console.error(e);
-        alert("שגיאה בחיבור ל-AI. וודא שהגדרות ה-API תקינות.");
+        alert("שגיאה בחיבור ל-AI. בדוק את המפתח ואת חיבור האינטרנט.");
       } finally {
         this.disabled = false;
         this.textContent = "✨ פירוק יעדים למשימות יומיות (AI)";
@@ -321,7 +319,7 @@
         });
         btn.textContent = "✅"; btn.disabled = true; btn.style.background = "#bdc3c7";
       } catch (e) {
-        alert("שגיאה בשמירת המשימה.");
+        alert("שגיאה בשמירה.");
       }
     }
   </script>
