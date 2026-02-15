@@ -110,24 +110,23 @@
     async function deleteGoal(id) { if (confirm("למחוק?")) { await db.collection("users").doc(userId).collection("weekly_goals").doc(id).delete(); loadWeekData(); } }
     function changeWeek(dir) { currentWeekStart.setDate(currentWeekStart.getDate() + (dir * 7)); loadWeekData(); document.getElementById("aiResultArea").style.display = "none"; }
 
-    // --- החלק המתוקן ל-AI ---
     document.getElementById("aiBreakdownBtn").onclick = async function() {
       const goals = Array.from(document.querySelectorAll(".goal-text")).map(el => el.textContent);
       if (goals.length === 0) return alert("אנא הוסף יעדים קודם");
 
       this.disabled = true;
-      this.textContent = "מפרק למשימות... ⏳";
+      this.textContent = "מנתח... ⏳";
 
       try {
         const config = await db.collection("system_config").doc("gemini_settings").get();
         const apiKey = config.data().apiKey;
 
-        // שינוי URL למבנה של מודל יציב יותר
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // הכתובת המדויקת לפי ה-Documentation העדכני ביותר
+        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
-        const promptText = `Return a JSON array of daily tasks for these goals: ${goals.join(", ")}. 
-        Structure: [{"dayOffset": 0, "task": "task name", "explanation": "why"}]. 
-        dayOffset 0-6. Hebrew language only for task and explanation. No markdown.`;
+        const promptText = `Return a JSON array of daily tasks based on these goals: ${goals.join(", ")}. 
+        Structure: [{"dayOffset": 0, "task": "Task Name", "explanation": "Brief explanation"}]. 
+        Language: Hebrew. Important: Return ONLY the JSON array, no markdown, no words before or after.`;
 
         const response = await fetch(url, {
           method: 'POST',
@@ -139,13 +138,9 @@
 
         const data = await response.json();
         
-        // בדיקת שגיאה ספציפית מגוגל
-        if (data.error) {
-            throw new Error(data.error.message || "Unknown API Error");
-        }
+        if (data.error) throw new Error(data.error.message);
 
         const rawText = data.candidates[0].content.parts[0].text;
-        // ניקוי JSON אגרסיבי
         const cleanJson = rawText.replace(/```json|```/g, "").trim();
         const suggestions = JSON.parse(cleanJson);
 
@@ -170,7 +165,7 @@
 
       } catch (e) {
         console.error("AI Error:", e);
-        alert("שגיאה מה-AI: " + e.message);
+        alert("שגיאה: " + e.message);
       } finally {
         this.disabled = false;
         this.textContent = "✨ פירוק יעדים למשימות יומיות (AI)";
