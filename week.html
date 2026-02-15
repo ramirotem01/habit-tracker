@@ -16,7 +16,6 @@
     .goal-text { flex: 1; font-size: 0.95em; }
     .goal-done { text-decoration: line-through; color: #95a5a6; }
     
-    /* AI Styling from PRO version */
     .ai-btn { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-weight: bold; margin-top: 15px; cursor: pointer; transition: 0.3s; }
     .ai-btn:disabled { background: #bdc3c7; cursor: not-allowed; }
     .ai-breakdown-area { background: #f0f7ff; border: 2px dashed #3498db; border-radius: 12px; padding: 15px; margin-top: 20px; display: none; }
@@ -46,17 +45,17 @@
       </div>
       
       <div style="display:flex; gap:8px; margin-bottom:15px;">
-        <input type="text" id="weekGoalInput" placeholder="הוסף יעד לשבוע זה..." style="flex:1; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+        <input type="text" id="weekGoalInput" placeholder="הוסף יעד (למשל: לקרוא 70 עמודים)" style="flex:1; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
         <button onclick="addWeekGoal()" style="background:#3498db; color:white; border:none; padding:0 15px; border-radius:5px;">➕</button>
       </div>
       
       <div id="weekGoalsList"></div>
       
-      <button id="aiBreakdownBtn" class="ai-btn">✨ פירוק יעדים למשימות יומיות (AI)</button>
+      <button id="aiBreakdownBtn" class="ai-btn">✨ צור תוכנית משימות יומית (AI)</button>
     </section>
 
     <div id="aiResultArea" class="ai-breakdown-area">
-      <h4 style="margin:0 0 10px 0; color: #2c3e50;">🤖 הצעת ה-AI לפירוק שבועי:</h4>
+      <h4 style="margin:0 0 10px 0; color: #2c3e50;">🤖 תוכנית העבודה המומלצת שלך:</h4>
       <div id="aiSuggestions"></div>
     </div>
 
@@ -79,7 +78,6 @@
       else { userId = user.uid; loadWeekData(); }
     });
 
-    // --- לוגיקת נתונים ---
     async function loadWeekData() {
       const weekId = currentWeekStart.toISOString().split('T')[0];
       const snapshot = await db.collection("users").doc(userId).collection("weekly_goals").where("weekId", "==", weekId).get();
@@ -96,7 +94,7 @@
         div.innerHTML = `
           <input type="checkbox" ${data.completed ? 'checked' : ''} onchange="toggleGoal('${doc.id}', ${data.completed})">
           <span class="goal-text ${data.completed ? 'goal-done' : ''}">${data.text}</span>
-          <span onclick="deleteGoal('${doc.id}')" style="cursor:pointer; margin-right:auto;">🗑️</span>
+          <span onclick="deleteGoal('${doc.id}')" style="cursor:pointer; margin-right:auto; opacity:0.6;">🗑️</span>
         `;
         list.appendChild(div);
       });
@@ -125,8 +123,6 @@
     async function deleteGoal(id) { if (confirm("למחוק?")) { await db.collection("users").doc(userId).collection("weekly_goals").doc(id).delete(); loadWeekData(); } }
     function changeWeek(dir) { currentWeekStart.setDate(currentWeekStart.getDate() + (dir * 7)); loadWeekData(); document.getElementById("aiResultArea").style.display = "none"; }
 
-    // --- לוגיקת AI (מושאלת מה-PRO) ---
-
     async function fetchApiKey() {
       const doc = await db.collection("system_config").doc("gemini_settings").get();
       return doc.exists ? doc.data().apiKey : null;
@@ -143,21 +139,28 @@
 
     document.getElementById("aiBreakdownBtn").onclick = async function() {
       const goals = Array.from(document.querySelectorAll(".goal-text")).map(el => el.textContent);
-      if (goals.length === 0) return alert("אנא הוסף יעדים קודם");
+      if (goals.length === 0) return alert("אנא הוסף יעדים שבועיים קודם");
 
       const btn = this;
       btn.disabled = true;
-      btn.innerHTML = `<span class="loader"></span> מעבד נתונים...`;
+      btn.innerHTML = `<span class="loader"></span> מחשב תוכנית חכמה...`;
 
       try {
         const apiKey = await fetchApiKey();
         const modelName = await getAvailableModel(apiKey);
 
-        const promptText = `Return a JSON array of daily tasks for these weekly goals: ${goals.join(", ")}.
-        Structure: [{"dayOffset": 0, "task": "task name in Hebrew", "explanation": "short explanation in Hebrew"}].
-        dayOffset 0 is today, up to 6. ONLY JSON, no markdown.`;
+        // פרומט משודרג לחלוקה כמותית ואסטרטגית
+        const promptText = `You are a strategic productivity coach. 
+        User's Weekly Goals: ${goals.join(", ")}.
+        TASK: Breakdown these goals into specific, manageable daily tasks for the next 7 days.
+        CRITICAL INSTRUCTIONS:
+        1. If a goal includes a number (e.g., "70 pages", "140 pushups"), DIVIDE it logically across the days (e.g., "10 pages every day" or "25 pages 3 times a week").
+        2. Provide a clear daily plan. 
+        3. Respond ONLY with a JSON array in this format: 
+        [{"dayOffset": 0, "task": "Hebrew Task Name", "explanation": "Hebrew reasoning based on the weekly goal division"}]
+        4. DayOffset 0 is today, 6 is the end of the week.
+        5. Language: Hebrew for 'task' and 'explanation'. No markdown.`;
 
-        // שימוש בפורמט ה-URL מה-PRO שעובד
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -196,7 +199,7 @@
         alert("שגיאה בחיבור ל-AI: " + e.message);
       } finally {
         btn.disabled = false;
-        btn.textContent = "✨ פירוק יעדים למשימות יומיות (AI)";
+        btn.textContent = "✨ צור תוכנית משימות יומית (AI)";
       }
     };
 
