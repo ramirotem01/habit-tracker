@@ -106,6 +106,8 @@ document.addEventListener("DOMContentLoaded", () => {
     items.forEach(text => {
       const li = document.createElement("li");
       li.textContent = text;
+      // לחיצה להרחבת טקסט הודיה
+      li.onclick = () => li.classList.toggle("expanded");
       gratitudeListEl.appendChild(li);
     });
 
@@ -157,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.checked = isDone;
+      cb.style.marginLeft = "10px";
       cb.onchange = async () => {
         dailyStats[task.text] = cb.checked;
         await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
@@ -165,7 +168,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const span = document.createElement("span");
       span.textContent = task.text;
+      span.className = "task-text"; // מחלקה לקיצור טקסט
       if (isDone) span.style.textDecoration = "line-through";
+      
+      // לחיצה על הטקסט להרחבה
+      span.onclick = () => span.classList.toggle("expanded");
 
       contentSide.appendChild(cb);
       contentSide.appendChild(span);
@@ -177,12 +184,18 @@ document.addEventListener("DOMContentLoaded", () => {
         const editBtn = document.createElement("button");
         editBtn.innerHTML = "✏️";
         editBtn.style = "background:none; border:none; cursor:pointer; margin-left:8px; padding: 5px; font-size: 16px;";
-        editBtn.onclick = () => editTempHabit(task.id, task.text);
+        editBtn.onclick = (e) => {
+          e.stopPropagation(); // מניעת הרחבת הטקסט בעת לחיצה על עריכה
+          editTempHabit(task.id, task.text);
+        };
 
         const deleteBtn = document.createElement("button");
         deleteBtn.innerHTML = "🗑️";
         deleteBtn.style = "background:none; border:none; cursor:pointer; padding: 5px; font-size: 16px;";
-        deleteBtn.onclick = () => deleteTempHabit(task.id, task.text);
+        deleteBtn.onclick = (e) => {
+          e.stopPropagation(); // מניעת הרחבת הטקסט בעת לחיצה על מחיקה
+          deleteTempHabit(task.id, task.text);
+        };
 
         actionsSide.appendChild(editBtn);
         actionsSide.appendChild(deleteBtn);
