@@ -6,6 +6,34 @@ const forgotPasswordLink = document.getElementById("forgotPasswordLink");
 const messageEl = document.getElementById("message");
 const captchaContainer = document.getElementById("captcha-container");
 
+// מילון הודעות לוגיקה (דו-לשוני)
+const logicMsg = {
+    he: {
+        fill: "אנא מלא/י אימייל וסיסמה",
+        loading: "התחברת בהצלחה! בודק נתונים...",
+        authError: "אימייל או סיסמה שגויים",
+        tooMany: "יותר מדי נסיונות כושלים. החשבון ננעל זמנית.",
+        general: "שגיאה בהתחברות: ",
+        resetPrompt: "כדי לאפס סיסמה, הזן קודם את כתובת המייל שלך בשדה למעלה.",
+        resetSuccess: "אימייל לאיפוס סיסמה נשלח! בדוק את תיבת הדואר.",
+        resetError: "שגיאה בשליחת האיפוס: "
+    },
+    en: {
+        fill: "Please enter email and password",
+        loading: "Logged in successfully! Checking data...",
+        authError: "Incorrect email or password",
+        tooMany: "Too many failed attempts. Account temporarily locked.",
+        general: "Login error: ",
+        resetPrompt: "To reset your password, please enter your email address above first.",
+        resetSuccess: "Password reset email sent! Check your inbox.",
+        resetError: "Reset error: "
+    }
+};
+
+// זיהוי שפה
+const currentLang = navigator.language.startsWith('he') ? 'he' : 'en';
+const m = logicMsg[currentLang];
+
 let failedAttempts = 0;
 
 /**
@@ -21,7 +49,6 @@ async function redirectBasedOnGoal(user) {
         }
     } catch (e) {
         console.error("Error checking goals:", e);
-        // במקרה של שגיאה, נבריח לדף הראשי כדי לא לתקוע את המשתמש
         window.location.href = "dashboard.html";
     }
 }
@@ -33,16 +60,14 @@ loginBtn.addEventListener("click", () => {
 
     if (!email || !password) {
         messageEl.style.color = "red";
-        messageEl.textContent = "אנא מלא/י אימייל וסיסמה";
+        messageEl.textContent = m.fill;
         return;
     }
 
     auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
             messageEl.style.color = "green";
-            messageEl.textContent = "התחברת בהצלחה! בודק נתונים...";
-            
-            // במקום לעבור ישר לדאשבורד, בודקים מטרה
+            messageEl.textContent = m.loading;
             redirectBasedOnGoal(userCredential.user);
         })
         .catch(err => {
@@ -54,12 +79,12 @@ loginBtn.addEventListener("click", () => {
             }
 
             messageEl.style.color = "red";
-            if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
-                messageEl.textContent = "אימייל או סיסמה שגויים";
+            if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") {
+                messageEl.textContent = m.authError;
             } else if (err.code === "auth/too-many-requests") {
-                messageEl.textContent = "יותר מדי נסיונות כושלים. החשבון ננעל זמנית.";
+                messageEl.textContent = m.tooMany;
             } else {
-                messageEl.textContent = "שגיאה בהתחברות: " + err.message;
+                messageEl.textContent = m.general + err.message;
             }
         });
 });
@@ -70,7 +95,7 @@ forgotPasswordLink.addEventListener("click", (e) => {
     const email = emailInput.value.trim();
     if (!email) {
         messageEl.style.color = "red";
-        messageEl.textContent = "כדי לאפס סיסמה, הזן קודם את כתובת המייל שלך בשדה למעלה.";
+        messageEl.textContent = m.resetPrompt;
         emailInput.focus();
         return;
     }
@@ -78,11 +103,11 @@ forgotPasswordLink.addEventListener("click", (e) => {
     auth.sendPasswordResetEmail(email)
         .then(() => {
             messageEl.style.color = "green";
-            messageEl.textContent = "אימייל לאיפוס סיסמה נשלח! בדוק את תיבת הדואר.";
+            messageEl.textContent = m.resetSuccess;
         })
         .catch(err => {
             messageEl.style.color = "red";
-            messageEl.textContent = "שגיאה בשליחת האיפוס: " + err.message;
+            messageEl.textContent = m.resetError + err.message;
         });
 });
 
