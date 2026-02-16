@@ -1,9 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- הזרקת CSS לתיקון פתיחת השורות ---
+  // --- הזרקת CSS לתיקון פתיחת השורות, רווח ועיצוב כפתורים ---
   const style = document.createElement('style');
   style.innerHTML = `
     .task-text-span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; display: inline-block; flex: 1; transition: all 0.2s; }
     .task-text-span.expanded { white-space: normal !important; overflow: visible !important; }
+    
+    /* הוספת רווח בין הכפתורים לרשימה */
+    #habitList { margin-top: 20px !important; }
+
+    /* אפקט ריחוף לכפתורי עריכה ומחיקה */
+    .actions-btn { transition: background-color 0.2s ease; border-radius: 4px; }
+    .actions-btn:hover { background-color: #f0f0f0 !important; }
   `;
   document.head.appendChild(style);
 
@@ -149,12 +156,14 @@ document.addEventListener("DOMContentLoaded", () => {
         // כפתור עריכה ✏️
         const editBtn = document.createElement("button");
         editBtn.innerHTML = "✏️";
+        editBtn.className = "actions-btn";
         editBtn.style = "background:none; border:none; cursor:pointer; margin-inline-start:8px; padding: 5px; font-size: 16px;";
         editBtn.onclick = (e) => { e.stopPropagation(); editTempHabit(task.id, task.text); };
 
         // כפתור מחיקה 🗑️
         const delBtn = document.createElement("button");
         delBtn.innerHTML = "🗑️";
+        delBtn.className = "actions-btn";
         delBtn.style = "background:none; border:none; cursor:pointer; font-size: 16px; margin-inline-start: 8px; padding: 5px;";
         delBtn.onclick = (e) => { e.stopPropagation(); deleteTempHabit(task.id, task.text); };
 
