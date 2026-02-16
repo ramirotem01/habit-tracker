@@ -134,6 +134,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.checked = isDone;
+      // הוספת רווח בין הצ'קבוקס לטקסט
+      cb.style.marginInlineEnd = "10px"; 
       cb.onchange = async () => {
         dailyStats[task.text] = cb.checked;
         await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
