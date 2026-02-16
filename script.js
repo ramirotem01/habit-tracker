@@ -12,8 +12,12 @@ const historyEl = document.getElementById("history");
 const manageListEl = document.getElementById("manageList");
 const newHabitInput = document.getElementById("newHabit");
 
-// תאריך היום
-const today = new Date().toLocaleDateString("he-IL");
+// זיהוי שפה פשוט
+const isEn = !navigator.language.startsWith('he');
+
+// תאריך היום - התאמה לפי שפה
+const dateOptions = isEn ? { day: '2-digit', month: '2-digit', year: 'numeric' } : undefined;
+const today = new Date().toLocaleDateString(isEn ? "en-GB" : "he-IL");
 if(todayDateEl) todayDateEl.textContent = today;
 
 // =====================
@@ -38,10 +42,9 @@ function saveStats() {
 // דשבורד
 // =====================
 function renderDashboard() {
-  if(!habitListEl) return; // אם לא קיים דף דשבורד
+  if(!habitListEl) return; 
 
   habitListEl.innerHTML = "";
-
   let doneCount = 0;
 
   allHabits.forEach(habit => {
@@ -67,9 +70,9 @@ function renderDashboard() {
     if(checkbox.checked) doneCount++;
   });
 
-  totalHabitsEl.textContent = allHabits.length;
-  doneTodayEl.textContent = doneCount;
-  progressTodayEl.textContent = `${doneCount}/${allHabits.length}`;
+  if(totalHabitsEl) totalHabitsEl.textContent = allHabits.length;
+  if(doneTodayEl) doneTodayEl.textContent = doneCount;
+  if(progressTodayEl) progressTodayEl.textContent = `${doneCount}/${allHabits.length}`;
 
   renderHistory();
 }
@@ -90,12 +93,12 @@ function renderManage() {
     li.appendChild(textSpan);
 
     const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "מחק";
+    deleteBtn.textContent = isEn ? "Delete" : "מחק";
     deleteBtn.onclick = () => {
       allHabits.splice(index, 1);
       saveHabits();
       renderManage();
-      renderDashboard(); // סנכרון מיידי עם הדשבורד
+      renderDashboard(); 
     };
 
     li.appendChild(deleteBtn);
@@ -126,22 +129,21 @@ function renderHistory() {
   historyEl.innerHTML = "";
   const days = 14;
 
-  // בודק את ה-14 הימים האחרונים
   const dailyKeys = Object.keys(dailyStats).sort().slice(-days);
 
   dailyKeys.forEach(day => {
     let habitsDone = 0;
-    const totalHabits = allHabits.length; // סך ההרגלים הקיימים בדף הניהול ברגע זה
+    const totalHabits = allHabits.length; 
 
     allHabits.forEach(habit => {
-      // ספירת ההרגלים שסומנו בדשבורד ביום זה
       if(dailyStats[day] && dailyStats[day][habit.text]) {
         habitsDone++;
       }
     });
 
     const div = document.createElement("div");
-    div.textContent = `${day}: ${habitsDone}/${totalHabits} הושלם`;
+    const completedText = isEn ? "completed" : "הושלם";
+    div.textContent = `${day}: ${habitsDone}/${totalHabits} ${completedText}`;
     historyEl.appendChild(div);
   });
 }
