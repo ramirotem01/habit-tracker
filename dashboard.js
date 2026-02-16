@@ -12,17 +12,38 @@ document.addEventListener("DOMContentLoaded", () => {
   const prevDayBtn = document.getElementById("prevDayBtn");
   const nextDayBtn = document.getElementById("nextDayBtn");
 
-  // אלמנטים של הודיה
   const gratitudeInput = document.getElementById("gratitudeInput");
   const addGratitudeBtn = document.getElementById("addGratitudeBtn");
   const gratitudeListEl = document.getElementById("gratitudeList");
   const gratitudeCircle = document.getElementById("gratitudeCircle");
-
-  // אלמנט עיגול התקדמות משימות
   const taskProgressCircle = document.getElementById("taskProgressCircle");
 
-  // ניהול תאריכים
-  let currentViewDate = new Date(); // התאריך שבו המשתמש צופה כרגע
+  // מערכת תרגום פנימית ללוגיקה
+  const translations = {
+    he: {
+      locale: "he-IL",
+      todayTasks: "🗓 המשימות שלי להיום",
+      tomorrowTasks: "🕒 המשימות שלי למחר",
+      chartLabel: "משימות שבוצעו",
+      confirmDelete: "למחוק את ",
+      editPrompt: "ערוך משימה:",
+      tomorrowAlert: (text) => `המשימה "${text}" נוספה למחר!`
+    },
+    en: {
+      locale: "en-US",
+      todayTasks: "🗓 My Tasks for Today",
+      tomorrowTasks: "🕒 My Tasks for Tomorrow",
+      chartLabel: "Completed Tasks",
+      confirmDelete: "Delete ",
+      editPrompt: "Edit task:",
+      tomorrowAlert: (text) => `Task "${text}" added for tomorrow!`
+    }
+  };
+
+  const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+  const t = translations[userLang];
+
+  let currentViewDate = new Date();
   const realTodayStr = new Date().toISOString().split('T')[0];
   
   function getDocId(date) {
@@ -48,50 +69,47 @@ document.addEventListener("DOMContentLoaded", () => {
   async function loadAllData() {
     const viewDocId = getDocId(currentViewDate);
     
-    // עדכון התאריך בסיכום למעלה והכותרת
-    todayDateEl.textContent = currentViewDate.toLocaleDateString("he-IL");
+    // עדכון תאריך בפורמט מקומי
+    todayDateEl.textContent = currentViewDate.toLocaleDateString(t.locale);
     
     if (viewDocId === realTodayStr) {
-      tasksTitle.textContent = "🗓 המשימות שלי להיום";
+      tasksTitle.textContent = t.todayTasks;
       prevDayBtn.style.visibility = "hidden";
       nextDayBtn.style.visibility = "visible";
     } else {
-      tasksTitle.textContent = "🗓 המשימות שלי למחר";
+      tasksTitle.textContent = t.tomorrowTasks;
       prevDayBtn.style.visibility = "visible";
       nextDayBtn.style.visibility = "hidden";
     }
 
     try {
-      // טעינת הרגלים קבועים
       const baseSnap = await db.collection("users").doc(userId).collection("habits").get();
       baseHabits = baseSnap.docs.map(doc => ({ text: doc.data().text, isTemp: false }));
 
-      // טעינת משימות זמניות ליום הנבחר
       const tempSnap = await db.collection("users").doc(userId).collection("daily")
         .doc(viewDocId).collection("tempHabits").get();
       tempHabits = tempSnap.docs.map(doc => ({ id: doc.id, text: doc.data().text, isTemp: true }));
 
-      // טעינת סטטיסטיקות (ביצועים) ליום הנבחר
       const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(viewDocId).get();
       dailyStats = statsDoc.exists ? statsDoc.data() : {};
 
       render();
     } catch (err) {
-      console.error("שגיאה בטעינה:", err);
+      console.error("Error loading data:", err);
     }
   }
 
-  // חצים לניווט
+  // ניווט
   nextDayBtn.addEventListener("click", () => {
     currentViewDate.setDate(currentViewDate.getDate() + 1);
     loadAllData();
-    loadGratitude(); // עדכון הודיות לתאריך החדש
+    loadGratitude();
   });
 
   prevDayBtn.addEventListener("click", () => {
     currentViewDate.setDate(currentViewDate.getDate() - 1);
     loadAllData();
-    loadGratitude(); // עדכון הודיות לתאריך החדש
+    loadGratitude();
   });
 
   async function loadGratitude() {
@@ -106,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
     items.forEach(text => {
       const li = document.createElement("li");
       li.textContent = text;
-      // לחיצה להרחבה
       li.onclick = () => li.classList.toggle("expanded");
       gratitudeListEl.appendChild(li);
     });
@@ -127,7 +144,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const text = gratitudeInput.value.trim();
     if (!text) return;
     const viewDocId = getDocId(currentViewDate);
-
     try {
       await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("gratitude").add({
         text,
@@ -135,9 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       gratitudeInput.value = "";
       loadGratitude();
-    } catch (e) {
-      console.error("Error adding gratitude:", e);
-    }
+    } catch (e) { console.error(e); }
   });
 
   function render() {
@@ -154,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const li = document.createElement("li");
       const contentSide = document.createElement("div");
-      contentSide.style = "display: flex; align-items: center; overflow: hidden; flex: 1; padding-left: 10px;";
+      contentSide.style = `display: flex; align-items: center; overflow: hidden; flex: 1; padding-${userLang === 'he' ? 'left' : 'right'}: 10px;`;
 
       const cb = document.createElement("input");
       cb.type = "checkbox";
@@ -167,9 +181,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const span = document.createElement("span");
       span.textContent = task.text;
-      span.className = "task-text-span"; // הרחבת טקסט
+      span.className = "task-text-span";
       if (isDone) span.style.textDecoration = "line-through";
-      
       span.onclick = () => span.classList.toggle("expanded");
 
       contentSide.appendChild(cb);
@@ -181,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (task.isTemp) {
         const editBtn = document.createElement("button");
         editBtn.innerHTML = "✏️";
-        editBtn.style = "background:none; border:none; cursor:pointer; margin-left:8px; padding: 5px; font-size: 16px;";
+        editBtn.style = `background:none; border:none; cursor:pointer; margin-${userLang === 'he' ? 'left' : 'right'}:8px; padding: 5px; font-size: 16px;`;
         editBtn.onclick = (e) => {
           e.stopPropagation();
           editTempHabit(task.id, task.text);
@@ -229,7 +242,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const d = new Date();
         d.setDate(d.getDate() - i);
         dates.push(getDocId(d));
-        labels.push(d.toLocaleDateString("he-IL", { weekday: 'short' }));
+        // שמות ימים בפורמט מקומי
+        labels.push(d.toLocaleDateString(t.locale, { weekday: 'short' }));
       }
       const statsSnap = await db.collection("users").doc(userId).collection("stats").get();
       const allStats = {};
@@ -244,7 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data: {
           labels: labels,
           datasets: [{
-            label: 'משימות שבוצעו',
+            label: t.chartLabel,
             data: dataPoints,
             backgroundColor: '#3498db',
             borderColor: '#2980b9',
@@ -258,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
           plugins: { legend: { display: false } }
         }
       });
-    } catch (err) { console.error("שגיאה בגרף:", err); }
+    } catch (err) { console.error(err); }
   }
 
   addTempHabitBtn.addEventListener("click", async () => {
@@ -278,14 +292,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const tomorrowDocId = getDocId(tomorrow);
     try {
       await db.collection("users").doc(userId).collection("daily").doc(tomorrowDocId).collection("tempHabits").add({ text });
-      alert(`המשימה "${text}" נוספה למחר!`);
+      alert(t.tomorrowAlert(text));
       tempHabitInput.value = "";
       if (getDocId(currentViewDate) === tomorrowDocId) loadAllData();
     } catch (err) { console.error(err); }
   });
 
   async function deleteTempHabit(id, text) {
-    if (!confirm(`למחוק את "${text}"?`)) return;
+    if (!confirm(t.confirmDelete + `"${text}"?`)) return;
     const viewDocId = getDocId(currentViewDate);
     await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("tempHabits").doc(id).delete();
     if (dailyStats[text] !== undefined) {
@@ -296,7 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function editTempHabit(id, oldText) {
-    const newText = prompt("ערוך משימה:", oldText);
+    const newText = prompt(t.editPrompt, oldText);
     if (!newText || newText.trim() === "" || newText === oldText) return;
     const cleanText = newText.trim();
     const viewDocId = getDocId(currentViewDate);
