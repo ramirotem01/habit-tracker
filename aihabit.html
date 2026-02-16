@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he" dir="rtl" id="mainHtml">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Habit Tracker – עוזר AI</title>
+  <title id="pageTitle">Habit Tracker – AI Assistant</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     /* עיצוב המכולה והכרטיס */
@@ -89,10 +89,9 @@
       background: #f8f9fa;
       padding: 12px;
       margin-bottom: 8px;
-      border-right: 4px solid #2ecc71;
+      border-inline-start: 4px solid #2ecc71;
       border-radius: 4px;
       font-size: 0.95em;
-      text-align: right;
     }
 
     .loading-spinner {
@@ -106,9 +105,9 @@
 </head>
 <body>
   <div class="app login-app">
-    <h1> עוזר AI אישי</h1>
+    <h1 id="mainTitle">עוזר AI אישי</h1>
     <div class="card login-card ai-card">
-      <p style="text-align: center; color: #666; margin-bottom: 20px;">רשום את המטרה שלך, והמערכת תבנה עבורך 5 הרגלים מנצחים</p>
+      <p id="instructionText" style="text-align: center; color: #666; margin-bottom: 20px;">רשום את המטרה שלך, והמערכת תבנה עבורך 5 הרגלים מנצחים</p>
       
       <div class="ai-container">
         <textarea id="goalInput" placeholder="למשל: אני רוצה להיכנס לכושר השנה..." rows="3"></textarea>
@@ -117,13 +116,13 @@
         <div id="loadingMsg" class="loading-spinner">מתחבר ל-AI... ⚡</div>
 
         <div id="previewArea" style="display: none;">
-          <h3 style="font-size: 1.1em; margin-bottom: 10px;">ההרגלים החדשים שלך:</h3>
+          <h3 id="previewTitle" style="font-size: 1.1em; margin-bottom: 10px;">ההרגלים החדשים שלך:</h3>
           <ul id="suggestedList" class="suggestions-list"></ul>
           <button id="approveBtn" class="action-btn" style="background-color: #3498db;">✅ אשר והוסף הכל למערכת</button>
         </div>
 
         <div style="text-align: center;">
-          <button class="back-btn" onclick="window.location.href='manage.html'">חזרה לניהול הרגלים</button>
+          <button id="backBtn" class="back-btn" onclick="window.location.href='manage.html'">חזרה לניהול הרגלים</button>
         </div>
       </div>
     </div>
@@ -136,6 +135,23 @@
 
   <script>
     let userId = null;
+    const isEn = !navigator.language.startsWith('he');
+    const htmlEl = document.getElementById("mainHtml");
+
+    // עדכון שפת הממשק מיד עם הטעינה
+    if (isEn) {
+      htmlEl.dir = "ltr";
+      htmlEl.lang = "en";
+      document.getElementById("pageTitle").textContent = "AI Assistant";
+      document.getElementById("mainTitle").textContent = "Personal AI Assistant";
+      document.getElementById("instructionText").textContent = "Type your goal, and AI will build 5 winning habits for you";
+      document.getElementById("goalInput").placeholder = "Example: I want to get in shape this year...";
+      document.getElementById("generateBtn").textContent = "✨ Generate Habit Plan";
+      document.getElementById("loadingMsg").textContent = "Connecting to AI... ⚡";
+      document.getElementById("previewTitle").textContent = "Your new habits:";
+      document.getElementById("approveBtn").textContent = "✅ Approve and Add All";
+      document.getElementById("backBtn").textContent = "Back to Manage Habits";
+    }
 
     auth.onAuthStateChanged(user => { 
       if (!user) window.location.href = "index.html"; 
@@ -148,10 +164,10 @@
         if (doc.exists) {
           return doc.data().apiKey;
         } else {
-          throw new Error("מפתח AI לא נמצא ב-Database");
+          throw new Error(isEn ? "API Key not found in Database" : "מפתח AI לא נמצא ב-Database");
         }
       } catch (e) {
-        console.error("שגיאה בשליפת המפתח:", e);
+        console.error("Key fetch error:", e);
         throw e;
       }
     }
@@ -171,7 +187,11 @@
       const apiKey = await fetchApiKey();
       const modelName = await getAvailableModel(apiKey);
       
-      const prompt = `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים יומיים קצרים: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי שום טקסט נוסף.`;
+      // התאמת הפרומפט לשפת המשתמש
+      const prompt = isEn 
+        ? `My goal: "${goal}". Return a JSON list of 5 short daily habits in English: ["habit 1", "habit 2", "habit 3", "habit 4", "habit 5"]. No other text.`
+        : `המטרה שלי: "${goal}". תחזיר רשימת JSON של 5 הרגלים יומיים קצרים בעברית: ["הרגל 1", "הרגל 2", "הרגל 3", "הרגל 4", "הרגל 5"]. בלי שום טקסט נוסף.`;
+      
       const url = `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${apiKey}`;
 
       const response = await fetch(url, {
@@ -192,11 +212,12 @@
       const goal = document.getElementById("goalInput").value.trim();
       if (!goal) return;
 
-      // בדיקת הגבלה יומית לפני הפנייה ל-API
       const today = new Date().toISOString().split('T')[0];
       const userDoc = await db.collection("users").doc(userId).get();
       if (userDoc.exists && userDoc.data().lastHabitGenerationDate === today) {
-        alert("כבר יצרת תוכנית הרגלים היום. ניתן להשתמש בעוזר ה-AI פעם ביום.");
+        alert(isEn 
+          ? "You already generated a plan today. The AI assistant can be used once a day." 
+          : "כבר יצרת תוכנית הרגלים היום. ניתן להשתמש בעוזר ה-AI פעם ביום.");
         return;
       }
 
@@ -211,7 +232,6 @@
       try {
         const habits = await generateWithAI(goal);
         
-        // עדכון תאריך השימוש מיד לאחר קבלת תוצאה מוצלחת מה-API
         await db.collection("users").doc(userId).set({ 
           lastHabitGenerationDate: today 
         }, { merge: true });
@@ -226,7 +246,7 @@
         preview.style.display = "block";
         window.currentHabits = habits;
       } catch (error) {
-        alert("שגיאה ביצירת הרגלים: " + error.message);
+        alert((isEn ? "Error generating habits: " : "שגיאה ביצירת הרגלים: ") + error.message);
       } finally {
         loader.style.display = "none";
         btn.disabled = false;
@@ -239,14 +259,12 @@
       const goalText = document.getElementById("goalInput").value.trim();
       const batch = db.batch();
 
-      // 1. שמירת המטרה הכללית
       const goalRef = db.collection("users").doc(userId).collection("goals").doc();
       batch.set(goalRef, { 
         text: goalText, 
         createdAt: firebase.firestore.FieldValue.serverTimestamp() 
       });
 
-      // 2. שמירת ההרגלים
       window.currentHabits.forEach(text => {
         const ref = db.collection("users").doc(userId).collection("habits").doc();
         batch.set(ref, { text, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
@@ -256,8 +274,8 @@
         await batch.commit();
         window.location.href = "manage.html";
       } catch (e) {
-        console.error("שגיאה בשמירה:", e);
-        alert("הייתה בעיה בשמירת המטרה והרגלים.");
+        console.error("Save error:", e);
+        alert(isEn ? "There was a problem saving your goal and habits." : "הייתה בעיה בשמירת המטרה והרגלים.");
       }
     });
   </script>
