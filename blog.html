@@ -1,10 +1,9 @@
-  
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>הבלוג של Habit Tracker - טיפים להצלחה</title>
+  <title id="page-title">הבלוג של Habit Tracker - טיפים להצלחה</title>
   <link rel="stylesheet" href="style.css">
   <style>
     :root {
@@ -20,6 +19,7 @@
       margin: 0;
       padding: 0;
       line-height: 1.6;
+      text-align: inherit; /* תמיכה בכיווניות */
     }
 
     .blog-container {
@@ -52,7 +52,6 @@
       font-weight: bold;
     }
 
-    /* תשתית המאמרים */
     .articles-list {
       display: flex;
       flex-direction: column;
@@ -114,11 +113,6 @@
       font-weight: bold;
     }
 
-    .read-more:hover {
-      text-decoration: underline;
-    }
-
-    /* עיצוב לניוזלטר בתחתית */
     .newsletter {
       background: var(--secondary-color);
       color: white;
@@ -150,77 +144,136 @@
 <body>
 
   <div class="blog-container">
-    <a href="index.html" class="back-link">← חזרה לאפליקציה</a>
+    <a href="index.html" class="back-link" id="back-link"></a>
     
     <header>
-      <h1>הבלוג שלנו ✍️</h1>
-      <p>כלים, טיפים ומחקרים על בניית הרגלים ושיפור הפרודוקטיביות</p>
+      <h1 id="header-title"></h1>
+      <p id="header-subtitle"></p>
     </header>
 
-    <div class="articles-list">
-        <article class="article-card">
-  <div class="article-content">
-    <span class="article-category">ניהול משימות</span> <h2>Daily Quest: הצעד הקטן להצלחה גדולה</h2> <p class="article-excerpt">
-      Daily Quest: מגרילים הצלחה בקליק
-מרגישים תקועים? הכירו את הבוסט היומי שלכם. בנק משימות חכם שבוחר עבורכם בכל יום פעולה אחת קטנה שיוצרת שינוי גדול.  
-
-מגרילים: לוחצים על הכפתור ומתחייבים.
-
-מבצעים: מקבלים משימה ממוקדת (ספורט, למידה או השראה).
-
-כובשים: אוספים ניצחונות קטנים שהופכים להצלחה גדולה.
-
-בלי סיבוכים, בלי רשימות ארוכות – רק קליק אחד והיום שלכם משתדרג.
-    </p>
-    <div class="article-meta">
-      <span>📅 8 בפברואר 2026</span> <a href="articles/Miss.html" class="read-more">קרא עוד</a>
-    </div>
-  </div>
-         </article>
-
-      
-      <article class="article-card">
-        <div class="article-content">
-          <span class="article-category">טיפים למתחילים</span>
-          <h2>איך לבנות הרגל חדש ב-21 יום?</h2>
-          <p class="article-excerpt">
-            רבים שואלים כמה זמן באמת לוקח להטמיע הרגל חדש. במאמר זה נבין את המדע שמאחורי הנושא וניתן לכם 3 כלים פרקטיים להתחלה חזקה...
-          </p>
-          <div class="article-meta">
-            <span>📅 7 בפברואר 2026</span>
-            <a href="articles/habit-building.html" class="read-more">קרא עוד</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="article-card">
-        <div class="article-content">
-          <span class="article-category">פרודוקטיביות</span>
-          <h2>ניהול זמן מול ניהול אנרגיה</h2>
-          <p class="article-excerpt">
-            האם אי פעם הרגשתם שיש לכם זמן אבל אין לכם כוח? גלו למה כדאי לכם להתחיל לנהל את רמות האנרגיה שלכם במקום את הדקות בלוח השנה...
-          </p>
-          <div class="article-meta">
-            <span>📅 1 בפברואר 2026</span>
-            <a href="articles/energy-management.html" class="read-more">קרא עוד</a>
-          </div>
-        </div>
-      </article>
-
+    <div class="articles-list" id="articles-container">
       </div>
 
     <section class="newsletter">
-      <h3>רוצים לקבל טיפים למייל?</h3>
-      <p>הירשמו לניוזלטר שלנו (מבטיחים שלא להציק!)</p>
-      <input type="email" placeholder="הכנס אימייל שלך...">
+      <h3 id="news-title"></h3>
+      <p id="news-subtitle"></p>
+      <input type="email" id="news-input">
       <br>
-      <button>אני רוצה להירשם</button>
+      <button id="news-btn"></button>
     </section>
 
-    <footer style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.9em;">
-      Habit Tracker Blog &copy; 2026
+    <footer style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.9em;" id="blog-footer">
     </footer>
   </div>
 
+  <script>
+    const translations = {
+      he: {
+        title: "הבלוג של Habit Tracker - טיפים להצלחה",
+        back: "← חזרה לאפליקציה",
+        headerTitle: "הבלוג שלנו ✍️",
+        headerSubtitle: "כלים, טיפים ומחקרים על בניית הרגלים ושיפור הפרודוקטיביות",
+        newsTitle: "רוצים לקבל טיפים למייל?",
+        newsSubtitle: "הירשמו לניוזלטר שלנו (מבטיחים שלא להציק!)",
+        newsPlaceholder: "הכנס אימייל שלך...",
+        newsBtn: "אני רוצה להירשם",
+        readMore: "קרא עוד",
+        footer: "Habit Tracker Blog &copy; 2026",
+        articles: [
+          {
+            cat: "ניהול משימות",
+            title: "Daily Quest: הצעד הקטן להצלחה גדולה",
+            excerpt: "מרגישים תקועים? הכירו את הבוסט היומי שלכם. בנק משימות חכם שבוחר עבורכם בכל יום פעולה אחת קטנה שיוצרת שינוי גדול...",
+            date: "8 בפברואר 2026",
+            link: "articles/Miss.html"
+          },
+          {
+            cat: "טיפים למתחילים",
+            title: "איך לבנות הרגל חדש ב-21 יום?",
+            excerpt: "רבים שואלים כמה זמן באמת לוקח להטמיע הרגל חדש. במאמר זה נבין את המדע שמאחורי הנושא וניתן לכם 3 כלים פרקטיים...",
+            date: "7 בפברואר 2026",
+            link: "articles/habit-building.html"
+          },
+          {
+            cat: "פרודוקטיביות",
+            title: "ניהול זמן מול ניהול אנרגיה",
+            excerpt: "האם אי פעם הרגשתם שיש לכם זמן אבל אין לכם כוח? גלו למה כדאי לכם להתחיל לנהל את רמות האנרגיה שלכם...",
+            date: "1 בפברואר 2026",
+            link: "articles/energy-management.html"
+          }
+        ]
+      },
+      en: {
+        title: "Habit Tracker Blog - Tips for Success",
+        back: "Back to App →",
+        headerTitle: "Our Blog ✍️",
+        headerSubtitle: "Tools, tips, and research on habit building and productivity",
+        newsTitle: "Want tips in your inbox?",
+        newsSubtitle: "Subscribe to our newsletter (we promise not to spam!)",
+        newsPlaceholder: "Enter your email...",
+        newsBtn: "I want to subscribe",
+        readMore: "Read More",
+        footer: "Habit Tracker Blog &copy; 2026",
+        articles: [
+          {
+            cat: "Task Management",
+            title: "Daily Quest: Small Step for Big Success",
+            excerpt: "Feeling stuck? Meet your daily boost. A smart task bank that chooses one small action for you every day to create big change...",
+            date: "February 8, 2026",
+            link: "articles/Miss.html"
+          },
+          {
+            cat: "Beginner Tips",
+            title: "How to Build a New Habit in 21 Days?",
+            excerpt: "Many ask how long it really takes to implement a new habit. In this article, we'll understand the science and give you 3 practical tools...",
+            date: "February 7, 2026",
+            link: "articles/habit-building.html"
+          },
+          {
+            cat: "Productivity",
+            title: "Time Management vs. Energy Management",
+            excerpt: "Ever felt like you have time but no strength? Discover why you should start managing your energy levels instead of minutes...",
+            date: "February 1, 2026",
+            link: "articles/energy-management.html"
+          }
+        ]
+      }
+    };
+
+    const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+    const t = translations[userLang];
+
+    document.documentElement.lang = userLang;
+    document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+
+    // הזרקת טקסטים
+    document.getElementById('page-title').innerText = t.title;
+    document.getElementById('back-link').innerText = t.back;
+    document.getElementById('header-title').innerText = t.headerTitle;
+    document.getElementById('header-subtitle').innerText = t.headerSubtitle;
+    document.getElementById('news-title').innerText = t.newsTitle;
+    document.getElementById('news-subtitle').innerText = t.newsSubtitle;
+    document.getElementById('news-input').placeholder = t.newsPlaceholder;
+    document.getElementById('news-btn').innerText = t.newsBtn;
+    document.getElementById('blog-footer').innerHTML = t.footer;
+
+    // הזרקת מאמרים
+    const container = document.getElementById('articles-container');
+    t.articles.forEach(art => {
+      container.innerHTML += `
+        <article class="article-card">
+          <div class="article-content">
+            <span class="article-category">${art.cat}</span>
+            <h2>${art.title}</h2>
+            <p class="article-excerpt">${art.excerpt}</p>
+            <div class="article-meta">
+              <span>📅 ${art.date}</span>
+              <a href="${art.link}" class="read-more">${t.readMore}</a>
+            </div>
+          </div>
+        </article>
+      `;
+    });
+  </script>
 </body>
 </html>
