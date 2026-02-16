@@ -14,16 +14,16 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Habit Tracker – התחברות</title>
+  <title id="page-title">Habit Tracker</title>
   
   <link rel="stylesheet" href="style.css?v=1.1" />
   
   <style>
-    /* --- עיצוב תפריט המבורגר --- */
+    /* --- עיצוב תפריט המבורגר תומך כיווניות --- */
     .menu-icon {
       position: fixed;
       top: 20px;
-      right: 20px;
+      inset-inline-end: 20px; /* תומך RTL/LTR */
       font-size: 30px;
       cursor: pointer;
       z-index: 1001;
@@ -37,13 +37,13 @@
       position: fixed;
       z-index: 1000;
       top: 0;
-      right: 0;
+      inset-inline-end: 0; /* נפתח מהצד הנכון */
       background-color: #fff;
       overflow-x: hidden;
       transition: 0.4s;
       padding-top: 80px;
       box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-      text-align: right;
+      text-align: start; /* מתיישר לפי dir */
     }
 
     .sidebar a {
@@ -83,6 +83,7 @@
     h1 {
       margin-bottom: 10px;
       font-size: 1.8em;
+      text-align: center;
     }
 
     input {
@@ -118,17 +119,11 @@
       border-radius: 20px;
       cursor: pointer;
       font-size: 0.9em;
-      font-weight: normal;
       transition: all 0.3s ease;
       display: inline-block;
       width: fit-content;
       margin: 5px auto;
       text-decoration: none;
-    }
-
-    .secondary-btn:hover {
-      background-color: #f5f6f7;
-      color: #000;
     }
 
     .info-toggle-btn {
@@ -139,23 +134,17 @@
       border-radius: 20px;
       cursor: pointer;
       margin: 20px auto 10px auto;
-      font-weight: normal;
       display: flex;
       align-items: center;
       gap: 8px;
       transition: all 0.3s ease;
     }
 
-    .info-toggle-btn:hover {
-      background-color: #fafafa;
-      border-color: #ddd;
-    }
-
     .app-info-content {
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.4s ease-out;
-      text-align: right;
+      text-align: start;
       font-size: 0.9em;
       line-height: 1.6;
       color: #333;
@@ -168,7 +157,7 @@
       border-top: 1px solid #eee;
     }
 
-    .app-info-content ul { padding-right: 20px; list-style: none; margin: 10px 0; }
+    .app-info-content ul { padding-inline-start: 20px; list-style: disc; margin: 10px 0; }
     .tagline { text-align: center; display: block; margin-top: 10px; color: #2c3e50; font-weight: bold; }
     
     #captcha-container { display: none; margin: 10px 0; transform: scale(0.9); }
@@ -178,9 +167,9 @@
 <body>
 
   <div id="sideMenu" class="sidebar">
-    <a href="about.html">מידע על האפליקציה</a>
-    <a href="blog.html">בלוג</a>
-    <a href="terms.html">תנאי שימוש</a>
+    <a href="about.html" id="nav-about"></a>
+    <a href="blog.html" id="nav-blog"></a>
+    <a href="terms.html" id="nav-terms"></a>
   </div>
   
   <div id="overlay" class="overlay" onclick="closeMenu()"></div>
@@ -188,45 +177,40 @@
   <div class="menu-icon" onclick="toggleMenu()">☰</div>
 
   <div class="app login-app">
-    <h1>🔐 התחברות</h1>
+    <h1 id="ui-login-title"></h1>
 
     <div class="card login-card">
-      <p style="text-align: center; color: #666; margin-bottom: 20px;">הזן פרטים כדי להמשיך לעקוב אחר ההרגלים שלך</p>
+      <p id="ui-login-desc" style="text-align: center; color: #666; margin-bottom: 20px;"></p>
       
       <div class="login-container">
-        <input type="email" id="email" placeholder="כתובת אימייל" />
-        <input type="password" id="password" placeholder="סיסמה" />
+        <input type="email" id="email" />
+        <input type="password" id="password" />
 
         <div id="captcha-container">
           <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY_HERE"></div>
         </div>
 
-        <button id="loginBtn" class="action-btn">התחבר למערכת</button>
+        <button id="loginBtn" class="action-btn"></button>
         
         <div style="text-align: center; display: flex; flex-direction: column; gap: 5px;">
-            <button id="goToRegisterBtn" class="secondary-btn" onclick="window.location.href='register.html'">רשום משתמש חדש</button>
-            <button id="forgotPasswordLink" class="secondary-btn">שכחתי סיסמה? לחץ לאיפוס</button>
-            <a href="terms.html" class="secondary-btn">תנאי שימוש ותקנון</a>
+            <button id="goToRegisterBtn" class="secondary-btn" onclick="window.location.href='register.html'"></button>
+            <button id="forgotPasswordLink" class="secondary-btn"></button>
+            <a href="terms.html" class="secondary-btn" id="ui-terms-link"></a>
         </div>
 
         <p id="message" style="color:red;"></p>
 
         <button class="info-toggle-btn" id="infoBtn" onclick="toggleInfo()">
           <span>ℹ️</span>
-          <span id="btnText">למידע על האפליקציה</span>
+          <span id="btnText"></span>
         </button>
 
         <div id="infoContent" class="app-info-content">
-          <h3>עקביות קטנה. שינוי גדול.</h3>
-          <p><strong>Habit Tracker</strong> אפליקציה חינמית שעוזרת לך להתקדם צעד־צעד, בלי עומס ובלי רעש.</p>
-          <p><strong>מה עושים בה?</strong></p>
-          <ul>
-            <li>✔ מגדירים הרגלים אישיים</li>
-            <li>✔ מסמנים ביצוע יומי בקליק</li>
-            <li>✔ עוקבים אחרי ההתקדמות</li>
-            <li>✔ מייצר הרגלים ומשימות באמצעות AI</li>
-          </ul>
-          <span class="tagline">כי שינוי גדול מתחיל בהרגל קטן.</span>
+          <h3 id="ui-info-h3"></h3>
+          <p id="ui-info-p1"></p>
+          <p><strong id="ui-info-strong"></strong></p>
+          <ul id="ui-info-list"></ul>
+          <span class="tagline" id="ui-tagline"></span>
         </div>
       </div>
     </div>
@@ -237,7 +221,95 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
   <script src="firebase.js?v=1.1"></script>
   <script src="login.js?v=1.1"></script>
+
   <script>
+    const translations = {
+      he: {
+        pageTitle: "Habit Tracker – התחברות",
+        navAbout: "מידע על האפליקציה",
+        navBlog: "בלוג",
+        navTerms: "תנאי שימוש",
+        loginTitle: "🔐 התחברות",
+        loginDesc: "הזן פרטים כדי להמשיך לעקוב אחר ההרגלים שלך",
+        emailPlace: "כתובת אימייל",
+        passPlace: "סיסמה",
+        loginBtn: "התחבר למערכת",
+        registerBtn: "רשום משתמש חדש",
+        forgotBtn: "שכחתי סיסמה? לחץ לאיפוס",
+        termsLink: "תנאי שימוש ותקנון",
+        infoBtnShow: "למידע על האפליקציה",
+        infoBtnHide: "סגור מידע",
+        infoH3: "עקביות קטנה. שינוי גדול.",
+        infoP1: "Habit Tracker אפליקציה חינמית שעוזרת לך להתקדם צעד־צעד, בלי עומס ובלי רעש.",
+        infoStrong: "מה עושים בה?",
+        infoList: [
+          "✔ מגדירים הרגלים אישיים",
+          "✔ מסמנים ביצוע יומי בקליק",
+          "✔ עוקבים אחרי ההתקדמות",
+          "✔ מייצר הרגלים ומשימות באמצעות AI"
+        ],
+        tagline: "כי שינוי גדול מתחיל בהרגל קטן."
+      },
+      en: {
+        pageTitle: "Habit Tracker – Login",
+        navAbout: "App Information",
+        navBlog: "Blog",
+        navTerms: "Terms of Use",
+        loginTitle: "🔐 Login",
+        loginDesc: "Enter your details to continue tracking your habits",
+        emailPlace: "Email Address",
+        passPlace: "Password",
+        loginBtn: "Login to System",
+        registerBtn: "Register New User",
+        forgotBtn: "Forgot password? Click to reset",
+        termsLink: "Terms & Conditions",
+        infoBtnShow: "About the App",
+        infoBtnHide: "Close Info",
+        infoH3: "Small consistency. Big change.",
+        infoP1: "Habit Tracker is a free app that helps you progress step-by-step, without the noise.",
+        infoStrong: "What can you do?",
+        infoList: [
+          "✔ Define personal habits",
+          "✔ Mark daily completion with a click",
+          "✔ Track your progress",
+          "✔ Generate habits & tasks using AI"
+        ],
+        tagline: "Because big change starts with a small habit."
+      }
+    };
+
+    const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+    const t = translations[userLang];
+
+    document.documentElement.lang = userLang;
+    document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+
+    // הזרקת טקסטים
+    document.getElementById('page-title').innerText = t.pageTitle;
+    document.getElementById('nav-about').innerText = t.navAbout;
+    document.getElementById('nav-blog').innerText = t.navBlog;
+    document.getElementById('nav-terms').innerText = t.navTerms;
+    document.getElementById('ui-login-title').innerText = t.loginTitle;
+    document.getElementById('ui-login-desc').innerText = t.loginDesc;
+    document.getElementById('email').placeholder = t.emailPlace;
+    document.getElementById('password').placeholder = t.passPlace;
+    document.getElementById('loginBtn').innerText = t.loginBtn;
+    document.getElementById('goToRegisterBtn').innerText = t.registerBtn;
+    document.getElementById('forgotPasswordLink').innerText = t.forgotBtn;
+    document.getElementById('ui-terms-link').innerText = t.termsLink;
+    document.getElementById('btnText').innerText = t.infoBtnShow;
+    document.getElementById('ui-info-h3').innerText = t.infoH3;
+    document.getElementById('ui-info-p1').innerText = t.infoP1;
+    document.getElementById('ui-info-strong').innerText = t.infoStrong;
+    document.getElementById('ui-tagline').innerText = t.tagline;
+
+    const listContainer = document.getElementById('ui-info-list');
+    t.infoList.forEach(item => {
+      const li = document.createElement('li');
+      li.innerText = item;
+      listContainer.appendChild(li);
+    });
+
     function toggleMenu() {
       const menu = document.getElementById("sideMenu");
       const overlay = document.getElementById("overlay");
@@ -256,9 +328,9 @@
 
     function toggleInfo() {
       const content = document.getElementById('infoContent');
-      const btnText = document.getElementById('btnText');
+      const btnLabel = document.getElementById('btnText');
       content.classList.toggle('open');
-      btnText.innerText = content.classList.contains('open') ? 'סגור מידע' : 'למידע על האפליקציה';
+      btnLabel.innerText = content.classList.contains('open') ? t.infoBtnHide : t.infoBtnShow;
     }
   </script>
 </body>
