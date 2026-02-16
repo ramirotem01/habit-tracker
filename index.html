@@ -19,11 +19,11 @@
   <link rel="stylesheet" href="style.css?v=1.1" />
   
   <style>
-    /* תיקון קריטי: שימוש בערכים לוגיים למניעת שיבוש */
+    /* --- עיצוב תפריט המבורגר (מתוקן לוגית) --- */
     .menu-icon {
       position: fixed;
       top: 20px;
-      inset-inline-end: 20px; /* במקום right */
+      inset-inline-end: 20px;
       font-size: 30px;
       cursor: pointer;
       z-index: 1001;
@@ -37,13 +37,13 @@
       position: fixed;
       z-index: 1000;
       top: 0;
-      inset-inline-end: 0; /* במקום right */
+      inset-inline-end: 0;
       background-color: #fff;
       overflow-x: hidden;
       transition: 0.4s;
       padding-top: 80px;
       box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-      text-align: start; /* מתיישר לפי dir */
+      text-align: start;
     }
 
     .sidebar a {
@@ -133,10 +133,11 @@
       color: #000;
     }
 
+    /* --- החזרת עיצוב הכפתור המקורי שלך --- */
     .info-toggle-btn {
       background: none;
       border: 1px solid #eee;
-      color: #7f8c8d;
+      color: #7f8c8d; /* הצבע האפור המקורי */
       padding: 8px 18px;
       border-radius: 20px;
       cursor: pointer;
@@ -146,6 +147,11 @@
       align-items: center;
       gap: 8px;
       transition: all 0.3s ease;
+    }
+
+    .info-toggle-btn:hover {
+      /* הכפתור נשאר בדיוק באותו צבע רק עם שינוי קל של הגבול אם תרצה, או כלום */
+      border-color: #ddd;
     }
 
     .app-info-content {
@@ -235,7 +241,6 @@
   <script src="firebase.js?v=1.1"></script>
   <script src="login.js?v=1.1"></script>
   <script>
-    // תרגומים
     const uiTranslations = {
       he: {
         dir: "rtl",
@@ -270,7 +275,6 @@
     const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
     const lang = uiTranslations[userLang];
 
-    // החלת שפה וכיווניות
     document.documentElement.lang = userLang;
     document.documentElement.dir = lang.dir;
     document.getElementById('ui-title').innerText = lang.title;
@@ -283,7 +287,6 @@
     document.getElementById('ui-terms').innerText = lang.terms;
     document.getElementById('btnText').innerText = lang.infoShow;
 
-    // ניווט
     const navLinks = document.querySelectorAll('#sideMenu a');
     lang.nav.forEach((text, i) => navLinks[i].innerText = text);
 
