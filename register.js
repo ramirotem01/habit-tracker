@@ -4,28 +4,6 @@ const confirmPasswordInput = document.getElementById("confirmPassword");
 const registerBtn = document.getElementById("executeRegisterBtn");
 const messageEl = document.getElementById("regMessage");
 
-// אובייקט תרגום פשוט
-const translations = {
-    he: {
-        fillAll: "אנא מלא את כל השדות",
-        noMatch: "הסיסמאות אינן תואמות",
-        tooShort: "על הסיסמה להכיל לפחות 6 תווים",
-        success: "החשבון נוצר בהצלחה! מעביר אותך...",
-        errorPrefix: "שגיאה ברישום: "
-    },
-    en: {
-        fillAll: "Please fill in all fields",
-        noMatch: "Passwords do not match",
-        tooShort: "Password must be at least 6 characters",
-        success: "Account created successfully! Redirecting...",
-        errorPrefix: "Registration error: "
-    }
-};
-
-// קביעת השפה
-const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
-const t = translations[userLang];
-
 registerBtn.addEventListener("click", () => {
     const email = emailInput.value.trim();
     const password = passwordInput.value;
@@ -33,34 +11,33 @@ registerBtn.addEventListener("click", () => {
 
     // ולידציה בסיסית
     if (!email || !password || !confirmPassword) {
-        messageEl.style.color = "red";
-        messageEl.textContent = t.fillAll;
+        messageEl.textContent = "אנא מלא את כל השדות";
         return;
     }
 
     if (password !== confirmPassword) {
         messageEl.style.color = "red";
-        messageEl.textContent = t.noMatch;
+        messageEl.textContent = "הסיסמאות אינן תואמות";
         return;
     }
 
     if (password.length < 6) {
         messageEl.style.color = "red";
-        messageEl.textContent = t.tooShort;
+        messageEl.textContent = "על הסיסמה להכיל לפחות 6 תווים";
         return;
     }
 
-    // ביצוע הרישום ב-Firebase - נשאר בדיוק כמו בגיבוי
+    // ביצוע הרישום ב-Firebase
     auth.createUserWithEmailAndPassword(email, password)
         .then(() => {
             messageEl.style.color = "green";
-            messageEl.textContent = t.success;
+            messageEl.textContent = "החשבון נוצר בהצלחה! מעביר אותך...";
             setTimeout(() => {
                 window.location.href = "firstgoal.html";
             }, 1500);
         })
         .catch(err => {
             messageEl.style.color = "red";
-            messageEl.textContent = t.errorPrefix + err.message;
+            messageEl.textContent = "שגיאה ברישום: " + err.message;
         });
 });
