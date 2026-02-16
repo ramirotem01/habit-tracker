@@ -9,14 +9,14 @@
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ניהול הרגלים</title>
+  <title id="page-title">ניהול הרגלים</title>
   <link rel="stylesheet" href="style.css">
   <style>
     .manage-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
     .manage-card { padding: 30px !important; }
     h1 { margin-bottom: 10px; font-size: 1.8em; text-align: center; }
     
-    /* כפתור AI - ירוק מלא, טקסט לבן, בולט ומעוצב */
+    /* כפתור AI - נשאר ירוק ומעוצב */
     .ai-btn {
       background-color: #2ecc71; 
       color: white; 
@@ -37,7 +37,7 @@
       box-shadow: 0 6px 8px rgba(39, 174, 96, 0.3);
     }
 
-    input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+    input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; text-align: start; }
 
     #addHabitBtn {
       background: #2ecc71;
@@ -58,10 +58,12 @@
     .habit-item {
       background: #f8f9fa;
       margin-bottom: 10px;
-      border-right: 4px solid #3498db;
+      /* שימוש ב-border לוגי כדי שיתהפך באנגלית */
+      border-inline-start: 4px solid #3498db;
       border-radius: 8px;
       overflow: hidden;
       transition: all 0.3s ease;
+      text-align: start;
     }
 
     .habit-header {
@@ -74,7 +76,7 @@
 
     .habit-text {
       flex-grow: 1;
-      margin-left: 10px;
+      margin-inline-start: 10px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -103,17 +105,29 @@
     .icon-btn:hover { transform: scale(1.2); }
 
     .footer-links { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 20px; }
-    .link-btn { background: none; border: none; color: #34495e; padding: 8px 15px; cursor: pointer; font-size: 0.9em; transition: all 0.3s; }
-    .link-btn:hover { background-color: #f5f6f7; border-radius: 20px; }
+    
+    /* כפתורי לינק - מוודאים שלא יהיו כחולים בגלל ה-CSS הכללי */
+    .link-btn { 
+      background: none !important; 
+      border: none !important; 
+      color: #34495e !important; 
+      padding: 8px 15px; 
+      cursor: pointer; 
+      font-size: 0.9em; 
+      transition: all 0.3s;
+      width: auto !important;
+      font-weight: normal !important;
+    }
+    .link-btn:hover { background-color: #f5f6f7 !important; border-radius: 20px; }
     .logout-link { color: #e74c3c !important; }
   </style>
 </head>
 <body>
   <div class="app login-app">
-    <h1>📝 ניהול הרגלים</h1>
+    <h1 id="ui-manage-title">📝 ניהול הרגלים</h1>
     
     <div class="card login-card manage-card">
-      <button class="ai-btn" onclick="window.location.href='aihabit.html'">✨ בניית תוכנית עם עוזר AI</button>
+      <button class="ai-btn" id="ui-ai-btn" onclick="window.location.href='aihabit.html'">✨ בניית תוכנית עם עוזר AI</button>
       
       <div class="manage-container">
         <div class="input-group" style="display: flex; gap: 8px;">
@@ -122,10 +136,10 @@
         </div>
 
         <ul id="habitList">
-        </ul>
+          </ul>
 
         <div class="footer-links">
-          <button class="link-btn" onclick="window.location.href='dashboard.html'">🔙 חזרה לדשבורד</button>
+          <button class="link-btn" id="ui-back-dash" onclick="window.location.href='dashboard.html'">🔙 חזרה לדשבורד</button>
           <button id="logoutBtn" class="link-btn logout-link">🔓 התנתק</button>
         </div>
       </div>
@@ -139,6 +153,39 @@
   
   <script src="manage.js"></script>
   <script>
+    // תרגומים לדף ניהול
+    const manageTranslations = {
+      he: {
+        dir: "rtl",
+        title: "📝 ניהול הרגלים",
+        aiBtn: "✨ בניית תוכנית עם עוזר AI",
+        placeholder: "הוסף הרגל חדש...",
+        back: "🔙 חזרה לדשבורד",
+        logout: "🔓 התנתק"
+      },
+      en: {
+        dir: "ltr",
+        title: "📝 Manage Habits",
+        aiBtn: "✨ Build plan with AI Assistant",
+        placeholder: "Add new habit...",
+        back: "🔙 Back to Dashboard",
+        logout: "🔓 Logout"
+      }
+    };
+
+    const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+    const lang = manageTranslations[userLang];
+
+    // החלת שפה וכיווניות
+    document.documentElement.lang = userLang;
+    document.documentElement.dir = lang.dir;
+    document.getElementById('ui-manage-title').innerText = lang.title;
+    document.getElementById('ui-ai-btn').innerText = lang.aiBtn;
+    document.getElementById('newHabit').placeholder = lang.placeholder;
+    document.getElementById('ui-back-dash').innerText = lang.back;
+    document.getElementById('logoutBtn').innerText = lang.logout;
+
+    // לוגיקת התנתקות
     document.getElementById('logoutBtn').addEventListener('click', () => {
       auth.signOut().then(() => window.location.href = 'index.html');
     });
