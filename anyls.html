@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he" dir="rtl" id="mainHtml">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>אנליטיקה שבועית AI - Habit Tracker</title>
+  <title id="pageTitle">אנליטיקה שבועית AI - Habit Tracker</title>
   <link rel="stylesheet" href="style.css">
   <style>
     .analytics-container { display: flex; flex-direction: column; gap: 20px; }
     .ai-response {
       background: white; padding: 25px; border-radius: 12px;
-      line-height: 1.8; border-right: 6px solid #2ecc71;
+      line-height: 1.8; border-inline-start: 6px solid #2ecc71;
       display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       font-size: 1.1em; color: #2c3e50;
     }
@@ -55,32 +55,32 @@
 </head>
 <body>
   <div class="app">
-    <h1>🧠 ניתוח שבועי חכם</h1>
+    <h1 id="mainTitle">🧠 ניתוח שבועי חכם</h1>
     <div class="analytics-container">
       <section class="card">
-        <h3 style="text-align: center;">תובנות על השבוע האחרון</h3>
-        <p style="text-align: center; color: #666; margin-bottom: 20px;">ה-AI ינתח את המגמות שלך ב-7 הימים האחרונים וימליץ על צעדים להמשך.</p>
+        <h3 id="cardTitle" style="text-align: center;">תובנות על השבוע האחרון</h3>
+        <p id="cardSub" style="text-align: center; color: #666; margin-bottom: 20px;">ה-AI ינתח את המגמות שלך ב-7 הימים האחרונים וימליץ על צעדים להמשך.</p>
         <button id="analyzeBtn" class="action-btn-ai">✨ נתח את השבוע שלי</button>
-        <button onclick="window.location.href='week.html'" class="action-btn-week-nav">📅 ניהול יעדים שבועיים</button>
-        <button onclick="window.location.href='proanyls.html'" class="action-btn-pro-nav">💎 ניתוח עומק היסטורי (PRO)</button>
+        <button id="weekNavBtn" onclick="window.location.href='week.html'" class="action-btn-week-nav">📅 ניהול יעדים שבועיים</button>
+        <button id="proNavBtn" onclick="window.location.href='proanyls.html'" class="action-btn-pro-nav">💎 ניתוח עומק היסטורי (PRO)</button>
       </section>
 
       <div id="loadingArea" class="loading-container">
         <div class="loader"></div>
-        <p>אוסף נתונים ומפענח דפוסים... 📊</p>
+        <p id="loadingText">אוסף נתונים ומפענח דפוסים... 📊</p>
       </div>
 
       <div id="resultArea" class="ai-response">
         <div id="aiTextContent"></div>
         <div id="recommendationBox" class="recommendation-box">
-          <div class="suggested-task-title">🎯 המשימה המדויקת עבורך למחר:</div>
+          <div id="recTitle" class="suggested-task-title">🎯 המשימה המדויקת עבורך למחר:</div>
           <p id="suggestedTaskText" style="font-weight: bold; font-size: 1.2em; color: #2c3e50;"></p>
           <button id="addTaskBtn" class="add-task-btn">➕ הוסף לרשימה היומית</button>
         </div>
       </div>
 
       <div class="actions">
-        <button onclick="window.location.href='dashboard.html'" style="width: 100%; background-color: #34495e;">🏠 חזרה לדשבורד</button>
+        <button id="backDashBtn" onclick="window.location.href='dashboard.html'" style="width: 100%; background-color: #34495e;">🏠 חזרה לדשבורד</button>
       </div>
     </div>
   </div>
@@ -93,6 +93,25 @@
   <script>
     let userId = null;
     let currentRecommendedTask = "";
+    const isEn = !navigator.language.startsWith('he');
+    const htmlEl = document.getElementById("mainHtml");
+
+    // עדכון שפת הממשק
+    if (isEn) {
+      htmlEl.dir = "ltr";
+      htmlEl.lang = "en";
+      document.getElementById("pageTitle").textContent = "Smart Weekly Analytics - Habit Tracker";
+      document.getElementById("mainTitle").textContent = "🧠 Smart Weekly Analytics";
+      document.getElementById("cardTitle").textContent = "Insights on Your Last Week";
+      document.getElementById("cardSub").textContent = "The AI will analyze your trends from the last 7 days and recommend next steps.";
+      document.getElementById("analyzeBtn").textContent = "✨ Analyze My Week";
+      document.getElementById("weekNavBtn").textContent = "📅 Weekly Goals Management";
+      document.getElementById("proNavBtn").textContent = "💎 Historical Deep Dive (PRO)";
+      document.getElementById("loadingText").textContent = "Collecting data and decoding patterns... 📊";
+      document.getElementById("recTitle").textContent = "🎯 Your precise task for tomorrow:";
+      document.getElementById("addTaskBtn").textContent = "➕ Add to daily list";
+      document.getElementById("backDashBtn").textContent = "🏠 Back to Dashboard";
+    }
 
     auth.onAuthStateChanged(user => {
       if (!user) window.location.href = "index.html";
@@ -115,7 +134,7 @@
 
     async function collectWeeklyData() {
       const now = new Date();
-      let goal = "שיפור עצמי";
+      let goal = isEn ? "Self improvement" : "שיפור עצמי";
       
       const goalSnap = await db.collection("users").doc(userId).collection("goals").orderBy("createdAt", "desc").limit(1).get();
       if (!goalSnap.empty) goal = goalSnap.docs[0].data().text;
@@ -145,14 +164,14 @@
           habitsData.forEach(habit => {
              if (habit.created <= d) {
                const done = dailyStats[habit.name] === true;
-               dayTasks.push(`${habit.name} (קבוע) - ${done ? 'בוצע ✅' : 'לא בוצע ❌'}`);
+               dayTasks.push(`${habit.name} (Recurring) - ${done ? 'Done ✅' : 'Not Done ❌'}`);
              }
           });
 
           tempSnap.forEach(t => {
             const taskText = t.data().text;
             const done = dailyStats[taskText] === true;
-            dayTasks.push(`${taskText} (זמני) - ${done ? 'בוצע ✅' : 'לא בוצע ❌'}`);
+            dayTasks.push(`${taskText} (Temporary) - ${done ? 'Done ✅' : 'Not Done ❌'}`);
           });
 
           dailyDetails.push({ date: dateId, tasks: dayTasks, isReal: true });
@@ -171,7 +190,9 @@
       const today = new Date().toISOString().split('T')[0];
       const userDoc = await db.collection("users").doc(userId).get();
       if (userDoc.exists && userDoc.data().lastAnalysisDate === today) {
-        alert("כבר ביצעת ניתוח היום. ניתן לבצע ניתוח חדש פעם ביום כדי לשמור על המיקוד.");
+        alert(isEn 
+          ? "You've already performed an analysis today. You can run a new analysis once a day to stay focused." 
+          : "כבר ביצעת ניתוח היום. ניתן לבצע ניתוח חדש פעם ביום כדי לשמור על המיקוד.");
         return;
       }
 
@@ -185,12 +206,21 @@
         const activeDaysCount = data.dailyDetails.length;
 
         if (activeDaysCount < 3) {
-          textContent.innerHTML = `
-            <div style="text-align: center; padding: 10px;">
-              <h3 style="color: #e67e22;">חסר לנו מידע... 🔍</h3>
-              <p>כדי שה-AI יבצע ניתוח מדויק, עליך לצבור נתונים של לפחות <b>3 ימים</b> בשבוע האחרון.</p>
-              <p>כרגע מצאתי רק ${activeDaysCount} ימים פעילים. המשך לעדכן את המשימות שלך וחזור לכאן בקרוב!</p>
-            </div>`;
+          if (isEn) {
+            textContent.innerHTML = `
+              <div style="text-align: center; padding: 10px;">
+                <h3 style="color: #e67e22;">Not enough data... 🔍</h3>
+                <p>For the AI to provide an accurate analysis, you need data from at least <b>3 days</b> in the past week.</p>
+                <p>I only found ${activeDaysCount} active days. Keep updating your tasks and come back soon!</p>
+              </div>`;
+          } else {
+            textContent.innerHTML = `
+              <div style="text-align: center; padding: 10px;">
+                <h3 style="color: #e67e22;">חסר לנו מידע... 🔍</h3>
+                <p>כדי שה-AI יבצע ניתוח מדויק, עליך לצבור נתונים של לפחות <b>3 ימים</b> בשבוע האחרון.</p>
+                <p>כרגע מצאתי רק ${activeDaysCount} ימים פעילים. המשך לעדכן את המשימות שלך וחזור לכאן בקרוב!</p>
+              </div>`;
+          }
           resultArea.style.display = "block";
           loader.style.display = "none";
           btn.disabled = false;
@@ -199,19 +229,28 @@
 
         const modelName = await getAvailableModel(apiKey);
         
-        const prompt = `אתה מאמן ביצועים. 
-          המטרה של המשתמש: "${data.goal}". 
-          להלן נתוני השבוע האחרון (משימות יומיות והרגלים):
-          ${JSON.stringify(data.dailyDetails)}
-
-          המשימה שלך:
-          1. נתח את הקשר בין המשימות שבוצעו בפועל לבין המטרה הגדולה.
-          2. תן "שיקוף" למשתמש על משהו שהוא כנראה לא יודע על עצמו מתוך הנתונים. חפש דפוסים נסתרים.
-          3. תן חיזוקים על הצלחות קטנות וציין מקומות ספציפיים לשיפור.
-          4. אל תשתמש ברשימות ממוספרות. כתוב פסקאות זורמות, חכמות ומעוררות השראה.
-          5. בסוף, צור משימה אחת פרקטית ומדויקת למחר שתקדם אותו למטרה.
-          
-          חשוב מאוד: את המשימה בלבד כתוב בסוף התשובה אחרי המילה "TASK:".`;
+        // הגדרת הפרומפט בהתאם לשפה
+        const prompt = isEn 
+          ? `You are a Performance Coach. 
+             User Goal: "${data.goal}". 
+             Past week data (Daily tasks and habits): ${JSON.stringify(data.dailyDetails)}
+             Your Mission:
+             1. Analyze the link between tasks performed and the main goal.
+             2. Provide a "Mirror" to the user about something they probably don't know about themselves based on the data. Look for hidden patterns.
+             3. Give reinforcement for small wins and point out specific areas for improvement.
+             4. Do not use numbered lists. Write flowing, smart, and inspiring paragraphs.
+             5. At the end, create one practical and precise task for tomorrow to move them toward the goal.
+             IMPORTANT: Write the task ONLY at the end of your response after the word "TASK:". Response language: English.`
+          : `אתה מאמן ביצועים. 
+             המטרה של המשתמש: "${data.goal}". 
+             להלן נתוני השבוע האחרון (משימות יומיות והרגלים): ${JSON.stringify(data.dailyDetails)}
+             המשימה שלך:
+             1. נתח את הקשר בין המשימות שבוצעו בפועל לבין המטרה הגדולה.
+             2. תן "שיקוף" למשתמש על משהו שהוא כנראה לא יודע על עצמו מתוך הנתונים. חפש דפוסים נסתרים.
+             3. תן חיזוקים על הצלחות קטנות וציין מקומות ספציפיים לשיפור.
+             4. אל תשתמש ברשימות ממוספרות. כתוב פסקאות זורמות, חכמות ומעוררות השראה.
+             5. בסוף, צור משימה אחת פרקטית ומדויקת למחר שתקדם אותו למטרה.
+             חשוב מאוד: את המשימה בלבד כתוב בסוף התשובה אחרי המילה "TASK:". שפת התשובה: עברית.`;
 
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${apiKey}`, {
           method: 'POST',
@@ -222,7 +261,7 @@
         const resData = await response.json();
         
         if (resData.error) {
-          throw new Error(`שגיאת API: ${resData.error.message}`);
+          throw new Error(`API Error: ${resData.error.message}`);
         }
 
         if (resData.candidates && resData.candidates[0].content) {
@@ -242,7 +281,7 @@
           resultArea.style.display = "block";
         }
       } catch (err) { 
-        alert("שגיאה בניתוח: " + err.message); 
+        alert((isEn ? "Analysis error: " : "שגיאה בניתוח: ") + err.message); 
       } finally { 
         loader.style.display = "none"; 
         btn.disabled = false; 
@@ -261,9 +300,9 @@
           done: false,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        alert("המשימה נוספה למחר!");
+        alert(isEn ? "Task added for tomorrow!" : "המשימה נוספה למחר!");
         document.getElementById("addTaskBtn").disabled = true;
-      } catch (e) { alert("שגיאה בשמירה"); }
+      } catch (e) { alert(isEn ? "Save error" : "שגיאה בשמירה"); }
     }
 
     document.getElementById("analyzeBtn").addEventListener("click", generateAnalytics);
