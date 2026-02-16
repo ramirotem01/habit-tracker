@@ -50,11 +50,11 @@ document.addEventListener("DOMContentLoaded", () => {
     todayDateEl.textContent = currentViewDate.toLocaleDateString(isEn ? "en-GB" : "he-IL");
     
     if (viewDocId === realTodayStr) {
-      tasksTitle.textContent = isEn ? "🗓 My Tasks" : "🗓 המשימות שלי להיום";
+      tasksTitle.textContent = isEn ? "🗓 My Daily Tasks" : "🗓 המשימות שלי להיום";
       if(prevDayBtn) prevDayBtn.style.visibility = "hidden";
       if(nextDayBtn) nextDayBtn.style.visibility = "visible";
     } else {
-      tasksTitle.textContent = isEn ? "🗓 Tomorrow's Tasks" : "🗓 המשימות שלי למחר";
+      tasksTitle.textContent = isEn ? "🗓 My Tasks for Tomorrow" : "🗓 המשימות שלי למחר";
       if(prevDayBtn) prevDayBtn.style.visibility = "visible";
       if(nextDayBtn) nextDayBtn.style.visibility = "hidden";
     }
@@ -70,7 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) { console.error("Load error:", err); }
   }
 
-  // חצים
   if(nextDayBtn) nextDayBtn.onclick = () => { currentViewDate.setDate(currentViewDate.getDate() + 1); loadAllData(); loadGratitude(); };
   if(prevDayBtn) prevDayBtn.onclick = () => { currentViewDate.setDate(currentViewDate.getDate() - 1); loadAllData(); loadGratitude(); };
 
@@ -114,6 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function render() {
     if (!habitListEl) return;
     habitListEl.innerHTML = "";
+    const viewDocId = getDocId(currentViewDate);
     const allTasks = [...baseHabits, ...tempHabits];
     let doneCount = 0;
 
@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cb.checked = isDone;
       cb.onchange = async () => {
         dailyStats[task.text] = cb.checked;
-        await db.collection("users").doc(userId).collection("stats").doc(getDocId(currentViewDate)).set(dailyStats);
+        await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
         render(); 
       };
 
@@ -146,10 +146,19 @@ document.addEventListener("DOMContentLoaded", () => {
       actionsSide.style = "display: flex; align-items: center; flex-shrink: 0;";
 
       if (task.isTemp) {
+        // כפתור עריכה ✏️
+        const editBtn = document.createElement("button");
+        editBtn.innerHTML = "✏️";
+        editBtn.style = "background:none; border:none; cursor:pointer; margin-inline-start:8px; padding: 5px; font-size: 16px;";
+        editBtn.onclick = (e) => { e.stopPropagation(); editTempHabit(task.id, task.text); };
+
+        // כפתור מחיקה 🗑️
         const delBtn = document.createElement("button");
         delBtn.innerHTML = "🗑️";
-        delBtn.style = "background:none; border:none; cursor:pointer; font-size: 16px; margin-inline-start: 8px;";
-        delBtn.onclick = () => deleteTempHabit(task.id, task.text);
+        delBtn.style = "background:none; border:none; cursor:pointer; font-size: 16px; margin-inline-start: 8px; padding: 5px;";
+        delBtn.onclick = (e) => { e.stopPropagation(); deleteTempHabit(task.id, task.text); };
+
+        actionsSide.appendChild(editBtn);
         actionsSide.appendChild(delBtn);
       }
 
@@ -164,6 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (taskProgressCircle) {
       const pct = allTasks.length > 0 ? Math.round((doneCount / allTasks.length) * 100) : 0;
       taskProgressCircle.textContent = pct + "%";
+      taskProgressCircle.className = (allTasks.length > 0 && doneCount === allTasks.length) ? "task-progress-circle task-circle-done" : "task-progress-circle task-circle-low";
     }
     renderChart();
   }
@@ -188,8 +198,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (myChart) myChart.destroy();
       myChart = new Chart(ctx, {
         type: 'bar',
-        data: { labels, datasets: [{ data: dataPoints, backgroundColor: '#3498db' }] },
-        options: { responsive: true, plugins: { legend: { display: false } } }
+        data: { labels, datasets: [{ label: isEn ? 'Tasks Completed' : 'משימות שבוצעו', data: dataPoints, backgroundColor: '#3498db', borderRadius: 5 }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
       });
     } catch (e) { console.error("Chart error:", e); }
   }
@@ -212,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const tomorrowDocId = getDocId(tomorrow);
       try {
         await db.collection("users").doc(userId).collection("daily").doc(tomorrowDocId).collection("tempHabits").add({ text });
-        alert(isEn ? `Added for tomorrow!` : `נוסף למחר!`);
+        alert(isEn ? `Task added for tomorrow!` : `המשימה נוספה למחר!`);
         tempHabitInput.value = "";
         if (getDocId(currentViewDate) === tomorrowDocId) loadAllData();
       } catch (err) { console.error(err); }
@@ -220,8 +230,27 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function deleteTempHabit(id, text) {
-    if (!confirm(isEn ? "Delete?" : "למחוק?")) return;
-    await db.collection("users").doc(userId).collection("daily").doc(getDocId(currentViewDate)).collection("tempHabits").doc(id).delete();
+    if (!confirm(isEn ? `Delete "${text}"?` : `למחוק את "${text}"?`)) return;
+    const viewDocId = getDocId(currentViewDate);
+    await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("tempHabits").doc(id).delete();
+    if (dailyStats[text] !== undefined) {
+      delete dailyStats[text];
+      await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
+    }
+    loadAllData();
+  }
+
+  async function editTempHabit(id, oldText) {
+    const newText = prompt(isEn ? "Edit task:" : "ערוך משימה:", oldText);
+    if (!newText || newText.trim() === "" || newText === oldText) return;
+    const cleanText = newText.trim();
+    const viewDocId = getDocId(currentViewDate);
+    await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("tempHabits").doc(id).update({ text: cleanText });
+    if (dailyStats[oldText] !== undefined) {
+      dailyStats[cleanText] = dailyStats[oldText];
+      delete dailyStats[oldText];
+      await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
+    }
     loadAllData();
   }
 
