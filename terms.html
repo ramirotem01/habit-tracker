@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he" dir="rtl" id="mainHtml">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>תנאי שימוש מחייבים - אפליקציית הרגלים</title>
+  <title id="pageTitle">תנאי שימוש מחייבים - אפליקציית הרגלים</title>
   <link rel="stylesheet" href="style.css">
   <style>
     .terms-container {
@@ -18,7 +18,7 @@
       text-align: justify;
     }
     h1 { color: #c0392b; text-align: center; border-bottom: 3px solid #f1f1f1; padding-bottom: 15px; font-size: 1.8em; }
-    h2 { color: #2c3e50; font-size: 1.1em; margin-top: 25px; border-right: 4px solid #c0392b; padding-right: 10px; }
+    h2 { color: #2c3e50; font-size: 1.1em; margin-top: 25px; border-inline-start: 4px solid #c0392b; padding-inline-start: 10px; }
     p, li { font-size: 0.9em; margin-bottom: 10px; }
     
     .back-link-container {
@@ -42,54 +42,119 @@
     .urgent-note {
       background-color: #fdf2f2;
       padding: 15px;
-      border-right: 5px solid #c0392b;
+      border-inline-start: 5px solid #c0392b;
       font-weight: bold;
       margin-bottom: 20px;
+    }
+
+    /* התאמת כיווניות לשפות LTR */
+    html[dir="ltr"] h2, html[dir="ltr"] .urgent-note {
+      border-right: none;
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <div class="terms-container">
-      <h1>תנאי שימוש ותקנון משפטי מחייב</h1>
-      
-      <div class="urgent-note">
-        השימוש במערכת מהווה הסכמה בלתי חוזרת לתנאים המוצגים להלן. אם אינך מסכים לאחד התנאים, עליך לחדול מהשימוש במערכת באופן מיידי.
+    <div class="terms-container" id="termsContent">
       </div>
-
-      <section>
-        <h2>1. היעדר אחריות מוחלט (Disclaimer)</h2>
-        <p>המערכת ניתנת לשימוש כפי שהיא ("As-Is"). הנהלת האתר, מפתחיה ושותפיה אינם נושאים ולא יישאו באחריות מכל סוג שהוא, ישירה או עקיפה, בגין כל נזק, אובדן נתונים, פגיעה בפרטיות, או הפסד כספי הנובע מהשימוש במערכת או מהסתמכות על תכניה (לרבות תכני AI).</p>
-      </section>
-
-      <section>
-        <h2>2. שימוש במידע למטרות שיווק ומסחר</h2>
-        <p>בעצם הרישום למערכת, המשתמש נותן את הסכמתו המלאה והמפורשת להנהלת האתר לעשות שימוש בפרטיו (לרבות כתובת דוא"ל) לצורכי דיוור ישיר, שיווק, מכירות ושיפור שירותים. הנהלת האתר רשאית להעביר פרטים אלו לצדדים שלישיים לצרכים מסחריים על פי שיקול דעתה הבלעדי.</p>
-      </section>
-
-      <section>
-        <h2>3. איסור שימוש מסחרי וטכנולוגי</h2>
-        <ul>
-          <li>השימוש במערכת מותר למטרות פרטיות ואישיות בלבד. חל איסור מוחלט על שימוש מסחרי כלשהו ללא אישור בכתב.</li>
-          <li>חל איסור מוחלט על הפעלת רובוטים (Bots), סורקים (Crawlers), או כל אמצעי אוטומטי לניטור, ניתוח, העתקה או כריית נתונים מהמערכת.</li>
-          <li>אין לבצע פעולות של הנדסה לאחור (Reverse Engineering) או ניסיונות לפרוץ את הגנות המערכת.</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>4. הגנה משפטית ותביעות</h2>
-        <p>כל הפרה של תנאי השימוש לעיל תחשוף את המשתמש לתביעות משפטיות, לרבות תביעות נזיקין ופיצויים ללא הוכחת נזק, ככל שהחוק מאפשר זאת. הנהלת האתר שומרת לעצמה את הזכות לחסום משתמשים ולמסור את פרטיהם לרשויות החוק במקרה של חשד לשימוש לרעה.</p>
-      </section>
-
-      <section>
-        <h2>5. סמכות שיפוט</h2>
-        <p>על תקנון זה יחולו אך ורק חוקי מדינת ישראל. סמכות השיפוט הבלעדית בכל עניין הנובע מהסכם זה תהיה לבתי המשפט המוסמכים במחוז תל אביב-יפו.</p>
-      </section>
-
-      <div class="back-link-container">
-        <a href="index.html" class="login-link">חזרה למסך הכניסה</a>
-      </div>
-    </div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const isEn = !navigator.language.startsWith('he');
+      const htmlEl = document.getElementById("mainHtml");
+      const contentDiv = document.getElementById("termsContent");
+
+      if (isEn) {
+        // הגדרות אנגלית
+        htmlEl.dir = "ltr";
+        htmlEl.lang = "en";
+        document.title = "Terms of Use - Habit App";
+
+        contentDiv.innerHTML = `
+          <h1>Terms of Use & Legal Agreement</h1>
+          
+          <div class="urgent-note">
+            Using this system constitutes irrevocable consent to the terms below. If you do not agree to any term, you must cease using the system immediately.
+          </div>
+
+          <section>
+            <h2>1. Absolute Disclaimer</h2>
+            <p>The system is provided "As-Is". The site management, developers, and partners bear no liability of any kind, direct or indirect, for any damage, data loss, privacy breach, or financial loss resulting from the use of the system or reliance on its content (including AI content).</p>
+          </section>
+
+          <section>
+            <h2>2. Use of Information for Marketing</h2>
+            <p>By registering, the user gives full and express consent for the site management to use their details (including email) for direct mailing, marketing, sales, and service improvement. The management may transfer these details to third parties for commercial purposes at its sole discretion.</p>
+          </section>
+
+          <section>
+            <h2>3. Commercial and Technological Prohibitions</h2>
+            <ul>
+              <li>System use is permitted for private and personal purposes only. Commercial use is strictly prohibited without written perimission.</li>
+              <li>Use of Bots, Crawlers, or any automated means to monitor, copy, or mine data from the system is strictly prohibited.</li>
+              <li>Reverse engineering or attempts to breach system security are strictly prohibited.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>4. Legal Protection and Claims</h2>
+            <p>Any violation of the above terms will expose the user to legal claims, including tort claims and statutory damages as permitted by law. The management reserves the right to block users and provide their details to law enforcement in case of suspected abuse.</p>
+          </section>
+
+          <section>
+            <h2>5. Jurisdiction</h2>
+            <p>This agreement shall be governed solely by the laws of the State of Israel. Exclusive jurisdiction for any matter arising from this agreement shall lie with the competent courts in the Tel Aviv-Yafo district.</p>
+          </section>
+
+          <div class="back-link-container">
+            <a href="index.html" class="login-link">Back to Login</a>
+          </div>
+        `;
+      } else {
+        // תוכן עברית (מה ששלחת)
+        contentDiv.innerHTML = `
+          <h1>תנאי שימוש ותקנון משפטי מחייב</h1>
+          
+          <div class="urgent-note">
+            השימוש במערכת מהווה הסכמה בלתי חוזרת לתנאים המוצגים להלן. אם אינך מסכים לאחד התנאים, עליך לחדול מהשימוש במערכת באופן מיידי.
+          </div>
+
+          <section>
+            <h2>1. היעדר אחריות מוחלט (Disclaimer)</h2>
+            <p>המערכת ניתנת לשימוש כפי שהיא ("As-Is"). הנהלת האתר, מפתחיה ושותפיה אינם נושאים ולא יישאו באחריות מכל סוג שהוא, ישירה או עקיפה, בגין כל נזק, אובדן נתונים, פגיעה בפרטיות, או הפסד כספי הנובע מהשימוש במערכת או מהסתמכות על תכניה (לרבות תכני AI).</p>
+          </section>
+
+          <section>
+            <h2>2. שימוש במידע למטרות שיווק ומסחר</h2>
+            <p>בעצם הרישום למערכת, המשתמש נותן את הסכמתו המלאה והמפורשת להנהלת האתר לעשות שימוש בפרטיו (לרבות כתובת דוא"ל) לצורכי דיוור ישיר, שיווק, מכירות ושיפור שירותים. הנהלת האתר רשאית להעביר פרטים אלו לצדדים שלישיים לצרכים מסחריים על פי שיקול דעתה הבלעדי.</p>
+          </section>
+
+          <section>
+            <h2>3. איסור שימוש מסחרי וטכנולוגי</h2>
+            <ul>
+              <li>השימוש במערכת מותר למטרות פרטיות ואישיות בלבד. חל איסור מוחלט על שימוש מסחרי כלשהו ללא אישור בכתב.</li>
+              <li>חל איסור מוחלט על הפעלת רובוטים (Bots), סורקים (Crawlers), או כל אמצעי אוטומטי לניטור, ניתוח, העתקה או כריית נתונים מהמערכת.</li>
+              <li>אין לבצע פעולות של הנדסה לאחור (Reverse Engineering) או ניסיונות לפרוץ את הגנות המערכת.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>4. הגנה משפטית ותביעות</h2>
+            <p>כל הפרה של תנאי השימוש לעיל תחשוף את המשתמש לתביעות משפטיות, לרבות תביעות נזיקין ופיצויים ללא הוכחת נזק, ככל שהחוק מאפשר זאת. הנהלת האתר שומרת לעצמה את הזכות לחסום משתמשים ולמסור את פרטיו לרשויות החוק במקרה של חשד לשימוש לרעה.</p>
+          </section>
+
+          <section>
+            <h2>5. סמכות שיפוט</h2>
+            <p>על תקנון זה יחולו אך ורק חוקי מדינת ישראל. סמכות השיפוט הבלעדית בכל עניין הנובע מהסכם זה תהיה לבתי המשפט המוסמכים במחוז תל אביב-יפו.</p>
+          </section>
+
+          <div class="back-link-container">
+            <a href="index.html" class="login-link">חזרה למסך הכניסה</a>
+          </div>
+        `;
+      }
+    });
+  </script>
 </body>
 </html>
