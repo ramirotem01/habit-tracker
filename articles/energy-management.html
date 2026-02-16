@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ניהול זמן מול ניהול אנרגיה - Habit Tracker</title>
+  <title id="page-title">ניהול זמן מול ניהול אנרגיה - Habit Tracker</title>
   <link rel="stylesheet" href="../style.css">
   <style>
     :root {
@@ -29,6 +29,7 @@
       background: var(--bg-light);
       box-shadow: 0 0 20px rgba(0,0,0,0.05);
       min-height: 100vh;
+      text-align: inherit; /* יורש מה-body/html */
     }
 
     .back-to-blog {
@@ -76,7 +77,8 @@
 
     .highlight-box {
       background-color: #fcfcfc;
-      border-right: 5px solid #e67e22; /* צבע כתום לאנרגיה */
+      /* שימוש ב-border-inline-start כדי שהקו יהיה בצד הנכון לפי השפה */
+      border-inline-start: 5px solid #e67e22; 
       padding: 20px;
       margin: 30px 0;
       font-style: italic;
@@ -110,49 +112,105 @@
 <body>
 
   <div class="article-page-container">
-    <a href="../blog.html" class="back-to-blog">← חזרה לבלוג</a>
+    <a href="../blog.html" class="back-to-blog" id="back-link"></a>
 
-    <article>
+    <article id="article-content">
       <header class="article-header">
         <div class="meta-info">
-          <span>📅 1 בפברואר 2026</span>
-          <span>⏱️ 5 דקות קריאה</span>
+          <span id="meta-date"></span>
+          <span id="meta-read-time"></span>
         </div>
-        <h1>ניהול זמן מול ניהול אנרגיה: הסוד לפרודוקטיביות שיא</h1>
+        <h1 id="main-h1"></h1>
       </header>
 
-      <div class="article-body">
-        <p>כולנו מקבלים את אותן 24 שעות ביממה. אז איך זה שיש אנשים שמספיקים פי שלושה מאחרים? התשובה היא שהם לא מנהלים את הדקות שלהם – הם מנהלים את האנרגיה שלהם.</p>
-
-        <div class="highlight-box">
-          "זמן הוא משאב מוגבל, אבל אנרגיה היא משאב מתחדש."
+      <div class="article-body" id="article-body-content">
         </div>
 
-        <h2>למה ניהול זמן נכשל?</h2>
-        <p>אנחנו יכולים לשבץ ביומן משימה מורכבת לשעה 16:00, אבל אם בשעה הזו רמת הריכוז שלנו בשפל, אנחנו נמרח את המשימה על פני שעות במקום לסיים אותה ב-20 דקות. ניהול זמן ללא ניהול אנרגיה מוביל לשחיקה.</p>
-
-        <h2>איך לזהות את "שעות הזהב" שלך?</h2>
-        <p>לכל אחד מאיתנו יש מקצב ביולוגי שונה. חלקנו "אנשי בוקר" וחלקנו "ציפורי לילה". כדי למקסם את הביצועים בעזרת Habit Tracker, כדאי להגדיר את ההרגלים הקשים ביותר לשעות שבהן האנרגיה שלכם בשיא.</p>
-
-        <h2>4 עמודי התווך של האנרגיה:</h2>
-        <ul>
-          <li><strong>אנרגיה פיזית:</strong> שינה, תזונה ופעילות גופנית. בלי הבסיס הזה, המוח פשוט לא יתפקד.</li>
-          <li><strong>אנרגיה רגשית:</strong> היכולת לשמור על חיוביות גם בלחץ. הרגלים של הכרת תודה יכולים לעזור כאן.</li>
-          <li><strong>אנרגיה מנטלית:</strong> היכולת להתמקד במשימה אחת (Deep Work) בלי הסחות דעת.</li>
-          <li><strong>אנרגיה רוחנית:</strong> תחושת המשמעות. כשאתם יודעים *למה* אתם עושים משהו, האנרגיה מגיעה מעצמה.</li>
-        </ul>
-
-        <h2>איך ליישם את זה באפליקציה?</h2>
-        <p>אל תעמיסו 10 הרגלים חדשים בבת אחת. זה שואב אנרגיה מנטלית. התחילו בהרגל אחד שנותן לכם אנרגיה (כמו שתיית מים או הליכה קצרה) והשתמשו ב-Habit Tracker כדי לוודא שאתם לא מפספסים.</p>
-      </div>
-
       <div class="footer-cta">
-        <h3>התחילו לנהל את האנרגיה שלכם</h3>
-        <p>הגדירו עכשיו את הרגל הבוקר שלכם ב-Habit Tracker.</p>
-        <a href="../index.html" class="btn-main">כניסה למערכת</a>
+        <h3 id="footer-h3"></h3>
+        <p id="footer-p"></p>
+        <a href="../index.html" class="btn-main" id="footer-btn"></a>
       </div>
     </article>
   </div>
+
+  <script>
+    const translations = {
+      he: {
+        title: "ניהול זמן מול ניהול אנרגיה - Habit Tracker",
+        back: "← חזרה לבלוג",
+        date: "📅 1 בפברואר 2026",
+        readTime: "⏱️ 5 דקות קריאה",
+        h1: "ניהול זמן מול ניהול אנרגיה: הסוד לפרודוקטיביות שיא",
+        body: `
+          <p>כולנו מקבלים את אותן 24 שעות ביממה. אז איך זה שיש אנשים שמספיקים פי שלושה מאחרים? התשובה היא שהם לא מנהלים את הדקות שלהם – הם מנהלים את האנרגיה שלהם.</p>
+          <div class="highlight-box">"זמן הוא משאב מוגבל, אבל אנרגיה היא משאב מתחדש."</div>
+          <h2>למה ניהול זמן נכשל?</h2>
+          <p>אנחנו יכולים לשבץ ביומן משימה מורכבת לשעה 16:00, אבל אם בשעה הזו רמת הריכוז שלנו בשפל, אנחנו נמרח את המשימה על פני שעות במקום לסיים אותה ב-20 דקות. ניהול זמן ללא ניהול אנרגיה מוביל לשחיקה.</p>
+          <h2>איך לזהות את "שעות הזהב" שלך?</h2>
+          <p>לכל אחד מאיתנו יש מקצב ביולוגי שונה. חלקנו "אנשי בוקר" וחלקנו "ציפורי לילה". כדי למקסם את הביצועים בעזרת Habit Tracker, כדאי להגדיר את ההרגלים הקשים ביותר לשעות שבהן האנרגיה שלכם בשיא.</p>
+          <h2>4 עמודי התווך של האנרגיה:</h2>
+          <ul>
+            <li><strong>אנרגיה פיזית:</strong> שינה, תזונה ופעילות גופנית. בלי הבסיס הזה, המוח פשוט לא יתפקד.</li>
+            <li><strong>אנרגיה רגשית:</strong> היכולת לשמור על חיוביות גם בלחץ. הרגלים של הכרת תודה יכולים לעזור כאן.</li>
+            <li><strong>אנרגיה מנטלית:</strong> היכולת להתמקד במשימה אחת (Deep Work) בלי הסחות דעת.</li>
+            <li><strong>אנרגיה רוחנית:</strong> תחושת המשמעות. כשאתם יודעים *למה* אתם עושים משהו, האנרגיה מגיעה מעצמה.</li>
+          </ul>
+          <h2>איך ליישם את זה באפליקציה?</h2>
+          <p>אל תעמיסו 10 הרגלים חדשים בבת אחת. זה שואב אנרגיה מנטלית. התחילו בהרגל אחד שנותן לכם אנרגיה (כמו שתיית מים או הליכה קצרה) והשתמשו ב-Habit Tracker כדי לוודא שאתם לא מפספסים.</p>
+        `,
+        footerH3: "התחילו לנהל את האנרגיה שלכם",
+        footerP: "הגדירו עכשיו את הרגל הבוקר שלכם ב-Habit Tracker.",
+        footerBtn: "כניסה למערכת"
+      },
+      en: {
+        title: "Time Management vs. Energy Management - Habit Tracker",
+        back: "Back to Blog →",
+        date: "📅 February 1, 2026",
+        readTime: "⏱️ 5 min read",
+        h1: "Time Management vs. Energy Management: The Secret to Peak Productivity",
+        body: `
+          <p>We all get the same 24 hours a day. So why do some people accomplish three times more than others? The answer is that they don't manage their minutes – they manage their energy.</p>
+          <div class="highlight-box">"Time is a limited resource, but energy is a renewable one."</div>
+          <h2>Why Time Management Fails?</h2>
+          <p>We can schedule a complex task for 4:00 PM, but if our concentration levels are at an all-time low then, we’ll drag the task for hours instead of finishing it in 20 minutes. Time management without energy management leads to burnout.</p>
+          <h2>How to Identify Your "Golden Hours"?</h2>
+          <p>Each of us has a different biological rhythm. Some are "morning people" and others are "night owls." To maximize performance with Habit Tracker, set your hardest habits for the hours when your energy is at its peak.</p>
+          <h2>The 4 Pillars of Energy:</h2>
+          <ul>
+            <li><strong>Physical Energy:</strong> Sleep, nutrition, and exercise. Without this foundation, the brain simply won't function.</li>
+            <li><strong>Emotional Energy:</strong> The ability to stay positive even under pressure. Gratitude habits can help here.</li>
+            <li><strong>Mental Energy:</strong> The ability to focus on a single task (Deep Work) without distractions.</li>
+            <li><strong>Spiritual Energy:</strong> A sense of meaning. When you know *why* you are doing something, the energy comes naturally.</li>
+          </ul>
+          <h2>How to Apply This in the App?</h2>
+          <p>Don't overload 10 new habits at once. It drains mental energy. Start with one habit that gives you energy (like drinking water or a short walk) and use Habit Tracker to ensure you don't miss it.</p>
+        `,
+        footerH3: "Start Managing Your Energy",
+        footerP: "Set your morning habit in the Habit Tracker now.",
+        footerBtn: "Login to System"
+      }
+    };
+
+    // זיהוי שפה
+    const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+    const t = translations[userLang];
+
+    // החלת כיווניות
+    document.documentElement.lang = userLang;
+    document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+
+    // הזרקת תוכן
+    document.getElementById('page-title').innerText = t.title;
+    document.getElementById('back-link').innerText = t.back;
+    document.getElementById('meta-date').innerText = t.date;
+    document.getElementById('meta-read-time').innerText = t.readTime;
+    document.getElementById('main-h1').innerText = t.h1;
+    document.getElementById('article-body-content').innerHTML = t.body;
+    document.getElementById('footer-h3').innerText = t.footerH3;
+    document.getElementById('footer-p').innerText = t.footerP;
+    document.getElementById('footer-btn').innerText = t.footerBtn;
+  </script>
 
 </body>
 </html>
