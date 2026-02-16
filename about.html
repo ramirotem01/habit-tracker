@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>מידע על Habit Tracker - לצמוח בפשטות</title>
+  <title id="page-title">מידע על Habit Tracker - לצמוח בפשטות</title>
   <link rel="stylesheet" href="style.css">
   <style>
     :root {
@@ -19,6 +19,7 @@
       margin: 0;
       padding: 0;
       color: var(--secondary-color);
+      text-align: inherit;
     }
 
     .info-container {
@@ -38,8 +39,9 @@
       transition: transform 0.2s;
     }
 
+    /* אפקט תנועה שמתאים לכיוון השפה */
     .back-btn:hover {
-      transform: translateX(5px);
+      transform: translateX(var(--hover-translate));
     }
 
     .hero-section {
@@ -71,7 +73,8 @@
       background: var(--white);
       padding: 20px;
       border-radius: 12px;
-      border-right: 5px solid var(--primary-color);
+      /* שימוש ב-inline-start כדי שהפס הצבעוני יהיה תמיד בתחילת השורה */
+      border-inline-start: 5px solid var(--primary-color);
       box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
 
@@ -128,46 +131,91 @@
 <body>
 
   <div class="info-container">
-    <a href="index.html" class="back-btn">→ חזרה להתחברות</a>
+    <a href="index.html" class="back-btn" id="back-link"></a>
 
     <section class="hero-section">
-      <span class="free-badge">100% חינמית</span>
+      <span class="free-badge" id="free-badge"></span>
       <h1>Habit Tracker</h1>
-      <p>הופכים פעולות קטנות להצלחות גדולות.</p>
+      <p id="hero-subtitle"></p>
     </section>
 
-    <div class="features-grid">
-      <div class="feature-card">
-        <h3>🎯 פשטות היא שם המשחק</h3>
-        <p>בלי טפסים מורכבים ובלי הגדרות מעיקות. פשוט מגדירים הרגל, ומסמנים V. הממשק נקי כדי שתוכלו להתרכז במה שחשוב – הביצוע שלכם.</p>
+    <div class="features-grid" id="features-container">
       </div>
-
-      <div class="feature-card">
-        <h3>📈 מעקב צמיחה אישי</h3>
-        <p>צפו בהתקדמות שלכם בזמן אמת. האפליקציה עוזרת לכם לראות את הרצף (Streak) שלכם, מה שמעלה את המוטיבציה להמשיך ולא להפסיק.</p>
-      </div>
-
-      <div class="feature-card">
-        <h3>⚡ ניהול משימות חכם</h3>
-        <p>לא רק הרגלים – גם משימות יומיות. רכזו את כל מה שחשוב לכם במקום אחד, נגיש ומהיר, מכל מכשיר.</p>
-      </div>
-
-      <div class="feature-card">
-        <h3>🌱 שינוי מתוך התמדה</h3>
-        <p>מחקרים מראים ששינוי אמיתי מגיע מהתמדה בפעולות קטנות. Habit Tracker נבנתה בדיוק בשביל הצעדים הקטנים האלו שמרכיבים חיים טובים יותר.</p>
-      </div>
-    </div>
 
     <section class="cta-section">
-      <h2>מוכנים להתחיל את השינוי?</h2>
-      <p>הצטרפו למשתמשים שכבר מנהלים את היום שלהם נכון יותר.</p>
-      <a href="register.html" class="cta-btn">צרו חשבון בחינם עכשיו</a>
+      <h2 id="cta-title"></h2>
+      <p id="cta-subtitle"></p>
+      <a href="register.html" class="cta-btn" id="cta-btn"></a>
     </section>
 
-    <p style="text-align: center; font-size: 0.8em; color: #bdc3c7; margin-top: 30px;">
-      Habit Tracker &copy; 2026 | כל הזכויות שמורות
+    <p style="text-align: center; font-size: 0.8em; color: #bdc3c7; margin-top: 30px;" id="copyright">
     </p>
   </div>
 
+  <script>
+    const translations = {
+      he: {
+        pageTitle: "מידע על Habit Tracker - לצמוח בפשטות",
+        back: "→ חזרה להתחברות",
+        freeBadge: "100% חינמית",
+        heroSubtitle: "הופכים פעולות קטנות להצלחות גדולות.",
+        ctaTitle: "מוכנים להתחיל את השינוי?",
+        ctaSubtitle: "הצטרפו למשתמשים שכבר מנהלים את היום שלהם נכון יותר.",
+        ctaBtn: "צרו חשבון בחינם עכשיו",
+        copyright: "Habit Tracker &copy; 2026 | כל הזכויות שמורות",
+        hoverTranslate: "5px",
+        features: [
+          { title: "🎯 פשטות היא שם המשחק", desc: "בלי טפסים מורכבים ובלי הגדרות מעיקות. פשוט מגדירים הרגל, ומסמנים V. הממשק נקי כדי שתוכלו להתרכז במה שחשוב – הביצוע שלכם." },
+          { title: "📈 מעקב צמיחה אישי", desc: "צפו בהתקדמות שלכם בזמן אמת. האפליקציה עוזרת לכם לראות את הרצף (Streak) שלכם, מה שמעלה את המוטיבציה להמשיך ולא להפסיק." },
+          { title: "⚡ ניהול משימות חכם", desc: "לא רק הרגלים – גם משימות יומיות. רכזו את כל מה שחשוב לכם במקום אחד, נגיש ומהיר, מכל מכשיר." },
+          { title: "🌱 שינוי מתוך התמדה", desc: "מחקרים מראים ששינוי אמיתי מגיע מהתמדה בפעולות קטנות. Habit Tracker נבנתה בדיוק בשביל הצעדים הקטנים האלו שמרכיבים חיים טובים יותר." }
+        ]
+      },
+      en: {
+        pageTitle: "About Habit Tracker - Simple Growth",
+        back: "Back to Login ←",
+        freeBadge: "100% Free",
+        heroSubtitle: "Turning small actions into big successes.",
+        ctaTitle: "Ready to start the change?",
+        ctaSubtitle: "Join users who are already managing their day better.",
+        ctaBtn: "Create a Free Account Now",
+        copyright: "Habit Tracker &copy; 2026 | All Rights Reserved",
+        hoverTranslate: "-5px",
+        features: [
+          { title: "🎯 Simplicity is Key", desc: "No complex forms or annoying settings. Just set a habit and check it off. The interface is clean so you can focus on what matters – your performance." },
+          { title: "📈 Personal Growth Tracking", desc: "Watch your progress in real-time. The app helps you see your streaks, boosting your motivation to keep going." },
+          { title: "⚡ Smart Task Management", desc: "Not just habits – daily tasks too. Keep everything important in one accessible and fast place, from any device." },
+          { title: "🌱 Change Through Consistency", desc: "Studies show true change comes from persisting in small actions. Habit Tracker was built exactly for those small steps that build a better life." }
+        ]
+      }
+    };
+
+    const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+    const t = translations[userLang];
+
+    // החלת כיווניות ושפה
+    document.documentElement.lang = userLang;
+    document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+    document.documentElement.style.setProperty('--hover-translate', t.hoverTranslate);
+
+    // הזרקת טקסטים
+    document.getElementById('page-title').innerText = t.pageTitle;
+    document.getElementById('back-link').innerText = t.back;
+    document.getElementById('free-badge').innerText = t.freeBadge;
+    document.getElementById('hero-subtitle').innerText = t.heroSubtitle;
+    document.getElementById('cta-title').innerText = t.ctaTitle;
+    document.getElementById('cta-subtitle').innerText = t.ctaSubtitle;
+    document.getElementById('cta-btn').innerText = t.ctaBtn;
+    document.getElementById('copyright').innerHTML = t.copyright;
+
+    // הזרקת כרטיסיות פיצ'רים
+    const container = document.getElementById('features-container');
+    t.features.forEach(f => {
+      const card = document.createElement('div');
+      card.className = 'feature-card';
+      card.innerHTML = `<h3>${f.title}</h3><p>${f.desc}</p>`;
+      container.appendChild(card);
+    });
+  </script>
 </body>
 </html>
