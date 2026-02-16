@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Quest - האתגר היומי</title>
+    <title>Daily Quest</title>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -25,8 +25,9 @@
             overflow-x: hidden;
         }
 
+        /* תמיכה ביישור טקסט גמיש לפי כיוון השפה */
         .game-container {
-            text-align: center;
+            text-align: inherit;
             width: 100%;
             max-width: 500px;
             padding: 20px;
@@ -40,6 +41,7 @@
             line-height: 1;
             text-shadow: 4px 4px 0px #fff;
             letter-spacing: -2px;
+            text-align: center;
         }
 
         .subtitle {
@@ -49,6 +51,7 @@
             margin-top: 10px;
             margin-bottom: 35px;
             display: block;
+            text-align: center;
         }
 
         .quest-card {
@@ -62,6 +65,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            text-align: center;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
             cursor: pointer;
         }
@@ -74,7 +78,8 @@
         .quest-tag {
             position: absolute;
             top: -15px;
-            right: 25px;
+            /* שימוש ב-inset-inline-end במקום right לתאימות RTL/LTR */
+            inset-inline-end: 25px;
             background: var(--accent);
             color: white;
             padding: 6px 18px;
@@ -93,7 +98,7 @@
         }
 
         .draw-btn {
-            margin-top: 35px;
+            margin: 35px auto 0 auto;
             background: var(--primary);
             color: white;
             border: none;
@@ -105,6 +110,7 @@
             box-shadow: 0 10px 20px rgba(0, 122, 255, 0.3);
             transition: all 0.3s ease;
             width: 90%;
+            display: block;
         }
 
         .draw-btn:hover {
@@ -113,7 +119,6 @@
             box-shadow: 0 15px 25px rgba(0, 122, 255, 0.4);
         }
 
-        /* עיצוב לאזור הפרסומת */
         .ad-container {
             margin: 40px auto;
             max-width: 100%;
@@ -129,11 +134,6 @@
             height: auto;
             display: block;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: opacity 0.3s;
-        }
-
-        .ad-container img:hover {
-            opacity: 0.9;
         }
 
         .cta-box {
@@ -142,6 +142,7 @@
             background: rgba(255, 255, 255, 0.5);
             border-radius: 24px;
             border: 1px solid rgba(0, 122, 255, 0.1);
+            text-align: center;
         }
 
         .cta-box p { margin: 0; color: #64748b; font-size: 1rem; }
@@ -189,28 +190,126 @@
 <body>
 
     <div class="game-container">
-        <h1 class="level-up-title">LEVEL UP!</h1>
-        <span class="subtitle">המשימה היומית שתקדם אותך להצלחה</span>
+        <h1 class="level-up-title" id="ui-title">LEVEL UP!</h1>
+        <span class="subtitle" id="ui-subtitle"></span>
 
         <div class="quest-card" id="card" onclick="startQuest()">
             <div class="quest-tag">DAILY QUEST</div>
-            <div id="challenge-text">מוכן לאתגר של היום?</div>
+            <div id="challenge-text"></div>
         </div>
 
-        <button class="draw-btn" onclick="startQuest()" id="drawBtn">הגרל משימה עכשיו</button>
+        <button class="draw-btn" onclick="startQuest()" id="drawBtn"></button>
 
-        <div class="ad-container" id="ad-slot">
-            </div>
+        <div class="ad-container" id="ad-slot"></div>
 
         <div class="cta-box">
-            <p>רוצה לעקוב אחרי ההתקדמות שלך?</p>
-            <strong>נהל את המשימות וההרגלים שלך באפליקציה</strong>
-            <a href="https://pcs365.co.il/index.html" class="cta-link">לחץ כאן למעבר לאפליקציה</a>
+            <p id="ui-cta-p"></p>
+            <strong id="ui-cta-strong"></strong>
+            <a href="https://pcs365.co.il/index.html" class="cta-link" id="ui-cta-link"></a>
         </div>
     </div>
 
     <script>
-        // --- ניהול פרסומות למתכנת ---
+        // --- מערכת תרגום ---
+        const translations = {
+            he: {
+                subtitle: "המשימה היומית שתקדם אותך להצלחה",
+                ready: "מוכן לאתגר של היום?",
+                drawBtn: "הגרל משימה עכשיו",
+                drawing: "מגריל משימה...",
+                drawAgain: "הגרל משימה חדשה",
+                ctaP: "רוצה לעקוב אחרי ההתקדמות שלך?",
+                ctaStrong: "נהל את המשימות וההרגלים שלך באפליקציה",
+                ctaLink: "לחץ כאן למעבר לאפליקציה",
+                quests: [
+                    "קרא/י 10 דפים בספר התפתחות אישית",
+                    "בצע/י אימון ספורט של 30 דקות",
+                    "כתוב/י 3 דברים שאת/ה מודה עליהם היום",
+                    "הקדש/י 10 דקות למדיטציה או נשימות",
+                    "צפה/י בהרצאת TED מעוררת השראה",
+                    "סדר/י את סביבת העבודה שלך למיקוד",
+                    "שתה/י 2 ליטר מים במהלך היום",
+                    "תכנן/י את 3 המשימות הכי חשובות למחר",
+                    "התנתק/י מהרשתות החברתיות לשעתיים",
+                    "צא/י להליכה של 20 דקות בלי מוזיקה ובלי טלפון",
+                    "פרגן/י לעצמך בקול על משהו שעשית טוב השבוע",
+                    "שתה/י כוס מים לפני הקפה הראשון",
+                    "סדר/י מגירה אחת בלבד – עד הסוף",
+                    "נשום/י עמוק 5 פעמים לפני תגובה אימפולסיבית",
+                    "כבה/י התראות לא נחוצות בטלפון",
+                    "אמור/י ״לא״ למשהו שלא מתאים לך",
+                    "קום/י 10 דקות מוקדם יותר מחר",
+                    "הקשב/י לשיר אחד עד הסוף, בלי הסחות",
+                    "ציין/י הצלחה קטנה שהייתה לך היום",
+                    "נסה/י דבר חדש קטן שלא ניסית בעבר",
+                    "הזכר/י לעצמך שאת/ה בתהליך – לא במרוץ",
+                    "סלח/י לעצמך על טעות קטנה",
+                    "עשה/י הפסקה אמיתית של 10 דקות בלי מסך",
+                    "הקשב/י באמת למישהו בלי להפריע",
+                    "סיים/י משימה אחת שדחית",
+                    "עשה/י מתיחה קלה לגוף",
+                    "נשום/י רגע לפני השינה",
+                    "פרגן/י לאדם קרוב במילה טובה"
+                ]
+            },
+            en: {
+                subtitle: "The daily quest to boost your success",
+                ready: "Ready for today's challenge?",
+                drawBtn: "Draw a Mission Now",
+                drawing: "Drawing mission...",
+                drawAgain: "Draw a New Mission",
+                ctaP: "Want to track your progress?",
+                ctaStrong: "Manage your tasks and habits in the app",
+                ctaLink: "Click here to go to the app",
+                quests: [
+                    "Read 10 pages of a self-development book",
+                    "Complete a 30-minute workout",
+                    "Write down 3 things you are grateful for today",
+                    "Dedicate 10 minutes to meditation or breathing",
+                    "Watch an inspiring TED talk",
+                    "Organize your workspace for better focus",
+                    "Drink 2 liters of water today",
+                    "Plan your top 3 most important tasks for tomorrow",
+                    "Unplug from social media for two hours",
+                    "Take a 20-minute walk without music or phone",
+                    "Give yourself a verbal shout-out for something you did well",
+                    "Drink a glass of water before your first coffee",
+                    "Organize just one drawer – completely",
+                    "Take 5 deep breaths before an impulsive reaction",
+                    "Turn off unnecessary phone notifications",
+                    "Say 'No' to something that doesn't serve you",
+                    "Wake up 10 minutes earlier tomorrow",
+                    "Listen to one full song without distractions",
+                    "Celebrate a small victory you had today",
+                    "Try one small new thing you've never tried before",
+                    "Remind yourself you're in a process – not a race",
+                    "Forgive yourself for a small mistake",
+                    "Take a real 10-minute break without screens",
+                    "Truly listen to someone without interrupting",
+                    "Finish one task you've been putting off",
+                    "Do some light body stretching",
+                    "Take a deep breath before going to sleep",
+                    "Give a compliment to someone close to you"
+                ]
+            }
+        };
+
+        // זיהוי שפה והחלת הגדרות כיוון
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+
+        // החלת טקסטים ראשונית
+        document.getElementById('ui-subtitle').innerText = t.subtitle;
+        document.getElementById('challenge-text').innerText = t.ready;
+        document.getElementById('drawBtn').innerText = t.drawBtn;
+        document.getElementById('ui-cta-p').innerText = t.ctaP;
+        document.getElementById('ui-cta-strong').innerText = t.ctaStrong;
+        document.getElementById('ui-cta-link').innerText = t.ctaLink;
+
+        // --- ניהול פרסומות ---
         const adConfig = {
             link: "https://s.click.aliexpress.com/e/_c3qgJNNV?bz=725*90",
             imgSrc: "https://ae-pic-a1.aliexpress-media.com/kf/S95f1050ce39f4a63950ff77cce6f47a4q.png",
@@ -224,38 +323,6 @@
                                 </a>`;
         }
         injectAd();
-        // ---------------------------
-
-        const quests = [
-            "קרא/י 10 דפים בספר התפתחות אישית",
-            "בצע/י אימון ספורט של 30 דקות",
-            "כתוב/י 3 דברים שאת/ה מודה עליהם היום",
-            "הקדש/י 10 דקות למדיטציה או נשימות",
-            "צפה/י בהרצאת TED מעוררת השראה",
-            "סדר/י את סביבת העבודה שלך למיקוד",
-            "שתה/י 2 ליטר מים במהלך היום",
-            "תכנן/י את 3 המשימות הכי חשובות למחר",
-            "התנתק/י מהרשתות החברתיות לשעתיים",
-            "צא/י להליכה של 20 דקות בלי מוזיקה ובלי טלפון",
-            "פרגן/י לעצמך בקול על משהו שעשית טוב השבוע",
-            "שתה/י כוס מים לפני הקפה הראשון",
-            "סדר/י מגירה אחת בלבד – עד הסוף",
-            "נשום/י עמוק 5 פעמים לפני תגובה אימפולסיבית",
-            "כבה/י התראות לא נחוצות בטלפון",
-            "אמור/י ״לא״ למשהו שלא מתאים לך",
-            "קום/י 10 דקות מוקדם יותר מחר",
-            "הקשב/י לשיר אחד עד הסוף, בלי הסחות",
-            "ציין/י הצלחה קטנה שהייתה לך היום",
-            "נסה/י דבר חדש קטן שלא ניסית בעבר",
-            "הזכר/י לעצמך שאת/ה בתהליך – לא במרוץ",
-            "סלח/י לעצמך על טעות קטנה",
-            "עשה/י הפסקה אמיתית של 10 דקות בלי מסך",
-            "הקשב/י באמת למישהו בלי להפריע",
-            "סיים/י משימה אחת שדחית",
-            "עשה/י מתיחה קלה לגוף",
-            "נשום/י רגע לפני השינה",
-            "פרגן/י לאדם קרוב במילה טובה"
-        ];
 
         function startQuest() {
             const card = document.getElementById('card');
@@ -266,14 +333,14 @@
             btn.disabled = true;
 
             card.classList.add('shake');
-            text.innerText = "מגריל משימה...";
+            text.innerText = t.drawing;
 
             setTimeout(() => {
                 card.classList.remove('shake');
-                const randomQuest = quests[Math.floor(Math.random() * quests.length)];
+                const randomQuest = t.quests[Math.floor(Math.random() * t.quests.length)];
                 text.innerText = randomQuest;
                 btn.disabled = false;
-                btn.innerText = "הגרל משימה חדשה";
+                btn.innerText = t.drawAgain;
                 createConfetti();
             }, 1100);
         }
