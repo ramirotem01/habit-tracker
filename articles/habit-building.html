@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>מאמר - Habit Tracker</title>
+  <title id="page-title">מאמר - Habit Tracker</title>
   <link rel="stylesheet" href="../style.css">
   <style>
     :root {
@@ -29,6 +29,7 @@
       background: var(--bg-light);
       box-shadow: 0 0 20px rgba(0,0,0,0.05);
       min-height: 100vh;
+      text-align: inherit;
     }
 
     .back-to-blog {
@@ -76,7 +77,8 @@
 
     .highlight-box {
       background-color: #ecf0f1;
-      border-right: 5px solid var(--primary-color);
+      /* תמיכה בכיווניות: הקו יופיע בתחילת השורה לפי השפה */
+      border-inline-start: 5px solid var(--primary-color);
       padding: 20px;
       margin: 30px 0;
       font-style: italic;
@@ -110,45 +112,102 @@
 <body>
 
   <div class="article-page-container">
-    <a href="../blog.html" class="back-to-blog">← חזרה לכל המאמרים</a>
+    <a href="../blog.html" class="back-to-blog" id="back-link"></a>
 
     <article>
       <header class="article-header">
         <div class="meta-info">
-          <span>📅 7 בפברואר 2026</span>
-          <span>⏱️ 4 דקות קריאה</span>
+          <span id="meta-date"></span>
+          <span id="meta-read-time"></span>
         </div>
-        <h1>איך לבנות הרגל חדש ב-21 יום?</h1>
+        <h1 id="main-h1"></h1>
       </header>
 
-      <div class="article-body">
-        <p>כולנו מכירים את המשפט המפורסם שאומר שצריך 21 יום כדי לבנות הרגל. אבל האם זה באמת נכון? במאמר זה נצלול למדע שמאחורי יצירת מסלולים עצביים חדשים במוח.</p>
-
-        <div class="highlight-box">
-          "הצלחה היא לא יותר מכמה דיסציפלינות פשוטות המבוצעות בכל יום." - ג'ים רוהן
+      <div class="article-body" id="article-body-content">
         </div>
 
-        <h2>למה דווקא 21 יום?</h2>
-        <p>המקור למספר הזה מגיע ממחקרים ישנים על דימוי גוף, אבל המציאות המודרנית מראה שזה משתנה מאדם לאדם. מה שחשוב הוא לא המספר המדויק, אלא העקביות.</p>
-
-        <h2>3 טיפים ליישום מיידי:</h2>
-        <ul>
-          <li><strong>התחילו בקטן:</strong> אל תנסו לרוץ מרתון ביום הראשון. התחילו ב-5 דקות הליכה.</li>
-          <li><strong>הצמידו הרגל להרגל:</strong> בצעו את הפעולה החדשה מיד אחרי משהו שאתם כבר עושים (למשל: מדיטציה מיד אחרי צחצוח שיניים).</li>
-          <li><strong>השתמשו ב-Habit Tracker:</strong> הסימון הויזואלי משחרר דופמין במוח וגורם לכם לרצות להמשיך.</li>
-        </ul>
-
-        <h2>סיכום</h2>
-        <p>בניית הרגלים היא מרתון, לא ספרינט. בעזרת הכלים הנכונים וסבלנות, תוכלו לעצב את החיים שאתם רוצים.</p>
-      </div>
-
       <div class="footer-cta">
-        <h3>מוכנים להתחיל לעקוב?</h3>
-        <p>הורידו את Habit Tracker והתחילו לסמן V על ההצלחות שלכם.</p>
-        <a href="../index.html" class="btn-main">חזרה להתחברות</a>
+        <h3 id="footer-h3"></h3>
+        <p id="footer-p"></p>
+        <a href="../index.html" class="btn-main" id="footer-btn"></a>
       </div>
     </article>
   </div>
 
+  <script>
+    const translations = {
+      he: {
+        pageTitle: "מאמר - Habit Tracker",
+        back: "← חזרה לכל המאמרים",
+        date: "📅 7 בפברואר 2026",
+        readTime: "⏱️ 4 דקות קריאה",
+        h1: "איך לבנות הרגל חדש ב-21 יום?",
+        body: `
+          <p>כולנו מכירים את המשפט המפורסם שאומר שצריך 21 יום כדי לבנות הרגל. אבל האם זה באמת נכון? במאמר זה נצלול למדע שמאחורי יצירת מסלולים עצביים חדשים במוח.</p>
+          <div class="highlight-box">
+            "הצלחה היא לא יותר מכמה דיסציפלינות פשוטות המבוצעות בכל יום." - ג'ים רוהן
+          </div>
+          <h2>למה דווקא 21 יום?</h2>
+          <p>המקור למספר הזה מגיע ממחקרים ישנים על דימוי גוף, אבל המציאות המודרנית מראה שזה משתנה מאדם לאדם. מה שחשוב הוא לא המספר המדויק, אלא העקביות.</p>
+          <h2>3 טיפים ליישום מיידי:</h2>
+          <ul>
+            <li><strong>התחילו בקטן:</strong> אל תנסו לרוץ מרתון ביום הראשון. התחילו ב-5 דקות הליכה.</li>
+            <li><strong>הצמידו הרגל להרגל:</strong> בצעו את הפעולה החדשה מיד אחרי משהו שאתם כבר עושים (למשל: מדיטציה מיד אחרי צחצוח שיניים).</li>
+            <li><strong>השתמשו ב-Habit Tracker:</strong> הסימון הויזואלי משחרר דופמין במוח וגורם לכם לרצות להמשיך.</li>
+          </ul>
+          <h2>סיכום</h2>
+          <p>בניית הרגלים היא מרתון, לא ספרינט. בעזרת הכלים הנכונים וסבלנות, תוכלו לעצב את החיים שאתם רוצים.</p>
+        `,
+        footerH3: "מוכנים להתחיל לעקוב?",
+        footerP: "התחילו לסמן V על ההצלחות שלכם.",
+        footerBtn: "חזרה להתחברות"
+      },
+      en: {
+        pageTitle: "Article - Habit Tracker",
+        back: "Back to all articles →",
+        date: "📅 February 7, 2026",
+        readTime: "⏱️ 4 min read",
+        h1: "How to Build a New Habit in 21 Days?",
+        body: `
+          <p>We've all heard the famous saying that it takes 21 days to build a habit. But is it really true? In this article, we'll dive into the science behind creating new neural pathways in the brain.</p>
+          <div class="highlight-box">
+            "Success is nothing more than a few simple disciplines, practiced every day." - Jim Rohn
+          </div>
+          <h2>Why 21 Days?</h2>
+          <p>The origin of this number comes from old studies on body image, but modern reality shows that it varies from person to person. What matters is not the exact number, but consistency.</p>
+          <h2>3 Tips for Immediate Application:</h2>
+          <ul>
+            <li><strong>Start Small:</strong> Don't try to run a marathon on day one. Start with a 5-minute walk.</li>
+            <li><strong>Habit Stacking:</strong> Perform the new action immediately after something you already do (e.g., meditate right after brushing your teeth).</li>
+            <li><strong>Use a Habit Tracker:</strong> The visual check-mark releases dopamine in the brain and makes you want to continue.</li>
+          </ul>
+          <h2>Summary</h2>
+          <p>Building habits is a marathon, not a sprint. With the right tools and patience, you can shape the life you want.</p>
+        `,
+        footerH3: "Ready to start tracking?",
+        footerP: "Start checking off your successes.",
+        footerBtn: "Back to Login"
+      }
+    };
+
+    // זיהוי שפה
+    const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+    const t = translations[userLang];
+
+    // החלת כיווניות ושפה
+    document.documentElement.lang = userLang;
+    document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+
+    // הזרקת תוכן
+    document.getElementById('page-title').innerText = t.pageTitle;
+    document.getElementById('back-link').innerText = t.back;
+    document.getElementById('meta-date').innerText = t.date;
+    document.getElementById('meta-read-time').innerText = t.readTime;
+    document.getElementById('main-h1').innerText = t.h1;
+    document.getElementById('article-body-content').innerHTML = t.body;
+    document.getElementById('footer-h3').innerText = t.footerH3;
+    document.getElementById('footer-p').innerText = t.footerP;
+    document.getElementById('footer-btn').innerText = t.footerBtn;
+  </script>
 </body>
 </html>
