@@ -129,12 +129,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isDone) doneCount++;
       const li = document.createElement("li");
       const contentSide = document.createElement("div");
-      contentSide.style = "display: flex; align-items: center; overflow: hidden; flex: 1; padding-inline-start: 10px;";
+      // הקטנת ה-padding כדי להצמיד את הצ'קבוקס להתחלה
+      contentSide.style = "display: flex; align-items: center; overflow: hidden; flex: 1; padding-inline-start: 2px;";
 
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.checked = isDone;
-      // הוספת רווח בין הצ'קבוקס לטקסט
+      // רווח בין הצ'קבוקס לטקסט
       cb.style.marginInlineEnd = "10px"; 
       cb.onchange = async () => {
         dailyStats[task.text] = cb.checked;
@@ -155,14 +156,12 @@ document.addEventListener("DOMContentLoaded", () => {
       actionsSide.style = "display: flex; align-items: center; flex-shrink: 0;";
 
       if (task.isTemp) {
-        // כפתור עריכה ✏️
         const editBtn = document.createElement("button");
         editBtn.innerHTML = "✏️";
         editBtn.className = "actions-btn";
         editBtn.style = "background:none; border:none; cursor:pointer; margin-inline-start:8px; padding: 5px; font-size: 16px;";
         editBtn.onclick = (e) => { e.stopPropagation(); editTempHabit(task.id, task.text); };
 
-        // כפתור מחיקה 🗑️
         const delBtn = document.createElement("button");
         delBtn.innerHTML = "🗑️";
         delBtn.className = "actions-btn";
