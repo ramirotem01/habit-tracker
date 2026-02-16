@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>הגדרת מטרה אישית - Habit Tracker</title>
+  <title id="page-title">הגדרת מטרה אישית - Habit Tracker</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* עיצוב המכולה והכרטיס - זהה ל-aihabit.html */
     .ai-container {
       display: flex;
       flex-direction: column;
@@ -37,7 +36,6 @@
       border-color: #2ecc71;
     }
 
-    /* כפתורי פעולה */
     .action-btn {
       background-color: #2ecc71;
       color: white;
@@ -90,21 +88,21 @@
 </head>
 <body>
   <div class="app login-app">
-    <h1>🎯 המטרה הגדולה שלי</h1>
+    <h1 id="ui-title">🎯 המטרה הגדולה שלי</h1>
     <div class="card login-card ai-card">
-      <p style="text-align: center; color: #666; margin-bottom: 20px;">
+      <p id="ui-description" style="text-align: center; color: #666; margin-bottom: 20px;">
         כאן תוכל להגדיר או לעדכן את היעד המרכזי שלך. המטרה הזו תעזור ל-AI לנתח את הביצועים השבועיים שלך בצורה מדויקת יותר.
       </p>
       
       <div class="ai-container">
-        <textarea id="goalInput" placeholder="למשל: לרדת 5 קילו ב-3 חודשים הקרובים..." rows="3"></textarea>
+        <textarea id="goalInput" rows="3"></textarea>
         
-        <button id="saveGoalBtn" class="action-btn">💾 שמור עדכון מטרה</button>
+        <button id="saveGoalBtn" class="action-btn"></button>
         
-        <div id="statusMsg">המטרה עודכנה בהצלחה! ✨</div>
+        <div id="statusMsg"></div>
 
         <div style="text-align: center;">
-          <button class="back-btn" onclick="window.location.href='dashboard.html'">דלג</button>
+          <button id="skipBtn" class="back-btn" onclick="window.location.href='dashboard.html'"></button>
         </div>
       </div>
     </div>
@@ -116,6 +114,47 @@
   <script src="firebase.js"></script>
 
   <script>
+    const translations = {
+      he: {
+        pageTitle: "הגדרת מטרה אישית - Habit Tracker",
+        title: "🎯 המטרה הגדולה שלי",
+        desc: "כאן תוכל להגדיר או לעדכן את היעד המרכזי שלך. המטרה הזו תעזור ל-AI לנתח את הביצועים השבועיים שלך בצורה מדויקת יותר.",
+        placeholder: "למשל: לרדת 5 קילו ב-3 חודשים הקרובים...",
+        saveBtn: "💾 שמור עדכון מטרה",
+        saving: "שומר...",
+        skipBtn: "דלג",
+        success: "המטרה עודכנה בהצלחה! ✨",
+        emptyError: "בבקשה רשום מטרה לפני השמירה",
+        generalError: "הייתה בעיה בשמירת המטרה."
+      },
+      en: {
+        pageTitle: "Set Personal Goal - Habit Tracker",
+        title: "🎯 My Big Goal",
+        desc: "Define or update your primary objective here. This goal helps the AI analyze your weekly performance more accurately.",
+        placeholder: "e.g., Lose 5kg in the next 3 months...",
+        saveBtn: "💾 Save Goal Update",
+        saving: "Saving...",
+        skipBtn: "Skip",
+        success: "Goal updated successfully! ✨",
+        emptyError: "Please write a goal before saving",
+        generalError: "There was a problem saving your goal."
+      }
+    };
+
+    const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+    const t = translations[userLang];
+
+    // החלת שפה
+    document.documentElement.lang = userLang;
+    document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+    document.getElementById('page-title').innerText = t.pageTitle;
+    document.getElementById('ui-title').innerText = t.title;
+    document.getElementById('ui-description').innerText = t.desc;
+    document.getElementById('goalInput').placeholder = t.placeholder;
+    document.getElementById('saveGoalBtn').innerText = t.saveBtn;
+    document.getElementById('skipBtn').innerText = t.skipBtn;
+    document.getElementById('statusMsg').innerText = t.success;
+
     let userId = null;
     const goalInput = document.getElementById("goalInput");
     const saveBtn = document.getElementById("saveGoalBtn");
@@ -126,11 +165,10 @@
         window.location.href = "index.html"; 
       } else {
         userId = user.uid;
-        loadCurrentGoal(); // טעינת המטרה הקיימת ברגע שהמשתמש מזוהה
+        loadCurrentGoal();
       }
     });
 
-    // טעינת המטרה האחרונה שהוזנה מה-Firestore
     async function loadCurrentGoal() {
       try {
         const goalSnap = await db.collection("users").doc(userId)
@@ -143,20 +181,19 @@
           goalInput.value = goalSnap.docs[0].data().text;
         }
       } catch (e) {
-        console.error("שגיאה בטעינת המטרה:", e);
+        console.error("Error loading goal:", e);
       }
     }
 
-    // שמירת מטרה חדשה
     saveBtn.addEventListener("click", async () => {
       const goalText = goalInput.value.trim();
       if (!goalText) {
-          alert("בבקשה רשום מטרה לפני השמירה");
+          alert(t.emptyError);
           return;
       }
 
       saveBtn.disabled = true;
-      saveBtn.textContent = "שומר...";
+      saveBtn.textContent = t.saving;
 
       try {
         await db.collection("users").doc(userId).collection("goals").add({
@@ -164,18 +201,17 @@
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        // הצגת הודעת הצלחה
         statusMsg.style.display = "block";
         setTimeout(() => {
             statusMsg.style.display = "none";
         }, 3000);
 
       } catch (e) {
-        console.error("שגיאה בשמירה:", e);
-        alert("הייתה בעיה בשמירת המטרה.");
+        console.error("Error saving:", e);
+        alert(t.generalError);
       } finally {
         saveBtn.disabled = false;
-        saveBtn.textContent = "💾 שמור עדכון מטרה";
+        saveBtn.textContent = t.saveBtn;
       }
     });
   </script>
