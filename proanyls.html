@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he" dir="rtl" id="mainHtml">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>אנליטיקה PRO - Habit Tracker</title>
+  <title id="pageTitle">אנליטיקה PRO - Habit Tracker</title>
   <link rel="stylesheet" href="style.css">
   <style>
     .analytics-container { display: flex; flex-direction: column; gap: 20px; }
     .ai-response {
       background: white; padding: 25px; border-radius: 12px;
-      line-height: 1.8; border-right: 6px solid #9b59b6;
+      line-height: 1.8; border-inline-start: 6px solid #9b59b6;
       display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       font-size: 1.1em; color: #2c3e50;
     }
@@ -40,11 +40,11 @@
 </head>
 <body>
   <div class="app">
-    <h1>🧠 ניתוח עומק PRO</h1>
+    <h1 id="mainHeading">🧠 ניתוח עומק PRO</h1>
     <div class="analytics-container">
       <section class="card">
-        <h3 style="text-align: center;">ניתוח כלל המידע הקיים</h3>
-        <p style="text-align: center; color: #666; margin-bottom: 20px;">המערכת תסרוק את כל ההיסטוריה שלך ותוציא תובנות עומק והרגל לשיפור שיאיץ את ההתקדמות שלך למטרות חייך.</p>
+        <h3 id="cardTitle" style="text-align: center;">ניתוח כלל המידע הקיים</h3>
+        <p id="cardDesc" style="text-align: center; color: #666; margin-bottom: 20px;">המערכת תסרוק את כל ההיסטוריה שלך ותוציא תובנות עומק והרגל לשיפור שיאיץ את ההתקדמות שלך למטרות חייך.</p>
         <button id="analyzeBtn" class="action-btn-ai">✨ בצע אנליזה כוללת</button>
       </section>
 
@@ -56,14 +56,14 @@
       <div id="resultArea" class="ai-response">
         <div id="aiTextContent"></div>
         <div id="recommendationBox" class="recommendation-box">
-          <div class="suggested-habit-title">🎯 ההרגל הממוקד שמומלץ לך לאמץ:</div>
+          <div id="recTitle" class="suggested-habit-title">🎯 ההרגל הממוקד שמומלץ לך לאמץ:</div>
           <p id="suggestedHabitText" style="font-weight: bold; font-size: 1.2em; color: #2c3e50;"></p>
           <button id="addHabitBtn" class="add-habit-btn">➕ הוסף כהרגל קבוע</button>
         </div>
       </div>
 
       <div class="actions">
-        <button onclick="window.location.href='dashboard.html'" style="width: 100%; background-color: #34495e;">🏠 חזרה לדשבורד</button>
+        <button id="backBtn" onclick="window.location.href='dashboard.html'" style="width: 100%; background-color: #34495e;">🏠 חזרה לדשבורד</button>
       </div>
     </div>
   </div>
@@ -76,6 +76,23 @@
   <script>
     let userId = null;
     let currentRecommendedHabit = "";
+    const isEn = !navigator.language.startsWith('he');
+    const htmlEl = document.getElementById("mainHtml");
+
+    // עדכון שפה וממשק
+    if (isEn) {
+      htmlEl.dir = "ltr";
+      htmlEl.lang = "en";
+      document.getElementById("pageTitle").textContent = "PRO Analytics - Habit Tracker";
+      document.getElementById("mainHeading").textContent = "🧠 PRO Deep Analytics";
+      document.getElementById("cardTitle").textContent = "Full History Analysis";
+      document.getElementById("cardDesc").textContent = "The system will scan your entire history to provide deep insights and a habit for improvement to accelerate your progress.";
+      document.getElementById("analyzeBtn").textContent = "✨ Run Full Analysis";
+      document.getElementById("loadingStatus").textContent = "Collecting historical data... 📊";
+      document.getElementById("recTitle").textContent = "🎯 Focused habit recommended for you:";
+      document.getElementById("addHabitBtn").textContent = "➕ Add as Permanent Habit";
+      document.getElementById("backBtn").textContent = "🏠 Back to Dashboard";
+    }
 
     auth.onAuthStateChanged(user => {
       if (!user) window.location.href = "index.html";
@@ -98,7 +115,7 @@
 
     async function collectAllTimeData() {
       const now = new Date();
-      let goal = "שיפור עצמי";
+      let goal = isEn ? "Self improvement" : "שיפור עצמי";
       
       const goalSnap = await db.collection("users").doc(userId).collection("goals").orderBy("createdAt", "desc").limit(1).get();
       if (!goalSnap.empty) goal = goalSnap.docs[0].data().text;
@@ -106,7 +123,6 @@
       const dailyDetails = [];
       const baseSnap = await db.collection("users").doc(userId).collection("habits").get();
       
-      // שמירת פרטי ההרגלים כולל תאריך יצירה
       const habitsMetadata = baseSnap.docs.map(doc => ({
         name: doc.data().text,
         created: doc.data().createdAt ? doc.data().createdAt.toDate() : new Date(0)
@@ -119,7 +135,7 @@
       while (keepGoing && dayOffset <= maxDays) {
         const d = new Date();
         d.setDate(now.getDate() - dayOffset);
-        d.setHours(23, 59, 59, 999); // סוף היום הנבדק
+        d.setHours(23, 59, 59, 999);
         const dateId = d.toISOString().split('T')[0];
         
         const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(dateId).get();
@@ -133,18 +149,17 @@
         const dailyStats = statsDoc.exists ? statsDoc.data() : {};
         const dayTasks = [];
         
-        // בדיקת רלוונטיות של כל הרגל לתאריך הספציפי
         habitsMetadata.forEach(habit => {
            if (habit.created <= d) {
              const done = dailyStats[habit.name] === true;
-             dayTasks.push(`${habit.name} (קבוע) - ${done ? 'בוצע ✅' : 'לא בוצע ❌'}`);
+             dayTasks.push(`${habit.name} (${isEn ? 'Regular' : 'קבוע'}) - ${done ? '✅' : '❌'}`);
            }
         });
 
         tempSnap.forEach(t => {
           const taskText = t.data().text;
           const done = dailyStats[taskText] === true;
-          dayTasks.push(`${taskText} (זמני) - ${done ? 'בוצע ✅' : 'לא בוצע ❌'}`);
+          dayTasks.push(`${taskText} (${isEn ? 'Temp' : 'זמני'}) - ${done ? '✅' : '❌'}`);
         });
 
         dailyDetails.push({ date: dateId, tasks: dayTasks });
@@ -164,7 +179,9 @@
       const today = new Date().toISOString().split('T')[0];
       const userDoc = await db.collection("users").doc(userId).get();
       if (userDoc.exists && userDoc.data().lastProAnalysisDate === today) {
-        alert("כבר ביצעת ניתוח PRO היום. ניתן לבצע ניתוח עומק חדש פעם ביום.");
+        alert(isEn 
+          ? "You've already performed a PRO analysis today. You can run a new deep dive once a day."
+          : "כבר ביצעת ניתוח PRO היום. ניתן לבצע ניתוח עומק חדש פעם ביום.");
         return;
       }
 
@@ -177,7 +194,9 @@
         const data = await collectAllTimeData();
 
         if (data.dailyDetails.length < 3) {
-          textContent.innerHTML = `<p>אין מספיק מידע היסטורי כדי לבצע ניתוח עומק. המשך להשתמש באפליקציה וחזור לכאן כשיצטברו לפחות 3 ימי פעילות.</p>`;
+          textContent.innerHTML = isEn 
+            ? `<p>Not enough historical data for a deep dive. Keep using the app and return once you have at least 3 days of activity.</p>`
+            : `<p>אין מספיק מידע היסטורי כדי לבצע ניתוח עומק. המשך להשתמש באפליקציה וחזור לכאן כשיצטברו לפחות 3 ימי פעילות.</p>`;
           resultArea.style.display = "block";
           loader.style.display = "none";
           btn.disabled = false;
@@ -186,19 +205,27 @@
 
         const modelName = await getAvailableModel(apiKey);
         
-        const prompt = `אתה מאמן ביצועים ואנליסט נתונים. 
-          המטרה של המשתמש: "${data.goal}". 
-          להלן כל המידע הקיים במערכת על הביצועים שלו (משימות והרגלים):
-          ${JSON.stringify(data.dailyDetails)}
-
-          המשימה שלך:
-          1. בצע ניתוח עומק על בסיס כל המידע. זהה מגמות ארוכות טווח ודפוסים שחוזרים על עצמם.
-          2. תן "שיקוף" חכם למשתמש על היכולות שלו ועל המקומות שבהם הוא מאבד ריכוז או עקביות.
-          3. אל תשתמש ברשימות. כתוב פסקאות זורמות ומניעות לפעולה.
-          4. על בסיס כל התובנות הללו, הוצא המלצה להרגל אחד חדש (לא משימה חד פעמית, אלא הרגל) שישפר משמעותית את היכולות של המשתמש ביחס למטרה שלו.
-          5. ההרגל חייב להיות ממוקד, קצר ופרקטי.
-          
-          חשוב מאוד: את ההרגל בלבד כתוב בסוף התשובה אחרי המילה "HABIT:".`;
+        const prompt = isEn 
+          ? `You are a Performance Coach and Data Analyst. 
+             User Goal: "${data.goal}". 
+             Full historical system data (Tasks and Habits): ${JSON.stringify(data.dailyDetails)}
+             Mission:
+             1. Perform deep analysis based on all data. Identify long-term trends and repeating patterns.
+             2. Provide a "Mirror" to the user about their capabilities and where they lose focus or consistency.
+             3. Do not use lists. Write flowing, actionable paragraphs.
+             4. Recommend ONE new habit (not a one-time task) to significantly improve the user's progress toward their goal.
+             5. The habit must be focused, short, and practical.
+             IMPORTANT: Write the habit ONLY at the end after the word "HABIT:". Language: English.`
+          : `אתה מאמן ביצועים ואנליסט נתונים. 
+             המטרה של המשתמש: "${data.goal}". 
+             להלן כל המידע הקיים במערכת על הביצועים שלו (משימות והרגלים): ${JSON.stringify(data.dailyDetails)}
+             המשימה שלך:
+             1. בצע ניתוח עומק על בסיס כל המידע. זהה מגמות ארוכות טווח ודפוסים שחוזרים על עצמם.
+             2. תן "שיקוף" חכם למשתמש על היכולות שלו ועל המקומות שבהם הוא מאבד ריכוז או עקביות.
+             3. אל תשתמש ברשימות. כתוב פסקאות זורמות ומניעות לפעולה.
+             4. על בסיס כל התובנות הללו, הוצא המלצה להרגל אחד חדש (לא משימה חד פעמית, אלא הרגל) שישפר משמעותית את היכולות של המשתמש ביחס למטרה שלו.
+             5. ההרגל חייב להיות ממוקד, קצר ופרקטי.
+             חשוב מאוד: את ההרגל בלבד כתוב בסוף התשובה אחרי המילה "HABIT:". שפה: עברית.`;
 
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${apiKey}`, {
           method: 'POST',
@@ -208,9 +235,7 @@
 
         const resData = await response.json();
         
-        if (resData.error) {
-          throw new Error(`שגיאת API: ${resData.error.message}`);
-        }
+        if (resData.error) throw new Error(resData.error.message);
 
         if (resData.candidates && resData.candidates[0].content) {
           await db.collection("users").doc(userId).set({ lastProAnalysisDate: today }, { merge: true });
@@ -229,7 +254,7 @@
           resultArea.style.display = "block";
         }
       } catch (err) { 
-        alert("שגיאה בניתוח: " + err.message); 
+        alert((isEn ? "Analysis Error: " : "שגיאה בניתוח: ") + err.message); 
       } finally { 
         loader.style.display = "none"; 
         btn.disabled = false; 
@@ -244,10 +269,10 @@
           text: currentRecommendedHabit,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        alert("ההרגל התווסף בהצלחה לרשימה הקבועה שלך!");
+        alert(isEn ? "Habit successfully added to your permanent list!" : "ההרגל התווסף בהצלחה לרשימה הקבועה שלך!");
         document.getElementById("addHabitBtn").disabled = true;
       } catch (e) { 
-        alert("שגיאה בשמירה"); 
+        alert(isEn ? "Save error" : "שגיאה בשמירה"); 
       }
     }
 
