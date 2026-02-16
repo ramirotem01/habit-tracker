@@ -128,15 +128,20 @@ document.addEventListener("DOMContentLoaded", () => {
       const isDone = dailyStats[task.text] === true;
       if (isDone) doneCount++;
       const li = document.createElement("li");
+      // איפוס padding של ה-li כדי להצמיד לחלוטין לשוליים
+      li.style.paddingInlineStart = "0px";
+
       const contentSide = document.createElement("div");
-      // הקטנת ה-padding כדי להצמיד את הצ'קבוקס להתחלה
-      contentSide.style = "display: flex; align-items: center; overflow: hidden; flex: 1; padding-inline-start: 2px;";
+      // איפוס padding של הדיב הפנימי
+      contentSide.style = "display: flex; align-items: center; overflow: hidden; flex: 1; padding-inline-start: 0px;";
 
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.checked = isDone;
-      // רווח בין הצ'קבוקס לטקסט
+      // רווח של 10 פיקסלים בין הצ'קבוקס לטקסט בלבד
       cb.style.marginInlineEnd = "10px"; 
+      cb.style.cursor = "pointer";
+
       cb.onchange = async () => {
         dailyStats[task.text] = cb.checked;
         await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
