@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Habit Tracker – רישום משתמש</title>
+  <title id="page-title">Habit Tracker – רישום משתמש</title>
   <link rel="stylesheet" href="style.css" />
   <style>
     .register-container {
@@ -18,6 +18,7 @@
     h1 {
       margin-bottom: 10px;
       font-size: 1.8em;
+      text-align: center;
     }
     input {
       width: 100%;
@@ -25,6 +26,7 @@
       border: 1px solid #ddd;
       border-radius: 8px;
       box-sizing: border-box;
+      text-align: start;
     }
     .action-btn {
       background-color: #2ecc71;
@@ -37,31 +39,31 @@
       font-size: 1.1em;
       transition: background 0.3s;
       margin-top: 10px;
+      width: 100%;
     }
     .action-btn:hover {
       background-color: #27ae60;
     }
     
-    /* כפתור חזרה עם כיתוב רגיל (לא Bold) ורקע עדין */
     .back-btn {
-      background: none;
-      border: none;
-      color: #34495e; /* כיתוב כהה */
+      background: none !important;
+      border: none !important;
+      color: #34495e !important;
       padding: 8px 15px;
       border-radius: 20px;
       cursor: pointer;
       margin: 15px auto 0 auto;
       font-size: 0.9em;
-      font-weight: normal; /* ביטול ה-Bold */
+      font-weight: normal !important;
       transition: all 0.3s ease;
       display: inline-block;
-      width: fit-content;
+      width: fit-content !important;
       text-decoration: none;
     }
 
     .back-btn:hover {
-      background-color: #f5f6f7; /* רקע אפור עדין מאוד */
-      color: #000;
+      background-color: #f5f6f7 !important;
+      color: #000 !important;
     }
 
     #regMessage {
@@ -73,9 +75,9 @@
 </head>
 <body>
   <div class="app login-app">
-    <h1>📝 יצירת חשבון חדש</h1>
+    <h1 id="ui-reg-title">📝 יצירת חשבון חדש</h1>
     <div class="card login-card register-card">
-      <p style="text-align: center; color: #666; margin-bottom: 20px;">הצטרף אלינו והתחל לעקוב אחר ההרגלים שלך</p>
+      <p id="ui-reg-desc" style="text-align: center; color: #666; margin-bottom: 20px;">הצטרף אלינו והתחל לעקוב אחר ההרגלים שלך</p>
       <div class="register-container">
         <input type="email" id="regEmail" placeholder="כתובת אימייל" />
         <input type="password" id="regPassword" placeholder="בחר סיסמה (6+ תווים)" />
@@ -83,7 +85,7 @@
         <button id="executeRegisterBtn" class="action-btn">צור חשבון והתחל</button>
         <p id="regMessage" style="color:red;"></p>
         <div style="text-align: center;">
-          <button class="back-btn" onclick="window.location.href='index.html'">כבר יש לי חשבון? חזרה להתחברות</button>
+          <button class="back-btn" id="ui-back-login" onclick="window.location.href='index.html'">כבר יש לי חשבון? חזרה להתחברות</button>
         </div>
       </div>
     </div>
@@ -92,6 +94,45 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="firebase.js"></script>
+  
+  <script>
+    // תרגום ממשק הרישום
+    const regUiTranslations = {
+      he: {
+        dir: "rtl",
+        title: "📝 יצירת חשבון חדש",
+        desc: "הצטרף אלינו והתחל לעקוב אחר ההרגלים שלך",
+        email: "כתובת אימייל",
+        pass: "בחר סיסמה (6+ תווים)",
+        confirm: "הקלד שוב את הסיסמה",
+        btn: "צור חשבון והתחל",
+        back: "כבר יש לי חשבון? חזרה להתחברות"
+      },
+      en: {
+        dir: "ltr",
+        title: "📝 Create New Account",
+        desc: "Join us and start tracking your habits",
+        email: "Email Address",
+        pass: "Choose Password (6+ chars)",
+        confirm: "Confirm Password",
+        btn: "Create Account & Start",
+        back: "Already have an account? Back to Login"
+      }
+    };
+
+    const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+    const lang = regUiTranslations[userLang];
+
+    document.documentElement.lang = userLang;
+    document.documentElement.dir = lang.dir;
+    document.getElementById('ui-reg-title').innerText = lang.title;
+    document.getElementById('ui-reg-desc').innerText = lang.desc;
+    document.getElementById('regEmail').placeholder = lang.email;
+    document.getElementById('regPassword').placeholder = lang.pass;
+    document.getElementById('confirmPassword').placeholder = lang.confirm;
+    document.getElementById('executeRegisterBtn').innerText = lang.btn;
+    document.getElementById('ui-back-login').innerText = lang.back;
+  </script>
   <script src="register.js"></script>
 </body>
 </html>
