@@ -33,12 +33,24 @@ registerBtn.addEventListener("click", () => {
 
     // ביצוע הרישום ב-Firebase
     auth.createUserWithEmailAndPassword(email, password)
-        .then(() => {
-            messageEl.style.color = "green";
-            messageEl.textContent = isEn ? "Account created! Redirecting..." : "החשבון נוצר בהצלחה! מעביר אותך...";
-            setTimeout(() => {
-                window.location.href = "firstgoal.html";
-            }, 1500);
+        .then((userCredential) => {
+            const user = userCredential.user;
+
+            // שליחת מייל אימות
+            return user.sendEmailVerification().then(() => {
+                messageEl.style.color = "green";
+                messageEl.textContent = isEn 
+                    ? "Account created! Please verify your email to login." 
+                    : "החשבון נוצר! מייל אימות נשלח אליך. אנא אשר אותו כדי להתחבר.";
+                
+                // התנתקות אוטומטית כדי שלא ייכנס לפני אימות
+                auth.signOut();
+
+                // הפניה לעמוד התחברות לאחר 4 שניות כדי שיוכלו לקרוא את ההודעה
+                setTimeout(() => {
+                    window.location.href = "index.html";
+                }, 4000);
+            });
         })
         .catch(err => {
             messageEl.style.color = "red";
