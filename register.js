@@ -4,7 +4,7 @@ const confirmPasswordInput = document.getElementById("confirmPassword");
 const registerBtn = document.getElementById("executeRegisterBtn");
 const messageEl = document.getElementById("regMessage");
 
-// זיהוי שפה מהיר
+// זיהוי שפה מהיר (עברית/אנגלית)
 const isEn = !navigator.language.startsWith('he');
 
 registerBtn.addEventListener("click", () => {
@@ -12,7 +12,9 @@ registerBtn.addEventListener("click", () => {
     const password = passwordInput.value;
     const confirmPassword = confirmPasswordInput.value;
 
-    // ולידציה בסיסית
+    console.log("Attempting to register:", email);
+
+    // 1. ולידציה בסיסית של השדות
     if (!email || !password || !confirmPassword) {
         messageEl.style.color = "red";
         messageEl.textContent = isEn ? "Please fill in all fields" : "אנא מלא את כל השדות";
@@ -31,30 +33,55 @@ registerBtn.addEventListener("click", () => {
         return;
     }
 
-    // ביצוע הרישום ב-Firebase
+    // 2. ביצוע הרישום ב-Firebase
     auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
             const user = userCredential.user;
+            console.log("User created successfully in Firebase:", user.uid);
 
-            // שליחת מייל אימות
-            return user.sendEmailVerification().then(() => {
-                messageEl.style.color = "green";
-                messageEl.textContent = isEn 
-                    ? "Account created! Please verify your email to login." 
-                    : "החשבון נוצר! מייל אימות נשלח אליך. אנא אשר אותו כדי להתחבר.";
-                
-                // התנתקות אוטומטית כדי שלא ייכנס לפני אימות
-                auth.signOut();
+            // 3. שליחת מייל אימות (Verification Email)
+            return user.sendEmailVerification()
+                .then(() => {
+                    console.log("Verification email sent to:", user.email);
+                    
+                    messageEl.style.color = "green";
+                    messageEl.textContent = isEn 
+                        ? "Account created! A verification email has been sent. Please check your inbox (and spam)." 
+                        : "החשבון נוצר! מייל אימות נשלח אליך. אנא בדוק את תיבת הדואר (והספאם).";
+                    
+                    // 4. התנתקות כדי למנוע כניסה ללא אימות
+                    auth.signOut().then(() => {
+                        console.log("User signed out until email is verified.");
+                    });
 
-                // הפניה לעמוד התחברות לאחר 4 שניות כדי שיוכלו לקרוא את ההודעה
-                setTimeout(() => {
-                    window.location.href = "index.html";
-                }, 4000);
-            });
+                    // הפניה לעמוד התחברות לאחר 5 שניות
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 5000);
+                })
+                .catch(emailErr => {
+                    console.error("Error sending verification email:", emailErr.code, emailErr.message);
+                    messageEl.style.color = "orange";
+                    messageEl.textContent = isEn 
+                        ? "Account created, but failed to send verification email. Please contact support." 
+                        : "החשבון נוצר, אך חלה שגיאה בשליחת המייל. פנה לתמיכה.";
+                });
         })
         .catch(err => {
+            // טיפול בשגיאות רישום (אימייל קיים, פורמט לא תקין וכו')
+            console.error("Firebase Registration Error:", err.code, err.message);
+            
             messageEl.style.color = "red";
+            let errorMsg = err.message;
+
+            // תרגום שגיאות נפוצות לעברית (אופציונלי)
+            if (!isEn) {
+                if (err.code === 'auth/email-already-in-use') errorMsg = "כתובת האימייל כבר קיימת במערכת.";
+                if (err.code === 'auth/invalid-email') errorMsg = "כתובת אימייל לא תקינה.";
+                if (err.code === 'auth/weak-password') errorMsg = "הסיסמה חלשה מדי.";
+            }
+
             const errorPrefix = isEn ? "Registration error: " : "שגיאה ברישום: ";
-            messageEl.textContent = errorPrefix + err.message;
+            messageEl.textContent = errorPrefix + errorMsg;
         });
 });
