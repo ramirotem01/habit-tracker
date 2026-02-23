@@ -32,6 +32,14 @@
             .weekly-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1rem; padding-bottom: 1rem; }
             .day-column { min-width: 85vw; scroll-snap-align: start; }
         }
+
+        /* עיצוב כפתור תכלת אחיד */
+        .btn-primary { 
+            background-color: #3498db; 
+            color: white; 
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover { opacity: 0.9; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
@@ -49,7 +57,7 @@
                 <h1 id="ui-title" class="text-3xl font-bold text-gray-800">מבט שבועי</h1>
                 <p id="ui-subtitle" class="text-gray-500 mt-2">סדר את המשימות שלך השבוע (Drag & Drop)</p>
             </div>
-            <button onclick="window.location.href='dashboard.html'" class="bg-white border px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium">חזרה לדשבורד</button>
+            <button id="backBtn" onclick="window.location.href='dashboard.html'" class="btn-primary px-4 py-2 rounded-lg text-sm font-medium shadow-sm">חזרה לדשבורד</button>
         </header>
 
         <div class="weekly-container grid grid-cols-1 md:grid-cols-7 gap-4" id="weeklyGrid"></div>
@@ -65,6 +73,14 @@
         const daysLabels = isEn ? 
             ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] : 
             ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+
+        // תרגום ממשק
+        if (isEn) {
+            document.getElementById("ui-title").textContent = "Weekly Overview";
+            document.getElementById("ui-subtitle").textContent = "Organize your tasks for the week (Drag & Drop)";
+            document.getElementById("backBtn").textContent = "Back to Dashboard";
+            document.documentElement.dir = "ltr";
+        }
 
         let userId = null;
         let weekDates = [];
@@ -97,7 +113,7 @@
 
         async function loadWeekData() {
             const grid = document.getElementById('weeklyGrid');
-            grid.innerHTML = '<p class="col-span-7 text-center py-20 text-gray-400">טוען נתונים...</p>';
+            grid.innerHTML = `<p class="col-span-7 text-center py-20 text-gray-400">${isEn ? 'Loading data...' : 'טוען נתונים...'}</p>`;
 
             try {
                 const baseSnap = await db.collection("users").doc(userId).collection("habits").get();
@@ -122,7 +138,6 @@
         function renderGrid() {
             const grid = document.getElementById('weeklyGrid');
             grid.innerHTML = '';
-            document.documentElement.dir = isEn ? "ltr" : "rtl";
 
             weekDates.forEach((dateId, index) => {
                 const dayColumn = document.createElement('div');
@@ -166,7 +181,6 @@
             `).join('');
         }
 
-        // --- פונקציות Drag & Drop ו-Toggle נשארות זהות ---
         function handleDragStart(ev, id, fromDate, text) {
             ev.dataTransfer.setData("taskId", id);
             ev.dataTransfer.setData("fromDate", fromDate);
