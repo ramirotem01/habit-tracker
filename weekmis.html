@@ -6,31 +6,15 @@
     <title>PCS365 - Weekly Overview</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .drag-over {
-            background-color: #f0fdf4;
-            border: 2px dashed #22c55e;
-        }
-        .task-card {
-            cursor: grab;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+        .drag-over { background-color: #f0fdf4 !important; border: 2px dashed #22c55e !important; }
+        .task-card { cursor: grab; transition: all 0.2s ease; user-select: none; }
         .task-card:active { cursor: grabbing; }
-        .completed { text-decoration: line-through; opacity: 0.6; }
-        /* עיצוב מותאם לגלילה במובייל */
+        .completed { text-decoration: line-through; opacity: 0.5; }
         @media (max-width: 768px) {
-            .weekly-container {
-                display: flex;
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-                gap: 1rem;
-                padding-bottom: 1rem;
-            }
-            .day-column {
-                min-width: 85vw;
-                scroll-snap-align: start;
-            }
+            .weekly-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1rem; padding-bottom: 1rem; }
+            .day-column { min-width: 85vw; scroll-snap-align: start; }
         }
-    </script>
+    </style>
 </head>
 <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
 
@@ -51,60 +35,49 @@
 
     <script>
         const i18n = {
-            he: {
-                title: "מבט שבועי",
-                subtitle: "ניהול משימות ויעדים בגרור והשלך",
-                days: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"],
-                addTask: "+ הוסף",
-                dir: "rtl"
-            },
-            en: {
-                title: "Weekly Overview",
-                subtitle: "Manage tasks and goals with drag & drop",
-                days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                addTask: "+ Add",
-                dir: "ltr"
-            }
+            he: { title: "מבט שבועי", subtitle: "ניהול משימות בגרור והשלך", days: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"], addTask: "+ הוסף", dir: "rtl" },
+            en: { title: "Weekly Overview", subtitle: "Manage tasks with drag & drop", days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], addTask: "+ Add", dir: "ltr" }
         };
 
-        // זיהוי שפה אוטומטי
         const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
         const content = i18n[userLang];
-
-        // נתונים ראשוניים
+        
+        // נתונים (וודא שה-ID תמיד ייחודי)
         let tasks = [
-            { id: 1, text: "Drinking Water 2L", day: 0, completed: false },
-            { id: 2, text: "AI Weekly Analysis", day: 6, completed: false }
+            { id: 101, text: "Drinking Water 2L", day: 0, completed: false },
+            { id: 102, text: "Weekly Review", day: 1, completed: false },
+            { id: 103, text: "AI Analysis", day: 6, completed: false }
         ];
 
         function init() {
-            // הגדרת כיווניות ושפה בדף
             const htmlTag = document.getElementById('mainHtml');
             htmlTag.dir = content.dir;
             htmlTag.lang = userLang;
-            
             document.getElementById('pageTitle').innerText = content.title;
             document.getElementById('pageSubtitle').innerText = content.subtitle;
-            
             renderGrid();
         }
 
         function renderGrid() {
             const grid = document.getElementById('weeklyGrid');
+            if (!grid) return;
             grid.innerHTML = '';
 
             content.days.forEach((dayName, index) => {
                 const dayColumn = document.createElement('div');
                 dayColumn.className = "day-column bg-white rounded-xl shadow-sm border border-gray-200 p-4 min-h-[350px] flex flex-col";
+                
+                // הזרקת התוכן לעמודה
                 dayColumn.innerHTML = `
                     <h3 class="font-bold text-lg mb-4 text-gray-700 border-b pb-2">${dayName}</h3>
                     <div class="task-list flex-grow space-y-3" 
-                         ondragover="allowDrop(event)" 
-                         ondragleave="clearHighlight(event)"
-                         ondrop="drop(event, ${index})">
+                         data-day="${index}"
+                         ondragover="event.preventDefault(); this.classList.add('drag-over');" 
+                         ondragleave="this.classList.remove('drag-over');"
+                         ondrop="handleDrop(event, ${index})">
                         ${renderTasks(index)}
                     </div>
-                    <button class="mt-4 text-sm text-gray-400 hover:text-green-600 transition self-start">
+                    <button class="mt-4 text-sm text-gray-400 hover:text-green-600 transition text-right w-full">
                         ${content.addTask}
                     </button>
                 `;
@@ -113,44 +86,30 @@
         }
 
         function renderTasks(dayIndex) {
-            return tasks
-                .filter(t => t.day === dayIndex)
-                .map(t => `
-                    <div class="task-card bg-gray-50 p-3 rounded-lg border border-gray-100 flex items-center justify-between shadow-sm"
-                         draggable="true" 
-                         ondragstart="drag(event, ${t.id})">
-                        <span class="text-sm ${t.completed ? 'completed' : ''}">${t.text}</span>
-                        <input type="checkbox" ${t.completed ? 'checked' : ''} 
-                               onchange="toggleTask(${t.id})"
-                               class="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer">
-                    </div>
-                `).join('');
-        }
-
-        // לוגיקת Drag & Drop
-        function drag(ev, id) {
-            ev.dataTransfer.setData("taskId", id);
-        }
-
-        function allowDrop(ev) {
-            ev.preventDefault();
-            ev.currentTarget.classList.add('drag-over');
-        }
-
-        function clearHighlight(ev) {
-            ev.currentTarget.classList.remove('drag-over');
-        }
-
-        function drop(ev, newDay) {
-            ev.preventDefault();
-            ev.currentTarget.classList.remove('drag-over');
-            const taskId = parseInt(ev.dataTransfer.getData("taskId"));
+            const dayTasks = tasks.filter(t => t.day === dayIndex);
+            if (dayTasks.length === 0) return `<div class="h-12 border border-dashed border-gray-100 rounded-lg"></div>`; // שטח גרירה ריק
             
-            const task = tasks.find(t => t.id === taskId);
-            if (task) {
-                task.day = newDay;
+            return dayTasks.map(t => `
+                <div class="task-card bg-gray-50 p-3 rounded-lg border border-gray-100 flex items-center justify-between shadow-sm"
+                     draggable="true" 
+                     ondragstart="event.dataTransfer.setData('text/plain', ${t.id})">
+                    <span class="text-sm ${t.completed ? 'completed' : ''}">${t.text}</span>
+                    <input type="checkbox" ${t.completed ? 'checked' : ''} 
+                           onchange="toggleTask(${t.id})"
+                           class="h-4 w-4 rounded border-gray-300 text-green-600 cursor-pointer">
+                </div>
+            `).join('');
+        }
+
+        function handleDrop(ev, newDay) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            const taskId = parseInt(ev.dataTransfer.getData("text/plain"));
+            
+            const taskIndex = tasks.findIndex(t => t.id === taskId);
+            if (taskIndex !== -1) {
+                tasks[taskIndex].day = newDay;
                 renderGrid();
-                // כאן תוכל להוסיף fetch לשמירה ב-DB: saveToDB(taskId, newDay);
             }
         }
 
@@ -162,7 +121,7 @@
             }
         }
 
-        init();
+        window.onload = init;
     </script>
 </body>
 </html>
