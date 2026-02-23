@@ -6,6 +6,11 @@
     <title>PCS365 - Weekly View</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://bernardo-castilho.github.io/DragDropTouch/DragDropTouch.js"></script>
+    <script>
+        // הגדרת זמן לחיצה ארוכה (במילישניות) לפני שהגרירה מתחילה
+        // זה יאפשר גלילה חופשית ורק לחיצה רצופה תפעיל את הגרירה
+        window.DragDropTouch.holdToDrag = 2000; 
+    </script>
     <style>
         .drag-over { background-color: #f0fdf4 !important; border: 2px dashed #22c55e !important; }
         .task-card { cursor: grab; transition: all 0.2s ease; user-select: none; }
