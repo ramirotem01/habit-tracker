@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">מבט שבועי - PCS365</title>
+    <title>PCS365 - Weekly View</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .drag-over { background-color: #f0fdf4 !important; border: 2px dashed #22c55e !important; }
         .task-card { cursor: grab; transition: all 0.2s ease; user-select: none; }
         .task-card:active { cursor: grabbing; }
         .completed { text-decoration: line-through; opacity: 0.5; }
-        .day-column { min-height: 400px; transition: background-color 0.3s; }
-        
+        .day-column { min-height: 450px; }
         @media (max-width: 768px) {
             .weekly-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1rem; padding-bottom: 1rem; }
             .day-column { min-width: 85vw; scroll-snap-align: start; }
@@ -24,20 +23,19 @@
         <div class="font-bold text-xl tracking-tight cursor-pointer" onclick="window.location.href='dashboard.html'">
             PCS<span class="text-green-600">365</span>
         </div>
-        <div id="user-status" class="text-sm text-gray-500 font-medium"></div>
+        <div id="weekRange" class="text-sm font-medium text-gray-500"></div>
     </nav>
 
     <main class="max-w-7xl mx-auto p-4 md:p-8">
         <header class="mb-8 flex justify-between items-end">
             <div>
-                <h1 id="ui-title" class="text-3xl font-bold text-gray-800"></h1>
-                <p id="ui-subtitle" class="text-gray-500 mt-2"></p>
+                <h1 id="ui-title" class="text-3xl font-bold text-gray-800">מבט שבועי</h1>
+                <p id="ui-subtitle" class="text-gray-500 mt-2">סדר את המשימות שלך השבוע (Drag & Drop)</p>
             </div>
-            <button onclick="window.location.href='dashboard.html'" id="ui-back-btn" class="bg-white border px-4 py-2 rounded-lg shadow-sm hover:bg-gray-50 transition text-sm font-medium"></button>
+            <button onclick="window.location.href='dashboard.html'" class="bg-white border px-4 py-2 rounded-lg hover:bg-gray-50 text-sm font-medium">חזרה</button>
         </header>
 
-        <div class="weekly-container grid grid-cols-1 md:grid-cols-7 gap-4" id="weeklyGrid">
-            </div>
+        <div class="weekly-container grid grid-cols-1 md:grid-cols-7 gap-4" id="weeklyGrid"></div>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -46,147 +44,173 @@
     <script src="firebase.js"></script>
 
     <script>
-        const translations = {
-            he: {
-                title: "מבט שבועי",
-                subtitle: "סדר את המשימות וההרגלים שלך השבוע",
-                backBtn: "חזרה לדשבורד",
-                days: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"],
-                loading: "טוען נתונים...",
-                empty: "אין משימות"
-            },
-            en: {
-                title: "Weekly Overview",
-                subtitle: "Organize your tasks and habits for the week",
-                backBtn: "Back to Dashboard",
-                days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                loading: "Loading data...",
-                empty: "No tasks"
-            }
-        };
+        const isEn = !navigator.language.startsWith('he');
+        const daysLabels = isEn ? 
+            ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] : 
+            ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
 
-        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
-        const t = translations[userLang];
-        let currentUserId = null;
-        let weekTasks = [];
-
-        function initUI() {
-            document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
-            document.getElementById('ui-title').innerText = t.title;
-            document.getElementById('ui-subtitle').innerText = t.subtitle;
-            document.getElementById('ui-back-btn').innerText = t.backBtn;
-            renderLoading();
-        }
+        let userId = null;
+        let weekDates = []; // יכיל מחרוזות של תאריכים YYYY-MM-DD
+        let allWeekTasks = {}; // מבנה: { "2026-02-23": [tasks...] }
 
         auth.onAuthStateChanged(user => {
             if (user) {
-                currentUserId = user.uid;
-                loadWeeklyData();
+                userId = user.uid;
+                calculateWeekDates();
+                loadWeekData();
             } else {
                 window.location.href = "index.html";
             }
         });
 
-        async function loadWeeklyData() {
-            // כאן אנחנו מושכים את המשימות מה-Firestore כפי שנעשה ב-Dashboard
-            // לצורך הפשטות נמשוך את ה-tempHabits של השבוע הנוכחי
-            try {
-                const snapshot = await db.collection("users").doc(currentUserId)
-                    .collection("tempHabits")
-                    .get();
+        function calculateWeekDates() {
+            const now = new Date();
+            const dayOfWeek = now.getDay(); // 0 (Sun) to 6 (Sat)
+            const startOfWeek = new Date(now);
+            startOfWeek.setDate(now.getDate() - dayOfWeek);
 
-                weekTasks = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-
-                renderGrid();
-            } catch (e) {
-                console.error("Error loading weekly data:", e);
+            weekDates = [];
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(startOfWeek);
+                d.setDate(startOfWeek.getDate() + i);
+                weekDates.push(d.toISOString().split('T')[0]);
             }
+            
+            const rangeText = `${weekDates[0]} - ${weekDates[6]}`;
+            document.getElementById('weekRange').textContent = rangeText;
         }
 
-        function renderLoading() {
-            document.getElementById('weeklyGrid').innerHTML = `<p class='col-span-7 text-center py-10 text-gray-400'>${t.loading}</p>`;
+        async function loadWeekData() {
+            const grid = document.getElementById('weeklyGrid');
+            grid.innerHTML = '<p class="col-span-7 text-center py-20 text-gray-400">טוען נתונים...</p>';
+
+            try {
+                // משיכת הרגלים קבועים (Base Habits)
+                const baseSnap = await db.collection("users").doc(userId).collection("habits").get();
+                const baseHabits = baseSnap.docs.map(doc => ({ text: doc.data().text, isTemp: false }));
+
+                // משיכת משימות זמניות וסטטוסים לכל יום בשבוע
+                for (const dateId of weekDates) {
+                    // משימות זמניות
+                    const tempSnap = await db.collection("users").doc(userId).collection("daily").doc(dateId).collection("tempHabits").get();
+                    const temps = tempSnap.docs.map(doc => ({ id: doc.id, text: doc.data().text, isTemp: true }));
+                    
+                    // סטטוס ביצוע (stats)
+                    const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(dateId).get();
+                    const dayStats = statsDoc.exists ? statsDoc.data() : {};
+
+                    allWeekTasks[dateId] = [...baseHabits, ...temps].map(task => ({
+                        ...task,
+                        completed: dayStats[task.text] === true
+                    }));
+                }
+                renderGrid();
+            } catch (err) {
+                console.error("Load error:", err);
+            }
         }
 
         function renderGrid() {
             const grid = document.getElementById('weeklyGrid');
             grid.innerHTML = '';
+            document.documentElement.dir = isEn ? "ltr" : "rtl";
 
-            t.days.forEach((dayName, index) => {
+            weekDates.forEach((dateId, index) => {
                 const dayColumn = document.createElement('div');
-                dayColumn.className = "day-column bg-white rounded-xl shadow-sm border border-gray-200 p-4 flex flex-col";
+                dayColumn.className = "day-column bg-white rounded-xl shadow-sm border border-gray-200 p-3 flex flex-col";
+                
+                const isToday = dateId === new Date().toISOString().split('T')[0];
+                
                 dayColumn.innerHTML = `
-                    <h3 class="font-bold text-lg mb-4 text-gray-700 border-b pb-2">${dayName}</h3>
-                    <div class="task-list flex-grow space-y-3" 
+                    <div class="text-center border-b pb-2 mb-3">
+                        <div class="font-bold ${isToday ? 'text-green-600' : 'text-gray-700'}">${daysLabels[index]}</div>
+                        <div class="text-xs text-gray-400">${dateId.split('-').reverse().slice(0,2).join('/')}</div>
+                    </div>
+                    <div class="flex-grow space-y-2 task-list" 
+                         data-date="${dateId}"
                          ondragover="event.preventDefault(); this.classList.add('drag-over');" 
                          ondragleave="this.classList.remove('drag-over');"
-                         ondrop="handleDrop(event, ${index})">
-                        ${renderTasksForDay(index)}
+                         ondrop="handleDrop(event, '${dateId}')">
+                        ${renderTasks(dateId)}
                     </div>
                 `;
                 grid.appendChild(dayColumn);
             });
         }
 
-        function renderTasksForDay(dayIndex) {
-            // הלוגיקה כאן צריכה להתאים לאיך שאתה שומר תאריכים ב-DB
-            // נניח שיש לנו שדה 'dayOfWeek' או תאריך
-            const dayTasks = weekTasks.filter(task => {
-                // סינון משימות לפי יום (לוגיקה מותאמת למבנה ה-DB שלך)
-                return task.dayOfWeek === dayIndex; 
-            });
-
-            if (dayTasks.length === 0) return `<div class="h-20 border border-dashed border-gray-100 rounded-lg"></div>`;
-
-            return dayTasks.map(task => `
-                <div class="task-card bg-gray-50 p-3 rounded-lg border border-gray-100 flex items-center justify-between shadow-sm"
-                     draggable="true" 
-                     ondragstart="event.dataTransfer.setData('text/plain', '${task.id}')">
-                    <span class="text-sm ${task.completed ? 'completed' : ''}">${task.text}</span>
-                    <input type="checkbox" ${task.completed ? 'checked' : ''} 
-                           onchange="toggleTaskStatus('${task.id}', ${!task.completed})"
-                           class="h-4 w-4 rounded border-gray-300 text-green-600 cursor-pointer">
+        function renderTasks(dateId) {
+            const tasks = allWeekTasks[dateId] || [];
+            return tasks.map(t => `
+                <div class="task-card bg-gray-50 p-2 rounded border border-gray-100 flex items-center justify-between text-sm shadow-sm"
+                     draggable="${t.isTemp}" 
+                     ondragstart="handleDragStart(event, '${t.id}', '${dateId}', '${t.text}')"
+                     style="${!t.isTemp ? 'border-inline-start: 3px solid #3498db; cursor: default;' : ''}">
+                    <span class="${t.completed ? 'completed' : ''} truncate flex-1">${t.text}</span>
+                    <input type="checkbox" ${t.completed ? 'checked' : ''} 
+                           onchange="toggleTask('${dateId}', '${t.text}', this.checked)"
+                           class="h-4 w-4 rounded border-gray-300 text-green-600 cursor-pointer ml-2 mr-2">
                 </div>
             `).join('');
         }
 
-        async function handleDrop(ev, newDayIndex) {
+        function handleDragStart(ev, id, fromDate, text) {
+            ev.dataTransfer.setData("taskId", id);
+            ev.dataTransfer.setData("fromDate", fromDate);
+            ev.dataTransfer.setData("taskText", text);
+        }
+
+        async function handleDrop(ev, toDate) {
             ev.preventDefault();
             ev.currentTarget.classList.remove('drag-over');
-            const taskId = ev.dataTransfer.getData("text/plain");
+            
+            const taskId = ev.dataTransfer.getData("taskId");
+            const fromDate = ev.dataTransfer.getData("fromDate");
+            const taskText = ev.dataTransfer.getData("taskText");
 
-            // עדכון ב-Firestore (חשוב: זה מעביר משימה בין ימים!)
+            if (fromDate === toDate || !taskId) return;
+
             try {
-                await db.collection("users").doc(currentUserId)
-                    .collection("tempHabits").doc(taskId)
-                    .update({ dayOfWeek: newDayIndex });
+                // 1. הוספה ליום החדש
+                await db.collection("users").doc(userId).collection("daily").doc(toDate).collection("tempHabits").add({ text: taskText });
                 
-                // עדכון מקומי ורינדור מחדש
-                const task = weekTasks.find(t => t.id === taskId);
-                if (task) task.dayOfWeek = newDayIndex;
-                renderGrid();
-            } catch (e) {
-                console.error("Update failed:", e);
+                // 2. מחיקה מהיום הישן
+                await db.collection("users").doc(userId).collection("daily").doc(fromDate).collection("tempHabits").doc(taskId).delete();
+
+                // 3. עדכון סטטוס ביצוע אם היה קיים
+                const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(fromDate).get();
+                if (statsDoc.exists) {
+                    let stats = statsDoc.data();
+                    if (stats[taskText] !== undefined) {
+                        const isDone = stats[taskText];
+                        delete stats[taskText];
+                        await db.collection("users").doc(userId).collection("stats").doc(fromDate).set(stats);
+                        
+                        // שמירת הסטטוס ביום החדש
+                        const toStatsDoc = await db.collection("users").doc(userId).collection("stats").doc(toDate).get();
+                        let toStats = toStatsDoc.exists ? toStatsDoc.data() : {};
+                        toStats[taskText] = isDone;
+                        await db.collection("users").doc(userId).collection("stats").doc(toDate).set(toStats);
+                    }
+                }
+
+                loadWeekData(); // רענון
+            } catch (err) {
+                console.error("Drop error:", err);
             }
         }
 
-        async function toggleTaskStatus(taskId, newStatus) {
+        async function toggleTask(dateId, taskText, isChecked) {
             try {
-                await db.collection("users").doc(currentUserId)
-                    .collection("tempHabits").doc(taskId)
-                    .update({ completed: newStatus });
-                
-                const task = weekTasks.find(t => t.id === taskId);
-                if (task) task.completed = newStatus;
-                renderGrid();
-            } catch (e) {
-                console.error("Toggle failed:", e);
+                const statsRef = db.collection("users").doc(userId).collection("stats").doc(dateId);
+                const doc = await statsRef.get();
+                let stats = doc.exists ? doc.data() : {};
+                stats[taskText] = isChecked;
+                await statsRef.set(stats);
+                loadWeekData();
+            } catch (err) {
+                console.error("Toggle error:", err);
             }
         }
-
-        initUI();
     </script>
 </body>
 </html>
