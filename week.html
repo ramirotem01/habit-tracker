@@ -61,7 +61,9 @@
       <div id="aiSuggestions"></div>
     </div>
 
-    <button id="backBtn" onclick="window.location.href='dashboard.html'" style="width:100%; margin-top:20px; padding:12px; background:#34495e; color:white; border:none; border-radius:8px;">🏠 חזרה לדשבורד</button>
+    <button id="weekMisBtn" onclick="window.location.href='weekmis.html'" style="width:100%; margin-top:20px; padding:12px; background:#2ecc71; color:white; border:none; border-radius:8px; font-weight:bold;">📋 למבט שבועי (ניהול משימות)</button>
+
+    <button id="backBtn" onclick="window.location.href='dashboard.html'" style="width:100%; margin-top:10px; padding:12px; background:#34495e; color:white; border:none; border-radius:8px;">🏠 חזרה לדשבורד</button>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -92,6 +94,7 @@
       document.getElementById("aiBreakdownBtn").textContent = "✨ Create Daily Task Plan (AI)";
       document.getElementById("addAllAiTasksBtn").textContent = "➕ Add All Tasks to Calendar";
       document.getElementById("aiSuggestHeading").textContent = "🤖 Suggested Work Plan:";
+      document.getElementById("weekMisBtn").textContent = "📋 Weekly Overview (Task Management)";
       document.getElementById("backBtn").textContent = "🏠 Back to Dashboard";
     }
 
