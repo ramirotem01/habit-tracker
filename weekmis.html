@@ -3,89 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PCS365 - Weekly View</title>
+    <title>PCS365 - Weekly Overview</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .drag-over {
-            background-color: #f0fdf4; /* Light green highlight */
+            background-color: #f0fdf4;
             border: 2px dashed #22c55e;
         }
         .task-card {
             cursor: grab;
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .task-card:active {
-            cursor: grabbing;
+        .task-card:active { cursor: grabbing; }
+        .completed { text-decoration: line-through; opacity: 0.6; }
+        /* עיצוב מותאם לגלילה במובייל */
+        @media (max-width: 768px) {
+            .weekly-container {
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                gap: 1rem;
+                padding-bottom: 1rem;
+            }
+            .day-column {
+                min-width: 85vw;
+                scroll-snap-align: start;
+            }
         }
-        .completed {
-            text-decoration: line-through;
-            opacity: 0.6;
-        }
-    </style>
+    </script>
 </head>
 <body class="bg-gray-50 min-h-screen font-sans text-gray-900">
 
     <nav class="bg-white border-b p-4 flex justify-between items-center">
         <div class="font-bold text-xl tracking-tight">PCS<span class="text-green-600">365</span></div>
-        <button onclick="toggleLanguage()" id="langBtn" class="text-sm bg-gray-100 px-3 py-1 rounded-full hover:bg-gray-200 transition">
-            English
-        </button>
+        <div id="dateDisplay" class="text-sm text-gray-500 font-medium"></div>
     </nav>
 
     <main class="max-w-7xl mx-auto p-4 md:p-8">
         <header class="mb-8">
-            <h1 id="pageTitle" class="text-3xl font-bold">מבט שבועי</h1>
-            <p id="pageSubtitle" class="text-gray-500 mt-2">גרור והשלך משימות כדי לארגן את השבוע שלך.</p>
+            <h1 id="pageTitle" class="text-3xl font-bold"></h1>
+            <p id="pageSubtitle" class="text-gray-500 mt-2"></p>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-7 gap-4" id="weeklyGrid">
+        <div class="weekly-container grid grid-cols-1 md:grid-cols-7 gap-4" id="weeklyGrid">
             </div>
     </main>
 
     <script>
-        // תרגומים
         const i18n = {
             he: {
                 title: "מבט שבועי",
-                subtitle: "גרור והשלך משימות כדי לארגן את השבוע שלך.",
+                subtitle: "ניהול משימות ויעדים בגרור והשלך",
                 days: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"],
-                addTask: "+ הוסף משימה",
-                langBtn: "English",
+                addTask: "+ הוסף",
                 dir: "rtl"
             },
             en: {
-                title: "Weekly View",
-                subtitle: "Drag and drop tasks to organize your week.",
+                title: "Weekly Overview",
+                subtitle: "Manage tasks and goals with drag & drop",
                 days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                addTask: "+ Add Task",
-                langBtn: "עברית",
+                addTask: "+ Add",
                 dir: "ltr"
             }
         };
 
-        let currentLang = 'he';
+        // זיהוי שפה אוטומטי
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const content = i18n[userLang];
 
-        // נתונים לדוגמה (במציאות יגיעו מה-DB שלך)
+        // נתונים ראשוניים
         let tasks = [
-            { id: 1, text: "אימון בוקר", day: 0, completed: false },
-            { id: 2, text: "סיכום שבועי AI", day: 0, completed: true },
-            { id: 3, text: "פגישת צוות", day: 1, completed: false },
-            { id: 4, text: "קניית מצרכים", day: 4, completed: false }
+            { id: 1, text: "Drinking Water 2L", day: 0, completed: false },
+            { id: 2, text: "AI Weekly Analysis", day: 6, completed: false }
         ];
 
         function init() {
-            renderGrid();
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'he' ? 'en' : 'he';
+            // הגדרת כיווניות ושפה בדף
             const htmlTag = document.getElementById('mainHtml');
-            htmlTag.dir = i18n[currentLang].dir;
-            htmlTag.lang = currentLang;
+            htmlTag.dir = content.dir;
+            htmlTag.lang = userLang;
             
-            document.getElementById('pageTitle').innerText = i18n[currentLang].title;
-            document.getElementById('pageSubtitle').innerText = i18n[currentLang].subtitle;
-            document.getElementById('langBtn').innerText = i18n[currentLang].langBtn;
+            document.getElementById('pageTitle').innerText = content.title;
+            document.getElementById('pageSubtitle').innerText = content.subtitle;
             
             renderGrid();
         }
@@ -94,10 +93,9 @@
             const grid = document.getElementById('weeklyGrid');
             grid.innerHTML = '';
 
-            i18n[currentLang].days.forEach((dayName, index) => {
+            content.days.forEach((dayName, index) => {
                 const dayColumn = document.createElement('div');
-                dayColumn.className = "bg-white rounded-xl shadow-sm border border-gray-200 p-4 min-h-[300px] flex flex-col";
-                dayColumn.setAttribute('onwrap', 'return false;');
+                dayColumn.className = "day-column bg-white rounded-xl shadow-sm border border-gray-200 p-4 min-h-[350px] flex flex-col";
                 dayColumn.innerHTML = `
                     <h3 class="font-bold text-lg mb-4 text-gray-700 border-b pb-2">${dayName}</h3>
                     <div class="task-list flex-grow space-y-3" 
@@ -106,8 +104,8 @@
                          ondrop="drop(event, ${index})">
                         ${renderTasks(index)}
                     </div>
-                    <button class="mt-4 text-sm text-gray-400 hover:text-green-600 transition text-right">
-                        ${i18n[currentLang].addTask}
+                    <button class="mt-4 text-sm text-gray-400 hover:text-green-600 transition self-start">
+                        ${content.addTask}
                     </button>
                 `;
                 grid.appendChild(dayColumn);
@@ -124,12 +122,12 @@
                         <span class="text-sm ${t.completed ? 'completed' : ''}">${t.text}</span>
                         <input type="checkbox" ${t.completed ? 'checked' : ''} 
                                onchange="toggleTask(${t.id})"
-                               class="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500">
+                               class="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500 cursor-pointer">
                     </div>
                 `).join('');
         }
 
-        // פונקציות Drag & Drop
+        // לוגיקת Drag & Drop
         function drag(ev, id) {
             ev.dataTransfer.setData("taskId", id);
         }
@@ -152,6 +150,7 @@
             if (task) {
                 task.day = newDay;
                 renderGrid();
+                // כאן תוכל להוסיף fetch לשמירה ב-DB: saveToDB(taskId, newDay);
             }
         }
 
