@@ -1,8 +1,7 @@
 {
-  "name": "Habits365",
+  "name": "Habits365 - ניהול הרגלים",
   "short_name": "Habits365",
-  "description": "A web-based management platform for tracking habits and tasks with AI-powered behavioral insights.",
-  "start_url": "/",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3498db",
