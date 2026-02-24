@@ -241,6 +241,16 @@
   <script src="firebase.js?v=1.1"></script>
   <script src="login.js?v=1.1"></script>
   <script>
+    // --- Service Worker Registration ---
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("pwabuilder-sw.js")
+          .then((reg) => console.log("Service Worker registered", reg))
+          .catch((err) => console.error("Service Worker failed", err));
+      });
+    }
+
     const uiTranslations = {
       he: {
         dir: "rtl",
