@@ -6,10 +6,8 @@
     <title>PCS365 - Habit Battles</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* כתר דינמי לפי כיוון השפה */
         html[dir="rtl"] .crown { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-15deg); font-size: 24px; z-index: 10; }
         html[dir="ltr"] .crown { position: absolute; top: -15px; right: 50%; transform: translateX(50%) rotate(15deg); font-size: 24px; z-index: 10; }
-        
         .rank-1 { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; }
         .battle-card { transition: all 0.3s ease; }
     </style>
@@ -27,6 +25,13 @@
         <section id="leagueHeader" class="bg-white rounded-2xl p-6 shadow-sm mb-6 text-center border border-gray-100">
             <h1 id="ui-loading-text" class="text-xl font-bold">טוען...</h1>
         </section>
+
+        <div id="joinAction" class="hidden mb-6">
+            <button onclick="handleJoin()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl shadow-lg transform active:scale-95 transition-all flex flex-col items-center">
+                <span id="ui-join-btn-text"></span>
+                <span class="text-xs opacity-80 font-normal mt-1" id="ui-join-subtext"></span>
+            </button>
+        </div>
 
         <section>
             <div class="flex justify-between items-center mb-4 px-2">
@@ -50,8 +55,8 @@
 
     <script>
         const LEAGUE_ID = "global_morning_league";
+        let currentUser = null;
 
-        // אובייקט תרגומים
         const translations = {
             he: {
                 loading: "טוען נתוני ליגה...",
@@ -66,10 +71,11 @@
                 streak: "רצף:",
                 days: "ימים",
                 points: "נקודות",
-                alertCopy: "הלינק הועתק! שלח לחברים בוואטסאפ 🚀",
+                alertCopy: "הלינק הועתק! 🚀",
                 connecting: "מתחבר...",
                 defaultLeagueName: "ליגת הבוקר של PCS",
-                defaultTaskName: "קימה ב-06:00"
+                joinBtn: "הצטרף לליגת לקום ב-6 בבוקר",
+                joinSub: "התחל לצבור נקודות ולהתחרות!"
             },
             en: {
                 loading: "Loading league data...",
@@ -84,10 +90,11 @@
                 streak: "Streak:",
                 days: "days",
                 points: "Points",
-                alertCopy: "Invite link copied! Send it to your friends 🚀",
+                alertCopy: "Link copied! 🚀",
                 connecting: "Connecting...",
                 defaultLeagueName: "PCS Morning League",
-                defaultTaskName: "Wake up at 06:00"
+                joinBtn: "Join 6:00 AM League",
+                joinSub: "Start earning points and compete!"
             }
         };
 
@@ -96,59 +103,45 @@
         document.documentElement.lang = userLang;
         document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
 
-        // הזרקת טקסטים ל-UI
         document.getElementById('ui-loading-text').innerText = t.loading;
         document.getElementById('ui-leaderboard-title').innerText = t.leaderboard;
         document.getElementById('ui-invite-title').innerText = t.inviteTitle;
         document.getElementById('ui-invite-desc').innerText = t.inviteDesc;
         document.getElementById('ui-invite-btn').innerText = t.inviteBtn;
-        document.getElementById('userStatus').innerText = t.connecting;
+        document.getElementById('ui-join-btn-text').innerText = t.joinBtn;
+        document.getElementById('ui-join-subtext').innerText = t.joinSub;
 
-        // פונקציית עזר לניקוי שם ממייל
         function cleanName(name, email) {
-            if (name && name.includes('@') === false) return name;
-            if (email) return email.split('@')[0];
-            return "User";
+            if (name && !name.includes('@')) return name;
+            return email ? email.split('@')[0] : "User";
         }
 
         auth.onAuthStateChanged(async (user) => {
-            if (!user) {
-                window.location.href = "index.html";
-                return;
-            }
-
-            // הצגת שם נקי ב-Navbar
+            if (!user) { window.location.href = "index.html"; return; }
+            currentUser = user;
             document.getElementById('userStatus').textContent = cleanName(user.displayName, user.email);
 
-            try {
-                const leagueRef = db.collection("leagues").doc(LEAGUE_ID);
-                let leagueDoc = await leagueRef.get();
-
-                if (!leagueDoc.exists) {
-                    await leagueRef.set({
-                        name: t.defaultLeagueName,
-                        habitTask: t.defaultTaskName,
-                        type: "Gold League",
-                        members: [] 
-                    });
+            const leagueRef = db.collection("leagues").doc(LEAGUE_ID);
+            leagueRef.onSnapshot((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    renderUI(data, user.uid);
+                    
+                    // בדיקה אם המשתמש כבר חבר בליגה
+                    const isMember = data.members && data.members.some(m => m.uid === user.uid);
+                    document.getElementById('joinAction').classList.toggle('hidden', isMember);
                 }
-
-                // הצטרפות אוטומטית (מתוך firebase.js)
-                if (window.joinLeague) {
-                    await window.joinLeague(LEAGUE_ID);
-                }
-
-                // האזנה לעדכונים בזמן אמת
-                leagueRef.onSnapshot((doc) => {
-                    if (doc.exists) {
-                        renderUI(doc.data(), user.uid);
-                    }
-                });
-
-            } catch (err) {
-                console.error("League Error:", err);
-            }
+            });
         });
+
+        async function handleJoin() {
+            if (!currentUser || !window.joinLeague) return;
+            const btn = document.getElementById('joinAction');
+            btn.style.opacity = "0.5";
+            btn.style.pointerEvents = "none";
+            
+            await window.joinLeague(LEAGUE_ID);
+        }
 
         function renderUI(data, currentUid) {
             document.getElementById('leagueHeader').innerHTML = `
@@ -165,7 +158,17 @@
                 return;
             }
 
-            const sorted = [...members].sort((a, b) => (b.score || 0) - (a.score || 0));
+            // פילטר למניעת כפילויות בתצוגה (ליתר ביטחון)
+            const uniqueMembers = [];
+            const seenUids = new Set();
+            members.forEach(m => {
+                if (!seenUids.has(m.uid)) {
+                    seenUids.add(m.uid);
+                    uniqueMembers.push(m);
+                }
+            });
+
+            const sorted = uniqueMembers.sort((a, b) => (b.score || 0) - (a.score || 0));
 
             const listHtml = sorted.map((m, index) => {
                 const isFirst = index === 0 && (m.score || 0) > 0;
