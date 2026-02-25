@@ -60,44 +60,37 @@
         let currentUserId = null;
         const LEAGUE_ID = "global_morning_league"; 
 
-        auth.onAuthStateChanged(user => {
+        auth.onAuthStateChanged(async (user) => {
             if (user) {
                 currentUserId = user.uid;
                 document.getElementById('userStatus').textContent = user.displayName || "מחובר";
+                
+                // וודוא שהליגה קיימת לפני שמתחילים להאזין
+                const leagueRef = db.collection("leagues").doc(LEAGUE_ID);
+                const leagueDoc = await leagueRef.get();
+                if (!leagueDoc.exists) {
+                    await createInitialLeague();
+                }
+
+                // הצטרפות (מזריק את ההרגל לדשבורד אם חסר)
+                if (window.joinLeague) {
+                    await window.joinLeague(LEAGUE_ID);
+                }
+
                 initLeagueListener();
-                checkAndJoinLeague(user); // בדיקה אם המשתמש כבר בליגה, ואם לא - צירופו
             } else {
                 window.location.href = "index.html";
             }
         });
 
-        async function initLeagueListener() {
-            db.collection("leagues").doc(LEAGUE_ID).onSnapshot(async (doc) => {
-                if (!doc.exists) {
-                    await createInitialLeague();
-                    return;
+        function initLeagueListener() {
+            db.collection("leagues").doc(LEAGUE_ID).onSnapshot((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    renderHeader(data);
+                    renderLeaderboard(data.members || []);
                 }
-                const data = doc.data();
-                renderHeader(data);
-                renderLeaderboard(data.members);
             });
-        }
-
-        // פונקציה שמצרפת את המשתמש לליגה באופן אוטומטי אם הוא לא שם
-        async function checkAndJoinLeague(user) {
-            const leagueRef = db.collection("leagues").doc(LEAGUE_ID);
-            const doc = await leagueRef.get();
-            if (!doc.exists) return;
-
-            const data = doc.data();
-            const isMember = data.members.some(m => m.uid === user.uid);
-
-            if (!isMember) {
-                console.log("Joining league...");
-                if (window.joinLeague) {
-                    await window.joinLeague(LEAGUE_ID);
-                }
-            }
         }
 
         function renderHeader(data) {
@@ -113,6 +106,7 @@
             const list = document.getElementById('leaderboardList');
             document.getElementById('memberCount').textContent = `${members.length} משתתפים`;
 
+            // מיון לפי ניקוד
             const sorted = [...members].sort((a, b) => b.score - a.score);
 
             list.innerHTML = sorted.map((m, index) => {
@@ -125,12 +119,12 @@
                         <div class="w-8 h-8 ${isFirst ? 'bg-yellow-500' : 'bg-gray-100'} rounded-full flex items-center justify-center font-bold ${isFirst ? 'text-white' : 'text-gray-400'} text-sm">
                             ${index + 1}
                         </div>
-                        <div class="mr-4 flex-1">
+                        <div class="mr-4 flex-1 text-right">
                             <div class="font-bold ${isMe ? 'text-blue-700' : 'text-gray-800'}">${m.name} ${isMe ? '(אתה)' : ''}</div>
-                            <div class="text-[11px] ${isFirst ? 'text-amber-700' : 'text-gray-400'}">רצף: ${m.streak} ימים 🔥</div>
+                            <div class="text-[11px] ${isFirst ? 'text-amber-700' : 'text-gray-400'}">רצף: ${m.streak || 0} ימים 🔥</div>
                         </div>
                         <div class="text-left">
-                            <div class="font-black text-xl ${isFirst ? 'text-amber-900' : 'text-gray-700'}">${m.score}</div>
+                            <div class="font-black text-xl ${isFirst ? 'text-amber-900' : 'text-gray-700'}">${m.score || 0}</div>
                             <div class="text-[9px] uppercase font-bold opacity-50 tracking-tighter">Points</div>
                         </div>
                     </div>
@@ -140,12 +134,12 @@
 
         async function createInitialLeague() {
             await db.collection("leagues").doc(LEAGUE_ID).set({
-                name: "ליגת הבוקר של PCS365",
+                name: "ליגת הבוקר של PCS",
                 habitTask: "קימה ב-06:00",
                 type: "ליגת זהב",
                 members: [
-                    { uid: "bot1", name: "אבי המקצוען", score: 85, streak: 6 },
-                    { uid: "bot2", name: "מיכל התותחית", score: 45, streak: 2 }
+                    { uid: "bot1", name: "גיא המקצוען", score: 85, streak: 6 },
+                    { uid: "bot2", name: "מיכל לוי", score: 45, streak: 2 }
                 ]
             });
         }
