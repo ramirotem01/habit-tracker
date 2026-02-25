@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +9,7 @@
     <style>
         body { font-family: 'Assistant', sans-serif; background: #f8fafc; }
         
-        /* כיווניות ועיצוב דינמי */
+        /* עיצוב כיווניות וכתר */
         html[dir="rtl"] .crown { right: 20px; transform: translateY(0) rotate(15deg); }
         html[dir="ltr"] .crown { left: 20px; transform: translateY(0) rotate(-15deg); }
 
@@ -28,7 +28,7 @@
         }
 
         @keyframes bounce {
-            0%, 100% { translateY(0); }
+            0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
         }
 
@@ -130,7 +130,10 @@
                 points: "נק'",
                 joinBtn: "הצטרף לליגת לקום ב-6 בבוקר",
                 joinSub: "קבל 10 נקודות על כל קימה בזמן",
-                copyAlert: "הקישור הועתק! עכשיו שלח אותו בוואטסאפ 🔥"
+                copyAlert: "הקישור הועתק! עכשיו שלח אותו בוואטסאפ 🔥",
+                goldLeague: "ליגת זהב",
+                morningLeagueName: "ליגת הבוקר של PCS",
+                morningTaskName: "קימה ב-06:00"
             },
             en: {
                 dir: "ltr",
@@ -149,11 +152,13 @@
                 points: "pts",
                 joinBtn: "Join 6:00 AM League",
                 joinSub: "Get 10 points for every early wake up",
-                copyAlert: "Link copied! Share it with your rivals 🔥"
+                copyAlert: "Link copied! Share it with your rivals 🔥",
+                goldLeague: "GOLD LEAGUE",
+                morningLeagueName: "PCS Morning League",
+                morningTaskName: "Wake up at 06:00"
             }
         };
 
-        // זיהוי שפה
         const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
         const t = translations[userLang];
         document.documentElement.lang = userLang;
@@ -170,7 +175,6 @@
         document.getElementById('ui-join-subtext').innerText = t.joinSub;
         document.getElementById('ui-footer-back').innerText = t.footerBack;
 
-        // היפוך אייקון חזרה לאנגלית
         if (userLang === 'en') {
             document.getElementById('back-icon').style.transform = 'rotate(180deg)';
         }
@@ -202,13 +206,25 @@
         }
 
         function renderUI(data, currentUid) {
-            const taskLabel = t.leagueTask;
+            // תרגום דינמי של שם הליגה והמשימה
+            let displayLeagueName = data.name;
+            let displayTaskName = data.habitTask;
+            let displayType = data.type || "GOLD LEAGUE";
+
+            if (userLang === 'en') {
+                if (displayLeagueName === "ליגת הבוקר של PCS") displayLeagueName = t.morningLeagueName;
+                if (displayTaskName === "קימה ב-06:00") displayTaskName = t.morningTaskName;
+                if (displayType === "ליגת זהב") displayType = t.goldLeague;
+            } else {
+                if (displayType === "GOLD LEAGUE") displayType = t.goldLeague;
+            }
+
             document.getElementById('leagueHeader').innerHTML = `
-                <span class="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">${data.type || 'GOLD LEAGUE'}</span>
-                <h1 class="text-3xl font-black mt-3 text-slate-800">${data.name}</h1>
+                <span class="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">${displayType}</span>
+                <h1 class="text-3xl font-black mt-3 text-slate-800">${displayLeagueName}</h1>
                 <div class="flex justify-center items-center gap-2 mt-2 text-slate-500 font-medium">
-                    <span>${taskLabel}</span>
-                    <span class="text-slate-900 font-extrabold underline decoration-green-500 decoration-2 underline-offset-4">${data.habitTask}</span>
+                    <span>${t.leagueTask}</span>
+                    <span class="text-slate-900 font-extrabold underline decoration-green-500 decoration-2 underline-offset-4">${displayTaskName}</span>
                 </div>
             `;
 
