@@ -127,9 +127,9 @@
 
         const translations = {
             he: {
-                loading: "טוען נתוני קרב...",
-                participants: "לוחמים",
-                inviteTitle: "צרף חברים לקרב",
+                loading: "טוען נתוני משחק...",
+                participants: "שחקנים",
+                inviteTitle: "צרף שחקנים למשחק",
                 inviteDesc: "הניצחון מתוק יותר כשיש את מי לנצח. העתק את הלינק:",
                 inviteBtn: "העתק לינק להזמנה",
                 leagueTask: "משימה:",
@@ -151,7 +151,7 @@
         document.getElementById('ui-join-subtext').innerText = t.joinSub;
 
         function cleanName(name) {
-            if (!name) return "לוחם";
+            if (!name) return "שחקן";
             return name.split('@')[0];
         }
 
