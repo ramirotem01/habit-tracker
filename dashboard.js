@@ -143,8 +143,15 @@ document.addEventListener("DOMContentLoaded", () => {
       cb.style.cursor = "pointer";
 
       cb.onchange = async () => {
-        dailyStats[task.text] = cb.checked;
+        const isChecked = cb.checked;
+        dailyStats[task.text] = isChecked;
         await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
+        
+        // --- סינכרון עם הליגה ---
+        if (window.syncHabitWithLeague) {
+          window.syncHabitWithLeague(task.text, isChecked);
+        }
+        
         render(); 
       };
 
