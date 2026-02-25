@@ -128,26 +128,38 @@ document.addEventListener("DOMContentLoaded", () => {
       const isDone = dailyStats[task.text] === true;
       if (isDone) doneCount++;
       const li = document.createElement("li");
-      // איפוס padding של ה-li כדי להצמיד לחלוטין לשוליים
       li.style.paddingInlineStart = "0px";
 
       const contentSide = document.createElement("div");
-      // איפוס padding של הדיב הפנימי
       contentSide.style = "display: flex; align-items: center; overflow: hidden; flex: 1; padding-inline-start: 0px;";
 
       const cb = document.createElement("input");
       cb.type = "checkbox";
       cb.checked = isDone;
-      // רווח של 10 פיקסלים בין הצ'קבוקס לטקסט בלבד
       cb.style.marginInlineEnd = "10px"; 
       cb.style.cursor = "pointer";
 
       cb.onchange = async () => {
         const isChecked = cb.checked;
+
+        // --- חוקיות נוקשה להרגל הליגה (קימה ב-06:00) ---
+        if (isChecked && (task.text === "קימה ב-06:00" || task.text === "Wake up at 06:00")) {
+          const now = new Date();
+          const hour = now.getHours();
+          
+          // בדיקה אם השעה מחוץ לטווח 03:00-06:00
+          if (hour < 3 || hour >= 6) {
+            alert(isEn ? 
+              "Too late/early! You can only mark this habit between 03:00 and 06:00 AM." : 
+              "לא בזמן! ניתן לסמן את ההרגל הזה רק בין 03:00 ל-06:00 בבוקר.");
+            cb.checked = false; // מבטל את הסימון ויזואלית
+            return; // עוצר את העדכון ל-Firebase
+          }
+        }
+
         dailyStats[task.text] = isChecked;
         await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
         
-        // --- סינכרון עם הליגה ---
         if (window.syncHabitWithLeague) {
           window.syncHabitWithLeague(task.text, isChecked);
         }
