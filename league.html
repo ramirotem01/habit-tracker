@@ -58,20 +58,20 @@
 
     <script>
         let currentUserId = null;
-        const LEAGUE_ID = "global_morning_league"; // כרגע MVP עם ליגה אחת קבועה
+        const LEAGUE_ID = "global_morning_league"; 
 
         auth.onAuthStateChanged(user => {
             if (user) {
                 currentUserId = user.uid;
                 document.getElementById('userStatus').textContent = user.displayName || "מחובר";
                 initLeagueListener();
+                checkAndJoinLeague(user); // בדיקה אם המשתמש כבר בליגה, ואם לא - צירופו
             } else {
                 window.location.href = "index.html";
             }
         });
 
         async function initLeagueListener() {
-            // האזנה לנתוני הליגה בזמן אמת
             db.collection("leagues").doc(LEAGUE_ID).onSnapshot(async (doc) => {
                 if (!doc.exists) {
                     await createInitialLeague();
@@ -81,6 +81,23 @@
                 renderHeader(data);
                 renderLeaderboard(data.members);
             });
+        }
+
+        // פונקציה שמצרפת את המשתמש לליגה באופן אוטומטי אם הוא לא שם
+        async function checkAndJoinLeague(user) {
+            const leagueRef = db.collection("leagues").doc(LEAGUE_ID);
+            const doc = await leagueRef.get();
+            if (!doc.exists) return;
+
+            const data = doc.data();
+            const isMember = data.members.some(m => m.uid === user.uid);
+
+            if (!isMember) {
+                console.log("Joining league...");
+                if (window.joinLeague) {
+                    await window.joinLeague(LEAGUE_ID);
+                }
+            }
         }
 
         function renderHeader(data) {
@@ -96,7 +113,6 @@
             const list = document.getElementById('leaderboardList');
             document.getElementById('memberCount').textContent = `${members.length} משתתפים`;
 
-            // מיון לפי ניקוד (מהגבוה לנמוך)
             const sorted = [...members].sort((a, b) => b.score - a.score);
 
             list.innerHTML = sorted.map((m, index) => {
@@ -123,9 +139,8 @@
         }
 
         async function createInitialLeague() {
-            // פונקציה ליצירת ליגה ראשונית ב-DB אם היא לא קיימת
             await db.collection("leagues").doc(LEAGUE_ID).set({
-                name: "ליגת הבוקר של PCS",
+                name: "ליגת הבוקר של PCS365",
                 habitTask: "קימה ב-06:00",
                 type: "ליגת זהב",
                 members: [
