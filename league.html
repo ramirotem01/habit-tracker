@@ -5,49 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PCS365 - Habit Battles</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700;800&display=swap" rel="stylesheet">
     <style>
-        /* כתר דינמי לפי כיוון השפה */
-        html[dir="rtl"] .crown { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-15deg); font-size: 24px; z-index: 10; }
-        html[dir="ltr"] .crown { position: absolute; top: -15px; right: 50%; transform: translateX(50%) rotate(15deg); font-size: 24px; z-index: 10; }
+        body { font-family: 'Assistant', sans-serif; background: #f8fafc; }
         
-        .rank-1 { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; }
-        .battle-card { transition: all 0.3s ease; }
+        /* עיצוב כרטיסיית המקום הראשון */
+        .rank-1 { 
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); 
+            border: 2px solid #fbbf24 !important;
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.2);
+        }
+
+        /* כתר למקום הראשון */
+        .crown { 
+            position: absolute; top: -18px; 
+            right: 20px; font-size: 28px; 
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(15deg); }
+            50% { transform: translateY(-5px) rotate(15deg); }
+        }
+
+        /* כרטיסיות משתמשים */
+        .battle-card { 
+            transition: all 0.2s ease-in-out;
+            border: 1px solid #e2e8f0;
+        }
+        .battle-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+
+        /* כפתור חזרה מעוצב */
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748b;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .back-btn:hover { color: #1e293b; }
+
+        /* רקע כפתור הצטרפות */
+        .join-gradient {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen font-sans text-gray-900">
+<body class="min-h-screen pb-10">
 
-    <nav class="bg-white border-b p-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
-        <div class="font-bold text-xl cursor-pointer" onclick="window.location.href='dashboard.html'">
-            PCS<span class="text-green-600">365</span> <span class="text-sm font-normal text-gray-500">| Battles</span>
+    <nav class="bg-white/80 backdrop-blur-md border-b p-4 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <a href="dashboard.html" class="back-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span>דשבורד</span>
+            </a>
+            <div class="font-extrabold text-xl italic tracking-tighter">
+                PCS<span class="text-green-600">365</span>
+            </div>
+            <div id="userStatus" class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">...</div>
         </div>
-        <div id="userStatus" class="text-xs font-medium text-gray-400">...</div>
     </nav>
 
-    <main class="max-w-md mx-auto p-4 pb-20">
-        <section id="leagueHeader" class="bg-white rounded-2xl p-6 shadow-sm mb-6 text-center border border-gray-100">
-            <h1 id="ui-loading-text" class="text-xl font-bold">טוען נתוני ליגה...</h1>
-        </section>
+    <main class="max-w-md mx-auto p-4">
+        
+        <header id="leagueHeader" class="bg-white rounded-3xl p-8 shadow-sm mb-6 text-center relative overflow-hidden border border-gray-100">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500"></div>
+            <h1 id="ui-loading-text" class="text-gray-400 font-medium">טוען ליגה...</h1>
+        </header>
 
-        <div id="joinAction" class="hidden mb-6">
-            <button onclick="handleJoin()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl shadow-lg transform active:scale-95 transition-all flex flex-col items-center">
-                <span id="ui-join-btn-text"></span>
-                <span class="text-xs opacity-80 font-normal mt-1" id="ui-join-subtext"></span>
+        <div id="joinAction" class="hidden mb-8">
+            <button onclick="handleJoin()" class="join-gradient w-full text-white p-5 rounded-2xl shadow-xl transform active:scale-95 transition-all">
+                <div class="text-lg font-extrabold" id="ui-join-btn-text"></div>
+                <div class="text-sm opacity-90" id="ui-join-subtext"></div>
             </button>
         </div>
 
         <section>
-            <div class="flex justify-between items-center mb-4 px-2">
-                <h2 id="ui-leaderboard-title" class="font-bold text-gray-700 flex items-center">Leaderboard 🔥</h2>
-                <span id="memberCount" class="text-xs text-gray-500"></span>
+            <div class="flex justify-between items-end mb-4 px-2">
+                <h2 class="text-xl font-extrabold text-gray-800 flex items-center gap-2">
+                    טבלת מובילים <span class="text-2xl">🏆</span>
+                </h2>
+                <span id="memberCount" class="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-full"></span>
             </div>
-            <div id="leaderboardList" class="space-y-3"></div>
+
+            <div id="leaderboardList" class="space-y-4">
+                </div>
         </section>
 
-        <section class="mt-8 bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-6 text-white shadow-lg">
-            <h3 id="ui-invite-title" class="font-bold text-lg"></h3>
-            <p id="ui-invite-desc" class="text-indigo-100 text-sm mt-1"></p>
-            <button onclick="shareLeague()" id="ui-invite-btn" class="mt-4 bg-white text-indigo-700 font-bold py-2.5 px-6 rounded-xl w-full active:scale-95 transition-transform"></button>
+        <section class="mt-10 bg-slate-900 rounded-3xl p-6 text-white shadow-2xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl"></div>
+            <h3 id="ui-invite-title" class="font-bold text-xl mb-1"></h3>
+            <p id="ui-invite-desc" class="text-slate-400 text-sm mb-4"></p>
+            <button onclick="shareLeague()" id="ui-invite-btn" class="bg-white text-slate-900 font-bold py-3 px-6 rounded-xl w-full flex items-center justify-center gap-2 hover:bg-blue-50 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+                <span>העתק קישור</span>
+            </button>
         </section>
+        
+        <div class="mt-8 text-center">
+            <a href="dashboard.html" class="text-sm font-bold text-gray-400 hover:text-green-600 transition-colors">
+                ← חזרה לרשימת המשימות שלי
+            </a>
+        </div>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -61,77 +127,43 @@
 
         const translations = {
             he: {
-                loading: "טוען נתוני ליגה...",
-                leaderboard: "טבלת מובילים 🔥",
-                participants: "משתתפים",
-                inviteTitle: "הזמן חברים לקרב! 😈",
-                inviteDesc: "שלח את הלינק לחברים. ברגע שהם יכנסו, הם יופיעו בטבלה.",
+                loading: "טוען נתוני קרב...",
+                participants: "לוחמים",
+                inviteTitle: "צרף חברים לקרב",
+                inviteDesc: "הניצחון מתוק יותר כשיש את מי לנצח. העתק את הלינק:",
                 inviteBtn: "העתק לינק להזמנה",
-                leagueTask: "משימת הליגה:",
-                noMembers: "עוד אין משתתפים. תהיה הראשון! 🚀",
+                leagueTask: "משימה:",
+                noMembers: "הזירה ריקה... הצטרף ראשון!",
                 you: "(אתה)",
-                streak: "רצף:",
-                days: "ימים",
-                points: "נקודות",
-                alertCopy: "הלינק הועתק! 🚀",
-                connecting: "מתחבר...",
+                streak: "רצף ימים",
+                points: "נק'",
                 joinBtn: "הצטרף לליגת לקום ב-6 בבוקר",
-                joinSub: "התחל לצבור נקודות ולהתחרות!"
-            },
-            en: {
-                loading: "Loading league data...",
-                leaderboard: "Leaderboard 🔥",
-                participants: "participants",
-                inviteTitle: "Invite Friends to Battle! 😈",
-                inviteDesc: "Send the link to friends. They will appear here once they join.",
-                inviteBtn: "Copy Invitation Link",
-                leagueTask: "League Task:",
-                noMembers: "No participants yet. Be the first! 🚀",
-                you: "(You)",
-                streak: "Streak:",
-                days: "days",
-                points: "Points",
-                alertCopy: "Link copied! 🚀",
-                connecting: "Connecting...",
-                joinBtn: "Join 6:00 AM League",
-                joinSub: "Start earning points and compete!"
+                joinSub: "קבל 10 נקודות על כל קימה בזמן"
             }
         };
 
-        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
-        const t = translations[userLang];
-        document.documentElement.lang = userLang;
-        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        const t = translations.he;
 
         document.getElementById('ui-loading-text').innerText = t.loading;
-        document.getElementById('ui-leaderboard-title').innerText = t.leaderboard;
         document.getElementById('ui-invite-title').innerText = t.inviteTitle;
         document.getElementById('ui-invite-desc').innerText = t.inviteDesc;
-        document.getElementById('ui-invite-btn').innerText = t.inviteBtn;
         document.getElementById('ui-join-btn-text').innerText = t.joinBtn;
         document.getElementById('ui-join-subtext').innerText = t.joinSub;
 
-        // פונקציית ניקוי שם - מבטיחה שלא יופיע ה-@
         function cleanName(name) {
-            if (!name) return "User";
+            if (!name) return "לוחם";
             return name.split('@')[0];
         }
 
         auth.onAuthStateChanged(async (user) => {
             if (!user) { window.location.href = "index.html"; return; }
             currentUser = user;
-            
             document.getElementById('userStatus').textContent = cleanName(user.displayName || user.email);
 
-            const leagueRef = db.collection("leagues").doc(LEAGUE_ID);
-            
-            // האזנה בזמן אמת
-            leagueRef.onSnapshot((doc) => {
+            db.collection("leagues").doc(LEAGUE_ID).onSnapshot((doc) => {
                 if (doc.exists) {
                     const data = doc.data();
                     renderUI(data, user.uid);
-                    
-                    // בדיקה אם המשתמש כבר חבר
                     const isMember = data.members && data.members.some(m => m.uid === user.uid);
                     document.getElementById('joinAction').classList.toggle('hidden', isMember);
                 }
@@ -141,33 +173,31 @@
         async function handleJoin() {
             if (!currentUser || !window.joinLeague) return;
             document.getElementById('joinAction').style.opacity = "0.5";
-            document.getElementById('joinAction').style.pointerEvents = "none";
             await window.joinLeague(LEAGUE_ID);
         }
 
         function renderUI(data, currentUid) {
             document.getElementById('leagueHeader').innerHTML = `
-                <span class="bg-blue-50 text-blue-600 text-[10px] font-bold px-3 py-1 rounded-full border border-blue-100 uppercase">${data.type || 'League'}</span>
-                <h1 class="text-2xl font-black mt-3 text-gray-800">${data.name}</h1>
-                <p class="text-gray-400 text-sm mt-1">${t.leagueTask} <span class="text-gray-600 font-bold">${data.habitTask}</span></p>
+                <span class="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">${data.type || 'GOLD LEAGUE'}</span>
+                <h1 class="text-3xl font-black mt-3 text-slate-800">${data.name}</h1>
+                <div class="flex justify-center items-center gap-2 mt-2 text-slate-500 font-medium">
+                    <span>${t.leagueTask}</span>
+                    <span class="text-slate-900 font-extrabold underline decoration-green-500 decoration-2 underline-offset-4">${data.habitTask}</span>
+                </div>
             `;
 
             const members = data.members || [];
             document.getElementById('memberCount').textContent = `${members.length} ${t.participants}`;
 
             if (members.length === 0) {
-                document.getElementById('leaderboardList').innerHTML = `<div class="text-center p-10 text-gray-400 border-2 border-dashed rounded-2xl">${t.noMembers}</div>`;
+                document.getElementById('leaderboardList').innerHTML = `<div class="text-center p-12 text-slate-400 border-2 border-dashed rounded-3xl">הליגה ממתינה ללוחם הראשון...</div>`;
                 return;
             }
 
-            // סינון כפילויות לפי UID ומניעת הצגת "משתמש PCS"
             const uniqueMembers = [];
             const seenUids = new Set();
             members.forEach(m => {
-                if (!seenUids.has(m.uid)) {
-                    seenUids.add(m.uid);
-                    uniqueMembers.push(m);
-                }
+                if (!seenUids.has(m.uid)) { seenUids.add(m.uid); uniqueMembers.push(m); }
             });
 
             const sorted = uniqueMembers.sort((a, b) => (b.score || 0) - (a.score || 0));
@@ -175,26 +205,31 @@
             const listHtml = sorted.map((m, index) => {
                 const isFirst = index === 0 && (m.score || 0) > 0;
                 const isMe = m.uid === currentUid;
-                
-                // ניקוי השם במידה ונשאר מייל או שם ברירת מחדל
                 let displayName = cleanName(m.name);
-                if (displayName === "משתמש PCS" && m.email) {
-                    displayName = cleanName(m.email);
-                }
+                if (displayName === "משתמש PCS" && m.email) displayName = cleanName(m.email);
                 
                 return `
-                    <div class="battle-card ${isFirst ? 'rank-1' : 'bg-white'} ${isMe ? 'ring-2 ring-blue-400' : ''} relative p-4 rounded-2xl flex items-center shadow-sm border border-gray-100">
+                    <div class="battle-card ${isFirst ? 'rank-1' : 'bg-white'} ${isMe ? 'ring-2 ring-blue-500' : ''} relative p-5 rounded-2xl flex items-center shadow-sm">
                         ${isFirst ? '<div class="crown">👑</div>' : ''}
-                        <div class="w-8 h-8 ${isFirst ? 'bg-yellow-500 text-white' : 'bg-gray-100 text-gray-400'} rounded-full flex items-center justify-center font-bold text-sm">
-                            ${index + 1}
+                        
+                        <div class="flex flex-col items-center justify-center min-w-[40px]">
+                            <span class="text-xs font-bold text-gray-400 mb-0.5">#</span>
+                            <span class="font-black text-xl ${isFirst ? 'text-yellow-600' : 'text-slate-400'}">${index + 1}</span>
                         </div>
-                        <div class="mx-4 flex-1 ${userLang === 'he' ? 'text-right' : 'text-left'}">
-                            <div class="font-bold ${isMe ? 'text-blue-700' : 'text-gray-800'}">${displayName} ${isMe ? t.you : ''}</div>
-                            <div class="text-[11px] opacity-70">${t.streak} ${m.streak || 0} ${t.days} 🔥</div>
+
+                        <div class="mx-4 flex-1">
+                            <div class="font-bold text-lg ${isMe ? 'text-blue-700' : 'text-slate-800'} flex items-center gap-2">
+                                ${displayName} ${isMe ? `<span class="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">${t.you}</span>` : ''}
+                            </div>
+                            <div class="flex items-center gap-1.5 mt-0.5">
+                                <span class="text-orange-500">🔥</span>
+                                <span class="text-xs font-bold text-slate-500">${m.streak || 0} ${t.streak}</span>
+                            </div>
                         </div>
-                        <div class="${userLang === 'he' ? 'text-left' : 'text-right'}">
-                            <div class="font-black text-xl">${m.score || 0}</div>
-                            <div class="text-[9px] uppercase font-bold opacity-50">${t.points}</div>
+
+                        <div class="text-left">
+                            <div class="font-black text-2xl text-slate-900">${m.score || 0}</div>
+                            <div class="text-[10px] uppercase font-black text-slate-400 tracking-tighter">${t.points}</div>
                         </div>
                     </div>
                 `;
@@ -206,7 +241,7 @@
         function shareLeague() {
             const url = window.location.origin + window.location.pathname;
             navigator.clipboard.writeText(url).then(() => {
-                alert(t.alertCopy);
+                alert("הקישור הועתק! עכשיו שלח אותו בוואטסאפ 🔥");
             });
         }
     </script>
