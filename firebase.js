@@ -1,6 +1,5 @@
 // firebase.js
 
-// הגדרות הפרויקט שלך מה-Firebase Console
 const firebaseConfig = {
   apiKey: "AIzaSyAwduvJv0z1T5dyV724zmkO83hj9SJFKf4",
   authDomain: "habittrackermultiuser.firebaseapp.com",
@@ -11,13 +10,91 @@ const firebaseConfig = {
   measurementId: "G-HWNWP0C8DE"
 };
 
-// אתחול Firebase - מוודא שהספרייה קיימת לפני האתחול
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-// הגדרת השירותים כמשתנים גלובליים (window) כדי שיהיו זמינים בקבצים אחרים (כמו login.js)
 window.auth = firebase.auth();
 window.db = firebase.firestore();
 
-console.log("Firebase initialized successfully");
+// --- פונקציות עזר ל-Habit Battles ---
+
+// 1. הצטרפות לליגה והזרקת ההרגל לדשבורד
+window.joinLeague = async (leagueId) => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const leagueRef = db.collection("leagues").doc(leagueId);
+    const leagueDoc = await leagueRef.get();
+    
+    if (!leagueDoc.exists) return;
+    const leagueData = leagueDoc.data();
+
+    // הוספת המשתמש למערך המשתתפים בליגה
+    const newMember = {
+        uid: user.uid,
+        name: user.displayName || "משתמש חדש",
+        score: 0,
+        streak: 0,
+        lastUpdated: new Date().toISOString()
+    };
+
+    await leagueRef.update({
+        members: firebase.firestore.FieldValue.arrayUnion(newMember)
+    });
+
+    // הוספת ההרגל של הליגה לרשימת ההרגלים האישית של המשתמש
+    await db.collection("users").doc(user.uid).collection("habits").add({
+        text: leagueData.habitTask,
+        isLeagueHabit: true,
+        leagueId: leagueId,
+        createdAt: new Date().toISOString()
+    });
+
+    console.log("Joined league and habit added!");
+};
+
+// 2. עדכון ניקוד בליגה כשמסמנים וי בדשבורד
+window.syncHabitWithLeague = async (taskText, isChecked) => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    // מחפשים אם ההרגל הזה שייך לליגה כלשהי
+    const habitSnap = await db.collection("users").doc(user.uid)
+        .collection("habits")
+        .where("text", "==", taskText)
+        .where("isLeagueHabit", "==", true)
+        .get();
+
+    if (habitSnap.empty) return; // לא הרגל ליגה, לא עושים כלום
+
+    const habitData = habitSnap.docs[0].data();
+    const leagueId = habitData.leagueId;
+
+    await updateLeagueScore(leagueId, user.uid, isChecked);
+};
+
+// 3. לוגיקת חישוב הניקוד הפנימית של הליגה
+async function updateLeagueScore(leagueId, userId, isDone) {
+    const leagueRef = db.collection("leagues").doc(leagueId);
+    const doc = await leagueRef.get();
+    if (!doc.exists) return;
+
+    let members = doc.data().members;
+    const memberIndex = members.findIndex(m => m.uid === userId);
+
+    if (memberIndex > -1) {
+        if (isDone) {
+            members[memberIndex].score += 10; // 10 נקודות על ביצוע
+            members[memberIndex].streak += 1; // העלאת רצף
+        } else {
+            members[memberIndex].score = Math.max(0, members[memberIndex].score - 10);
+            members[memberIndex].streak = 0; // שבירת רצף
+        }
+        members[memberIndex].lastUpdated = new Date().toISOString();
+        
+        await leagueRef.update({ members: members });
+    }
+}
+
+console.log("Firebase initialized successfully with League Logic");
