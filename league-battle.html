@@ -3,58 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PCS365 - League Battle</title>
+    <title>PCS365 - Battle Arena</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Assistant', sans-serif; background: #f8fafc; }
-        .leaderboard-card { transition: all 0.3s ease; }
-        .user-row { transition: background 0.2s; }
-        .user-row:hover { background: #f1f5f9; }
-        .rank-1 { background: #fef3c7; border: 1px solid #fbbf24; }
-        .glass { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
-        
-        /* LTR Fixes */
-        html[dir="ltr"] .back-icon { transform: rotate(180deg); }
+        html[dir="rtl"] .crown { right: 20px; transform: translateY(0) rotate(15deg); }
+        html[dir="ltr"] .crown { left: 20px; transform: translateY(0) rotate(-15deg); }
+        .rank-1 { 
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); 
+            border: 2px solid #fbbf24 !important;
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.2);
+        }
+        .crown { 
+            position: absolute; top: -18px; 
+            font-size: 28px; 
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .battle-card { transition: all 0.2s ease-in-out; border: 1px solid #e2e8f0; }
+        .battle-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .back-btn { display: flex; align-items: center; gap: 8px; color: #64748b; font-weight: 600; transition: color 0.2s; }
+        .join-gradient { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
     </style>
 </head>
 <body class="min-h-screen pb-10">
 
-    <nav class="glass sticky top-0 z-50 border-b p-4">
-        <div class="max-w-2xl mx-auto flex justify-between items-center">
-            <a href="league.html" class="text-slate-500 font-bold flex items-center gap-1 hover:text-slate-800 transition-colors">
-                <svg id="back-icon" class="back-icon h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    <nav class="bg-white/80 backdrop-blur-md border-b p-4 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <a href="league.html" class="back-btn">
+                <svg id="back-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
-                <span id="ui-back">חזרה ללובי</span>
+                <span id="ui-back-text">חזרה ללובי</span>
             </a>
-            <div class="font-black text-xl italic tracking-tighter">PCS<span class="text-green-600">365</span></div>
-            <button onclick="leaveLeague()" id="ui-leave-btn" class="text-xs font-black text-red-500 bg-red-50 px-3 py-1.5 rounded-full hover:bg-red-100 transition-all uppercase tracking-wider"></button>
+            <div class="font-extrabold text-xl italic tracking-tighter">
+                PCS<span class="text-green-600">365</span>
+            </div>
+            <div id="userStatus" class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">...</div>
         </div>
     </nav>
 
-    <main class="max-w-2xl mx-auto p-4">
-        <div id="habitStatusAlert" class="hidden mb-6 bg-amber-50 border-2 border-amber-200 p-4 rounded-2xl">
-            <p id="ui-habit-deleted-msg" class="text-amber-800 font-bold text-sm mb-3"></p>
-            <button onclick="restoreHabitAndJoin()" id="ui-restore-btn" class="w-full bg-amber-500 text-white font-black py-3 rounded-xl shadow-lg hover:bg-amber-600 transition-all"></button>
-        </div>
-
-        <header class="mb-8 text-center pt-6">
-            <h1 id="leagueName" class="text-4xl font-black text-slate-800 mb-2">---</h1>
-            <p id="habitTask" class="text-slate-500 text-lg font-bold">🎯 ---</p>
+    <main class="max-w-md mx-auto p-4">
+        
+        <header id="leagueHeader" class="bg-white rounded-3xl p-8 shadow-sm mb-6 text-center relative overflow-hidden border border-gray-100">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500"></div>
+            <h1 id="ui-loading-text" class="text-gray-400 font-medium">טוען זירה...</h1>
         </header>
 
-        <section class="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden">
-            <div class="p-6 border-b border-slate-50 bg-slate-50/50 flex justify-between items-center">
-                <h2 class="text-xl font-black text-slate-800 flex items-center gap-2">
-                    <span id="ui-leaderboard-title">טבלת מובילים</span> 🏆
-                </h2>
-                <span id="memberCount" class="text-xs font-bold text-slate-400 bg-white px-3 py-1 rounded-full shadow-sm">0 משתתפים</span>
-            </div>
+        <div id="joinAction" class="hidden mb-8">
+            <button onclick="handleJoin()" class="join-gradient w-full text-white p-5 rounded-2xl shadow-xl transform active:scale-95 transition-all">
+                <div class="text-lg font-extrabold" id="ui-join-btn-text">שחזר הרגל והצטרף</div>
+                <div class="text-sm opacity-90" id="ui-join-sub-text">נראה שההרגל נמחק, לחץ כאן כדי להחזיר אותו</div>
+            </button>
+        </div>
 
-            <div id="leaderboardList" class="divide-y divide-slate-50">
-                </div>
+        <section>
+            <div class="flex justify-between items-end mb-4 px-2">
+                <h2 class="text-xl font-extrabold text-gray-800 flex items-center gap-2">
+                    <span id="ui-leaderboard-title">טבלת מובילים</span> <span class="text-2xl">🏆</span>
+                </h2>
+                <span id="memberCount" class="text-xs font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-full"></span>
+            </div>
+            <div id="leaderboardList" class="space-y-4"></div>
         </section>
+
+        <div class="mt-10 px-2">
+            <button onclick="handleLeave()" class="text-red-400 hover:text-red-600 text-xs font-bold flex items-center gap-1 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                <span id="ui-leave-text">צא מליגה זו</span>
+            </button>
+        </div>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -64,123 +88,143 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const leagueId = urlParams.get('id');
+        const LEAGUE_ID = urlParams.get('id');
         let currentUser = null;
+        let currentLeagueData = null;
 
-        const translations = {
+        if (!LEAGUE_ID) { window.location.href = "league.html"; }
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        
+        // הגדרת תרגומים
+        const texts = {
             he: {
-                dir: "rtl", back: "חזרה ללובי", leave: "צא מהליגה",
-                leaderboard: "טבלת מובילים", members: "משתתפים",
-                habitDeleted: "נראה שההרגל נמחק מהרשימה האישית שלך...",
-                restoreBtn: "שחזר הרגל והצטרף לקרב",
-                leaveConfirm: "בטוח שאתה רוצה לעזוב את הליגה?",
-                scoreSuffix: "נק'", loading: "טוען..."
+                back: 'חזרה ללובי',
+                loading: 'טוען זירה...',
+                joinBtn: 'שחזר הרגל והצטרף',
+                joinSub: 'נראה שההרגל נמחק, לחץ כאן כדי להחזיר אותו',
+                leaderboard: 'טבלת מובילים',
+                leave: 'צא מליגה זו',
+                leaveConfirm: 'בטוח שברצונך לצאת מהליגה?',
+                taskLabel: 'משימה:',
+                players: 'שחקנים',
+                you: '(אתה)',
+                streak: 'רצף ימים',
+                points: "נק'",
+                noPlayers: 'אין עדיין שחקנים'
             },
             en: {
-                dir: "ltr", back: "Back to Lobby", leave: "Leave League",
-                leaderboard: "Leaderboard", members: "Participants",
-                habitDeleted: "It seems the habit was deleted from your list...",
-                restoreBtn: "Restore Habit & Join Battle",
-                leaveConfirm: "Are you sure you want to leave this league?",
-                scoreSuffix: "pts", loading: "Loading..."
+                back: 'Back to Lobby',
+                loading: 'Loading Arena...',
+                joinBtn: 'Restore Habit & Join',
+                joinSub: 'The habit seems to be missing, click to restore it',
+                leaderboard: 'Leaderboard',
+                leave: 'Leave this league',
+                leaveConfirm: 'Are you sure you want to leave this league?',
+                taskLabel: 'Task:',
+                players: 'players',
+                you: '(You)',
+                streak: 'day streak',
+                points: 'pts',
+                noPlayers: 'No players yet'
             }
         };
 
-        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
-        const t = translations[userLang];
-        document.documentElement.lang = userLang;
-        document.documentElement.dir = t.dir;
+        const t = texts[userLang];
 
-        // Apply UI translations
-        document.getElementById('ui-back').innerText = t.back;
-        document.getElementById('ui-leave-btn').innerText = t.leave;
+        // החלת תרגום ראשוני
+        if (userLang === 'en') {
+            document.documentElement.dir = 'ltr';
+            document.getElementById('back-icon').style.transform = 'rotate(180deg)';
+        }
+        
+        document.getElementById('ui-back-text').innerText = t.back;
+        document.getElementById('ui-loading-text').innerText = t.loading;
+        document.getElementById('ui-join-btn-text').innerText = t.joinBtn;
+        document.getElementById('ui-join-sub-text').innerText = t.joinSub;
         document.getElementById('ui-leaderboard-title').innerText = t.leaderboard;
-        document.getElementById('ui-habit-deleted-msg').innerText = t.habitDeleted;
-        document.getElementById('ui-restore-btn').innerText = t.restoreBtn;
+        document.getElementById('ui-leave-text').innerText = t.leave;
 
         auth.onAuthStateChanged(user => {
             if (!user) { window.location.href = "index.html"; return; }
             currentUser = user;
-            loadLeagueData();
-            checkUserHabitStatus();
+            
+            db.collection("leagues").doc(LEAGUE_ID).onSnapshot(doc => {
+                if (!doc.exists) { window.location.href = "league.html"; return; }
+                currentLeagueData = doc.data();
+                renderUI(currentLeagueData, user.uid);
+                checkHabitPresence(user, currentLeagueData);
+            });
         });
 
-        async function loadLeagueData() {
-            if (!leagueId) return;
-            db.collection("leagues").doc(leagueId).onSnapshot(doc => {
-                if (!doc.exists) return;
-                const data = doc.data();
-                document.getElementById('leagueName').innerText = data.name;
-                document.getElementById('habitTask').innerText = `🎯 ${data.habitTask}`;
-                document.getElementById('memberCount').innerText = `${data.members?.length || 0} ${t.members}`;
-                renderLeaderboard(data.members || []);
+        async function checkHabitPresence(user, leagueData) {
+            const habitsSnap = await db.collection("users").doc(user.uid).collection("habits").get();
+            const hasHabit = habitsSnap.docs.some(h => {
+                const txt = h.data().text || "";
+                return txt.includes(leagueData.habitTask);
             });
+            document.getElementById('joinAction').classList.toggle('hidden', hasHabit);
         }
 
-        function renderLeaderboard(members) {
-            const list = document.getElementById('leaderboardList');
-            // סדר יורד לפי נקודות
-            const sorted = members.sort((a, b) => (b.score || 0) - (a.score || 0));
-            
-            list.innerHTML = sorted.map((m, index) => `
-                <div class="user-row p-5 flex items-center justify-between ${index === 0 ? 'rank-1' : ''} ${m.uid === currentUser.uid ? 'border-r-4 border-green-500' : ''}">
-                    <div class="flex items-center gap-4">
-                        <span class="w-6 text-center font-black text-slate-400">${index + 1}</span>
-                        <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center font-bold text-slate-600 uppercase">
-                            ${m.displayName?.charAt(0) || 'U'}
-                        </div>
-                        <div>
-                            <div class="font-bold text-slate-800">${m.displayName || 'User'} ${m.uid === currentUser.uid ? '(You)' : ''}</div>
-                            <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest italic">${index === 0 ? '👑 Legend' : 'Challenger'}</div>
-                        </div>
-                    </div>
-                    <div class="text-left">
-                        <div class="text-xl font-black text-slate-900">${m.score || 0}</div>
-                        <div class="text-[10px] font-bold text-slate-400 uppercase">${t.scoreSuffix}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function checkUserHabitStatus() {
-            if (!leagueId) return;
-            // כאן בודקים אם למשתמש יש את ההרגל של הליגה ברשימה האישית שלו
-            const leagueDoc = await db.collection("leagues").doc(leagueId).get();
-            const taskName = leagueDoc.data().habitTask;
-            
-            const userHabits = await db.collection("users").doc(currentUser.uid).collection("habits")
-                                 .where("text", "==", taskName).get();
-            
-            if (userHabits.empty) {
-                document.getElementById('habitStatusAlert').classList.remove('hidden');
-            } else {
-                document.getElementById('habitStatusAlert').classList.add('hidden');
+        async function handleJoin() {
+            if (window.joinLeague) {
+                await window.joinLeague(LEAGUE_ID);
             }
         }
 
-        async function restoreHabitAndJoin() {
-            const leagueDoc = await db.collection("leagues").doc(leagueId).get();
-            const taskName = leagueDoc.data().habitTask;
-
-            await db.collection("users").doc(currentUser.uid).collection("habits").add({
-                text: taskName,
-                completed: false,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                streak: 0
-            });
-            
-            location.reload();
+        async function handleLeave() {
+            if (!confirm(t.leaveConfirm)) return;
+            const updatedMembers = currentLeagueData.members.filter(m => m.uid !== currentUser.uid);
+            await db.collection("leagues").doc(LEAGUE_ID).update({ members: updatedMembers });
+            window.location.href = "league.html";
         }
 
-        async function leaveLeague() {
-            if (!confirm(t.leaveConfirm)) return;
-            const leagueRef = db.collection("leagues").doc(leagueId);
-            const doc = await leagueRef.get();
-            const members = doc.data().members || [];
-            const updatedMembers = members.filter(m => m.uid !== currentUser.uid);
+        function renderUI(data, currentUid) {
+            document.getElementById('userStatus').textContent = (currentUser.displayName || currentUser.email).split('@')[0];
             
-            await leagueRef.update({ members: updatedMembers });
-            window.location.href = "league.html";
+            document.getElementById('leagueHeader').innerHTML = `
+                <span class="bg-green-100 text-green-700 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">BATTLE ZONE</span>
+                <h1 class="text-3xl font-black mt-3 text-slate-800">${data.name}</h1>
+                <div class="flex justify-center items-center gap-2 mt-2 text-slate-500 font-medium">
+                    <span>${t.taskLabel}</span>
+                    <span class="text-slate-900 font-extrabold underline decoration-green-500 decoration-2 underline-offset-4">${data.habitTask}</span>
+                </div>
+            `;
+
+            const members = data.members || [];
+            document.getElementById('memberCount').textContent = `${members.length} ${t.players}`;
+
+            const sorted = [...members].sort((a, b) => (b.score || 0) - (a.score || 0));
+
+            const listHtml = sorted.map((m, index) => {
+                const isFirst = index === 0 && (m.score || 0) > 0;
+                const isMe = m.uid === currentUid;
+                const name = m.name.split('@')[0];
+                
+                return `
+                    <div class="battle-card ${isFirst ? 'rank-1' : 'bg-white'} ${isMe ? 'ring-2 ring-blue-500' : ''} relative p-5 rounded-2xl flex items-center shadow-sm">
+                        ${isFirst ? '<div class="crown">👑</div>' : ''}
+                        <div class="flex flex-col items-center justify-center min-w-[40px]">
+                            <span class="text-xs font-bold text-gray-400">#</span>
+                            <span class="font-black text-xl ${isFirst ? 'text-yellow-600' : 'text-slate-400'}">${index + 1}</span>
+                        </div>
+                        <div class="mx-4 flex-1">
+                            <div class="font-bold text-lg ${isMe ? 'text-blue-700' : 'text-slate-800'}">
+                                ${name} ${isMe ? `<span class="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">${t.you}</span>` : ''}
+                            </div>
+                            <div class="flex items-center gap-1 mt-0.5 text-xs font-bold text-slate-500">
+                                <span>🔥</span> ${m.streak || 0} ${t.streak}
+                            </div>
+                        </div>
+                        <div class="${userLang === 'he' ? 'text-left' : 'text-right'}">
+                            <div class="font-black text-2xl text-slate-900">${m.score || 0}</div>
+                            <div class="text-[10px] uppercase font-black text-slate-400">${t.points}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('leaderboardList').innerHTML = listHtml || `<div class="text-center p-10 text-slate-400">${t.noPlayers}</div>`;
         }
     </script>
 </body>
