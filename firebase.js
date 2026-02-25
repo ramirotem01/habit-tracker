@@ -30,28 +30,40 @@ window.joinLeague = async (leagueId) => {
     if (!leagueDoc.exists) return;
     const leagueData = leagueDoc.data();
 
-    // הוספת המשתמש למערך המשתתפים בליגה
-    const newMember = {
-        uid: user.uid,
-        name: user.displayName || "משתמש חדש",
-        score: 0,
-        streak: 0,
-        lastUpdated: new Date().toISOString()
-    };
+    // בדיקה אם המשתמש כבר רשום בליגה
+    const members = leagueData.members || [];
+    const alreadyMember = members.some(m => m.uid === user.uid);
 
-    await leagueRef.update({
-        members: firebase.firestore.FieldValue.arrayUnion(newMember)
-    });
+    if (!alreadyMember) {
+        // הוספת המשתמש למערך המשתתפים בליגה
+        const newMember = {
+            uid: user.uid,
+            name: user.displayName || "משתמש PCS",
+            score: 0,
+            streak: 0,
+            lastUpdated: new Date().toISOString()
+        };
 
-    // הוספת ההרגל של הליגה לרשימת ההרגלים האישית של המשתמש
-    await db.collection("users").doc(user.uid).collection("habits").add({
-        text: leagueData.habitTask,
-        isLeagueHabit: true,
-        leagueId: leagueId,
-        createdAt: new Date().toISOString()
-    });
+        await leagueRef.update({
+            members: firebase.firestore.FieldValue.arrayUnion(newMember)
+        });
+    }
 
-    console.log("Joined league and habit added!");
+    // הוספת ההרגל של הליגה לרשימת ההרגלים האישית של המשתמש (מניעת כפילות)
+    const habitRef = db.collection("users").doc(user.uid).collection("habits");
+    const habitCheck = await habitRef.where("text", "==", leagueData.habitTask).get();
+    
+    if (habitCheck.empty) {
+        await habitRef.add({
+            text: leagueData.habitTask,
+            isLeagueHabit: true,
+            leagueId: leagueId,
+            createdAt: new Date().toISOString()
+        });
+        console.log("Joined league and habit added!");
+    } else {
+        console.log("Already in league and habit exists.");
+    }
 };
 
 // 2. עדכון ניקוד בליגה כשמסמנים וי בדשבורד
@@ -80,7 +92,7 @@ async function updateLeagueScore(leagueId, userId, isDone) {
     const doc = await leagueRef.get();
     if (!doc.exists) return;
 
-    let members = doc.data().members;
+    let members = doc.data().members || [];
     const memberIndex = members.findIndex(m => m.uid === userId);
 
     if (memberIndex > -1) {
@@ -89,7 +101,7 @@ async function updateLeagueScore(leagueId, userId, isDone) {
             members[memberIndex].streak += 1; // העלאת רצף
         } else {
             members[memberIndex].score = Math.max(0, members[memberIndex].score - 10);
-            members[memberIndex].streak = 0; // שבירת רצף
+            members[memberIndex].streak = Math.max(0, members[memberIndex].streak - 1); // הורדת רצף
         }
         members[memberIndex].lastUpdated = new Date().toISOString();
         
