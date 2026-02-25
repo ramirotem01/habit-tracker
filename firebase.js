@@ -35,10 +35,17 @@ window.joinLeague = async (leagueId) => {
     const alreadyMember = members.some(m => m.uid === user.uid);
 
     if (!alreadyMember) {
+        // לוגיקת יצירת שם נקי: אם אין שם תצוגה, לוקחים את המייל עד ה-@
+        let cleanName = user.displayName;
+        if (!cleanName || cleanName === "" || cleanName === "משתמש PCS") {
+            cleanName = user.email ? user.email.split('@')[0] : "User";
+        }
+
         // הוספת המשתמש למערך המשתתפים בליגה
         const newMember = {
             uid: user.uid,
-            name: user.displayName || "משתמש PCS",
+            name: cleanName,
+            email: user.email, // שומרים מייל לגיבוי וזיהוי
             score: 0,
             streak: 0,
             lastUpdated: new Date().toISOString()
