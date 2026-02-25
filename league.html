@@ -189,12 +189,25 @@
             currentUser = user;
             document.getElementById('userStatus').textContent = cleanName(user.displayName || user.email);
 
-            db.collection("leagues").doc(LEAGUE_ID).onSnapshot((doc) => {
+            // האזנה לנתוני הליגה
+            db.collection("leagues").doc(LEAGUE_ID).onSnapshot(async (doc) => {
                 if (doc.exists) {
                     const data = doc.data();
                     renderUI(data, user.uid);
-                    const isMember = data.members && data.members.some(m => m.uid === user.uid);
-                    document.getElementById('joinAction').classList.toggle('hidden', isMember);
+                    
+                    // בדיקה 1: האם המשתמש רשום במערך המשתתפים של הליגה?
+                    const isMemberInLeague = data.members && data.members.some(m => m.uid === user.uid);
+                    
+                    // בדיקה 2: האם ההרגל הספציפי קיים אצלו באוסף האישי?
+                    const habitsSnap = await db.collection("users").doc(user.uid).collection("habits").get();
+                    const hasHabit = habitsSnap.docs.some(h => {
+                        const habitText = h.data().text || "";
+                        return habitText.includes("קימה ב-06:00") || habitText.includes("Wake up at 06:00");
+                    });
+
+                    // הכפתור יופיע אם הוא לא רשום, או אם הוא רשום אבל מחק את ההרגל
+                    const shouldShowJoin = !isMemberInLeague || !hasHabit;
+                    document.getElementById('joinAction').classList.toggle('hidden', !shouldShowJoin);
                 }
             });
         });
@@ -206,14 +219,14 @@
         }
 
         function renderUI(data, currentUid) {
-            // תרגום דינמי של שם הליגה והמשימה
-            let displayLeagueName = data.name;
-            let displayTaskName = data.habitTask;
+            let displayLeagueName = data.name || "";
+            let displayTaskName = data.habitTask || "";
             let displayType = data.type || "GOLD LEAGUE";
 
+            // תרגום חכם לפי מילות מפתח (תומך בשינויי שמות ב-DB)
             if (userLang === 'en') {
-                if (displayLeagueName === "ליגת הבוקר של PCS") displayLeagueName = t.morningLeagueName;
-                if (displayTaskName === "קימה ב-06:00") displayTaskName = t.morningTaskName;
+                if (displayLeagueName.includes("ליגת הבוקר")) displayLeagueName = t.morningLeagueName;
+                if (displayTaskName.includes("קימה") || displayTaskName.includes("06:00")) displayTaskName = t.morningTaskName;
                 if (displayType === "ליגת זהב") displayType = t.goldLeague;
             } else {
                 if (displayType === "GOLD LEAGUE") displayType = t.goldLeague;
@@ -254,38 +267,4 @@
                     <div class="battle-card ${isFirst ? 'rank-1' : 'bg-white'} ${isMe ? 'ring-2 ring-blue-500' : ''} relative p-5 rounded-2xl flex items-center shadow-sm">
                         ${isFirst ? '<div class="crown">👑</div>' : ''}
                         
-                        <div class="flex flex-col items-center justify-center min-w-[40px]">
-                            <span class="text-xs font-bold text-gray-400 mb-0.5">#</span>
-                            <span class="font-black text-xl ${isFirst ? 'text-yellow-600' : 'text-slate-400'}">${index + 1}</span>
-                        </div>
-
-                        <div class="mx-4 flex-1 ${userLang === 'he' ? 'text-right' : 'text-left'}">
-                            <div class="font-bold text-lg ${isMe ? 'text-blue-700' : 'text-slate-800'} flex items-center gap-2">
-                                ${displayName} ${isMe ? `<span class="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">${t.you}</span>` : ''}
-                            </div>
-                            <div class="flex items-center gap-1.5 mt-0.5">
-                                <span class="text-orange-500">🔥</span>
-                                <span class="text-xs font-bold text-slate-500">${m.streak || 0} ${t.streak}</span>
-                            </div>
-                        </div>
-
-                        <div class="${userLang === 'he' ? 'text-left' : 'text-right'}">
-                            <div class="font-black text-2xl text-slate-900">${m.score || 0}</div>
-                            <div class="text-[10px] uppercase font-black text-slate-400 tracking-tighter">${t.points}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            document.getElementById('leaderboardList').innerHTML = listHtml;
-        }
-
-        function shareLeague() {
-            const url = window.location.origin + window.location.pathname;
-            navigator.clipboard.writeText(url).then(() => {
-                alert(t.copyAlert);
-            });
-        }
-    </script>
-</body>
-</html>
+                        <div class="flex flex-col items-center justify-center min-
