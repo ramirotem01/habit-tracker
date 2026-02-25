@@ -35,20 +35,18 @@ window.joinLeague = async (leagueId) => {
     const alreadyMember = members.some(m => m.uid === user.uid);
 
     if (!alreadyMember) {
-        // לוגיקת יצירת שם נקי: אם אין שם תצוגה, לוקחים את המייל עד ה-@
         let cleanName = user.displayName;
         if (!cleanName || cleanName === "" || cleanName === "משתמש PCS") {
             cleanName = user.email ? user.email.split('@')[0] : "User";
         }
 
-        // הוספת המשתמש למערך המשתתפים בליגה
         const newMember = {
             uid: user.uid,
             name: cleanName,
-            email: user.email, // שומרים מייל לגיבוי וזיהוי
+            email: user.email,
             score: 0,
             streak: 0,
-            lastUpdated: new Date().toISOString()
+            lastUpdated: firebase.firestore.Timestamp.now() // תיקון לפורמט פיירבייס
         };
 
         await leagueRef.update({
@@ -56,7 +54,7 @@ window.joinLeague = async (leagueId) => {
         });
     }
 
-    // הוספת ההרגל של הליגה לרשימת ההרגלים האישית של המשתמש (מניעת כפילות)
+    // הוספת ההרגל של הליגה לרשימת ההרגלים האישית
     const habitRef = db.collection("users").doc(user.uid).collection("habits");
     const habitCheck = await habitRef.where("text", "==", leagueData.habitTask).get();
     
@@ -65,11 +63,9 @@ window.joinLeague = async (leagueId) => {
             text: leagueData.habitTask,
             isLeagueHabit: true,
             leagueId: leagueId,
-            createdAt: new Date().toISOString()
+            createdAt: firebase.firestore.Timestamp.now() // תיקון קריטי ל-AI
         });
         console.log("Joined league and habit added!");
-    } else {
-        console.log("Already in league and habit exists.");
     }
 };
 
@@ -78,14 +74,13 @@ window.syncHabitWithLeague = async (taskText, isChecked) => {
     const user = auth.currentUser;
     if (!user) return;
 
-    // מחפשים אם ההרגל הזה שייך לליגה כלשהי
     const habitSnap = await db.collection("users").doc(user.uid)
         .collection("habits")
         .where("text", "==", taskText)
         .where("isLeagueHabit", "==", true)
         .get();
 
-    if (habitSnap.empty) return; // לא הרגל ליגה, לא עושים כלום
+    if (habitSnap.empty) return;
 
     const habitData = habitSnap.docs[0].data();
     const leagueId = habitData.leagueId;
@@ -104,16 +99,16 @@ async function updateLeagueScore(leagueId, userId, isDone) {
 
     if (memberIndex > -1) {
         if (isDone) {
-            members[memberIndex].score += 10; // 10 נקודות על ביצוע
-            members[memberIndex].streak += 1; // העלאת רצף
+            members[memberIndex].score += 10;
+            members[memberIndex].streak += 1;
         } else {
             members[memberIndex].score = Math.max(0, members[memberIndex].score - 10);
-            members[memberIndex].streak = Math.max(0, members[memberIndex].streak - 1); // הורדת רצף
+            members[memberIndex].streak = Math.max(0, members[memberIndex].streak - 1);
         }
-        members[memberIndex].lastUpdated = new Date().toISOString();
+        members[memberIndex].lastUpdated = firebase.firestore.Timestamp.now(); // תיקון
         
         await leagueRef.update({ members: members });
     }
 }
 
-console.log("Firebase initialized successfully with League Logic");
+console.log("Firebase initialized successfully");
