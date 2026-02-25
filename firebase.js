@@ -74,18 +74,24 @@ window.syncHabitWithLeague = async (taskText, isChecked) => {
     const user = auth.currentUser;
     if (!user) return;
 
-    const habitSnap = await db.collection("users").doc(user.uid)
-        .collection("habits")
-        .where("text", "==", taskText)
-        .where("isLeagueHabit", "==", true)
+    // איתור כל הליגות שבהן המשימה הזו רלוונטית
+    const leaguesSnap = await db.collection("leagues")
+        .where("habitTask", "==", taskText)
         .get();
 
-    if (habitSnap.empty) return;
+    if (leaguesSnap.empty) return;
 
-    const habitData = habitSnap.docs[0].data();
-    const leagueId = habitData.leagueId;
+    // עדכון הציון בכל ליגה שהמשתמש חבר בה והמשימה תואמת
+    const updatePromises = [];
+    leaguesSnap.forEach(doc => {
+        const data = doc.data();
+        const isMember = data.members && data.members.some(m => m.uid === user.uid);
+        if (isMember) {
+            updatePromises.push(updateLeagueScore(doc.id, user.uid, isChecked));
+        }
+    });
 
-    await updateLeagueScore(leagueId, user.uid, isChecked);
+    await Promise.all(updatePromises);
 };
 
 // 3. לוגיקת חישוב הניקוד הפנימית של הליגה
@@ -99,13 +105,13 @@ async function updateLeagueScore(leagueId, userId, isDone) {
 
     if (memberIndex > -1) {
         if (isDone) {
-            members[memberIndex].score += 10;
-            members[memberIndex].streak += 1;
+            members[memberIndex].score = (members[memberIndex].score || 0) + 10;
+            members[memberIndex].streak = (members[memberIndex].streak || 0) + 1;
         } else {
-            members[memberIndex].score = Math.max(0, members[memberIndex].score - 10);
-            members[memberIndex].streak = Math.max(0, members[memberIndex].streak - 1);
+            members[memberIndex].score = Math.max(0, (members[memberIndex].score || 0) - 10);
+            members[memberIndex].streak = Math.max(0, (members[memberIndex].streak || 0) - 1);
         }
-        members[memberIndex].lastUpdated = firebase.firestore.Timestamp.now(); // תיקון
+        members[memberIndex].lastUpdated = firebase.firestore.Timestamp.now(); 
         
         await leagueRef.update({ members: members });
     }
