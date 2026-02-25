@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCS365 - Habit Battles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .crown { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-15deg); font-size: 24px; z-index: 10; }
+        .rank-1 { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; }
+        .battle-card { transition: all 0.3s ease; }
+        .loading-spinner { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans text-gray-900">
+
+    <nav class="bg-white border-b p-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
+        <div class="font-bold text-xl cursor-pointer" onclick="window.location.href='dashboard.html'">
+            PCS<span class="text-green-600">365</span> <span class="text-sm font-normal text-gray-500">| Battles</span>
+        </div>
+        <div id="userStatus" class="text-xs font-medium text-gray-400">טוען...</div>
+    </nav>
+
+    <main class="max-w-md mx-auto p-4 pb-20">
+        <section id="leagueHeader" class="bg-white rounded-2xl p-6 shadow-sm mb-6 text-center border border-gray-100">
+            <div class="animate-pulse flex flex-col items-center">
+                <div class="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+                <div class="h-8 bg-gray-200 rounded w-3/4"></div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex justify-between items-center mb-4 px-2">
+                <h2 class="font-bold text-gray-700 flex items-center">Leaderboard 🔥</h2>
+                <span id="memberCount" class="text-xs text-gray-500"></span>
+            </div>
+            
+            <div id="leaderboardList" class="space-y-3">
+                </div>
+        </section>
+
+        <section class="mt-8 bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+            <div class="relative z-10">
+                <h3 class="font-bold text-lg">קרב צמוד? הזמן תגבורת! 😈</h3>
+                <p class="text-indigo-100 text-sm mt-1">שלח לינק לחברים ובדוק מי באמת מחזיק מעמד.</p>
+                <button onclick="shareLeague()" class="mt-4 bg-white text-indigo-700 font-bold py-2.5 px-6 rounded-xl shadow-md text-sm active:scale-95 transition-transform w-full">
+                    העתק לינק להזמנה
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="firebase.js"></script>
+
+    <script>
+        let currentUserId = null;
+        const LEAGUE_ID = "global_morning_league"; // כרגע MVP עם ליגה אחת קבועה
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                currentUserId = user.uid;
+                document.getElementById('userStatus').textContent = user.displayName || "מחובר";
+                initLeagueListener();
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+
+        async function initLeagueListener() {
+            // האזנה לנתוני הליגה בזמן אמת
+            db.collection("leagues").doc(LEAGUE_ID).onSnapshot(async (doc) => {
+                if (!doc.exists) {
+                    await createInitialLeague();
+                    return;
+                }
+                const data = doc.data();
+                renderHeader(data);
+                renderLeaderboard(data.members);
+            });
+        }
+
+        function renderHeader(data) {
+            const header = document.getElementById('leagueHeader');
+            header.innerHTML = `
+                <span class="bg-blue-50 text-blue-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-blue-100">${data.type || 'ליגה שבועית'}</span>
+                <h1 class="text-2xl font-black mt-3 text-gray-800">${data.name}</h1>
+                <p class="text-gray-400 text-sm mt-1">משימת הליגה: <span class="text-gray-600 font-bold">${data.habitTask}</span></p>
+            `;
+        }
+
+        function renderLeaderboard(members) {
+            const list = document.getElementById('leaderboardList');
+            document.getElementById('memberCount').textContent = `${members.length} משתתפים`;
+
+            // מיון לפי ניקוד (מהגבוה לנמוך)
+            const sorted = [...members].sort((a, b) => b.score - a.score);
+
+            list.innerHTML = sorted.map((m, index) => {
+                const isFirst = index === 0;
+                const isMe = m.uid === currentUserId;
+                
+                return `
+                    <div class="battle-card ${isFirst ? 'rank-1' : 'bg-white'} ${isMe ? 'ring-2 ring-blue-400' : ''} relative p-4 rounded-2xl flex items-center shadow-sm border border-gray-100">
+                        ${isFirst ? '<div class="crown">👑</div>' : ''}
+                        <div class="w-8 h-8 ${isFirst ? 'bg-yellow-500' : 'bg-gray-100'} rounded-full flex items-center justify-center font-bold ${isFirst ? 'text-white' : 'text-gray-400'} text-sm">
+                            ${index + 1}
+                        </div>
+                        <div class="mr-4 flex-1">
+                            <div class="font-bold ${isMe ? 'text-blue-700' : 'text-gray-800'}">${m.name} ${isMe ? '(אתה)' : ''}</div>
+                            <div class="text-[11px] ${isFirst ? 'text-amber-700' : 'text-gray-400'}">רצף: ${m.streak} ימים 🔥</div>
+                        </div>
+                        <div class="text-left">
+                            <div class="font-black text-xl ${isFirst ? 'text-amber-900' : 'text-gray-700'}">${m.score}</div>
+                            <div class="text-[9px] uppercase font-bold opacity-50 tracking-tighter">Points</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function createInitialLeague() {
+            // פונקציה ליצירת ליגה ראשונית ב-DB אם היא לא קיימת
+            await db.collection("leagues").doc(LEAGUE_ID).set({
+                name: "ליגת הבוקר של PCS",
+                habitTask: "קימה ב-06:00",
+                type: "ליגת זהב",
+                members: [
+                    { uid: "bot1", name: "גיא המקצוען", score: 85, streak: 6 },
+                    { uid: "bot2", name: "מיכל לוי", score: 45, streak: 2 }
+                ]
+            });
+        }
+
+        function shareLeague() {
+            const link = `https://pcs365.co.il/league.html?join=${LEAGUE_ID}`;
+            navigator.clipboard.writeText(link);
+            alert("הלינק הועתק! שלח אותו בוואטסאפ לחברים 🚀");
+        }
+    </script>
+</body>
+</html>
