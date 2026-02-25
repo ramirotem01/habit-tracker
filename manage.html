@@ -139,6 +139,7 @@
           </ul>
 
         <div class="footer-links">
+          <button class="link-btn" id="ui-leagues-link" onclick="window.location.href='league.html'">🏆 Habit Battles</button>
           <button class="link-btn" id="ui-back-dash" onclick="window.location.href='dashboard.html'">🔙 חזרה לדשבורד</button>
           <button id="logoutBtn" class="link-btn logout-link">🔓 התנתק</button>
         </div>
@@ -160,6 +161,7 @@
         title: "📝 ניהול הרגלים",
         aiBtn: "✨ בניית תוכנית עם עוזר AI",
         placeholder: "הוסף הרגל חדש...",
+        leagues: "🏆 זירת הליגות (Habit Battles)",
         back: "🔙 חזרה לדשבורד",
         logout: "🔓 התנתק"
       },
@@ -168,6 +170,7 @@
         title: "📝 Manage Habits",
         aiBtn: "✨ Build plan with AI Assistant",
         placeholder: "Add new habit...",
+        leagues: "🏆 Habit Battles Arena",
         back: "🔙 Back to Dashboard",
         logout: "🔓 Logout"
       }
@@ -182,6 +185,7 @@
     document.getElementById('ui-manage-title').innerText = lang.title;
     document.getElementById('ui-ai-btn').innerText = lang.aiBtn;
     document.getElementById('newHabit').placeholder = lang.placeholder;
+    document.getElementById('ui-leagues-link').innerText = lang.leagues;
     document.getElementById('ui-back-dash').innerText = lang.back;
     document.getElementById('logoutBtn').innerText = lang.logout;
 
