@@ -69,7 +69,10 @@
     </main>
 
     <div id="createModal" class="modal p-4">
-        <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl">
+        <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative">
+            <button onclick="closeCreateModal()" class="absolute top-6 left-6 text-slate-400 hover:text-slate-600" id="ui-close-modal">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
             <h2 id="ui-modal-title" class="text-2xl font-black text-slate-800 mb-6">ליגה חדשה</h2>
             <div class="space-y-5">
                 <div>
@@ -98,18 +101,20 @@
 
         const translations = {
             he: {
-                dir: "rtl", back: "דשבורד", title: "הזירה הקהילתית", subtitle: "הצטרף לקרב או פתח ליגה משלך",
+                dir: "rtl", back: "דשבורד", title: "הזירה הקהילתית", subtitle: "הצטרף לקרב על ההרגלים או פתח ליגה משלך",
                 explore: "גלה ליגות", myLeagues: "הליגות שלי", search: "חפש ליגה...",
                 modalTitle: "ליגה חדשה", labelName: "שם הקבוצה", labelTask: "מה המשימה?",
                 createBtn: "פתח ליגה והצטרף", official: "רשמי", participants: "משתתפים",
-                limitAlert: "מקסימום 5 ליגות!", globalName: "ליגת לקום לפני 6", globalTask: "לקום לפני 06:00"
+                limitAlert: "מקסימום 5 ליגות!", globalName: "ליגת לקום לפני 6", globalTask: "לקום לפני 06:00",
+                joined: "רשום", leagueUnit: "ליגות"
             },
             en: {
-                dir: "ltr", back: "Dashboard", title: "Community Arena", subtitle: "Join a battle or start your own",
-                explore: "Explore", myLeagues: "My Leagues", search: "Search leagues...",
-                modalTitle: "New League", labelName: "League Name", labelTask: "What's the habit?",
-                createBtn: "Create & Join", official: "OFFICIAL", participants: "Participants",
-                limitAlert: "Maximum 5 leagues allowed!", globalName: "Before 6AM League", globalTask: "Wake up before 06:00"
+                dir: "ltr", back: "Dashboard", title: "Community Arena", subtitle: "Join the habit battle or start your own league",
+                explore: "Explore Leagues", myLeagues: "My Leagues", search: "Search league...",
+                modalTitle: "New League", labelName: "League Name", labelTask: "What's the mission?",
+                createBtn: "Create League & Join", official: "OFFICIAL", participants: "Participants",
+                limitAlert: "Maximum 5 leagues!", globalName: "Before 6AM League", globalTask: "Wake up before 06:00",
+                joined: "Joined", leagueUnit: "Leagues"
             }
         };
 
@@ -118,7 +123,7 @@
         document.documentElement.lang = userLang;
         document.documentElement.dir = t.dir;
 
-        // Apply translations
+        // Apply translations on Load
         document.getElementById('ui-back').innerText = t.back;
         document.getElementById('ui-title').innerText = t.title;
         document.getElementById('ui-subtitle').innerText = t.subtitle;
@@ -136,6 +141,8 @@
             document.getElementById('search-icon').style.left = '1rem';
             document.getElementById('leagueSearch').style.paddingRight = '1rem';
             document.getElementById('leagueSearch').style.paddingLeft = '3rem';
+            document.getElementById('ui-close-modal').style.left = 'auto';
+            document.getElementById('ui-close-modal').style.right = '1.5rem';
         }
 
         auth.onAuthStateChanged(async user => {
@@ -171,7 +178,9 @@
             const list = document.getElementById('leaguesList');
             const searchTerm = document.getElementById('leagueSearch').value.toLowerCase();
             const myLeagues = allLeagues.filter(l => l.members?.some(m => m.uid === currentUser.uid));
-            document.getElementById('leagueCountBadge').innerText = `${myLeagues.length}/5 ${userLang === 'he' ? 'ליגות' : 'Leagues'}`;
+            
+            // עדכון כמות ליגות 0/5
+            document.getElementById('leagueCountBadge').innerText = `${myLeagues.length}/5 ${t.leagueUnit}`;
 
             let filtered = currentTab === 'explore' ? allLeagues : myLeagues;
             if (currentTab === 'explore') {
@@ -192,7 +201,7 @@
                             ${isGlobal ? `<span class="official-tag">${t.official}</span>` : ''}
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="bg-amber-100 text-amber-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">Gold League</span>
-                                ${isMember ? `<span class="bg-blue-100 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">${userLang === 'he' ? 'רשום' : 'Joined'}</span>` : ''}
+                                ${isMember ? `<span class="bg-blue-100 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">${t.joined}</span>` : ''}
                             </div>
                             <h3 class="text-xl font-black text-slate-800">${league.name}</h3>
                             <p class="text-slate-500 text-sm font-medium mt-1">🎯 ${league.habitTask}</p>
@@ -216,7 +225,6 @@
                 name: name, habitTask: task, createdBy: currentUser.uid,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(), members: []
             });
-            if (window.joinLeague) await window.joinLeague(newLeagueRef.id);
             window.location.href = `league-battle.html?id=${newLeagueRef.id}`;
         }
 
