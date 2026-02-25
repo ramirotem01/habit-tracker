@@ -6,7 +6,10 @@
     <title>PCS365 - Habit Battles</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .crown { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-15deg); font-size: 24px; z-index: 10; }
+        /* כתר דינמי לפי כיוון השפה */
+        html[dir="rtl"] .crown { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-15deg); font-size: 24px; z-index: 10; }
+        html[dir="ltr"] .crown { position: absolute; top: -15px; right: 50%; transform: translateX(50%) rotate(15deg); font-size: 24px; z-index: 10; }
+        
         .rank-1 { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; }
         .battle-card { transition: all 0.3s ease; }
     </style>
@@ -17,29 +20,26 @@
         <div class="font-bold text-xl cursor-pointer" onclick="window.location.href='dashboard.html'">
             PCS<span class="text-green-600">365</span> <span class="text-sm font-normal text-gray-500">| Battles</span>
         </div>
-        <div id="userStatus" class="text-xs font-medium text-gray-400">מתחבר...</div>
+        <div id="userStatus" class="text-xs font-medium text-gray-400">...</div>
     </nav>
 
     <main class="max-w-md mx-auto p-4 pb-20">
         <section id="leagueHeader" class="bg-white rounded-2xl p-6 shadow-sm mb-6 text-center border border-gray-100">
-            <h1 class="text-xl font-bold">טוען נתוני ליגה...</h1>
+            <h1 id="ui-loading-text" class="text-xl font-bold">טוען...</h1>
         </section>
 
         <section>
             <div class="flex justify-between items-center mb-4 px-2">
-                <h2 class="font-bold text-gray-700 flex items-center">Leaderboard 🔥</h2>
+                <h2 id="ui-leaderboard-title" class="font-bold text-gray-700 flex items-center">Leaderboard 🔥</h2>
                 <span id="memberCount" class="text-xs text-gray-500"></span>
             </div>
-            <div id="leaderboardList" class="space-y-3">
-                </div>
+            <div id="leaderboardList" class="space-y-3"></div>
         </section>
 
         <section class="mt-8 bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-6 text-white shadow-lg">
-            <h3 class="font-bold text-lg">הזמן חברים לקרב! 😈</h3>
-            <p class="text-indigo-100 text-sm mt-1">שלח את הלינק לחברים. ברגע שהם יכנסו, הם יופיעו בטבלה.</p>
-            <button onclick="shareLeague()" class="mt-4 bg-white text-indigo-700 font-bold py-2.5 px-6 rounded-xl w-full active:scale-95 transition-transform">
-                העתק לינק להזמנה
-            </button>
+            <h3 id="ui-invite-title" class="font-bold text-lg"></h3>
+            <p id="ui-invite-desc" class="text-indigo-100 text-sm mt-1"></p>
+            <button onclick="shareLeague()" id="ui-invite-btn" class="mt-4 bg-white text-indigo-700 font-bold py-2.5 px-6 rounded-xl w-full active:scale-95 transition-transform"></button>
         </section>
     </main>
 
@@ -51,38 +51,97 @@
     <script>
         const LEAGUE_ID = "global_morning_league";
 
+        // אובייקט תרגומים
+        const translations = {
+            he: {
+                loading: "טוען נתוני ליגה...",
+                leaderboard: "טבלת מובילים 🔥",
+                participants: "משתתפים",
+                inviteTitle: "הזמן חברים לקרב! 😈",
+                inviteDesc: "שלח את הלינק לחברים. ברגע שהם יכנסו, הם יופיעו בטבלה.",
+                inviteBtn: "העתק לינק להזמנה",
+                leagueTask: "משימת הליגה:",
+                noMembers: "עוד אין משתתפים. תהיה הראשון! 🚀",
+                you: "(אתה)",
+                streak: "רצף:",
+                days: "ימים",
+                points: "נקודות",
+                alertCopy: "הלינק הועתק! שלח לחברים בוואטסאפ 🚀",
+                connecting: "מתחבר...",
+                defaultLeagueName: "ליגת הבוקר של PCS",
+                defaultTaskName: "קימה ב-06:00"
+            },
+            en: {
+                loading: "Loading league data...",
+                leaderboard: "Leaderboard 🔥",
+                participants: "participants",
+                inviteTitle: "Invite Friends to Battle! 😈",
+                inviteDesc: "Send the link to friends. They will appear here once they join.",
+                inviteBtn: "Copy Invitation Link",
+                leagueTask: "League Task:",
+                noMembers: "No participants yet. Be the first! 🚀",
+                you: "(You)",
+                streak: "Streak:",
+                days: "days",
+                points: "Points",
+                alertCopy: "Invite link copied! Send it to your friends 🚀",
+                connecting: "Connecting...",
+                defaultLeagueName: "PCS Morning League",
+                defaultTaskName: "Wake up at 06:00"
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+
+        // הזרקת טקסטים ל-UI
+        document.getElementById('ui-loading-text').innerText = t.loading;
+        document.getElementById('ui-leaderboard-title').innerText = t.leaderboard;
+        document.getElementById('ui-invite-title').innerText = t.inviteTitle;
+        document.getElementById('ui-invite-desc').innerText = t.inviteDesc;
+        document.getElementById('ui-invite-btn').innerText = t.inviteBtn;
+        document.getElementById('userStatus').innerText = t.connecting;
+
+        // פונקציית עזר לניקוי שם ממייל
+        function cleanName(name, email) {
+            if (name && name.includes('@') === false) return name;
+            if (email) return email.split('@')[0];
+            return "User";
+        }
+
         auth.onAuthStateChanged(async (user) => {
             if (!user) {
                 window.location.href = "index.html";
                 return;
             }
 
-            document.getElementById('userStatus').textContent = user.displayName || user.email;
+            // הצגת שם נקי ב-Navbar
+            document.getElementById('userStatus').textContent = cleanName(user.displayName, user.email);
 
             try {
                 const leagueRef = db.collection("leagues").doc(LEAGUE_ID);
                 let leagueDoc = await leagueRef.get();
 
-                // אם הליגה לא קיימת בכלל (פעם ראשונה בהיסטוריה), יוצרים אותה ריקה
                 if (!leagueDoc.exists) {
                     await leagueRef.set({
-                        name: "ליגת הבוקר של PCS",
-                        habitTask: "קימה ב-06:00",
-                        type: "ליגת זהב",
-                        members: [] // מתחילים בלי משתמשים
+                        name: t.defaultLeagueName,
+                        habitTask: t.defaultTaskName,
+                        type: "Gold League",
+                        members: [] 
                     });
                 }
 
-                // הצטרפות אוטומטית (מתוך firebase.js שעדכנו)
+                // הצטרפות אוטומטית (מתוך firebase.js)
                 if (window.joinLeague) {
                     await window.joinLeague(LEAGUE_ID);
                 }
 
-                // האזנה בזמן אמת - ברגע שמישהו מצטרף או מעדכן ציון, זה יקפוץ פה
+                // האזנה לעדכונים בזמן אמת
                 leagueRef.onSnapshot((doc) => {
                     if (doc.exists) {
-                        const data = doc.data();
-                        renderUI(data, user.uid);
+                        renderUI(doc.data(), user.uid);
                     }
                 });
 
@@ -92,31 +151,26 @@
         });
 
         function renderUI(data, currentUid) {
-            // כותרת הליגה
             document.getElementById('leagueHeader').innerHTML = `
                 <span class="bg-blue-50 text-blue-600 text-[10px] font-bold px-3 py-1 rounded-full border border-blue-100 uppercase">${data.type}</span>
                 <h1 class="text-2xl font-black mt-3 text-gray-800">${data.name}</h1>
-                <p class="text-gray-400 text-sm mt-1">משימת הליגה: <span class="text-gray-600 font-bold">${data.habitTask}</span></p>
+                <p class="text-gray-400 text-sm mt-1">${t.leagueTask} <span class="text-gray-600 font-bold">${data.habitTask}</span></p>
             `;
 
             const members = data.members || [];
-            document.getElementById('memberCount').textContent = `${members.length} משתתפים`;
+            document.getElementById('memberCount').textContent = `${members.length} ${t.participants}`;
 
             if (members.length === 0) {
-                document.getElementById('leaderboardList').innerHTML = `
-                    <div class="text-center p-10 text-gray-400 border-2 border-dashed rounded-2xl">
-                        עוד אין משתתפים. תהיה הראשון! 🚀
-                    </div>
-                `;
+                document.getElementById('leaderboardList').innerHTML = `<div class="text-center p-10 text-gray-400 border-2 border-dashed rounded-2xl">${t.noMembers}</div>`;
                 return;
             }
 
-            // מיון אמיתי לפי ניקוד
             const sorted = [...members].sort((a, b) => (b.score || 0) - (a.score || 0));
 
             const listHtml = sorted.map((m, index) => {
-                const isFirst = index === 0 && m.score > 0;
+                const isFirst = index === 0 && (m.score || 0) > 0;
                 const isMe = m.uid === currentUid;
+                const displayName = cleanName(m.name, m.email || "");
                 
                 return `
                     <div class="battle-card ${isFirst ? 'rank-1' : 'bg-white'} ${isMe ? 'ring-2 ring-blue-400' : ''} relative p-4 rounded-2xl flex items-center shadow-sm border border-gray-100">
@@ -124,13 +178,13 @@
                         <div class="w-8 h-8 ${isFirst ? 'bg-yellow-500 text-white' : 'bg-gray-100 text-gray-400'} rounded-full flex items-center justify-center font-bold text-sm">
                             ${index + 1}
                         </div>
-                        <div class="mr-4 flex-1 text-right">
-                            <div class="font-bold ${isMe ? 'text-blue-700' : 'text-gray-800'}">${m.name} ${isMe ? '(אתה)' : ''}</div>
-                            <div class="text-[11px] opacity-70">רצף: ${m.streak || 0} ימים 🔥</div>
+                        <div class="mx-4 flex-1 ${userLang === 'he' ? 'text-right' : 'text-left'}">
+                            <div class="font-bold ${isMe ? 'text-blue-700' : 'text-gray-800'}">${displayName} ${isMe ? t.you : ''}</div>
+                            <div class="text-[11px] opacity-70">${t.streak} ${m.streak || 0} ${t.days} 🔥</div>
                         </div>
-                        <div class="text-left">
+                        <div class="${userLang === 'he' ? 'text-left' : 'text-right'}">
                             <div class="font-black text-xl">${m.score || 0}</div>
-                            <div class="text-[9px] uppercase font-bold opacity-50">Points</div>
+                            <div class="text-[9px] uppercase font-bold opacity-50">${t.points}</div>
                         </div>
                     </div>
                 `;
@@ -142,7 +196,7 @@
         function shareLeague() {
             const url = window.location.origin + window.location.pathname;
             navigator.clipboard.writeText(url).then(() => {
-                alert("לינק להזמנה הועתק! שלח לחברים בוואטסאפ 🚀");
+                alert(t.alertCopy);
             });
         }
     </script>
