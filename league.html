@@ -18,11 +18,15 @@
         }
         .modal.active { display: flex; }
         .badge-count { font-variant-numeric: tabular-nums; }
+        
+        /* Official Tag Style */
         .global-highlight { border: 2px solid #10b981 !important; position: relative; }
-        .global-highlight::after { 
-            content: "רשמי"; position: absolute; top: -10px; left: 20px; 
+        html[dir="rtl"] .official-tag { left: 20px; }
+        html[dir="ltr"] .official-tag { right: 20px; }
+        .official-tag { 
+            position: absolute; top: -10px; 
             background: #10b981; color: white; font-size: 10px; font-weight: 800; 
-            padding: 2px 8px; rounded: 4px; border-radius: 4px;
+            padding: 2px 8px; border-radius: 4px;
         }
     </style>
 </head>
@@ -31,19 +35,18 @@
     <nav class="glass sticky top-0 z-50 border-b p-4">
         <div class="max-w-2xl mx-auto flex justify-between items-center">
             <a href="dashboard.html" class="text-slate-500 font-bold flex items-center gap-1 hover:text-slate-800 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-                דשבורד
+                <svg id="back-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                <span id="ui-back">דשבורד</span>
             </a>
             <div class="font-black text-2xl italic tracking-tighter">PCS<span class="text-green-600">365</span></div>
-            <div id="leagueCountBadge" class="bg-blue-100 text-blue-700 text-xs font-black px-3 py-1 rounded-full badge-count">0/5 ליגות</div>
+            <div id="leagueCountBadge" class="bg-blue-100 text-blue-700 text-xs font-black px-3 py-1 rounded-full badge-count">0/5</div>
         </div>
     </nav>
 
     <main class="max-w-2xl mx-auto p-4">
-        
         <header class="mb-8 mt-6">
-            <h1 class="text-3xl font-black text-slate-800">הזירה הקהילתית</h1>
-            <p class="text-slate-500 font-medium">הצטרף לקרב על ההרגלים או פתח ליגה משלך</p>
+            <h1 id="ui-title" class="text-3xl font-black text-slate-800">הזירה הקהילתית</h1>
+            <p id="ui-subtitle" class="text-slate-500 font-medium">הצטרף לקרב על ההרגלים או פתח ליגה משלך</p>
         </header>
 
         <div class="flex gap-8 mb-6 border-b border-slate-200">
@@ -55,40 +58,29 @@
             <div class="relative flex-1">
                 <input type="text" id="leagueSearch" oninput="renderLeagues()" placeholder="חפש ליגה..." 
                        class="w-full p-4 pr-12 rounded-2xl border-none shadow-sm focus:ring-2 focus:ring-green-500 text-lg">
-                <svg class="w-6 h-6 absolute right-4 top-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <svg id="search-icon" class="w-6 h-6 absolute right-4 top-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
             <button onclick="openCreateModal()" class="bg-slate-900 text-white p-4 rounded-2xl shadow-lg hover:bg-slate-800 transition-all transform active:scale-95">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
             </button>
         </div>
 
-        <div id="leaguesList" class="grid gap-4">
-            <div class="flex flex-col items-center justify-center p-20 text-slate-400">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mb-4"></div>
-                <p>טוען זירות...</p>
-            </div>
-        </div>
-
+        <div id="leaguesList" class="grid gap-4"></div>
     </main>
 
     <div id="createModal" class="modal p-4">
         <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-black text-slate-800">ליגה חדשה</h2>
-                <button onclick="closeCreateModal()" class="text-slate-400 hover:text-slate-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
+            <h2 id="ui-modal-title" class="text-2xl font-black text-slate-800 mb-6">ליגה חדשה</h2>
             <div class="space-y-5">
                 <div>
-                    <label class="block text-xs font-black text-slate-400 mb-2 px-1 uppercase">שם הקבוצה</label>
-                    <input type="text" id="newLeagueName" placeholder="למשל: אריות הבוקר" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-green-500 focus:bg-white outline-none transition-all">
+                    <label id="ui-label-name" class="block text-xs font-black text-slate-400 mb-2 px-1 uppercase">שם הקבוצה</label>
+                    <input type="text" id="newLeagueName" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-green-500 focus:bg-white outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block text-xs font-black text-slate-400 mb-2 px-1 uppercase">מה המשימה?</label>
-                    <input type="text" id="newLeagueTask" placeholder="למשל: לקום לפני 06:00" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-green-500 focus:bg-white outline-none transition-all">
+                    <label id="ui-label-task" class="block text-xs font-black text-slate-400 mb-2 px-1 uppercase">מה המשימה?</label>
+                    <input type="text" id="newLeagueTask" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-green-500 focus:bg-white outline-none transition-all">
                 </div>
-                <button onclick="handleCreateLeague()" id="createBtn" class="w-full bg-green-600 text-white font-bold py-4 rounded-2xl shadow-xl hover:bg-green-700 transition-all">פתח ליגה והצטרף</button>
+                <button onclick="handleCreateLeague()" id="ui-create-btn" class="w-full bg-green-600 text-white font-bold py-4 rounded-2xl shadow-xl hover:bg-green-700 transition-all"></button>
             </div>
         </div>
     </div>
@@ -99,15 +91,57 @@
     <script src="firebase.js"></script>
 
     <script>
+        const GLOBAL_ID = "global_morning_league";
         let currentUser = null;
         let allLeagues = [];
         let currentTab = 'explore';
-        const GLOBAL_ID = "global_morning_league";
+
+        const translations = {
+            he: {
+                dir: "rtl", back: "דשבורד", title: "הזירה הקהילתית", subtitle: "הצטרף לקרב או פתח ליגה משלך",
+                explore: "גלה ליגות", myLeagues: "הליגות שלי", search: "חפש ליגה...",
+                modalTitle: "ליגה חדשה", labelName: "שם הקבוצה", labelTask: "מה המשימה?",
+                createBtn: "פתח ליגה והצטרף", official: "רשמי", participants: "משתתפים",
+                limitAlert: "מקסימום 5 ליגות!", globalName: "ליגת לקום לפני 6", globalTask: "לקום לפני 06:00"
+            },
+            en: {
+                dir: "ltr", back: "Dashboard", title: "Community Arena", subtitle: "Join a battle or start your own",
+                explore: "Explore", myLeagues: "My Leagues", search: "Search leagues...",
+                modalTitle: "New League", labelName: "League Name", labelTask: "What's the habit?",
+                createBtn: "Create & Join", official: "OFFICIAL", participants: "Participants",
+                limitAlert: "Maximum 5 leagues allowed!", globalName: "Before 6AM League", globalTask: "Wake up before 06:00"
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = t.dir;
+
+        // Apply translations
+        document.getElementById('ui-back').innerText = t.back;
+        document.getElementById('ui-title').innerText = t.title;
+        document.getElementById('ui-subtitle').innerText = t.subtitle;
+        document.getElementById('tab-explore').innerText = t.explore;
+        document.getElementById('tab-myLeagues').innerText = t.myLeagues;
+        document.getElementById('leagueSearch').placeholder = t.search;
+        document.getElementById('ui-modal-title').innerText = t.modalTitle;
+        document.getElementById('ui-label-name').innerText = t.labelName;
+        document.getElementById('ui-label-task').innerText = t.labelTask;
+        document.getElementById('ui-create-btn').innerText = t.createBtn;
+
+        if (userLang === 'en') {
+            document.getElementById('back-icon').style.transform = 'rotate(180deg)';
+            document.getElementById('search-icon').style.right = 'auto';
+            document.getElementById('search-icon').style.left = '1rem';
+            document.getElementById('leagueSearch').style.paddingRight = '1rem';
+            document.getElementById('leagueSearch').style.paddingLeft = '3rem';
+        }
 
         auth.onAuthStateChanged(async user => {
             if (!user) { window.location.href = "index.html"; return; }
             currentUser = user;
-            await ensureGlobalLeagueExists(); // מבטיח שליגת הבוקר תמיד שם
+            await ensureGlobalLeagueExists();
             listenToLeagues();
         });
 
@@ -116,8 +150,8 @@
             const doc = await leagueRef.get();
             if (!doc.exists) {
                 await leagueRef.set({
-                    name: "ליגת לקום לפני 6",
-                    habitTask: "לקום לפני 06:00",
+                    name: t.globalName,
+                    habitTask: t.globalTask,
                     createdBy: "system",
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     members: [],
@@ -137,11 +171,9 @@
             const list = document.getElementById('leaguesList');
             const searchTerm = document.getElementById('leagueSearch').value.toLowerCase();
             const myLeagues = allLeagues.filter(l => l.members?.some(m => m.uid === currentUser.uid));
-            document.getElementById('leagueCountBadge').innerText = `${myLeagues.length}/5 ליגות`;
+            document.getElementById('leagueCountBadge').innerText = `${myLeagues.length}/5 ${userLang === 'he' ? 'ליגות' : 'Leagues'}`;
 
             let filtered = currentTab === 'explore' ? allLeagues : myLeagues;
-            
-            // מיון: ליגת הבוקר תמיד ראשונה ב-Explore
             if (currentTab === 'explore') {
                 filtered.sort((a, b) => (a.id === GLOBAL_ID ? -1 : b.id === GLOBAL_ID ? 1 : 0));
             }
@@ -153,21 +185,21 @@
             list.innerHTML = filtered.map(league => {
                 const isMember = league.members?.some(m => m.uid === currentUser.uid);
                 const isGlobal = league.id === GLOBAL_ID;
-                
                 return `
                     <div onclick="window.location.href='league-battle.html?id=${league.id}'" 
                          class="league-card bg-white p-6 rounded-[2rem] shadow-sm border border-white flex justify-between items-center ${isGlobal ? 'global-highlight' : ''}">
                         <div class="flex-1">
+                            ${isGlobal ? `<span class="official-tag">${t.official}</span>` : ''}
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="bg-amber-100 text-amber-700 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">Gold League</span>
-                                ${isMember ? '<span class="bg-blue-100 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">רשום</span>' : ''}
+                                ${isMember ? `<span class="bg-blue-100 text-blue-600 text-[10px] font-black px-2 py-0.5 rounded-md uppercase">${userLang === 'he' ? 'רשום' : 'Joined'}</span>` : ''}
                             </div>
                             <h3 class="text-xl font-black text-slate-800">${league.name}</h3>
                             <p class="text-slate-500 text-sm font-medium mt-1">🎯 ${league.habitTask}</p>
                         </div>
-                        <div class="text-left">
+                        <div class="${userLang === 'he' ? 'text-left' : 'text-right'}">
                             <div class="font-black text-xl text-slate-900">${league.members?.length || 0}</div>
-                            <div class="text-[10px] font-bold text-slate-300 uppercase">משתתפים</div>
+                            <div class="text-[10px] font-bold text-slate-300 uppercase">${t.participants}</div>
                         </div>
                     </div>
                 `;
@@ -177,8 +209,8 @@
         async function handleCreateLeague() {
             const name = document.getElementById('newLeagueName').value.trim();
             const task = document.getElementById('newLeagueTask').value.trim();
-            if (allLeagues.filter(l => l.members?.some(m => m.uid === currentUser.uid)).length >= 5) return alert("מקסימום 5 ליגות!");
-            if (!name || !task) return alert("מלא את כל השדות");
+            if (allLeagues.filter(l => l.members?.some(m => m.uid === currentUser.uid)).length >= 5) return alert(t.limitAlert);
+            if (!name || !task) return;
 
             const newLeagueRef = await db.collection("leagues").add({
                 name: name, habitTask: task, createdBy: currentUser.uid,
@@ -190,8 +222,8 @@
 
         function switchTab(tab) {
             currentTab = tab;
-            document.getElementById('tab-explore').className = tab === 'explore' ? 'tab-active pb-3 font-extrabold' : 'pb-3 font-extrabold text-slate-400';
-            document.getElementById('tab-myLeagues').className = tab === 'myLeagues' ? 'tab-active pb-3 font-extrabold' : 'pb-3 font-extrabold text-slate-400';
+            document.getElementById('tab-explore').className = tab === 'explore' ? 'tab-active pb-3 font-extrabold transition-all' : 'pb-3 font-extrabold text-slate-400 transition-all';
+            document.getElementById('tab-myLeagues').className = tab === 'myLeagues' ? 'tab-active pb-3 font-extrabold transition-all' : 'pb-3 font-extrabold text-slate-400 transition-all';
             renderLeagues();
         }
 
