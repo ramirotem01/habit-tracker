@@ -46,17 +46,17 @@
     <main class="max-w-2xl mx-auto p-4">
         <header class="mb-8 mt-6">
             <h1 id="ui-title" class="text-3xl font-black text-slate-800">הזירה הקהילתית</h1>
-            <p id="ui-subtitle" class="text-slate-500 font-medium">הצטרף לקרב על ההרגלים או פתח ליגה משלך</p>
+            <p id="ui-subtitle" class="text-slate-500 font-medium">הצטרף לקרב על ההרגלים או פתח קבוצה משלך</p>
         </header>
 
         <div class="flex gap-8 mb-6 border-b border-slate-200">
-            <button onclick="switchTab('explore')" id="tab-explore" class="tab-active pb-3 font-extrabold transition-all">גלה ליגות</button>
-            <button onclick="switchTab('myLeagues')" id="tab-myLeagues" class="pb-3 font-extrabold text-slate-400 hover:text-slate-600 transition-all">הליגות שלי</button>
+            <button onclick="switchTab('explore')" id="tab-explore" class="tab-active pb-3 font-extrabold transition-all">גלה קבוצות</button>
+            <button onclick="switchTab('myLeagues')" id="tab-myLeagues" class="pb-3 font-extrabold text-slate-400 hover:text-slate-600 transition-all">הקבוצות שלי</button>
         </div>
 
         <div class="flex gap-2 mb-8">
             <div class="relative flex-1">
-                <input type="text" id="leagueSearch" oninput="renderLeagues()" placeholder="חפש ליגה..." 
+                <input type="text" id="leagueSearch" oninput="renderLeagues()" placeholder="חפש קבוצה..." 
                        class="w-full p-4 pr-12 rounded-2xl border-none shadow-sm focus:ring-2 focus:ring-green-500 text-lg">
                 <svg id="search-icon" class="w-6 h-6 absolute right-4 top-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
@@ -73,7 +73,7 @@
             <button onclick="closeCreateModal()" class="absolute top-6 left-6 text-slate-400 hover:text-slate-600" id="ui-close-modal">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
-            <h2 id="ui-modal-title" class="text-2xl font-black text-slate-800 mb-6">ליגה חדשה</h2>
+            <h2 id="ui-modal-title" class="text-2xl font-black text-slate-800 mb-6">קבוצה חדשה</h2>
             <div class="space-y-5">
                 <div>
                     <label id="ui-label-name" class="block text-xs font-black text-slate-400 mb-2 px-1 uppercase">שם הקבוצה</label>
@@ -101,20 +101,20 @@
 
         const translations = {
             he: {
-                dir: "rtl", back: "דשבורד", title: "הזירה הקהילתית", subtitle: "הצטרף לקרב על ההרגלים או פתח ליגה משלך",
-                explore: "גלה ליגות", myLeagues: "הליגות שלי", search: "חפש ליגה...",
-                modalTitle: "ליגה חדשה", labelName: "שם הקבוצה", labelTask: "מה המשימה?",
-                createBtn: "פתח ליגה והצטרף", official: "רשמי", participants: "משתתפים",
-                limitAlert: "מקסימום 5 ליגות!", globalName: "ליגת לקום לפני 6", globalTask: "לקום לפני 06:00",
-                joined: "רשום", leagueUnit: "ליגות"
+                dir: "rtl", back: "דשבורד", title: "הזירה הקהילתית", subtitle: "הצטרף לאתגר הרגלים או פתח קבוצה משלך",
+                explore: "גלה קבוצות", myLeagues: "הקבוצות שלי", search: "חפש קבוצה...",
+                modalTitle: "קבוצה חדשה", labelName: "שם הקבוצה", labelTask: "מה המשימה?",
+                createBtn: "פתח קבוצה והצטרף", official: "רשמי", participants: "משתתפים",
+                limitAlert: "מקסימום 5 קבוצות!", globalName: "קבוצה לקום לפני 6", globalTask: "לקום לפני 06:00",
+                joined: "רשום", leagueUnit: "קבוצות"
             },
             en: {
-                dir: "ltr", back: "Dashboard", title: "Community Arena", subtitle: "Join the habit battle or start your own league",
-                explore: "Explore Leagues", myLeagues: "My Leagues", search: "Search league...",
-                modalTitle: "New League", labelName: "League Name", labelTask: "What's the mission?",
-                createBtn: "Create League & Join", official: "OFFICIAL", participants: "Participants",
-                limitAlert: "Maximum 5 leagues!", globalName: "Before 6AM League", globalTask: "Wake up before 06:00",
-                joined: "Joined", leagueUnit: "Leagues"
+                dir: "ltr", back: "Dashboard", title: "Community Arena", subtitle: "Join the habit battle or start your own group",
+                explore: "Explore Groups", myLeagues: "My Groups", search: "Search group...",
+                modalTitle: "New Groups", labelName: "Group Name", labelTask: "What's the mission?",
+                createBtn: "Create Groups & Join", official: "OFFICIAL", participants: "Participants",
+                limitAlert: "Maximum 5 Groups!", globalName: "Before 6AM Groups", globalTask: "Wake up before 06:00",
+                joined: "Joined", leagueUnit: "Groups"
             }
         };
 
