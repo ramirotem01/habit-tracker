@@ -30,34 +30,31 @@
     h1, h2 { 
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
         color: #2c3e50;
-        white-space: nowrap;
+        white-space: nowrap; /* מונע ירידת שורה */
     }
 
     h1 { 
         text-align: center; 
-        margin-bottom: 20px; 
+        margin-bottom: 25px; 
         font-weight: 800; 
         font-size: 2.1em; 
         letter-spacing: -0.5px;
     }
 
-    /* ביטול רווחים בין כרטיסיות */
-    .card {
-      background: #ffffff;
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 0 !important; /* ביטול הרווח לחלוטין */
-      margin-top: 8px; /* רווח קטן בין כרטיס לכרטיס במקום רווח תחתון גדול */
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-      box-sizing: border-box;
-    }
-
-    /* התאמה למובייל */
+    /* התאמה למובייל כדי שהטקסט לא ייחתך או יירד שורה */
     @media (max-width: 400px) {
         h1 { font-size: 1.8em; }
         h2 { font-size: 1.05em !important; }
         .date-nav h2 { font-size: 1em !important; }
-        .card { padding: 15px; }
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 1px !important; /* רווח של 1px בדיוק כפי שביקשת */
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      box-sizing: border-box;
     }
 
     .goal-card {
@@ -84,9 +81,7 @@
       width: 70px; height: 70px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-weight: bold; font-size: 1.1em; background-color: #fff;
-      border: 6px solid #2ecc71; /* שיניתי לירוק כפי שביקשת קודם */
-      color: #27ae60;
-      transition: all 0.4s ease;
+      border: 6px solid #f1c40f; transition: all 0.4s ease;
       flex-shrink: 0;
     }
 
@@ -94,7 +89,7 @@
       display: flex; 
       align-items: center; 
       justify-content: space-between; 
-      margin-bottom: 15px; 
+      margin-bottom: 20px; 
       background: #ffffff; 
       padding: 8px 15px; 
       border-radius: 50px;
@@ -107,20 +102,51 @@
       width: 38px; height: 38px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       color: #3498db;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08); 
+      transition: all 0.2s; 
+      font-size: 1em;
     }
+    .nav-btn:hover { background: #f8f9fa; border-color: #3498db; transform: scale(1.05); }
 
     #habitList { list-style: none; padding: 0; margin-top: 15px; }
     #habitList li {
       display: flex; align-items: center; justify-content: space-between;
       background: #fff; padding: 12px; border-radius: 12px;
-      margin-bottom: 8px; border: 1px solid #edf2f7;
+      margin-bottom: 10px; border: 1px solid #edf2f7;
+      overflow: hidden;
     }
     
-    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+    .task-content { display: flex; align-items: center; flex: 1; min-width: 0; }
+
+    .custom-cb {
+      width: 24px; height: 24px; border: 2px solid #3498db; border-radius: 6px;
+      margin-inline-end: 12px; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; transition: all 0.2s; flex-shrink: 0;
+    }
+    .custom-cb.checked { background: #2ecc71; border-color: #2ecc71; }
+    .custom-cb.checked::after { content: '✓'; color: white; font-weight: bold; }
+
+    .task-text-span {
+      flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      cursor: pointer; color: #2c3e50; font-size: 1em;
+    }
+    .task-text-span.expanded { white-space: normal; overflow: visible; }
+    .task-text-span.done { text-decoration: line-through; color: #bdc3c7; }
+
+    .action-icon-btn {
+      background: none; border: none; cursor: pointer; font-size: 18px; 
+      padding: 8px; border-radius: 50%; transition: all 0.2s; opacity: 0.6;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .action-icon-btn:hover { background-color: #f0f0f0; opacity: 1; transform: scale(1.1); }
+
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
     .actions button {
       padding: 16px 10px; border-radius: 12px; border: none; color: white;
-      font-weight: 700; cursor: pointer; font-size: 0.9em;
+      font-weight: 700; cursor: pointer; transition: all 0.3s ease; font-size: 0.9em;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
+    .actions button:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); filter: brightness(1.1); }
     
     #ui-btn-manage { background-color: #34495e; }
     #ui-btn-ai { background-color: #2ecc71; }
@@ -130,7 +156,9 @@
     .gratitude-list li {
         background: #fdfcf0; margin-bottom: 6px; padding: 10px;
         border-radius: 8px; border-inline-start: 4px solid #f1c40f;
+        cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
+    .gratitude-list li.expanded { white-space: normal; overflow: visible; }
   </style>
 </head>
 <body>
@@ -161,6 +189,7 @@
         <h2 id="tasksTitle" style="margin:0; font-size: 1.15em; font-weight: 800;"></h2>
         <button id="nextDayBtn" class="nav-btn">❯</button>
       </div>
+      
       <div style="display: flex; flex-direction: column; gap: 10px;">
         <input type="text" id="tempHabitInput" style="padding: 14px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; outline: none;" />
         <div style="display: flex; gap: 8px;">
@@ -174,7 +203,7 @@
     <section class="card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h2 id="ui-gratitude-title" style="margin:0; font-size: 1.15em; font-weight: 800;"></h2>
-        <div id="gratitudeCircle" class="gratitude-circle" style="border-color: #f1c40f; color: #f39c12;">0/3</div>
+        <div id="gratitudeCircle" class="gratitude-circle">0/3</div>
       </div>
       <div id="gratitudeInputGroup" style="display: flex; gap: 8px;">
           <input type="text" id="gratitudeInput" style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 16px;" />
