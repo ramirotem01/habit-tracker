@@ -7,8 +7,6 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
 
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@900&display=swap" rel="stylesheet">
-
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
@@ -29,15 +27,14 @@
     }
     .app { max-width: 600px; margin: 0 auto; padding: 15px; box-sizing: border-box; }
     
-    /* עיצוב כותרת ספציפי עם הפונט החדש */
+    /* כותרת דשבורד - אותו פונט כמו שאר הכותרות */
     h1 { 
         text-align: center; 
         color: #2c3e50; 
         margin-bottom: 25px; 
-        font-weight: 900; 
-        font-size: 2.2em; 
-        font-family: 'Heebo', sans-serif;
-        letter-spacing: -1px;
+        font-weight: 800; 
+        font-size: 2.1em; 
+        letter-spacing: -0.5px;
     }
 
     .card {
@@ -54,7 +51,18 @@
       border-inline-start: 5px solid #3498db;
       text-align: center;
     }
-    #userGoalText { font-size: 1.2em; color: #2c3e50; font-weight: bold; font-style: italic; margin-top: 10px; }
+    
+    /* הגדלת הכותרת של היעד הגדול שלי */
+    #ui-goal-label { 
+        font-size: 1.1em !important; 
+        color: #7f8c8d; 
+        text-transform: uppercase; 
+        font-weight: 800;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    #userGoalText { font-size: 1.3em; color: #2c3e50; font-weight: bold; font-style: italic; margin-top: 10px; }
 
     .summary-card { display: flex; justify-content: space-between; align-items: center; }
     .summary-info p { margin: 4px 0; color: #34495e; font-size: 0.95em; }
@@ -149,8 +157,8 @@
     
     <section class="card goal-card" id="goalSection" style="display: none;">
       <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
-        <h2 id="ui-goal-label" style="font-size: 0.85em; color: #7f8c8d; text-transform: uppercase;"></h2>
-        <a href="mygoal.html" style="text-decoration:none; font-size: 1.2em;">✏️</a>
+        <span id="ui-goal-label"></span>
+        <a href="mygoal.html" style="text-decoration:none; font-size: 1.3em; margin-bottom: 5px;">✏️</a>
       </div>
       <p id="userGoalText"></p>
     </section>
@@ -168,7 +176,7 @@
     <section class="card">
       <div class="date-nav">
         <button id="prevDayBtn" class="nav-btn">❮</button>
-        <h2 id="tasksTitle" style="margin:0; font-size: 1.1em; color: #2c3e50;"></h2>
+        <h2 id="tasksTitle" style="margin:0; font-size: 1.1em; color: #2c3e50; font-weight: 800;"></h2>
         <button id="nextDayBtn" class="nav-btn">❯</button>
       </div>
       
@@ -184,7 +192,7 @@
 
     <section class="card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h2 id="ui-gratitude-title" style="margin:0; font-size: 1.1em;"></h2>
+        <h2 id="ui-gratitude-title" style="margin:0; font-size: 1.1em; font-weight: 800;"></h2>
         <div id="gratitudeCircle" class="gratitude-circle">0/3</div>
       </div>
       <div id="gratitudeInputGroup" style="display: flex; gap: 8px;">
@@ -195,7 +203,7 @@
     </section>
 
     <section class="card">
-      <h2 id="ui-chart-title" style="font-size: 1.1em; margin-bottom: 10px;"></h2>
+      <h2 id="ui-chart-title" style="font-size: 1.1em; margin-bottom: 10px; font-weight: 800;"></h2>
       <canvas id="habitsChart" width="400" height="200"></canvas>
     </section>
 
