@@ -65,7 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateCircleColor(el, current, max) {
     if (!el) return;
     const pct = max > 0 ? (current / max) * 100 : 0;
-    // מעבר מצהוב (hsl 45) לירוק (hsl 145)
     const hue = 45 + (pct * 1); 
     el.style.borderColor = `hsl(${hue}, 70%, 50%)`;
     el.style.color = `hsl(${hue}, 80%, 30%)`;
@@ -85,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const li = document.createElement("li");
 
       const contentSide = document.createElement("div");
-      contentSide.style = "display: flex; align-items: center; flex: 1; overflow: hidden;";
+      contentSide.className = "task-content";
 
       const customCb = document.createElement("div");
       customCb.className = isDone ? "custom-cb checked" : "custom-cb";
@@ -98,13 +97,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const span = document.createElement("span");
       span.textContent = task.text;
       span.className = isDone ? "task-text-span done" : "task-text-span";
-      span.onclick = () => span.classList.toggle("expanded");
 
       contentSide.appendChild(customCb);
       contentSide.appendChild(span);
 
       const actionsSide = document.createElement("div");
-      actionsSide.style = "display: flex; align-items: center; flex-shrink: 0;";
+      actionsSide.style = "display: flex; flex-shrink: 0;";
 
       if (task.isTemp) {
         const editBtn = document.createElement("button");
@@ -141,7 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
     gratitudes.forEach(text => {
       const li = document.createElement("li");
       li.textContent = text;
-      li.onclick = () => li.classList.toggle("expanded");
       gratitudeListEl.appendChild(li);
     });
     updateCircleColor(gratitudeCircle, gratitudes.length, 3);
