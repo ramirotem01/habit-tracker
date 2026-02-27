@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const span = document.createElement("span");
       span.textContent = task.text;
       span.className = isDone ? "task-text-span done" : "task-text-span";
+      span.onclick = () => span.classList.toggle("expanded");
 
       contentSide.appendChild(customCb);
       contentSide.appendChild(span);
@@ -139,6 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     gratitudes.forEach(text => {
       const li = document.createElement("li");
       li.textContent = text;
+      li.onclick = () => li.classList.toggle("expanded");
       gratitudeListEl.appendChild(li);
     });
     updateCircleColor(gratitudeCircle, gratitudes.length, 3);
