@@ -76,14 +76,32 @@
     .summary-card { display: flex; justify-content: space-between; align-items: center; }
     .summary-info p { margin: 4px 0; color: #34495e; font-size: 0.95em; }
 
-    /* עיצוב משופר לעיגולים עם מעבר צבע */
+    /* עיצוב העיגול עם אפקט מילוי יחסי (Conic Gradient) */
     .task-progress-circle, .gratitude-circle {
-      width: 70px; height: 70px; border-radius: 50%;
+      width: 75px; height: 75px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-weight: bold; font-size: 1.1em; background-color: #fff;
-      border: 6px solid #f1c40f; /* צבע התחלתי */
-      transition: all 0.4s ease;
+      font-weight: bold; font-size: 1.1em;
+      position: relative;
+      /* הרקע מייצר את הטבעת: ירוק כהה עד האחוז הנבחר, והשאר ירוק בהיר */
+      background: conic-gradient(#27ae60 var(--pg, 0%), #d1f2eb 0%);
       flex-shrink: 0;
+      transition: all 0.4s ease;
+    }
+
+    /* יצירת החור הלבן באמצע כדי שזה ייראה כמו עיגול ריק (Donut) */
+    .task-progress-circle::before, .gratitude-circle::before {
+      content: "";
+      position: absolute;
+      width: 63px; height: 63px;
+      background: white;
+      border-radius: 50%;
+    }
+
+    /* הצגת הטקסט מעל החור הלבן */
+    .task-progress-circle span, .gratitude-circle span {
+      position: relative;
+      z-index: 1;
+      color: #2c3e50;
     }
 
     .date-nav { 
@@ -181,7 +199,7 @@
         <p><span id="ui-done-label"></span> <strong id="doneToday">0</strong></p>
         <p><span id="ui-progress-label"></span> <strong id="progressToday">0/0</strong></p>
       </div>
-      <div id="taskProgressCircle" class="task-progress-circle">0%</div>
+      <div id="taskProgressCircle" class="task-progress-circle"><span>0%</span></div>
     </section>
 
     <section class="card">
@@ -204,7 +222,7 @@
     <section class="card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h2 id="ui-gratitude-title" style="margin:0; font-size: 1.15em; font-weight: 800;"></h2>
-        <div id="gratitudeCircle" class="gratitude-circle">0/3</div>
+        <div id="gratitudeCircle" class="gratitude-circle"><span>0/3</span></div>
       </div>
       <div id="gratitudeInputGroup" style="display: flex; gap: 8px;">
           <input type="text" id="gratitudeInput" style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 16px;" />
