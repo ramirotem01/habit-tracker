@@ -27,10 +27,10 @@
     }
     .app { max-width: 600px; margin: 0 auto; padding: 15px; box-sizing: border-box; }
     
-    /* כותרת ראשית וכותרות כרטיסים - פונט אחיד ומקורי */
     h1, h2 { 
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
         color: #2c3e50;
+        white-space: nowrap; /* מונע ירידת שורה */
     }
 
     h1 { 
@@ -39,6 +39,13 @@
         font-weight: 800; 
         font-size: 2.1em; 
         letter-spacing: -0.5px;
+    }
+
+    /* התאמה למובייל כדי שהטקסט לא ייחתך או יירד שורה */
+    @media (max-width: 400px) {
+        h1 { font-size: 1.8em; }
+        h2 { font-size: 1.05em !important; }
+        .date-nav h2 { font-size: 1em !important; }
     }
 
     .card {
@@ -56,7 +63,6 @@
       text-align: center;
     }
     
-    /* כותרת היעד הגדול */
     #ui-goal-label { 
         font-size: 1.15em !important; 
         color: #7f8c8d; 
@@ -234,8 +240,8 @@
         totalLabel: "סה\"כ משימות:",
         doneLabel: "בוצעו היום:",
         progressLabel: "התקדמות:",
-        tasksTitleToday: "🗓 המשימות להיום",
-        tasksTitleTomorrow: "🕒 המשימות למחר",
+        tasksTitleToday: "🗓 המשימות שלי להיום",
+        tasksTitleTomorrow: "🕒 המשימות שלי למחר",
         tempInputPlaceholder: "הוסף משימה חדשה...",
         addBtn: "➕ הוסף להיום",
         tomorrowBtn: "🕒 הוסף למחר",
