@@ -62,19 +62,23 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) { console.error(err); }
   }
 
-  // פונקציית העדכון החדשה: יוצרת את אפקט מילוי השעון
   function updateCircleColor(el, current, max) {
     if (!el) return;
     const pct = max > 0 ? (current / max) * 100 : 0;
-    
-    // מעדכן את משתנה ה-CSS שקובע היכן הירוק הכהה עוצר
     el.style.setProperty('--pg', `${pct}%`);
-    
-    // מעדכן את הטקסט בתוך ה-span
     const span = el.querySelector('span');
     if (span) {
         span.textContent = el.id === "gratitudeCircle" ? `${current}/${max}` : `${Math.round(pct)}%`;
     }
+  }
+
+  // פונקציית עזר לעדכון המונים ללא רינדור מחדש של כל הרשימה
+  function updateCountersLocally() {
+    const allTasks = [...baseHabits, ...tempHabits];
+    const doneCount = allTasks.filter(t => dailyStats[t.text] === true).length;
+    doneTodayEl.textContent = doneCount;
+    progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
+    updateCircleColor(taskProgressCircle, doneCount, allTasks.length);
   }
 
   function render() {
@@ -94,16 +98,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const customCb = document.createElement("div");
       customCb.className = isDone ? "custom-cb checked" : "custom-cb";
-      customCb.onclick = async () => {
-        dailyStats[task.text] = !dailyStats[task.text];
-        await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
-        render(); 
-      };
-
+      
       const span = document.createElement("span");
       span.textContent = task.text;
       span.className = isDone ? "task-text-span done" : "task-text-span";
       span.onclick = () => span.classList.toggle("expanded");
+
+      // תיקון ביצועים: עדכון אופטימי (Optimistic UI)
+      customCb.onclick = () => {
+        const wasDone = dailyStats[task.text] === true;
+        const newStatus = !wasDone;
+        
+        // 1. עדכון המודל המקומי
+        dailyStats[task.text] = newStatus;
+        
+        // 2. עדכון ויזואלי מיידי ללא רינדור מחדש
+        if (newStatus) {
+            customCb.classList.add("checked");
+            span.classList.add("done");
+        } else {
+            customCb.classList.remove("checked");
+            span.classList.remove("done");
+        }
+        
+        // 3. עדכון המונים ועיגול התקדמות
+        updateCountersLocally();
+
+        // 4. עדכון Firebase ברקע
+        db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats)
+          .catch(err => {
+            console.error("Sync error:", err);
+            dailyStats[task.text] = wasDone; // חזרה למצב קודם במקרה תקלה
+            render(); 
+          });
+      };
 
       contentSide.appendChild(customCb);
       contentSide.appendChild(span);
