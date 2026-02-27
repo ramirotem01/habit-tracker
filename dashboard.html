@@ -1,156 +1,106 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#3498db">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
-
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log("PWA Ready"))
-        .catch(err => console.log("PWA Error", err));
-    }
-  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title id="page-title">pcs365 - דשבורד</title>
-  <link rel="stylesheet" href="style.css">
+  
   <style>
+    /* בסיס האפליקציה */
     body { 
         background: #f4f7f6; 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
         margin: 0; padding: 0; 
-        overflow-x: hidden; 
-    }
-    .app { max-width: 600px; margin: 0 auto; padding: 12px; box-sizing: border-box; }
-    
-    h1, h2 { 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
         color: #2c3e50;
-        white-space: nowrap;
     }
+    .app { max-width: 500px; margin: 0 auto; padding: 15px; box-sizing: border-box; }
+    
+    /* כותרות */
+    h1 { text-align: center; font-size: 1.8em; margin: 10px 0 20px; font-weight: 800; }
+    h2 { font-size: 1.1em; margin: 0; font-weight: 700; }
 
-    h1 { 
-        text-align: center; 
-        margin-bottom: 15px; /* צמצום רווח כותרת */
-        font-weight: 800; 
-        font-size: 2em; 
-        letter-spacing: -0.5px;
-    }
-
-    /* התאמה למובייל */
-    @media (max-width: 400px) {
-        h1 { font-size: 1.7em; }
-        h2 { font-size: 1.05em !important; }
-        .date-nav h2 { font-size: 1em !important; }
-    }
-
+    /* כרטיסיות */
     .card {
       background: #ffffff;
-      border-radius: 15px;
-      padding: 15px; /* צמצום פדינג פנימי */
-      margin-bottom: 12px; /* צמצום רווח בין כרטיסים */
-      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-      box-sizing: border-box;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.02);
     }
 
+    /* היעד הגדול */
     .goal-card {
-      background: linear-gradient(135deg, #f1f9ff 0%, #ffffff 100%);
-      border-inline-start: 5px solid #3498db;
+      background: linear-gradient(135deg, #f8fcff 0%, #ffffff 100%);
+      border-right: 5px solid #3498db;
       text-align: center;
     }
-    
-    #ui-goal-label { 
-        font-size: 1.1em !important; 
-        color: #7f8c8d; 
-        text-transform: uppercase; 
-        font-weight: 800;
-        display: block;
-        margin-bottom: 3px;
-    }
+    #ui-goal-label { font-size: 1.1em; color: #7f8c8d; font-weight: 800; display: block; }
+    #userGoalText { font-size: 1.2em; font-weight: bold; margin-top: 8px; color: #2c3e50; }
 
-    #userGoalText { font-size: 1.25em; color: #2c3e50; font-weight: bold; font-style: italic; margin-top: 5px; }
-
-    /* עיצוב חדשני לעיגולי התקדמות */
-    .task-progress-circle, .gratitude-circle {
-      width: 65px; height: 65px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 1em; 
-      background: #ffffff;
-      box-shadow: inset 0 0 0 5px #f0f0f0, 0 2px 5px rgba(0,0,0,0.1);
-      border: 5px solid #2ecc71; /* ירוק מודרני */
-      color: #27ae60;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      flex-shrink: 0;
-    }
-
+    /* סיכום והתקדמות */
     .summary-card { display: flex; justify-content: space-between; align-items: center; }
-    .summary-info p { margin: 2px 0; color: #34495e; font-size: 0.9em; }
+    .summary-info p { margin: 4px 0; font-size: 0.95em; }
+    
+    .task-progress-circle {
+      width: 70px; height: 70px; border-radius: 50%;
+      border: 6px solid #2ecc71; /* ירוק התקדמות */
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.1em; color: #27ae60;
+      background: #fff; flex-shrink: 0;
+    }
 
+    /* ניווט תאריכים */
     .date-nav { 
-      display: flex; 
-      align-items: center; 
-      justify-content: space-between; 
-      margin-bottom: 15px; 
-      background: #ffffff; 
-      padding: 6px 12px; 
-      border-radius: 50px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      display: flex; align-items: center; justify-content: space-between; 
+      background: #f8f9fa; padding: 8px 12px; border-radius: 30px; margin-bottom: 15px;
     }
     .nav-btn {
-      background: #ffffff; 
-      border: 1px solid #eee; 
-      border-radius: 50%;
-      width: 34px; height: 34px; cursor: pointer;
+      background: white; border: 1px solid #eee; border-radius: 50%;
+      width: 35px; height: 35px; cursor: pointer; color: #3498db;
       display: flex; align-items: center; justify-content: center;
-      color: #3498db;
-      transition: all 0.2s; 
     }
 
+    /* רשימת משימות */
+    #habitList { list-style: none; padding: 0; margin: 15px 0 0; }
     #habitList li {
-      display: flex; align-items: center; justify-content: space-between;
-      background: #fff; padding: 10px; border-radius: 12px;
-      margin-bottom: 8px; border: 1px solid #edf2f7;
+      display: flex; align-items: center; background: #fff; padding: 12px;
+      border-radius: 12px; margin-bottom: 8px; border: 1px solid #f0f0f0;
     }
-    
-    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-    .actions button {
-      padding: 14px 8px; border-radius: 12px; border: none; color: white;
-      font-weight: 700; cursor: pointer; transition: all 0.3s ease; font-size: 0.85em;
-    }
-    
-    #ui-btn-manage { background-color: #34495e; }
-    #ui-btn-ai { background-color: #2ecc71; }
-    #ui-btn-stats { background-color: #9b59b6; }
-    #logoutBtn { background-color: #e74c3c; }
 
-    .gratitude-list li {
-        background: #fdfcf0; margin-bottom: 5px; padding: 8px;
-        border-radius: 8px; border-inline-start: 4px solid #f1c40f;
+    /* כפתורי פעולה */
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+    .actions button {
+      padding: 15px; border-radius: 12px; border: none; color: white;
+      font-weight: 700; cursor: pointer; font-size: 0.9em;
+    }
+    #ui-btn-manage { background: #34495e; }
+    #ui-btn-ai { background: #2ecc71; }
+    #ui-btn-stats { background: #9b59b6; }
+    #logoutBtn { background: #e74c3c; }
+
+    /* מובייל אופטימיזציה */
+    @media (max-width: 400px) {
+      .app { padding: 10px; }
+      h1 { font-size: 1.6em; }
+      .card { padding: 15px; }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <h1 id="ui-dashboard-title"></h1>
+    <h1 id="ui-dashboard-title">📊 דשבורד יומי</h1>
     
     <section class="card goal-card" id="goalSection" style="display: none;">
-      <div style="display: flex; justify-content: center; align-items: center; gap: 8px;">
-        <span id="ui-goal-label"></span>
-        <a href="mygoal.html" style="text-decoration:none; font-size: 1.2em; margin-bottom: 3px;">✏️</a>
-      </div>
+      <span id="ui-goal-label">היעד הגדול שלי</span>
       <p id="userGoalText"></p>
     </section>
 
     <section class="card summary-card">
       <div class="summary-info">
-        <p><span id="ui-date-label"></span> <strong id="todayDate"></strong></p>
-        <p><span id="ui-total-label"></span> <strong id="totalHabits">0</strong></p>
-        <p><span id="ui-done-label"></span> <strong id="doneToday">0</strong></p>
-        <p><span id="ui-progress-label"></span> <strong id="progressToday">0/0</strong></p>
+        <p><span id="ui-date-label">תאריך:</span> <strong id="todayDate"></strong></p>
+        <p><span id="ui-total-label">סה"כ:</span> <strong id="totalHabits">0</strong></p>
+        <p id="progress-text"><span id="ui-progress-label">התקדמות:</span> <strong id="progressToday">0/0</strong></p>
       </div>
       <div id="taskProgressCircle" class="task-progress-circle">0%</div>
     </section>
@@ -158,116 +108,29 @@
     <section class="card">
       <div class="date-nav">
         <button id="prevDayBtn" class="nav-btn">❮</button>
-        <h2 id="tasksTitle" style="margin:0; font-size: 1.1em; font-weight: 800;"></h2>
+        <h2 id="tasksTitle">המשימות להיום</h2>
         <button id="nextDayBtn" class="nav-btn">❯</button>
       </div>
       
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <input type="text" id="tempHabitInput" style="padding: 12px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; outline: none;" />
-        <div style="display: flex; gap: 6px;">
-          <button id="addTempHabitBtn" style="flex:1.2; background:#3498db; color:white; border:none; padding:10px; border-radius:10px; font-weight:bold; cursor:pointer;"></button>
-          <button id="addTomorrowHabitBtn" style="flex:1; background:#34495e; color:white; border:none; padding:10px; border-radius:10px; font-weight:bold; cursor:pointer;"></button>
-        </div>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <input type="text" id="tempHabitInput" placeholder="הוסף משימה..." style="padding: 12px; border-radius: 10px; border: 1px solid #ddd;" />
+        <button id="addTempHabitBtn" style="background:#3498db; color:white; border:none; padding:12px; border-radius:10px; font-weight:bold;">➕ הוסף להיום</button>
       </div>
       <ul id="habitList"></ul>
     </section>
 
-    <section class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h2 id="ui-gratitude-title" style="margin:0; font-size: 1.1em; font-weight: 800;"></h2>
-        <div id="gratitudeCircle" class="gratitude-circle" style="border-color: #f1c40f; color: #f39c12;">0/3</div>
-      </div>
-      <div id="gratitudeInputGroup" style="display: flex; gap: 6px;">
-          <input type="text" id="gratitudeInput" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 16px;" />
-          <button id="addGratitudeBtn" style="background: #f1c40f; color: white; border: none; border-radius: 8px; padding: 0 15px; cursor: pointer; font-size: 1.2em;">➕</button>
-      </div>
-      <ul id="gratitudeList" class="gratitude-list" style="padding:0; list-style:none; margin-top:10px;"></ul>
-    </section>
-
-    <section class="card">
-      <h2 id="ui-chart-title" style="font-size: 1.1em; margin-bottom: 8px; font-weight: 800;"></h2>
-      <canvas id="habitsChart" width="400" height="200"></canvas>
-    </section>
-
     <div class="actions">
-      <button onclick="window.location.href='manage.html'" id="ui-btn-manage"></button>
-      <button onclick="window.location.href='aihabit.html'" id="ui-btn-ai"></button>
-      <button onclick="window.location.href='anyls.html'" id="ui-btn-stats"></button>
-      <button id="logoutBtn"></button>
+      <button onclick="window.location.href='manage.html'" id="ui-btn-manage">ניהול</button>
+      <button onclick="window.location.href='aihabit.html'" id="ui-btn-ai">עוזר AI</button>
+      <button onclick="window.location.href='anyls.html'" id="ui-btn-stats">ניתוח</button>
+      <button id="logoutBtn">יציאה</button>
     </div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="firebase.js"></script>
-  <script>
-    const translations = {
-      he: {
-        pageTitle: "pcs365 - דשבורד",
-        dashboardTitle: "📊 דשבורד יומי",
-        goalLabel: "היעד הגדול שלי",
-        dateLabel: "תאריך:",
-        totalLabel: "סה\"כ משימות:",
-        doneLabel: "בוצעו היום:",
-        progressLabel: "התקדמות:",
-        tasksTitleToday: "🗓 המשימות שלי להיום",
-        tasksTitleTomorrow: "🕒 המשימות שלי למחר",
-        tempInputPlaceholder: "הוסף משימה חדשה...",
-        addBtn: "➕ הוסף להיום",
-        tomorrowBtn: "🕒 הוסף למחר",
-        gratitudeTitle: "רגע של הודיה ✨",
-        gratitudePlaceholder: "על מה את/ה מודה היום?",
-        chartTitle: "📈 התקדמות שבועית",
-        btnManage: "📝 ניהול הרגלים",
-        btnAI: "✨ עוזר AI אישי",
-        btnStats: "🧠 תובנות שבועיות",
-        btnLogout: "🚪 התנתק מהמערכת"
-      },
-      en: {
-        pageTitle: "pcs365 - Dashboard",
-        dashboardTitle: "📊 Daily Dashboard",
-        goalLabel: "MY BIG GOAL",
-        dateLabel: "Date:",
-        totalLabel: "Total Tasks:",
-        doneLabel: "Done Today:",
-        progressLabel: "Progress:",
-        tasksTitleToday: "🗓 Tasks for Today",
-        tasksTitleTomorrow: "🕒 Tasks for Tomorrow",
-        tempInputPlaceholder: "Add a task...",
-        addBtn: "➕ Add Today",
-        tomorrowBtn: "🕒 Add Tomorrow",
-        gratitudeTitle: "Gratitude ✨",
-        gratitudePlaceholder: "What are you grateful for?",
-        chartTitle: "📈 Weekly Progress",
-        btnManage: "📝 Manage Habits",
-        btnAI: "✨ Personal AI",
-        btnStats: "🧠 Weekly Insights",
-        btnLogout: "🚪 Logout"
-      }
-    };
-    const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
-    const t = translations[userLang];
-    document.getElementById('page-title').innerText = t.pageTitle;
-    document.getElementById('ui-dashboard-title').innerText = t.dashboardTitle;
-    document.getElementById('ui-goal-label').innerText = t.goalLabel;
-    document.getElementById('ui-date-label').innerText = t.dateLabel;
-    document.getElementById('ui-total-label').innerText = t.totalLabel;
-    document.getElementById('ui-done-label').innerText = t.doneLabel;
-    document.getElementById('ui-progress-label').innerText = t.progressLabel;
-    document.getElementById('tasksTitle').innerText = t.tasksTitleToday;
-    document.getElementById('tempHabitInput').placeholder = t.tempInputPlaceholder;
-    document.getElementById('addTempHabitBtn').innerText = t.addBtn;
-    document.getElementById('addTomorrowHabitBtn').innerText = t.tomorrowBtn;
-    document.getElementById('ui-gratitude-title').innerText = t.gratitudeTitle;
-    document.getElementById('gratitudeInput').placeholder = t.gratitudePlaceholder;
-    document.getElementById('ui-chart-title').innerText = t.chartTitle;
-    document.getElementById('ui-btn-manage').innerText = t.btnManage;
-    document.getElementById('ui-btn-ai').innerText = t.btnAI;
-    document.getElementById('ui-btn-stats').innerText = t.btnStats;
-    document.getElementById('logoutBtn').innerText = t.btnLogout;
-  </script>
   <script src="dashboard.js"></script>
 </body>
 </html>
