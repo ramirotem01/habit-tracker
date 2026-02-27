@@ -62,12 +62,27 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) { console.error(err); }
   }
 
+  // הפונקציה המעודכנת לשינוי צבע דינמי
   function updateCircleColor(el, current, max) {
     if (!el) return;
     const pct = max > 0 ? (current / max) * 100 : 0;
-    const hue = 45 + (pct * 1); 
-    el.style.borderColor = `hsl(${hue}, 70%, 50%)`;
-    el.style.color = `hsl(${hue}, 80%, 30%)`;
+    
+    let borderColor, textColor;
+
+    if (pct === 0) {
+      // צהוב ב-0% התקדמות
+      borderColor = "#f1c40f";
+      textColor = "#f39c12";
+    } else {
+      // מעבר לירוק: מבהירות גבוהה (75%) ב-1% לכהה (25%) ב-100%
+      // גוון (Hue) של ירוק הוא 120
+      const lightness = 75 - (pct * 0.5); // ככל שהאחוז עולה, הבהירות יורדת
+      borderColor = `hsl(120, 70%, ${lightness}%)`;
+      textColor = `hsl(120, 80%, ${lightness - 15}%)`; // טקסט מעט כהה יותר מהמסגרת לקריאות
+    }
+
+    el.style.borderColor = borderColor;
+    el.style.color = textColor;
     el.textContent = el.id === "gratitudeCircle" ? `${current}/${max}` : `${Math.round(pct)}%`;
   }
 
