@@ -19,11 +19,9 @@
   <title id="page-title">pcs365 - דשבורד</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* בסיס האפליקציה */
     body { background: #f4f7f6; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
     .app { max-width: 600px; margin: 0 auto; padding: 20px; }
     
-    /* כותרת מקורית */
     h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; font-weight: 800; }
 
     .card {
@@ -34,7 +32,7 @@
       box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
 
-    /* כרטיס מטרה - עיצוב מקורי משופר */
+    /* כרטיס מטרה */
     .goal-card {
       background: linear-gradient(135deg, #f1f9ff 0%, #ffffff 100%);
       border-inline-start: 5px solid #3498db;
@@ -45,7 +43,12 @@
     .goal-card h2 { font-size: 0.9em; color: #7f8c8d; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
     #userGoalText { font-size: 1.3em; color: #2c3e50; font-weight: bold; font-style: italic; }
 
-    /* עיגולי התקדמות - לוגיקה מקורית */
+    /* כרטיס סיכום מלא */
+    .summary-card { display: flex; justify-content: space-between; align-items: center; }
+    .summary-info p { margin: 4px 0; color: #34495e; font-size: 0.95em; }
+    .summary-info strong { color: #2c3e50; }
+
+    /* עיגולי התקדמות */
     .task-progress-circle, .gratitude-circle {
       width: 65px; height: 65px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
@@ -55,7 +58,7 @@
     .circle-low, .task-circle-low { border-color: #f1c40f; color: #f39c12; }
     .circle-full, .task-circle-done { border-color: #2ecc71; color: #27ae60; background-color: #fafffa; }
 
-    /* ניווט ימים - החזרת הכפתורים העגולים */
+    /* ניווט ימים */
     .date-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: #f8f9fa; padding: 10px; border-radius: 12px; }
     .nav-btn {
       background: #ffffff; border: none; border-radius: 50%;
@@ -65,7 +68,7 @@
     }
     .nav-btn:hover { background: #3498db; color: #fff; transform: scale(1.1); }
 
-    /* רשימת משימות ו-Checkbox חדשני */
+    /* רשימה ו-Checkbox */
     #habitList { list-style: none; padding: 0; margin-top: 20px; }
     #habitList li {
       display: flex; align-items: center; justify-content: space-between;
@@ -81,7 +84,6 @@
     .custom-cb.checked { background: #2ecc71; border-color: #2ecc71; }
     .custom-cb.checked::after { content: '✓'; color: white; font-weight: bold; }
 
-    /* טיפול במלל ארוך */
     .task-text-span {
       flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       cursor: pointer; transition: all 0.2s; color: #2c3e50;
@@ -89,7 +91,7 @@
     .task-text-span.expanded { white-space: normal; overflow: visible; }
     .task-text-span.done { text-decoration: line-through; color: #bdc3c7; }
 
-    /* כפתורי פעולה למטה - מקוריים עם אפקט */
+    /* כפתורי פעולה למטה */
     .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
     .actions button {
       padding: 12px; border-radius: 8px; border: none; color: white;
@@ -98,7 +100,6 @@
     .actions button:hover { transform: translateY(-3px); filter: brightness(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
     
     #ui-btn-manage { background-color: #34495e; }
-    /* כפתורים אחרים מקבלים צבע ב-Inline או ב-JS */
 
     .gratitude-list li {
         background: #f9f9f9; margin-bottom: 5px; padding: 8px 12px;
@@ -120,9 +121,11 @@
       <p id="userGoalText"></p>
     </section>
 
-    <section class="card" style="display: flex; justify-content: space-between; align-items: center;">
+    <section class="card summary-card">
       <div class="summary-info">
         <p><span id="ui-date-label"></span> <strong id="todayDate"></strong></p>
+        <p><span id="ui-total-label"></span> <span id="totalHabits">0</span></p>
+        <p><span id="ui-done-label"></span> <span id="doneToday">0</span></p>
         <p><span id="ui-progress-label"></span> <span id="progressToday">0/0</span></p>
       </div>
       <div id="taskProgressCircle" class="task-progress-circle task-circle-low">0%</div>
@@ -186,6 +189,8 @@
         goalLabel: "היעד הגדול שלי:",
         goalLoading: "טוען מטרה...",
         dateLabel: "תאריך:",
+        totalLabel: "סה\"כ משימות:",
+        doneLabel: "בוצעו היום:",
         progressLabel: "התקדמות:",
         tasksTitleToday: "🗓 המשימות שלי להיום",
         tasksTitleTomorrow: "🕒 המשימות שלי למחר",
@@ -206,6 +211,8 @@
         goalLabel: "MY BIG GOAL:",
         goalLoading: "Loading goal...",
         dateLabel: "Date:",
+        totalLabel: "Total Tasks:",
+        doneLabel: "Done Today:",
         progressLabel: "Progress:",
         tasksTitleToday: "🗓 My Tasks for Today",
         tasksTitleTomorrow: "🕒 My Tasks for Tomorrow",
@@ -232,6 +239,8 @@
     document.getElementById('ui-goal-label').innerText = t.goalLabel;
     document.getElementById('userGoalText').innerText = t.goalLoading;
     document.getElementById('ui-date-label').innerText = t.dateLabel;
+    document.getElementById('ui-total-label').innerText = t.totalLabel;
+    document.getElementById('ui-done-label').innerText = t.doneLabel;
     document.getElementById('ui-progress-label').innerText = t.progressLabel;
     document.getElementById('tasksTitle').innerText = t.tasksTitleToday;
     document.getElementById('tempHabitInput').placeholder = t.tempInputPlaceholder;
