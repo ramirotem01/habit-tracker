@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#4f46e5">
+  <meta name="theme-color" content="#3498db">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
@@ -19,278 +19,93 @@
   <title id="page-title">pcs365 - דשבורד</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    :root {
-      --primary: #4f46e5;
-      --primary-light: #818cf8;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-      --card-bg: rgba(255, 255, 255, 0.9);
-      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    }
-
-    body {
-      background: var(--bg-gradient);
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      color: #1e293b;
-      margin: 0;
-      padding: 0;
-    }
-
-    .app {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    h1 {
-      font-weight: 800;
-      text-align: center;
-      color: var(--primary);
-      margin-bottom: 25px;
-      letter-spacing: -0.5px;
-    }
+    /* בסיס האפליקציה */
+    body { background: #f4f7f6; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+    .app { max-width: 600px; margin: 0 auto; padding: 20px; }
+    
+    /* כותרת מקורית */
+    h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; font-weight: 800; }
 
     .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
+      background: #ffffff;
+      border-radius: 15px;
       padding: 20px;
       margin-bottom: 20px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      transition: transform 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
 
-    /* כרטיס מטרה מעוצב */
+    /* כרטיס מטרה - עיצוב מקורי משופר */
     .goal-card {
-      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-      color: white;
+      background: linear-gradient(135deg, #f1f9ff 0%, #ffffff 100%);
+      border-inline-start: 5px solid #3498db;
       text-align: center;
+      padding: 20px !important;
     }
+    .goal-header { display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .goal-card h2 { font-size: 0.9em; color: #7f8c8d; margin: 0; text-transform: uppercase; letter-spacing: 1px; }
+    #userGoalText { font-size: 1.3em; color: #2c3e50; font-weight: bold; font-style: italic; }
 
-    .goal-header h2 {
-      font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.8);
-      margin: 0;
-      text-transform: uppercase;
-      font-weight: 600;
+    /* עיגולי התקדמות - לוגיקה מקורית */
+    .task-progress-circle, .gratitude-circle {
+      width: 65px; height: 65px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; font-size: 1em; background-color: #fff;
+      border: 5px solid #eee; transition: all 0.4s ease;
     }
+    .circle-low, .task-circle-low { border-color: #f1c40f; color: #f39c12; }
+    .circle-full, .task-circle-done { border-color: #2ecc71; color: #27ae60; background-color: #fafffa; }
 
-    #userGoalText {
-      font-size: 1.4rem;
-      margin-top: 10px;
-      font-weight: 700;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .edit-goal-btn {
-      color: white;
-      text-decoration: none;
-      font-size: 1rem;
-      background: rgba(255, 255, 255, 0.2);
-      padding: 5px 10px;
-      border-radius: 10px;
-    }
-
-    /* סיכום והתקדמות */
-    .summary-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .summary-info p {
-      margin: 5px 0;
-      font-size: 0.95rem;
-      color: #64748b;
-    }
-
-    .summary-info strong, .summary-info span {
-      color: #1e293b;
-      font-weight: 600;
-    }
-
-    .task-progress-circle {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: white;
-      border: 6px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.1rem;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .task-circle-done {
-      border-color: var(--success);
-      color: var(--success);
-      background: #ecfdf5;
-    }
-
-    /* ניווט ימים */
-    .date-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(0,0,0,0.03);
-      padding: 8px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-    }
-
+    /* ניווט ימים - החזרת הכפתורים העגולים */
+    .date-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: #f8f9fa; padding: 10px; border-radius: 12px; }
     .nav-btn {
-      background: white;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      color: var(--primary);
-      cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      font-weight: bold;
+      background: #ffffff; border: none; border-radius: 50%;
+      width: 40px; height: 40px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #3498db; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: all 0.2s;
     }
+    .nav-btn:hover { background: #3498db; color: #fff; transform: scale(1.1); }
 
-    /* אינפוטים וכפתורי פעולה */
-    .input-group {
-      margin-bottom: 15px;
-    }
-
-    input[type="text"] {
-      padding: 12px 16px;
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      font-size: 1rem;
-      width: 100%;
-      box-sizing: border-box;
-      transition: border-color 0.3s;
-    }
-
-    input[type="text"]:focus {
-      outline: none;
-      border-color: var(--primary-light);
-    }
-
-    .button-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .button-row button {
-      flex: 1;
-      padding: 12px;
-      border-radius: 12px;
-      border: none;
-      font-weight: 600;
-      cursor: pointer;
-      color: white;
-      transition: opacity 0.2s;
-    }
-
-    #addTempHabitBtn { background: var(--primary); }
-    #addTomorrowHabitBtn { background: #334155; }
-
-    /* רשימת הרגלים - העיצוב החדש של ה-Checkbox */
-    #habitList {
-      list-style: none;
-      padding: 0;
-      margin-top: 25px;
-    }
-
+    /* רשימת משימות ו-Checkbox חדשני */
+    #habitList { list-style: none; padding: 0; margin-top: 20px; }
     #habitList li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: white;
-      padding: 15px;
-      border-radius: 15px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-      border: 1px solid #f1f5f9;
+      display: flex; align-items: center; justify-content: space-between;
+      background: #fff; padding: 12px; border-radius: 12px;
+      margin-bottom: 8px; border: 1px solid #edf2f7;
     }
-
-    /* Toggle Checkbox Modern Style */
+    
     .custom-cb {
-      width: 28px;
-      height: 28px;
-      border: 2.5px solid #cbd5e1;
-      border-radius: 8px;
-      margin-inline-end: 15px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      flex-shrink: 0;
+      width: 24px; height: 24px; border: 2px solid #3498db; border-radius: 6px;
+      margin-inline-end: 12px; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; transition: all 0.2s; flex-shrink: 0;
     }
+    .custom-cb.checked { background: #2ecc71; border-color: #2ecc71; }
+    .custom-cb.checked::after { content: '✓'; color: white; font-weight: bold; }
 
-    .custom-cb.checked {
-      background: var(--success);
-      border-color: var(--success);
-    }
-
-    .custom-cb.checked::after {
-      content: '✓';
-      color: white;
-      font-weight: bold;
-      font-size: 18px;
-    }
-
+    /* טיפול במלל ארוך */
     .task-text-span {
-      font-weight: 500;
-      flex: 1;
-      transition: color 0.3s;
+      flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      cursor: pointer; transition: all 0.2s; color: #2c3e50;
     }
+    .task-text-span.expanded { white-space: normal; overflow: visible; }
+    .task-text-span.done { text-decoration: line-through; color: #bdc3c7; }
 
-    .task-text-span.done {
-      color: #94a3b8;
-      text-decoration: line-through;
+    /* כפתורי פעולה למטה - מקוריים עם אפקט */
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+    .actions button {
+      padding: 12px; border-radius: 8px; border: none; color: white;
+      font-weight: bold; cursor: pointer; transition: all 0.3s ease;
     }
-
-    /* הודיה */
-    .gratitude-section {
-      border-top: 4px solid var(--warning);
-    }
-
-    .gratitude-circle {
-      background: var(--warning);
-      color: white;
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-weight: bold;
-      font-size: 0.8rem;
-    }
+    .actions button:hover { transform: translateY(-3px); filter: brightness(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    
+    #ui-btn-manage { background-color: #34495e; }
+    /* כפתורים אחרים מקבלים צבע ב-Inline או ב-JS */
 
     .gratitude-list li {
-      background: #fffbeb !important;
-      border-inline-start: 4px solid var(--warning) !important;
+        background: #f9f9f9; margin-bottom: 5px; padding: 8px 12px;
+        border-radius: 8px; font-size: 0.95em; border-inline-start: 3px solid #f1c40f;
+        cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-
-    /* פעולות תחתונות */
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 30px;
-    }
-
-    .actions button {
-      padding: 15px;
-      border-radius: 15px;
-      border: none;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-    }
-
-    #ui-btn-manage { background: white; color: var(--primary); border: 1px solid var(--primary); }
-
+    .gratitude-list li.expanded { white-space: normal; overflow: visible; }
   </style>
 </head>
 <body>
@@ -299,69 +114,59 @@
     
     <section class="card goal-card" id="goalSection" style="display: none;">
       <div class="goal-header">
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-          <h2 id="ui-goal-label"></h2>
-          <a href="mygoal.html" class="edit-goal-btn" id="ui-edit-goal-link">✏️</a>
-        </div>
+        <h2 id="ui-goal-label"></h2>
+        <a href="mygoal.html" class="edit-goal-btn" id="ui-edit-goal-link" style="text-decoration:none;">✏️</a>
       </div>
       <p id="userGoalText"></p>
     </section>
 
-    <section class="card summary-card">
+    <section class="card" style="display: flex; justify-content: space-between; align-items: center;">
       <div class="summary-info">
         <p><span id="ui-date-label"></span> <strong id="todayDate"></strong></p>
-        <p><span id="ui-total-label"></span> <span id="totalHabits">0</span></p>
-        <p><span id="ui-done-label"></span> <span id="doneToday">0</span></p>
         <p><span id="ui-progress-label"></span> <span id="progressToday">0/0</span></p>
       </div>
-      <div class="progress-circle-container">
-        <div id="taskProgressCircle" class="task-progress-circle">0%</div>
-      </div>
+      <div id="taskProgressCircle" class="task-progress-circle task-circle-low">0%</div>
     </section>
 
     <section class="card">
       <div class="date-nav">
         <button id="prevDayBtn" class="nav-btn">❮</button>
-        <div class="tasks-title-container">
-            <h2 id="tasksTitle" style="margin:0; font-size: 1.1rem;"></h2>
-        </div>
+        <h2 id="tasksTitle" style="margin:0; font-size: 1.1em;"></h2>
         <button id="nextDayBtn" class="nav-btn">❯</button>
       </div>
       
-      <div class="input-group">
-        <input type="text" id="tempHabitInput" />
-        <div class="button-row">
-          <button id="addTempHabitBtn"></button>
-          <button id="addTomorrowHabitBtn"></button>
+      <div class="input-group" style="display: flex; flex-direction: column; gap: 8px;">
+        <input type="text" id="tempHabitInput" style="padding: 10px; border-radius: 8px; border: 1px solid #ddd;" />
+        <div style="display: flex; gap: 8px;">
+          <button id="addTempHabitBtn" style="flex:1; background:#3498db; color:white; border:none; padding:10px; border-radius:8px;"></button>
+          <button id="addTomorrowHabitBtn" style="flex:1; background:#34495e; color:white; border:none; padding:10px; border-radius:8px;"></button>
         </div>
       </div>
       <ul id="habitList"></ul>
     </section>
 
     <section class="card gratitude-section">
-      <div class="gratitude-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h2 id="ui-gratitude-title" style="margin:0; font-size: 1.1rem;"></h2>
-        <div id="gratitudeCircle" class="gratitude-circle">0/3</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2 id="ui-gratitude-title" style="margin:0; font-size: 1.1em;"></h2>
+        <div id="gratitudeCircle" class="gratitude-circle circle-low">0/3</div>
       </div>
-      <div id="gratitudeInputGroup" class="input-group">
-        <div style="display: flex; gap: 8px;">
-          <input type="text" id="gratitudeInput" style="flex: 1;" />
-          <button id="addGratitudeBtn" style="background: var(--warning); color: white; border: none; border-radius: 12px; padding: 0 15px; cursor: pointer;">➕</button>
-        </div>
+      <div id="gratitudeInputGroup" style="display: flex; gap: 8px;">
+          <input type="text" id="gratitudeInput" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #ddd;" />
+          <button id="addGratitudeBtn" style="background: #f1c40f; color: white; border: none; border-radius: 8px; padding: 0 15px; cursor: pointer;">➕</button>
       </div>
-      <ul id="gratitudeList" class="gratitude-list" style="list-style: none; padding:0;"></ul>
+      <ul id="gratitudeList" class="gratitude-list" style="padding:0; list-style:none; margin-top:10px;"></ul>
     </section>
 
     <section class="card">
-      <h2 id="ui-chart-title" style="font-size: 1.1rem; margin-bottom: 15px;"></h2>
+      <h2 id="ui-chart-title" style="font-size: 1.1em; margin-bottom: 10px;"></h2>
       <canvas id="habitsChart" width="400" height="200"></canvas>
     </section>
 
     <div class="actions">
       <button onclick="window.location.href='manage.html'" id="ui-btn-manage"></button>
-      <button onclick="window.location.href='aihabit.html'" style="background: var(--success); color: white;" id="ui-btn-ai"></button>
-      <button onclick="window.location.href='anyls.html'" style="background: #9b59b6; color: white;" id="ui-btn-stats"></button>
-      <button id="logoutBtn" style="background: var(--danger); color: white;"></button>
+      <button onclick="window.location.href='aihabit.html'" style="background: #2ecc71;" id="ui-btn-ai"></button>
+      <button onclick="window.location.href='anyls.html'" style="background: #9b59b6;" id="ui-btn-stats"></button>
+      <button id="logoutBtn" style="background: #ff4b2b;"></button>
     </div>
 
     <div id="logBox" style="font-size: 12px; color: gray; margin-top: 20px; text-align: center;"></div>
@@ -381,13 +186,11 @@
         goalLabel: "היעד הגדול שלי:",
         goalLoading: "טוען מטרה...",
         dateLabel: "תאריך:",
-        totalLabel: "סה\"כ משימות:",
-        doneLabel: "בוצעו היום:",
         progressLabel: "התקדמות:",
-        tasksTitleToday: "המשימות שלי להיום",
-        tasksTitleTomorrow: "המשימות שלי למחר",
+        tasksTitleToday: "🗓 המשימות שלי להיום",
+        tasksTitleTomorrow: "🕒 המשימות שלי למחר",
         tempInputPlaceholder: "הוסף משימה חד פעמית...",
-        addBtn: "➕ הוסף להיום",
+        addBtn: "➕ הוסף לרשימה",
         tomorrowBtn: "🕒 תזמן למחר",
         gratitudeTitle: "רגע של הודיה ✨",
         gratitudePlaceholder: "על מה אתה מודה היום?",
@@ -395,10 +198,7 @@
         btnManage: "📝 ניהול הרגלים",
         btnAI: "✨ עוזר AI",
         btnStats: "🧠 תובנות שבועיות",
-        btnLogout: "🚪 התנתק",
-        editTooltip: "עדכן מטרה",
-        navPrev: "חזור להיום",
-        navNext: "עבור למחר"
+        btnLogout: "🚪 התנתק"
       },
       en: {
         pageTitle: "pcs365 - Dashboard",
@@ -406,24 +206,19 @@
         goalLabel: "MY BIG GOAL:",
         goalLoading: "Loading goal...",
         dateLabel: "Date:",
-        totalLabel: "Total Tasks:",
-        doneLabel: "Done Today:",
         progressLabel: "Progress:",
-        tasksTitleToday: "My Tasks for Today",
-        tasksTitleTomorrow: "My Tasks for Tomorrow",
-        tempInputPlaceholder: "Add a one-time task...",
-        addBtn: "➕ Add Today",
+        tasksTitleToday: "🗓 My Tasks for Today",
+        tasksTitleTomorrow: "🕒 My Tasks for Tomorrow",
+        tempInputPlaceholder: "Add a task...",
+        addBtn: "➕ Add to List",
         tomorrowBtn: "🕒 Schedule Tomorrow",
         gratitudeTitle: "Gratitude Moment ✨",
-        gratitudePlaceholder: "What are you grateful for today?",
+        gratitudePlaceholder: "What are you grateful for?",
         chartTitle: "📈 Weekly Progress",
         btnManage: "📝 Manage Habits",
         btnAI: "✨ AI Assistant",
         btnStats: "🧠 Weekly Insights",
-        btnLogout: "🚪 Logout",
-        editTooltip: "Update Goal",
-        navPrev: "Back to Today",
-        navNext: "Go to Tomorrow"
+        btnLogout: "🚪 Logout"
       }
     };
 
@@ -437,8 +232,6 @@
     document.getElementById('ui-goal-label').innerText = t.goalLabel;
     document.getElementById('userGoalText').innerText = t.goalLoading;
     document.getElementById('ui-date-label').innerText = t.dateLabel;
-    document.getElementById('ui-total-label').innerText = t.totalLabel;
-    document.getElementById('ui-done-label').innerText = t.doneLabel;
     document.getElementById('ui-progress-label').innerText = t.progressLabel;
     document.getElementById('tasksTitle').innerText = t.tasksTitleToday;
     document.getElementById('tempHabitInput').placeholder = t.tempInputPlaceholder;
@@ -451,7 +244,6 @@
     document.getElementById('ui-btn-ai').innerText = t.btnAI;
     document.getElementById('ui-btn-stats').innerText = t.btnStats;
     document.getElementById('logoutBtn').innerText = t.btnLogout;
-    document.getElementById('ui-edit-goal-link').title = t.editTooltip;
 
     auth.onAuthStateChanged(user => {
       if (user) { loadUserGoal(user.uid); } 
@@ -460,14 +252,12 @@
 
     async function loadUserGoal(uid) {
       try {
-        const snapshot = await db.collection("users").doc(uid)
-          .collection("goals").orderBy("createdAt", "desc").limit(1).get();
+        const snapshot = await db.collection("users").doc(uid).collection("goals").orderBy("createdAt", "desc").limit(1).get();
         if (!snapshot.empty) {
-          const goalData = snapshot.docs[0].data();
-          document.getElementById("userGoalText").textContent = `"${goalData.text}"`;
+          document.getElementById("userGoalText").textContent = `"${snapshot.docs[0].data().text}"`;
           document.getElementById("goalSection").style.display = "block";
         }
-      } catch (e) { console.error("Error loading goal:", e); }
+      } catch (e) { console.error(e); }
     }
   </script>
   <script src="dashboard.js"></script>
