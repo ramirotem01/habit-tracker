@@ -31,21 +31,25 @@ document.addEventListener("DOMContentLoaded", () => {
   auth.onAuthStateChanged(user => {
     if (!user) { window.location.href = "index.html"; return; }
     userId = user.uid;
+    loadUserGoal(userId);
     loadAllData();
     loadGratitude(); 
   });
+
+  async function loadUserGoal(uid) {
+    const snap = await db.collection("users").doc(uid).collection("goals").orderBy("createdAt", "desc").limit(1).get();
+    if (!snap.empty) {
+      document.getElementById("userGoalText").textContent = `"${snap.docs[0].data().text}"`;
+      document.getElementById("goalSection").style.display = "block";
+    }
+  }
 
   async function loadAllData() {
     const viewDocId = getDocId(currentViewDate);
     todayDateEl.textContent = currentViewDate.toLocaleDateString(isEn ? "en-GB" : "he-IL");
     
-    if (viewDocId === realTodayStr) {
-      tasksTitle.textContent = isEn ? "🗓 המשימות שלי להיום" : "🗓 המשימות שלי להיום";
-      if(prevDayBtn) prevDayBtn.style.visibility = "hidden";
-    } else {
-      tasksTitle.textContent = isEn ? "🕒 המשימות שלי למחר" : "🕒 המשימות שלי למחר";
-      if(prevDayBtn) prevDayBtn.style.visibility = "visible";
-    }
+    tasksTitle.textContent = (viewDocId === realTodayStr) ? (isEn ? "🗓 Tasks for Today" : "🗓 המשימות שלי להיום") : (isEn ? "🕒 Tasks for Tomorrow" : "🕒 המשימות שלי למחר");
+    if(prevDayBtn) prevDayBtn.style.visibility = (viewDocId === realTodayStr) ? "hidden" : "visible";
 
     try {
       const baseSnap = await db.collection("users").doc(userId).collection("habits").get();
@@ -58,39 +62,15 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) { console.error(err); }
   }
 
-  nextDayBtn.onclick = () => { currentViewDate.setDate(currentViewDate.getDate() + 1); loadAllData(); loadGratitude(); };
-  prevDayBtn.onclick = () => { currentViewDate.setDate(currentViewDate.getDate() - 1); loadAllData(); loadGratitude(); };
-
-  async function loadGratitude() {
-    const viewDocId = getDocId(currentViewDate);
-    const snap = await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("gratitude").get();
-    const gratitudes = snap.docs.map(doc => doc.data().text);
-    renderGratitude(gratitudes);
+  function updateCircleColor(el, current, max) {
+    if (!el) return;
+    const pct = max > 0 ? (current / max) * 100 : 0;
+    // מעבר מצהוב (hsl 45) לירוק (hsl 145)
+    const hue = 45 + (pct * 1); 
+    el.style.borderColor = `hsl(${hue}, 70%, 50%)`;
+    el.style.color = `hsl(${hue}, 80%, 30%)`;
+    el.textContent = el.id === "gratitudeCircle" ? `${current}/${max}` : `${Math.round(pct)}%`;
   }
-
-  function renderGratitude(items) {
-    if(!gratitudeListEl) return;
-    gratitudeListEl.innerHTML = "";
-    items.forEach(text => {
-      const li = document.createElement("li");
-      li.textContent = text;
-      li.onclick = () => li.classList.toggle("expanded");
-      gratitudeListEl.appendChild(li);
-    });
-    const count = items.length;
-    if(gratitudeCircle) {
-        gratitudeCircle.textContent = `${count}/3`;
-        gratitudeCircle.className = (count >= 3) ? "gratitude-circle circle-full" : "gratitude-circle circle-low";
-    }
-    document.getElementById("gratitudeInputGroup").style.display = (count >= 3) ? "none" : "flex";
-  }
-
-  addGratitudeBtn.onclick = async () => {
-    const text = gratitudeInput.value.trim();
-    if (!text) return;
-    await db.collection("users").doc(userId).collection("daily").doc(getDocId(currentViewDate)).collection("gratitude").add({ text, createdAt: new Date() });
-    gratitudeInput.value = ""; loadGratitude();
-  };
 
   function render() {
     if (!habitListEl) return;
@@ -110,15 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const customCb = document.createElement("div");
       customCb.className = isDone ? "custom-cb checked" : "custom-cb";
       customCb.onclick = async () => {
-        const newState = !dailyStats[task.text];
-        if (newState && (task.text === "קימה ב-06:00" || task.text === "Wake up at 06:00")) {
-          const hour = new Date().getHours();
-          if (hour < 3 || hour >= 6) {
-            alert(isEn ? "Only 03:00-06:00 AM!" : "רק בין 03:00 ל-06:00 בבוקר!");
-            return;
-          }
-        }
-        dailyStats[task.text] = newState;
+        dailyStats[task.text] = !dailyStats[task.text];
         await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
         render(); 
       };
@@ -132,18 +104,17 @@ document.addEventListener("DOMContentLoaded", () => {
       contentSide.appendChild(span);
 
       const actionsSide = document.createElement("div");
-      actionsSide.style = "display: flex; align-items: center;";
+      actionsSide.style = "display: flex; align-items: center; flex-shrink: 0;";
 
       if (task.isTemp) {
-        // החזרת כפתור עריכה
         const editBtn = document.createElement("button");
         editBtn.innerHTML = "✏️";
-        editBtn.style = "background:none; border:none; cursor:pointer; font-size: 16px; margin-inline-start: 5px;";
+        editBtn.className = "action-icon-btn";
         editBtn.onclick = () => editTempHabit(task.id, task.text);
 
         const delBtn = document.createElement("button");
         delBtn.innerHTML = "🗑️";
-        delBtn.style = "background:none; border:none; cursor:pointer; font-size: 16px; margin-inline-start: 10px;";
+        delBtn.className = "action-icon-btn";
         delBtn.onclick = () => deleteTempHabit(task.id, task.text);
         
         actionsSide.appendChild(editBtn);
@@ -155,39 +126,59 @@ document.addEventListener("DOMContentLoaded", () => {
       habitListEl.appendChild(li);
     });
 
-    // עדכון נתוני סיכום
-    if(totalHabitsEl) totalHabitsEl.textContent = allTasks.length;
-    if(doneTodayEl) doneTodayEl.textContent = doneCount;
-    if(progressTodayEl) progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
-    
-    if (taskProgressCircle) {
-      const pct = allTasks.length > 0 ? Math.round((doneCount / allTasks.length) * 100) : 0;
-      taskProgressCircle.textContent = pct + "%";
-      taskProgressCircle.className = (pct === 100 && allTasks.length > 0) ? "task-progress-circle task-circle-done" : "task-progress-circle task-circle-low";
-    }
+    totalHabitsEl.textContent = allTasks.length;
+    doneTodayEl.textContent = doneCount;
+    progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
+    updateCircleColor(taskProgressCircle, doneCount, allTasks.length);
     renderChart();
   }
 
-  async function editTempHabit(id, oldText) {
-    const newText = prompt(isEn ? "Edit task:" : "ערוך משימה:", oldText);
-    if (!newText || newText.trim() === "" || newText === oldText) return;
-    const cleanText = newText.trim();
+  async function loadGratitude() {
     const viewDocId = getDocId(currentViewDate);
-    await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("tempHabits").doc(id).update({ text: cleanText });
-    if (dailyStats[oldText] !== undefined) {
-      dailyStats[cleanText] = dailyStats[oldText];
-      delete dailyStats[oldText];
-      await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
-    }
+    const snap = await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("gratitude").get();
+    const gratitudes = snap.docs.map(doc => doc.data().text);
+    gratitudeListEl.innerHTML = "";
+    gratitudes.forEach(text => {
+      const li = document.createElement("li");
+      li.textContent = text;
+      li.onclick = () => li.classList.toggle("expanded");
+      gratitudeListEl.appendChild(li);
+    });
+    updateCircleColor(gratitudeCircle, gratitudes.length, 3);
+    document.getElementById("gratitudeInputGroup").style.display = (gratitudes.length >= 3) ? "none" : "flex";
+  }
+
+  async function editTempHabit(id, oldText) {
+    const newText = prompt(isEn ? "Edit:" : "ערוך:", oldText);
+    if (!newText || newText.trim() === "" || newText === oldText) return;
+    await db.collection("users").doc(userId).collection("daily").doc(getDocId(currentViewDate)).collection("tempHabits").doc(id).update({ text: newText.trim() });
     loadAllData();
   }
 
   async function deleteTempHabit(id, text) {
-    if (!confirm(isEn ? `Delete "${text}"?` : `למחוק את "${text}"?`)) return;
+    if (!confirm(isEn ? "Delete?" : "למחוק?")) return;
     await db.collection("users").doc(userId).collection("daily").doc(getDocId(currentViewDate)).collection("tempHabits").doc(id).delete();
     loadAllData();
   }
 
+  addTempHabitBtn.onclick = async () => {
+    const text = tempHabitInput.value.trim();
+    if (!text) return;
+    await db.collection("users").doc(userId).collection("daily").doc(getDocId(currentViewDate)).collection("tempHabits").add({ text });
+    tempHabitInput.value = ""; loadAllData();
+  };
+
+  addTomorrowHabitBtn.onclick = async () => {
+      const text = tempHabitInput.value.trim();
+      if (!text) return;
+      const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+      await db.collection("users").doc(userId).collection("daily").doc(getDocId(tomorrow)).collection("tempHabits").add({ text });
+      tempHabitInput.value = ""; alert(isEn ? "Scheduled for tomorrow" : "תוזמן למחר");
+  };
+
+  nextDayBtn.onclick = () => { currentViewDate.setDate(currentViewDate.getDate() + 1); loadAllData(); loadGratitude(); };
+  prevDayBtn.onclick = () => { currentViewDate.setDate(currentViewDate.getDate() - 1); loadAllData(); loadGratitude(); };
+  
   async function renderChart() {
     const ctx = document.getElementById('habitsChart');
     if (!ctx || typeof Chart === 'undefined') return;
@@ -212,19 +203,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  addTempHabitBtn.onclick = async () => {
-    const text = tempHabitInput.value.trim();
+  addGratitudeBtn.onclick = async () => {
+    const text = gratitudeInput.value.trim();
     if (!text) return;
-    await db.collection("users").doc(userId).collection("daily").doc(getDocId(currentViewDate)).collection("tempHabits").add({ text });
-    tempHabitInput.value = ""; loadAllData();
-  };
-
-  addTomorrowHabitBtn.onclick = async () => {
-      const text = tempHabitInput.value.trim();
-      if (!text) return;
-      const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
-      await db.collection("users").doc(userId).collection("daily").doc(getDocId(tomorrow)).collection("tempHabits").add({ text });
-      tempHabitInput.value = ""; alert(isEn ? "Added for tomorrow" : "נוסף למחר");
+    await db.collection("users").doc(userId).collection("daily").doc(getDocId(currentViewDate)).collection("gratitude").add({ text, createdAt: new Date() });
+    gratitudeInput.value = ""; loadGratitude();
   };
 
   document.getElementById("logoutBtn").onclick = () => auth.signOut().then(() => window.location.href = "index.html");
