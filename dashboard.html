@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#3498db">
+  <meta name="theme-color" content="#4f46e5">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
@@ -16,205 +16,281 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="page-title">דשבורד הרגלים</title>
+  <title id="page-title">pcs365 - דשבורד</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* עיצוב ייעודי לכרטיס המטרה */
-    .goal-card {
-      background: linear-gradient(135deg, #f1f9ff 0%, #ffffff 100%);
-      border-inline-start: 5px solid #3498db; /* הופך ל-right בעברית ו-left באנגלית */
-      text-align: center;
-      padding: 20px !important;
-      position: relative;
-    }
-    .goal-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .goal-card h2 {
-      font-size: 0.9em;
-      color: #7f8c8d;
-      margin: 0;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .edit-goal-btn {
-      text-decoration: none;
-      font-size: 1.2em;
-      color: #3498db;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    .edit-goal-btn:hover {
-      opacity: 0.7;
-    }
-    #userGoalText {
-      font-size: 1.3em;
-      color: #2c3e50;
-      font-weight: bold;
-      font-style: italic;
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #818cf8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
 
-    /* עיצוב כרטיס סיכום עם עיגול התקדמות */
+    body {
+      background: var(--bg-gradient);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+    }
+
+    .app {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      font-weight: 800;
+      text-align: center;
+      color: var(--primary);
+      margin-bottom: 25px;
+      letter-spacing: -0.5px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      transition: transform 0.3s ease;
+    }
+
+    /* כרטיס מטרה מעוצב */
+    .goal-card {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+      text-align: center;
+    }
+
+    .goal-header h2 {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin: 0;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    #userGoalText {
+      font-size: 1.4rem;
+      margin-top: 10px;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .edit-goal-btn {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px 10px;
+      border-radius: 10px;
+    }
+
+    /* סיכום והתקדמות */
     .summary-card {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .summary-info {
-      flex: 1;
+
+    .summary-info p {
+      margin: 5px 0;
+      font-size: 0.95rem;
+      color: #64748b;
     }
-    .progress-circle-container {
-      margin-inline-start: 15px;
+
+    .summary-info strong, .summary-info span {
+      color: #1e293b;
+      font-weight: 600;
     }
+
     .task-progress-circle {
-      width: 65px;
-      height: 65px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
+      background: white;
+      border: 6px solid #e2e8f0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
-      font-size: 1em;
-      background-color: #fff;
-      border: 5px solid #eee;
-      transition: all 0.4s ease;
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .task-circle-low { border-color: #f1c40f; color: #f39c12; }
-    .task-circle-done { border-color: #2ecc71; color: #27ae60; background-color: #fafffa; }
 
-    /* ניווט בין ימים */
+    .task-circle-done {
+      border-color: var(--success);
+      color: var(--success);
+      background: #ecfdf5;
+    }
+
+    /* ניווט ימים */
     .date-nav {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
+      background: rgba(0,0,0,0.03);
+      padding: 8px;
+      border-radius: 15px;
       margin-bottom: 20px;
-      background: #f8f9fa;
-      padding: 10px;
-      border-radius: 12px;
     }
-    .tasks-title-container {
-      flex: 1;
-      text-align: center;
-    }
-    .tasks-title-container h2 {
-      margin: 0;
-      font-size: 1.1em;
-      color: #2c3e50;
-    }
+
     .nav-btn {
-      background: #ffffff;
+      background: white;
       border: none;
-      border-radius: 50%;
-      width: 38px;
-      height: 38px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: bold;
-      color: #3498db;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: all 0.2s ease;
-    }
-    .nav-btn:hover {
-      background: #3498db;
-      color: #fff;
-      transform: translateY(-2px);
-    }
-    .nav-btn:disabled {
-      opacity: 0;
-      cursor: not-allowed;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .input-group {
-      display: flex;
-      flex-direction: column; 
-      gap: 8px;
-    }
-    .input-group input {
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .button-row {
-      display: flex;
-      gap: 8px;
-    }
-    .button-row button {
-      flex: 1;
-      white-space: nowrap;
-      padding: 10px 5px;
-      font-size: 0.9em;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      color: white;
-    }
-    #addTempHabitBtn { background-color: #3498db; }
-    #addTomorrowHabitBtn { background-color: #34495e; }
-
-    /* הודיה */
-    .gratitude-section {
-      background: #fff;
+      width: 40px;
+      height: 40px;
       border-radius: 12px;
-      padding: 15px;
-      margin-top: 15px;
+      color: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      font-weight: bold;
     }
-    .gratitude-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+
+    /* אינפוטים וכפתורי פעולה */
+    .input-group {
       margin-bottom: 15px;
     }
-    .gratitude-circle {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+
+    input[type="text"] {
+      padding: 12px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--primary-light);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .button-row button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      color: white;
+      transition: opacity 0.2s;
+    }
+
+    #addTempHabitBtn { background: var(--primary); }
+    #addTomorrowHabitBtn { background: #334155; }
+
+    /* רשימת הרגלים - העיצוב החדש של ה-Checkbox */
+    #habitList {
+      list-style: none;
+      padding: 0;
+      margin-top: 25px;
+    }
+
+    #habitList li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 15px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      border: 1px solid #f1f5f9;
+    }
+
+    /* Toggle Checkbox Modern Style */
+    .custom-cb {
+      width: 28px;
+      height: 28px;
+      border: 2.5px solid #cbd5e1;
+      border-radius: 8px;
+      margin-inline-end: 15px;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .custom-cb.checked {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .custom-cb.checked::after {
+      content: '✓';
+      color: white;
       font-weight: bold;
-      font-size: 0.9em;
-      background-color: #ffffff;
-      border: 4px solid #eee;
-    }
-    .circle-low { border-color: #f1c40f; color: #f39c12; }
-    .circle-full { border-color: #2ecc71; color: #27ae60; }
-    
-    .gratitude-list {
-      list-style: none;
-      padding: 0;
-      margin: 10px 0;
-    }
-    .gratitude-list li {
-      background: #f9f9f9;
-      margin-bottom: 5px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 0.95em;
-      border-inline-start: 3px solid #f1c40f;
-      cursor: pointer;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 18px;
     }
 
     .task-text-span {
+      font-weight: 500;
       flex: 1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      cursor: pointer;
+      transition: color 0.3s;
     }
+
+    .task-text-span.done {
+      color: #94a3b8;
+      text-decoration: line-through;
+    }
+
+    /* הודיה */
+    .gratitude-section {
+      border-top: 4px solid var(--warning);
+    }
+
+    .gratitude-circle {
+      background: var(--warning);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+
+    .gratitude-list li {
+      background: #fffbeb !important;
+      border-inline-start: 4px solid var(--warning) !important;
+    }
+
+    /* פעולות תחתונות */
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .actions button {
+      padding: 15px;
+      border-radius: 15px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    #ui-btn-manage { background: white; color: var(--primary); border: 1px solid var(--primary); }
+
   </style>
 </head>
 <body>
@@ -223,8 +299,10 @@
     
     <section class="card goal-card" id="goalSection" style="display: none;">
       <div class="goal-header">
-        <h2 id="ui-goal-label"></h2>
-        <a href="mygoal.html" class="edit-goal-btn" id="ui-edit-goal-link">✏️</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <h2 id="ui-goal-label"></h2>
+          <a href="mygoal.html" class="edit-goal-btn" id="ui-edit-goal-link">✏️</a>
+        </div>
       </div>
       <p id="userGoalText"></p>
     </section>
@@ -237,17 +315,17 @@
         <p><span id="ui-progress-label"></span> <span id="progressToday">0/0</span></p>
       </div>
       <div class="progress-circle-container">
-        <div id="taskProgressCircle" class="task-progress-circle task-circle-low">0%</div>
+        <div id="taskProgressCircle" class="task-progress-circle">0%</div>
       </div>
     </section>
 
     <section class="card">
       <div class="date-nav">
-        <button id="prevDayBtn" class="nav-btn"><span>&#10094;</span></button>
+        <button id="prevDayBtn" class="nav-btn">❮</button>
         <div class="tasks-title-container">
-            <h2 id="tasksTitle"></h2>
+            <h2 id="tasksTitle" style="margin:0; font-size: 1.1rem;"></h2>
         </div>
-        <button id="nextDayBtn" class="nav-btn"><span>&#10095;</span></button>
+        <button id="nextDayBtn" class="nav-btn">❯</button>
       </div>
       
       <div class="input-group">
@@ -261,34 +339,32 @@
     </section>
 
     <section class="card gratitude-section">
-      <div class="gratitude-header">
-        <h2 id="ui-gratitude-title"></h2>
-        <div id="gratitudeCircle" class="gratitude-circle circle-low">0/3</div>
+      <div class="gratitude-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2 id="ui-gratitude-title" style="margin:0; font-size: 1.1rem;"></h2>
+        <div id="gratitudeCircle" class="gratitude-circle">0/3</div>
       </div>
       <div id="gratitudeInputGroup" class="input-group">
         <div style="display: flex; gap: 8px;">
           <input type="text" id="gratitudeInput" style="flex: 1;" />
-          <button id="addGratitudeBtn" style="background: #f1c40f; color: white; border: none; border-radius: 5px; padding: 0 15px; cursor: pointer;">➕</button>
+          <button id="addGratitudeBtn" style="background: var(--warning); color: white; border: none; border-radius: 12px; padding: 0 15px; cursor: pointer;">➕</button>
         </div>
       </div>
-      <ul id="gratitudeList" class="gratitude-list"></ul>
+      <ul id="gratitudeList" class="gratitude-list" style="list-style: none; padding:0;"></ul>
     </section>
 
     <section class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h2 id="ui-chart-title"></h2>
-      </div>
+      <h2 id="ui-chart-title" style="font-size: 1.1rem; margin-bottom: 15px;"></h2>
       <canvas id="habitsChart" width="400" height="200"></canvas>
     </section>
 
     <div class="actions">
       <button onclick="window.location.href='manage.html'" id="ui-btn-manage"></button>
-      <button onclick="window.location.href='aihabit.html'" style="background: #2ecc71; color: white;" id="ui-btn-ai"></button>
+      <button onclick="window.location.href='aihabit.html'" style="background: var(--success); color: white;" id="ui-btn-ai"></button>
       <button onclick="window.location.href='anyls.html'" style="background: #9b59b6; color: white;" id="ui-btn-stats"></button>
-      <button id="logoutBtn" style="background: #ff4b2b; color: white;"></button>
+      <button id="logoutBtn" style="background: var(--danger); color: white;"></button>
     </div>
 
-    <div id="logBox" style="font-size: 12px; color: gray; margin-top: 20px;"></div>
+    <div id="logBox" style="font-size: 12px; color: gray; margin-top: 20px; text-align: center;"></div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -300,7 +376,7 @@
   <script>
     const translations = {
       he: {
-        pageTitle: "דשבורד הרגלים",
+        pageTitle: "pcs365 - דשבורד",
         dashboardTitle: "📊 דשבורד יומי",
         goalLabel: "היעד הגדול שלי:",
         goalLoading: "טוען מטרה...",
@@ -308,10 +384,10 @@
         totalLabel: "סה\"כ משימות:",
         doneLabel: "בוצעו היום:",
         progressLabel: "התקדמות:",
-        tasksTitleToday: "🗓 המשימות שלי להיום",
-        tasksTitleTomorrow: "🕒 המשימות שלי למחר",
+        tasksTitleToday: "המשימות שלי להיום",
+        tasksTitleTomorrow: "המשימות שלי למחר",
         tempInputPlaceholder: "הוסף משימה חד פעמית...",
-        addBtn: "➕ הוסף לרשימה",
+        addBtn: "➕ הוסף להיום",
         tomorrowBtn: "🕒 תזמן למחר",
         gratitudeTitle: "רגע של הודיה ✨",
         gratitudePlaceholder: "על מה אתה מודה היום?",
@@ -325,7 +401,7 @@
         navNext: "עבור למחר"
       },
       en: {
-        pageTitle: "Habit Dashboard",
+        pageTitle: "pcs365 - Dashboard",
         dashboardTitle: "📊 Daily Dashboard",
         goalLabel: "MY BIG GOAL:",
         goalLoading: "Loading goal...",
@@ -333,10 +409,10 @@
         totalLabel: "Total Tasks:",
         doneLabel: "Done Today:",
         progressLabel: "Progress:",
-        tasksTitleToday: "🗓 My Tasks for Today",
-        tasksTitleTomorrow: "🕒 My Tasks for Tomorrow",
+        tasksTitleToday: "My Tasks for Today",
+        tasksTitleTomorrow: "My Tasks for Tomorrow",
         tempInputPlaceholder: "Add a one-time task...",
-        addBtn: "➕ Add to List",
+        addBtn: "➕ Add Today",
         tomorrowBtn: "🕒 Schedule Tomorrow",
         gratitudeTitle: "Gratitude Moment ✨",
         gratitudePlaceholder: "What are you grateful for today?",
@@ -353,11 +429,9 @@
 
     const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
     const t = translations[userLang];
-
     document.documentElement.lang = userLang;
     document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
 
-    // הזרקת טקסטים
     document.getElementById('page-title').innerText = t.pageTitle;
     document.getElementById('ui-dashboard-title').innerText = t.dashboardTitle;
     document.getElementById('ui-goal-label').innerText = t.goalLabel;
@@ -378,33 +452,22 @@
     document.getElementById('ui-btn-stats').innerText = t.btnStats;
     document.getElementById('logoutBtn').innerText = t.btnLogout;
     document.getElementById('ui-edit-goal-link').title = t.editTooltip;
-    document.getElementById('prevDayBtn').title = t.navPrev;
-    document.getElementById('nextDayBtn').title = t.navNext;
 
     auth.onAuthStateChanged(user => {
-      if (user) {
-        loadUserGoal(user.uid);
-      } else {
-          window.location.href = "index.html";
-      }
+      if (user) { loadUserGoal(user.uid); } 
+      else { window.location.href = "index.html"; }
     });
 
     async function loadUserGoal(uid) {
       try {
         const snapshot = await db.collection("users").doc(uid)
-          .collection("goals")
-          .orderBy("createdAt", "desc")
-          .limit(1)
-          .get();
-
+          .collection("goals").orderBy("createdAt", "desc").limit(1).get();
         if (!snapshot.empty) {
           const goalData = snapshot.docs[0].data();
           document.getElementById("userGoalText").textContent = `"${goalData.text}"`;
           document.getElementById("goalSection").style.display = "block";
         }
-      } catch (e) {
-        console.error("Error loading goal:", e);
-      }
+      } catch (e) { console.error("Error loading goal:", e); }
     }
   </script>
   <script src="dashboard.js"></script>
