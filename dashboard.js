@@ -62,28 +62,19 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) { console.error(err); }
   }
 
-  // הפונקציה המעודכנת לשינוי צבע דינמי
+  // פונקציית העדכון החדשה: יוצרת את אפקט מילוי השעון
   function updateCircleColor(el, current, max) {
     if (!el) return;
     const pct = max > 0 ? (current / max) * 100 : 0;
     
-    let borderColor, textColor;
-
-    if (pct === 0) {
-      // צהוב ב-0% התקדמות
-      borderColor = "#f1c40f";
-      textColor = "#f39c12";
-    } else {
-      // מעבר לירוק: מבהירות גבוהה (75%) ב-1% לכהה (25%) ב-100%
-      // גוון (Hue) של ירוק הוא 120
-      const lightness = 75 - (pct * 0.5); // ככל שהאחוז עולה, הבהירות יורדת
-      borderColor = `hsl(120, 70%, ${lightness}%)`;
-      textColor = `hsl(120, 80%, ${lightness - 15}%)`; // טקסט מעט כהה יותר מהמסגרת לקריאות
+    // מעדכן את משתנה ה-CSS שקובע היכן הירוק הכהה עוצר
+    el.style.setProperty('--pg', `${pct}%`);
+    
+    // מעדכן את הטקסט בתוך ה-span
+    const span = el.querySelector('span');
+    if (span) {
+        span.textContent = el.id === "gratitudeCircle" ? `${current}/${max}` : `${Math.round(pct)}%`;
     }
-
-    el.style.borderColor = borderColor;
-    el.style.color = textColor;
-    el.textContent = el.id === "gratitudeCircle" ? `${current}/${max}` : `${Math.round(pct)}%`;
   }
 
   function render() {
