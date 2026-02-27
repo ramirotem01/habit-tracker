@@ -1,22 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const style = document.createElement('style');
-  style.innerHTML = `
-    .task-text-span { cursor: pointer; display: inline-block; flex: 1; transition: all 0.2s; }
-    .task-text-span.expanded { white-space: normal !important; overflow: visible !important; }
-    .actions-btn { transition: transform 0.2s; border-radius: 8px; }
-    .actions-btn:hover { transform: scale(1.1); background-color: rgba(0,0,0,0.05) !important; }
-  `;
-  document.head.appendChild(style);
-
   const habitListEl = document.getElementById("habitList");
-  const totalHabitsEl = document.getElementById("totalHabits");
-  const doneTodayEl = document.getElementById("doneToday");
   const progressTodayEl = document.getElementById("progressToday");
   const todayDateEl = document.getElementById("todayDate");
   const tempHabitInput = document.getElementById("tempHabitInput");
   const addTempHabitBtn = document.getElementById("addTempHabitBtn");
   const addTomorrowHabitBtn = document.getElementById("addTomorrowHabitBtn"); 
-  const logoutBtn = document.getElementById("logoutBtn");
   const tasksTitle = document.getElementById("tasksTitle");
   const prevDayBtn = document.getElementById("prevDayBtn");
   const nextDayBtn = document.getElementById("nextDayBtn");
@@ -50,10 +38,10 @@ document.addEventListener("DOMContentLoaded", () => {
     todayDateEl.textContent = currentViewDate.toLocaleDateString(isEn ? "en-GB" : "he-IL");
     
     if (viewDocId === realTodayStr) {
-      tasksTitle.textContent = isEn ? "My Daily Tasks" : "המשימות שלי להיום";
+      tasksTitle.textContent = isEn ? "🗓 My Tasks for Today" : "🗓 המשימות שלי להיום";
       if(prevDayBtn) prevDayBtn.style.visibility = "hidden";
     } else {
-      tasksTitle.textContent = isEn ? "My Tasks for Tomorrow" : "המשימות שלי למחר";
+      tasksTitle.textContent = isEn ? "🕒 My Tasks for Tomorrow" : "🕒 המשימות שלי למחר";
       if(prevDayBtn) prevDayBtn.style.visibility = "visible";
     }
 
@@ -65,11 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const statsDoc = await db.collection("users").doc(userId).collection("stats").doc(viewDocId).get();
       dailyStats = statsDoc.exists ? statsDoc.data() : {};
       render();
-    } catch (err) { console.error("Load error:", err); }
+    } catch (err) { console.error(err); }
   }
 
-  if(nextDayBtn) nextDayBtn.onclick = () => { currentViewDate.setDate(currentViewDate.getDate() + 1); loadAllData(); loadGratitude(); };
-  if(prevDayBtn) prevDayBtn.onclick = () => { currentViewDate.setDate(currentViewDate.getDate() - 1); loadAllData(); loadGratitude(); };
+  nextDayBtn.onclick = () => { currentViewDate.setDate(currentViewDate.getDate() + 1); loadAllData(); loadGratitude(); };
+  prevDayBtn.onclick = () => { currentViewDate.setDate(currentViewDate.getDate() - 1); loadAllData(); loadGratitude(); };
 
   async function loadGratitude() {
     const viewDocId = getDocId(currentViewDate);
@@ -83,27 +71,24 @@ document.addEventListener("DOMContentLoaded", () => {
     gratitudeListEl.innerHTML = "";
     items.forEach(text => {
       const li = document.createElement("li");
-      li.style = "background: #fffbeb; padding: 10px; border-radius: 10px; margin-bottom: 5px; border-inline-start: 4px solid #f59e0b;";
       li.textContent = text;
+      li.onclick = () => li.classList.toggle("expanded");
       gratitudeListEl.appendChild(li);
     });
     const count = items.length;
-    if(gratitudeCircle) gratitudeCircle.textContent = `${count}/3`;
-    const inputGroup = document.getElementById("gratitudeInputGroup");
-    if(inputGroup) inputGroup.style.display = (count >= 3) ? "none" : "flex";
+    if(gratitudeCircle) {
+        gratitudeCircle.textContent = `${count}/3`;
+        gratitudeCircle.className = (count >= 3) ? "gratitude-circle circle-full" : "gratitude-circle circle-low";
+    }
+    document.getElementById("gratitudeInputGroup").style.display = (count >= 3) ? "none" : "flex";
   }
 
-  if(addGratitudeBtn) {
-    addGratitudeBtn.onclick = async () => {
-      const text = gratitudeInput.value.trim();
-      if (!text) return;
-      try {
-        await db.collection("users").doc(userId).collection("daily").doc(getDocId(currentViewDate)).collection("gratitude").add({ text, createdAt: new Date() });
-        gratitudeInput.value = "";
-        loadGratitude();
-      } catch (e) { console.error(e); }
-    };
-  }
+  addGratitudeBtn.onclick = async () => {
+    const text = gratitudeInput.value.trim();
+    if (!text) return;
+    await db.collection("users").doc(userId).collection("daily").doc(getDocId(currentViewDate)).collection("gratitude").add({ text, createdAt: new Date() });
+    gratitudeInput.value = ""; loadGratitude();
+  };
 
   function render() {
     if (!habitListEl) return;
@@ -118,27 +103,21 @@ document.addEventListener("DOMContentLoaded", () => {
       const li = document.createElement("li");
 
       const contentSide = document.createElement("div");
-      contentSide.style = "display: flex; align-items: center; flex: 1;";
+      contentSide.style = "display: flex; align-items: center; flex: 1; overflow: hidden;";
 
-      // בניית ה-Checkbox החדש (Custom Toggle)
       const customCb = document.createElement("div");
       customCb.className = isDone ? "custom-cb checked" : "custom-cb";
-      
       customCb.onclick = async () => {
         const newState = !dailyStats[task.text];
-        
-        // לוגיקת קימה ב-06:00
         if (newState && (task.text === "קימה ב-06:00" || task.text === "Wake up at 06:00")) {
           const hour = new Date().getHours();
           if (hour < 3 || hour >= 6) {
-            alert(isEn ? "Too late/early! (03:00-06:00 AM only)" : "לא בזמן! (רק בין 03:00 ל-06:00 בבוקר)");
+            alert(isEn ? "Only between 03:00-06:00 AM!" : "רק בין 03:00 ל-06:00 בבוקר!");
             return;
           }
         }
-
         dailyStats[task.text] = newState;
         await db.collection("users").doc(userId).collection("stats").doc(viewDocId).set(dailyStats);
-        if (window.syncHabitWithLeague) window.syncHabitWithLeague(task.text, newState);
         render(); 
       };
 
@@ -154,9 +133,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (task.isTemp) {
         const delBtn = document.createElement("button");
         delBtn.innerHTML = "🗑️";
-        delBtn.className = "actions-btn";
-        delBtn.style = "background:none; border:none; cursor:pointer; font-size: 1.1rem; padding: 5px;";
-        delBtn.onclick = () => deleteTempHabit(task.id, task.text);
+        delBtn.style = "background:none; border:none; cursor:pointer; font-size: 16px; margin-inline-start: 10px;";
+        delBtn.onclick = async () => {
+          if(confirm(isEn ? "Delete?" : "למחוק?")) {
+            await db.collection("users").doc(userId).collection("daily").doc(viewDocId).collection("tempHabits").doc(task.id).delete();
+            loadAllData();
+          }
+        };
         actionsSide.appendChild(delBtn);
       }
 
@@ -165,15 +148,11 @@ document.addEventListener("DOMContentLoaded", () => {
       habitListEl.appendChild(li);
     });
 
-    if(totalHabitsEl) totalHabitsEl.textContent = allTasks.length;
-    if(doneTodayEl) doneTodayEl.textContent = doneCount;
-    if(progressTodayEl) progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
-    
+    progressTodayEl.textContent = `${doneCount}/${allTasks.length}`;
     if (taskProgressCircle) {
       const pct = allTasks.length > 0 ? Math.round((doneCount / allTasks.length) * 100) : 0;
       taskProgressCircle.textContent = pct + "%";
-      taskProgressCircle.className = (pct === 100 && allTasks.length > 0) ? "task-progress-circle task-circle-done" : "task-progress-circle";
-      taskProgressCircle.style.borderColor = pct === 100 ? "#10b981" : "#e2e8f0";
+      taskProgressCircle.className = (pct === 100 && allTasks.length > 0) ? "task-progress-circle task-circle-done" : "task-progress-circle task-circle-low";
     }
     renderChart();
   }
@@ -181,54 +160,41 @@ document.addEventListener("DOMContentLoaded", () => {
   async function renderChart() {
     const ctx = document.getElementById('habitsChart');
     if (!ctx || typeof Chart === 'undefined') return;
-    try {
-      const dates = []; const labels = [];
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i);
-        dates.push(getDocId(d));
-        labels.push(d.toLocaleDateString(isEn ? "en-GB" : "he-IL", { weekday: 'short' }));
-      }
-      const statsSnap = await db.collection("users").doc(userId).collection("stats").get();
-      const allStats = {};
-      statsSnap.forEach(doc => allStats[doc.id] = doc.data());
-      const dataPoints = dates.map(dateId => {
-        const dayData = allStats[dateId] || {};
-        return Object.values(dayData).filter(v => v === true).length;
-      });
-      if (myChart) myChart.destroy();
-      myChart = new Chart(ctx, {
-        type: 'bar',
-        data: { labels, datasets: [{ data: dataPoints, backgroundColor: '#4f46e5', borderRadius: 8 }] },
-        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
-      });
-    } catch (e) { console.error("Chart error:", e); }
+    const dates = []; const labels = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      dates.push(getDocId(d));
+      labels.push(d.toLocaleDateString(isEn ? "en-GB" : "he-IL", { weekday: 'short' }));
+    }
+    const statsSnap = await db.collection("users").doc(userId).collection("stats").get();
+    const allStats = {};
+    statsSnap.forEach(doc => allStats[doc.id] = doc.data());
+    const dataPoints = dates.map(dateId => {
+      const dayData = allStats[dateId] || {};
+      return Object.values(dayData).filter(v => v === true).length;
+    });
+    if (myChart) myChart.destroy();
+    myChart = new Chart(ctx, {
+      type: 'bar',
+      data: { labels, datasets: [{ data: dataPoints, backgroundColor: '#3498db', borderRadius: 5 }] },
+      options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    });
   }
 
-  if(addTempHabitBtn) {
-    addTempHabitBtn.onclick = async () => {
+  addTempHabitBtn.onclick = async () => {
+    const text = tempHabitInput.value.trim();
+    if (!text) return;
+    await db.collection("users").doc(userId).collection("daily").doc(getDocId(currentViewDate)).collection("tempHabits").add({ text });
+    tempHabitInput.value = ""; loadAllData();
+  };
+
+  addTomorrowHabitBtn.onclick = async () => {
       const text = tempHabitInput.value.trim();
       if (!text) return;
-      await db.collection("users").doc(userId).collection("daily").doc(getDocId(currentViewDate)).collection("tempHabits").add({ text });
-      tempHabitInput.value = ""; loadAllData();
-    };
-  }
+      const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+      await db.collection("users").doc(userId).collection("daily").doc(getDocId(tomorrow)).collection("tempHabits").add({ text });
+      tempHabitInput.value = ""; alert(isEn ? "Added for tomorrow" : "נוסף למחר");
+  };
 
-  if(addTomorrowHabitBtn) {
-    addTomorrowHabitBtn.onclick = async () => {
-      const text = tempHabitInput.value.trim();
-      if (!text) return;
-      const tomorrowDocId = getDocId(new Date(Date.now() + 86400000));
-      await db.collection("users").doc(userId).collection("daily").doc(tomorrowDocId).collection("tempHabits").add({ text });
-      alert(isEn ? `Task added for tomorrow!` : `המשימה נוספה למחר!`);
-      tempHabitInput.value = "";
-    };
-  }
-
-  async function deleteTempHabit(id, text) {
-    if (!confirm(isEn ? `Delete "${text}"?` : `למחוק את "${text}"?`)) return;
-    await db.collection("users").doc(userId).collection("daily").doc(getDocId(currentViewDate)).collection("tempHabits").doc(id).delete();
-    loadAllData();
-  }
-
-  if(logoutBtn) logoutBtn.onclick = () => auth.signOut().then(() => window.location.href = "index.html");
+  document.getElementById("logoutBtn").onclick = () => auth.signOut().then(() => window.location.href = "index.html");
 });
