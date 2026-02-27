@@ -7,6 +7,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/4345/4345517.png">
 
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@900&display=swap" rel="stylesheet">
+
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
@@ -27,7 +29,16 @@
     }
     .app { max-width: 600px; margin: 0 auto; padding: 15px; box-sizing: border-box; }
     
-    h1 { text-align: center; color: #2c3e50; margin-bottom: 25px; font-weight: 800; font-size: 1.8em; letter-spacing: -0.5px; }
+    /* עיצוב כותרת ספציפי עם הפונט החדש */
+    h1 { 
+        text-align: center; 
+        color: #2c3e50; 
+        margin-bottom: 25px; 
+        font-weight: 900; 
+        font-size: 2.2em; 
+        font-family: 'Heebo', sans-serif;
+        letter-spacing: -1px;
+    }
 
     .card {
       background: #ffffff;
@@ -56,7 +67,6 @@
       flex-shrink: 0;
     }
 
-    /* ניווט ימים - עיצוב מקורי ויוקרתי */
     .date-nav { 
       display: flex; 
       align-items: center; 
@@ -112,7 +122,6 @@
     }
     .action-icon-btn:hover { background-color: #f0f0f0; opacity: 1; transform: scale(1.1); }
 
-    /* כפתורי מערכת למטה - פריסה רחבה */
     .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
     .actions button {
       padding: 16px 10px; border-radius: 12px; border: none; color: white;
@@ -217,7 +226,7 @@
         tasksTitleTomorrow: "🕒 המשימות שלי למחר",
         tempInputPlaceholder: "הוסף משימה חדשה...",
         addBtn: "➕ הוסף להיום",
-        tomorrowBtn: "🕒 למחר",
+        tomorrowBtn: "🕒 הוסף למחר",
         gratitudeTitle: "רגע של הודיה ✨",
         gratitudePlaceholder: "על מה את/ה מודה היום?",
         chartTitle: "📈 התקדמות שבועית",
@@ -238,7 +247,7 @@
         tasksTitleTomorrow: "🕒 Tasks for Tomorrow",
         tempInputPlaceholder: "Add a task...",
         addBtn: "➕ Add Today",
-        tomorrowBtn: "🕒 Tomorrow",
+        tomorrowBtn: "🕒 Add Tomorrow",
         gratitudeTitle: "Gratitude ✨",
         gratitudePlaceholder: "What are you grateful for?",
         chartTitle: "📈 Weekly Progress",
