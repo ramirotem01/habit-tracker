@@ -30,20 +30,21 @@
     h1, h2 { 
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
         color: #2c3e50;
-        white-space: nowrap; /* מונע ירידת שורה */
+        white-space: nowrap;
     }
 
     h1 { 
         text-align: center; 
-        margin-bottom: 25px; 
+        margin-bottom: 10px; /* צמצום הרווח מתחת לכותרת הראשונה */
+        margin-top: 10px;    /* צמצום הרווח מעל הכותרת */
         font-weight: 800; 
         font-size: 2.1em; 
         letter-spacing: -0.5px;
     }
 
-    /* התאמה למובייל כדי שהטקסט לא ייחתך או יירד שורה */
+    /* התאמה למובייל */
     @media (max-width: 400px) {
-        h1 { font-size: 1.8em; }
+        h1 { font-size: 1.8em; margin-bottom: 8px; }
         h2 { font-size: 1.05em !important; }
         .date-nav h2 { font-size: 1em !important; }
     }
@@ -52,7 +53,7 @@
       background: #ffffff;
       border-radius: 15px;
       padding: 20px;
-      margin-bottom: 1px !important; /* רווח של 1px בדיוק כפי שביקשת */
+      margin-bottom: 10px !important; /* רווח של 10px בין הכרטיסיות */
       box-shadow: 0 4px 6px rgba(0,0,0,0.05);
       box-sizing: border-box;
     }
@@ -102,11 +103,7 @@
       width: 38px; height: 38px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       color: #3498db;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.08); 
-      transition: all 0.2s; 
-      font-size: 1em;
     }
-    .nav-btn:hover { background: #f8f9fa; border-color: #3498db; transform: scale(1.05); }
 
     #habitList { list-style: none; padding: 0; margin-top: 15px; }
     #habitList li {
@@ -116,37 +113,12 @@
       overflow: hidden;
     }
     
-    .task-content { display: flex; align-items: center; flex: 1; min-width: 0; }
-
-    .custom-cb {
-      width: 24px; height: 24px; border: 2px solid #3498db; border-radius: 6px;
-      margin-inline-end: 12px; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; transition: all 0.2s; flex-shrink: 0;
-    }
-    .custom-cb.checked { background: #2ecc71; border-color: #2ecc71; }
-    .custom-cb.checked::after { content: '✓'; color: white; font-weight: bold; }
-
-    .task-text-span {
-      flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      cursor: pointer; color: #2c3e50; font-size: 1em;
-    }
-    .task-text-span.expanded { white-space: normal; overflow: visible; }
-    .task-text-span.done { text-decoration: line-through; color: #bdc3c7; }
-
-    .action-icon-btn {
-      background: none; border: none; cursor: pointer; font-size: 18px; 
-      padding: 8px; border-radius: 50%; transition: all 0.2s; opacity: 0.6;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .action-icon-btn:hover { background-color: #f0f0f0; opacity: 1; transform: scale(1.1); }
-
     .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 25px; }
     .actions button {
       padding: 16px 10px; border-radius: 12px; border: none; color: white;
-      font-weight: 700; cursor: pointer; transition: all 0.3s ease; font-size: 0.9em;
+      font-weight: 700; cursor: pointer; font-size: 0.9em;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
-    .actions button:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); filter: brightness(1.1); }
     
     #ui-btn-manage { background-color: #34495e; }
     #ui-btn-ai { background-color: #2ecc71; }
@@ -156,9 +128,7 @@
     .gratitude-list li {
         background: #fdfcf0; margin-bottom: 6px; padding: 10px;
         border-radius: 8px; border-inline-start: 4px solid #f1c40f;
-        cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .gratitude-list li.expanded { white-space: normal; overflow: visible; }
   </style>
 </head>
 <body>
@@ -189,7 +159,6 @@
         <h2 id="tasksTitle" style="margin:0; font-size: 1.15em; font-weight: 800;"></h2>
         <button id="nextDayBtn" class="nav-btn">❯</button>
       </div>
-      
       <div style="display: flex; flex-direction: column; gap: 10px;">
         <input type="text" id="tempHabitInput" style="padding: 14px; border-radius: 10px; border: 1px solid #ddd; font-size: 16px; outline: none;" />
         <div style="display: flex; gap: 8px;">
