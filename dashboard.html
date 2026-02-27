@@ -27,9 +27,14 @@
     }
     .app { max-width: 600px; margin: 0 auto; padding: 15px; box-sizing: border-box; }
     
+    /* כותרת ראשית וכותרות כרטיסים - פונט אחיד ומקורי */
+    h1, h2 { 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+        color: #2c3e50;
+    }
+
     h1 { 
         text-align: center; 
-        color: #2c3e50; 
         margin-bottom: 25px; 
         font-weight: 800; 
         font-size: 2.1em; 
@@ -51,8 +56,9 @@
       text-align: center;
     }
     
+    /* כותרת היעד הגדול */
     #ui-goal-label { 
-        font-size: 1.1em !important; 
+        font-size: 1.15em !important; 
         color: #7f8c8d; 
         text-transform: uppercase; 
         font-weight: 800;
@@ -174,7 +180,7 @@
     <section class="card">
       <div class="date-nav">
         <button id="prevDayBtn" class="nav-btn">❮</button>
-        <h2 id="tasksTitle" style="margin:0; font-size: 1.1em; color: #2c3e50; font-weight: 800;"></h2>
+        <h2 id="tasksTitle" style="margin:0; font-size: 1.15em; font-weight: 800;"></h2>
         <button id="nextDayBtn" class="nav-btn">❯</button>
       </div>
       
@@ -190,7 +196,7 @@
 
     <section class="card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-        <h2 id="ui-gratitude-title" style="margin:0; font-size: 1.1em; font-weight: 800;"></h2>
+        <h2 id="ui-gratitude-title" style="margin:0; font-size: 1.15em; font-weight: 800;"></h2>
         <div id="gratitudeCircle" class="gratitude-circle">0/3</div>
       </div>
       <div id="gratitudeInputGroup" style="display: flex; gap: 8px;">
@@ -201,7 +207,7 @@
     </section>
 
     <section class="card">
-      <h2 id="ui-chart-title" style="font-size: 1.1em; margin-bottom: 10px; font-weight: 800;"></h2>
+      <h2 id="ui-chart-title" style="font-size: 1.15em; margin-bottom: 10px; font-weight: 800;"></h2>
       <canvas id="habitsChart" width="400" height="200"></canvas>
     </section>
 
