@@ -30,7 +30,7 @@
     h1, h2 { 
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
         color: #2c3e50;
-        white-space: nowrap; /* מונע ירידת שורה */
+        white-space: nowrap;
     }
 
     h1 { 
@@ -41,7 +41,6 @@
         letter-spacing: -0.5px;
     }
 
-    /* התאמה למובייל כדי שהטקסט לא ייחתך או יירד שורה */
     @media (max-width: 400px) {
         h1 { font-size: 1.8em; }
         h2 { font-size: 1.05em !important; }
@@ -52,7 +51,7 @@
       background: #ffffff;
       border-radius: 15px;
       padding: 20px;
-      margin-bottom: 5px !important; /* רווח של 1px בדיוק כפי שביקשת */
+      margin-bottom: 5px !important;
       box-shadow: 0 4px 6px rgba(0,0,0,0.05);
       box-sizing: border-box;
     }
@@ -77,11 +76,13 @@
     .summary-card { display: flex; justify-content: space-between; align-items: center; }
     .summary-info p { margin: 4px 0; color: #34495e; font-size: 0.95em; }
 
+    /* עיצוב משופר לעיגולים עם מעבר צבע */
     .task-progress-circle, .gratitude-circle {
       width: 70px; height: 70px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-weight: bold; font-size: 1.1em; background-color: #fff;
-      border: 6px solid #f1c40f; transition: all 0.4s ease;
+      border: 6px solid #f1c40f; /* צבע התחלתי */
+      transition: all 0.4s ease;
       flex-shrink: 0;
     }
 
