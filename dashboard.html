@@ -19,7 +19,12 @@
   <title id="page-title">pcs365 - דשבורד</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    body { background: #f4f7f6; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+    body { 
+        background: #f4f7f6; 
+        font-family: system-ui, -apple-system, sans-serif; 
+        margin: 0; padding: 0; 
+        overflow-x: hidden; 
+    }
     .app { max-width: 600px; margin: 0 auto; padding: 15px; box-sizing: border-box; }
     
     h1 { text-align: center; color: #2c3e50; margin-bottom: 20px; font-weight: 800; }
@@ -30,6 +35,7 @@
       padding: 20px;
       margin-bottom: 20px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      box-sizing: border-box;
     }
 
     /* כרטיס מטרה */
@@ -44,7 +50,7 @@
     .summary-card { display: flex; justify-content: space-between; align-items: center; }
     .summary-info p { margin: 4px 0; color: #34495e; font-size: 0.95em; }
 
-    /* עיגולי התקדמות */
+    /* עיגולי התקדמות דינמיים */
     .task-progress-circle, .gratitude-circle {
       width: 70px; height: 70px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
@@ -53,34 +59,30 @@
       flex-shrink: 0;
     }
 
-    /* ניווט ימים - החזרת הרקע המקורי */
+    /* ניווט ימים - צבעים מקוריים (לבן) */
     .date-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: #f8f9fa; padding: 10px; border-radius: 12px; }
     .nav-btn {
-      background: #3498db; /* חזרה לצבע המקורי */
-      border: none; border-radius: 50%;
+      background: #ffffff; border: none; border-radius: 50%;
       width: 42px; height: 42px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      color: white; 
+      color: #2c3e50;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: all 0.2s; font-size: 1.2em;
     }
-    .nav-btn:hover { background: #2980b9; transform: scale(1.1); }
+    .nav-btn:hover { background: #f0f0f0; transform: scale(1.05); }
 
-    /* רשימת משימות - החזרת הגלילה למלל ארוך */
+    /* רשימת משימות - לוגיקה גרסה 1 */
     #habitList { list-style: none; padding: 0; margin-top: 15px; }
     #habitList li {
       display: flex; align-items: center; justify-content: space-between;
       background: #fff; padding: 12px; border-radius: 12px;
       margin-bottom: 10px; border: 1px solid #edf2f7;
+      overflow: hidden;
     }
     
     .task-content {
       display: flex; align-items: center;
-      flex: 1; 
-      overflow-x: auto; /* החזרת הגלגלת למלל ארוך */
-      white-space: nowrap;
-      scrollbar-width: none; /* הסתרת פס גלילה בדפדפנים תומכים */
+      flex: 1; min-width: 0;
     }
-    .task-content::-webkit-scrollbar { display: none; } /* הסתרת פס גלילה בכרום/ספארי */
 
     .custom-cb {
       width: 24px; height: 24px; border: 2px solid #3498db; border-radius: 6px;
@@ -91,19 +93,22 @@
     .custom-cb.checked::after { content: '✓'; color: white; font-weight: bold; }
 
     .task-text-span {
-      color: #2c3e50; font-size: 1em;
+      flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      cursor: pointer; color: #2c3e50; font-size: 1em;
     }
+    .task-text-span.expanded { white-space: normal; overflow: visible; }
     .task-text-span.done { text-decoration: line-through; color: #bdc3c7; }
 
-    /* אפקט אפור במעבר עכבר על סל מחזור ועיפרון */
+    /* כפתורי פעולה ברשימה - תיקון רקע אפור ב-Hover */
     .action-icon-btn {
       background: none; border: none; cursor: pointer; font-size: 18px; 
-      padding: 8px; border-radius: 50%; transition: background-color 0.2s, transform 0.2s;
+      padding: 8px; border-radius: 50%; transition: all 0.2s; opacity: 0.7;
       display: flex; align-items: center; justify-content: center;
     }
     .action-icon-btn:hover { 
-      background-color: #f0f0f0; /* רקע אפור בהיר */
-      transform: scale(1.1);
+        background-color: #f0f0f0; /* רקע אפור בהיר */
+        opacity: 1; 
+        transform: scale(1.1); 
     }
 
     /* כפתורי מערכת למטה */
@@ -119,8 +124,9 @@
     .gratitude-list li {
         background: #fdfcf0; margin-bottom: 6px; padding: 10px;
         border-radius: 8px; border-inline-start: 4px solid #f1c40f;
-        overflow-x: auto; white-space: nowrap;
+        cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
+    .gratitude-list li.expanded { white-space: normal; overflow: visible; }
   </style>
 </head>
 <body>
@@ -155,8 +161,8 @@
       <div style="display: flex; flex-direction: column; gap: 10px;">
         <input type="text" id="tempHabitInput" style="padding: 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 16px;" />
         <div style="display: flex; gap: 8px;">
-          <button id="addTempHabitBtn" style="flex:1.2; background:#3498db; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold;"></button>
-          <button id="addTomorrowHabitBtn" style="flex:1; background:#34495e; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold;"></button>
+          <button id="addTempHabitBtn" style="flex:1.2; background:#3498db; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;"></button>
+          <button id="addTomorrowHabitBtn" style="flex:1; background:#34495e; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;"></button>
         </div>
       </div>
       <ul id="habitList"></ul>
@@ -181,7 +187,9 @@
 
     <div class="actions">
       <button onclick="window.location.href='manage.html'" id="ui-btn-manage"></button>
-      <button onclick="window.location.href='aihabit.html'" style="background: #2ecc71;" id="ui-btn-stats"></button> <button onclick="window.location.href='anyls.html'" style="background: #9b59b6;" id="ui-btn-stats"></button> <button id="logoutBtn" style="background: #ff4b2b;"></button>
+      <button onclick="window.location.href='aihabit.html'" style="background: #2ecc71;" id="ui-btn-ai"></button>
+      <button onclick="window.location.href='anyls.html'" style="background: #9b59b6;" id="ui-btn-stats"></button>
+      <button id="logoutBtn" style="background: #ff4b2b;"></button>
     </div>
   </div>
 
@@ -252,8 +260,8 @@
     document.getElementById('gratitudeInput').placeholder = t.gratitudePlaceholder;
     document.getElementById('ui-chart-title').innerText = t.chartTitle;
     document.getElementById('ui-btn-manage').innerText = t.btnManage;
-    document.querySelectorAll('#ui-btn-stats')[0].innerText = t.btnAI;
-    document.querySelectorAll('#ui-btn-stats')[1].innerText = t.btnStats;
+    document.getElementById('ui-btn-ai').innerText = t.btnAI;
+    document.getElementById('ui-btn-stats').innerText = t.btnStats;
     document.getElementById('logoutBtn').innerText = t.btnLogout;
   </script>
   <script src="dashboard.js"></script>
