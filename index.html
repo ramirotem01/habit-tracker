@@ -5,6 +5,9 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
+  <meta name="description" content="pcs365: An AI-powered habit tracker and task management web app. Optimize your daily routine with deep AI insights, habit analysis, and goal tracking for better results.">
+  <meta name="keywords" content="habit tracker, task management, AI productivity, daily routines, goal setter, AI insights, productivity app, habit analysis, personal growth, pcs365">
+
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3498db">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -282,6 +285,7 @@
       }
     };
 
+    // Default to 'en' if the language is not Hebrew
     const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
     const lang = uiTranslations[userLang];
 
