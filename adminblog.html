@@ -70,42 +70,46 @@
         blogFilePath: 'blog.html'
     };
 
+    // פונקציית עזר לניקוי טקסט והגנה מגרשיים
+    function escapeJS(str) {
+        return str.replace(/"/g, '\\"').replace(/\n/g, ' ');
+    }
+
     async function startPublishing() {
         const status = document.getElementById('status');
         const token = document.getElementById('gh-token').value;
         const titleEn = document.getElementById('title-en').value;
         
         if(!token) return alert("נא להזין את ה-GitHub Token");
-        if(!titleEn) return alert("חובה כותרת באנגלית עבור שם הקובץ");
+        if(!titleEn) return alert("חובה כותרת באנגלית");
 
         status.style.display = "block";
         status.style.backgroundColor = "#fff3cd";
-        status.innerText = "מתחיל תהליך הוספה...";
+        status.innerText = "1. מייצר דף מאמר חדש...";
 
         const fileName = titleEn.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w-]/g, '') + ".html";
         const articlePath = `articles/${fileName}`;
 
         try {
-            // 1. העלאת קובץ המאמר החדש
+            // פעולה 1: יצירת דף המאמר
             const articleHtml = generateArticleTemplate();
             await uploadToGithub(articlePath, `Add article: ${titleEn}`, articleHtml, token);
-            status.innerText += "\n✅ קובץ המאמר נוצר בתיקיית articles.";
+            status.innerText += "\n✅ קובץ המאמר נוצר.";
 
-            // 2. עדכון blog.html
-            status.innerText += "\nמבצע עדכון אוטומטי של דף הבלוג הראשי...";
+            // פעולה 2: עדכון blog.html
+            status.innerText += "\n2. מעדכן רשימה ב-blog.html...";
             await updateBlogMainPage(token, fileName);
             
             status.style.backgroundColor = "#d4edda";
-            status.innerText += "\n✅ הבלוג הראשי עודכן בהצלחה!";
-            status.innerText += "\n🚀 המאמר באוויר!";
+            status.innerText += "\n✅ הכל עודכן בהצלחה! המאמר מופיע בבלוג.";
         } catch (e) {
             status.style.backgroundColor = "#f8d7da";
             status.innerText += "\n❌ שגיאה: " + e.message;
+            console.error(e);
         }
     }
 
     async function updateBlogMainPage(token, fileName) {
-        // משיכת הקובץ הקיים
         const res = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/${CONFIG.blogFilePath}`);
         const data = await res.json();
         let content = decodeURIComponent(escape(atob(data.content)));
@@ -113,29 +117,40 @@
         const dateHe = new Date().toLocaleDateString('he-IL', {day:'numeric', month:'long', year:'numeric'});
         const dateEn = new Date().toLocaleDateString('en-US', {day:'numeric', month:'long', year:'numeric'});
 
-        // בניית האובייקטים החדשים (בדיוק לפי הפורמט של הבלוג שלך)
+        const titleHe = escapeJS(document.getElementById('title-he').value);
+        const excerptHe = escapeJS(document.getElementById('excerpt-he').value);
+        const titleEn = escapeJS(document.getElementById('title-en').value);
+        const excerptEn = escapeJS(document.getElementById('excerpt-en').value);
+
+        // בניית האובייקטים להזרקה
         const entryHe = `          {
             "cat": "מאמר חדש",
-            "title": "${document.getElementById('title-he').value}",
-            "excerpt": "${document.getElementById('excerpt-he').value}",
+            "title": "${titleHe}",
+            "excerpt": "${excerptHe}",
             "date": "${dateHe}",
             "link": "articles/${fileName}"
           },`;
 
         const entryEn = `          {
             "cat": "New Article",
-            "title": "${document.getElementById('title-en').value}",
-            "excerpt": "${document.getElementById('excerpt-en').value}",
+            "title": "${titleEn}",
+            "excerpt": "${excerptEn}",
             "date": "${dateEn}",
             "link": "articles/${fileName}"
           },`;
 
-        // הזרקה חכמה למערך ה-articles
-        // מחפש את "articles: [" ומדביק מיד אחריו את המאמר החדש
-        content = content.replace(/(he:\s*{[\s\S]*?articles:\s*\[)/, `$1\n${entryHe}`);
-        content = content.replace(/(en:\s*{[\s\S]*?articles:\s*\[)/, `$1\n${entryEn}`);
+        // הזרקה חכמה באמצעות החלפת תחילת המערך
+        // מחפש את articles: [ (עם או בלי רווחים) ומזריק מיד אחריו
+        content = content.replace(/(articles:\s*\[)/, `$1\n${entryHe}`); // הזרקה ראשונה (לעברית)
+        
+        // כדי להזריק לאנגלית שנמצאת בהמשך הקובץ, נחפש את ה-articles הבא אחרי המילה 'en:'
+        const parts = content.split('en:');
+        if (parts.length > 1) {
+            parts[1] = parts[1].replace(/(articles:\s*\[)/, `$1\n${entryEn}`);
+            content = parts.join('en:');
+        }
 
-        await uploadToGithub(CONFIG.blogFilePath, "Update blog.html articles list", content, token, data.sha);
+        await uploadToGithub(CONFIG.blogFilePath, "Auto-update blog list", content, token, data.sha);
     }
 
     async function uploadToGithub(path, message, content, token, sha = null) {
@@ -151,11 +166,13 @@
             headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
         });
-        if (!res.ok) throw new Error("GitHub API Error");
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message);
+        }
     }
 
     function generateArticleTemplate() {
-        // (הפונקציה של יצירת ה-HTML של המאמר הבודד נשארת כפי שהייתה קודם)
         const tHe = { title: document.getElementById('title-he').value, body: document.getElementById('body-he').value };
         const tEn = { title: document.getElementById('title-en').value, body: document.getElementById('body-en').value };
         const dateHe = new Date().toLocaleDateString('he-IL', {day:'numeric', month:'long', year:'numeric'});
