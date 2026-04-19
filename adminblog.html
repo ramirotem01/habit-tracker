@@ -22,20 +22,9 @@
     <h1>הוספת מאמר ל-GitHub 🚀</h1>
 
     <div class="config-bar">
-        <div class="section" style="grid-template-columns: 2fr 1fr 1fr;">
-            <div>
-                <label>GitHub Personal Token:</label>
-                <input type="password" id="gh-token" placeholder="הדבק כאן את הטוקן">
-            </div>
-            <div>
-                <label>User/Repo:</label>
-                <input type="text" id="gh-repo" value="YourUser/YourRepo">
-            </div>
-            <div>
-                <label>Branch:</label>
-                <input type="text" id="gh-branch" value="main">
-            </div>
-        </div>
+        <label>GitHub Personal Token:</label>
+        <input type="password" id="gh-token" placeholder="הדבק כאן את הטוקן שמתחיל ב-ghp_">
+        <p style="font-size: 0.85em; color: #5d6d7e; margin-top: 5px;">הפרמטרים ramirotem01/habit-tracker ו-main כבר מוגדרים במערכת.</p>
     </div>
 
     <div class="section">
@@ -76,21 +65,24 @@
 </div>
 
 <script>
+    // הגדרות קבועות לפי הבקשה שלך
     const CONFIG = {
-        blogFilePath: 'blog.html' // נתיב קובץ הבלוג הראשי ב-GitHub
+        repo: 'ramirotem01/habit-tracker',
+        branch: 'main',
+        blogFilePath: 'blog.html' // הנתיב לקובץ הבלוג הראשי
     };
 
     async function startPublishing() {
         const status = document.getElementById('status');
         const token = document.getElementById('gh-token').value;
-        const repo = document.getElementById('gh-repo').value;
         const titleEn = document.getElementById('title-en').value;
         
-        if(!token || !titleEn) return alert("נא למלא טוקן וכותרת באנגלית");
+        if(!token) return alert("נא להזין את ה-GitHub Token שלך");
+        if(!titleEn) return alert("חובה להזין כותרת באנגלית עבור שם הקובץ");
 
         status.style.display = "block";
         status.style.backgroundColor = "#fff3cd";
-        status.innerText = "מתחיל בתהליך...\n1. יוצר דף מאמר חדש...";
+        status.innerText = "מתחיל בתהליך...\n1. יוצר דף מאמר חדש בתיקיית articles...";
 
         const fileName = titleEn.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w-]/g, '') + ".html";
         const articlePath = `articles/${fileName}`;
@@ -98,49 +90,52 @@
         try {
             // פעולה 1: יצירת דף המאמר החדש
             const articleHtml = generateArticleTemplate();
-            await uploadToGithub(repo, articlePath, `New article: ${titleEn}`, articleHtml, token);
+            await uploadToGithub(articlePath, `New article: ${titleEn}`, articleHtml, token);
             status.innerText += "\n✅ דף המאמר נוצר.";
 
             // פעולה 2: עדכון דף הבלוג הראשי
             status.innerText += "\n2. מעדכן את דף הבלוג הראשי...";
-            await updateBlogMainPage(repo, token, fileName);
+            await updateBlogMainPage(token, fileName);
             
             status.innerText += "\n✅ הבלוג הראשי עודכן!";
             status.style.backgroundColor = "#d4edda";
-            status.innerText += "\n\nהמאמר פורסם בהצלחה!";
+            status.innerText += "\n\nהמאמר פורסם בהצלחה בכתובת: " + articlePath;
         } catch (e) {
             status.style.backgroundColor = "#f8d7da";
             status.innerText += "\n❌ שגיאה: " + e.message;
         }
     }
 
-    async function uploadToGithub(repo, path, message, content, token, sha = null) {
+    async function uploadToGithub(path, message, content, token, sha = null) {
         const body = {
             message: message,
             content: btoa(unescape(encodeURIComponent(content))),
-            branch: document.getElementById('gh-branch').value
+            branch: CONFIG.branch
         };
         if (sha) body.sha = sha;
 
-        const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+        const res = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/${path}`, {
             method: 'PUT',
             headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
         });
-        if (!res.ok) throw new Error(await res.text());
+        if (!res.ok) {
+            const errorDetails = await res.json();
+            throw new Error(errorDetails.message || "שגיאה בתקשורת עם GitHub");
+        }
         return await res.json();
     }
 
-    async function updateBlogMainPage(repo, token, fileName) {
-        // משיכת הקובץ הקיים
-        const res = await fetch(`https://api.github.com/repos/${repo}/contents/${CONFIG.blogFilePath}`);
+    async function updateBlogMainPage(token, fileName) {
+        const res = await fetch(`https://api.github.com/repos/${CONFIG.repo}/contents/${CONFIG.blogFilePath}`);
+        if (!res.ok) throw new Error("לא מצליח למצוא את קובץ הבלוג הראשי בנתיב: " + CONFIG.blogFilePath);
+        
         const data = await res.json();
         const currentContent = decodeURIComponent(escape(atob(data.content)));
 
         const dateHe = new Date().toLocaleDateString('he-IL', {day:'numeric', month:'long', year:'numeric'});
         const dateEn = new Date().toLocaleDateString('en-US', {day:'numeric', month:'long', year:'numeric'});
 
-        // יצירת האובייקטים להזרקה
         const newArtHe = {
             cat: "מאמר חדש",
             title: document.getElementById('title-he').value,
@@ -156,16 +151,15 @@
             link: `articles/${fileName}`
         };
 
-        // הזרקה לקוד (מחפש את תחילת מערך ה-articles במחרוזת)
         let updatedContent = currentContent;
+        // הזרקת המאמר לראש מערך המאמרים בעברית ובאנגלית
         updatedContent = updatedContent.replace(/(he:\s*{[\s\S]*?articles:\s*\[)/, `$1\n          ${JSON.stringify(newArtHe, null, 10)},`);
         updatedContent = updatedContent.replace(/(en:\s*{[\s\S]*?articles:\s*\[)/, `$1\n          ${JSON.stringify(newArtEn, null, 10)},`);
 
-        await uploadToGithub(repo, CONFIG.blogFilePath, "Update blog list", updatedContent, token, data.sha);
+        await uploadToGithub(CONFIG.blogFilePath, "Update blog list", updatedContent, token, data.sha);
     }
 
     function generateArticleTemplate() {
-        // כאן נמצאת התבנית שסיפקת למאמר בודד
         const tHe = { title: document.getElementById('title-he').value, body: document.getElementById('body-he').value };
         const tEn = { title: document.getElementById('title-en').value, body: document.getElementById('body-en').value };
         const dateHe = new Date().toLocaleDateString('he-IL', {day:'numeric', month:'long', year:'numeric'});
