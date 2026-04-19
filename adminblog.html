@@ -2,14 +2,14 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>מערכת הוספת מאמרים - Habit Tracker</title>
+    <title>ניהול תוכן - Habit Tracker</title>
     <style>
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; padding: 20px; direction: rtl; }
         .admin-container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
         .section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
         label { font-weight: bold; display: block; margin-bottom: 8px; color: #2c3e50; }
         input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
-        textarea { height: 250px; font-family: monospace; }
+        textarea { height: 200px; font-family: monospace; }
         .config-bar { background: #ebf5fb; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #d6eaf8; }
         .btn-submit { background: #27ae60; color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; width: 100%; transition: 0.3s; }
         .btn-submit:hover { background: #219150; }
@@ -19,43 +19,54 @@
 <body>
 
 <div class="admin-container">
-    <h1>הוספת מאמר ל-GitHub 🚀</h1>
+    <h1>ניהול תוכן - הוספת מאמר לבלוג 🚀</h1>
 
     <div class="config-bar">
         <label>GitHub Personal Token:</label>
-        <input type="password" id="gh-token" placeholder="הדבק כאן את הטוקן שמתחיל ב-ghp_">
+        <input type="password" id="gh-token" placeholder="הדבק כאן את הטוקן ghp_...">
+    </div>
+
+    <div class="section">
+        <div>
+            <label>קטגוריה (עברית):</label>
+            <input type="text" id="cat-he" placeholder="למשל: פרודוקטיביות, תזונה...">
+        </div>
+        <div>
+            <label>Category (English):</label>
+            <input type="text" id="cat-en" placeholder="e.g: Productivity, Health...">
+        </div>
     </div>
 
     <div class="section">
         <div>
             <label>כותרת המאמר (עברית):</label>
-            <input type="text" id="title-he" placeholder="למשל: איך לבנות הרגל חדש">
+            <input type="text" id="title-he">
         </div>
         <div>
             <label>Article Title (English):</label>
-            <input type="text" id="title-en" placeholder="e.g: How to build a new habit">
+            <input type="text" id="title-en">
         </div>
     </div>
 
     <div class="section">
         <div>
             <label>תקציר קצר (עברית):</label>
-            <input type="text" id="excerpt-he" placeholder="יופיע בדף הבלוג הראשי...">
+            <input type="text" id="excerpt-he">
         </div>
         <div>
             <label>Short Excerpt (English):</label>
-            <input type="text" id="excerpt-en" placeholder="Will appear on main blog page...">
+            <input type="text" id="excerpt-en">
         </div>
     </div>
 
     <div class="section">
         <div>
-            <label>תוכן המאמר ב-HTML (עברית):</label>
-            <textarea id="body-he" placeholder="<h2>כותרת</h2><p>תוכן...</p>"></textarea>
+            <label>תוכן ב-HTML (עברית):</label>
+            <textarea id="body-he"></textarea>
         </div>
         <div>
-            <label>Article Body in HTML (English):</label>
-            <textarea id="body-en" placeholder="<h2>Sub-title</h2><p>Content...</p>"></textarea>
+            <label>Article Body (HTML - English):</label>
+            <textarea id="body-en"></textarea>
         </div>
     </div>
 
@@ -70,8 +81,8 @@
         blogFilePath: 'blog.html'
     };
 
-    // פונקציית עזר לניקוי טקסט והגנה מגרשיים
     function escapeJS(str) {
+        if (!str) return "";
         return str.replace(/"/g, '\\"').replace(/\n/g, ' ');
     }
 
@@ -81,7 +92,7 @@
         const titleEn = document.getElementById('title-en').value;
         
         if(!token) return alert("נא להזין את ה-GitHub Token");
-        if(!titleEn) return alert("חובה כותרת באנגלית");
+        if(!titleEn) return alert("חובה כותרת באנגלית עבור שם הקובץ");
 
         status.style.display = "block";
         status.style.backgroundColor = "#fff3cd";
@@ -91,21 +102,18 @@
         const articlePath = `articles/${fileName}`;
 
         try {
-            // פעולה 1: יצירת דף המאמר
             const articleHtml = generateArticleTemplate();
             await uploadToGithub(articlePath, `Add article: ${titleEn}`, articleHtml, token);
             status.innerText += "\n✅ קובץ המאמר נוצר.";
 
-            // פעולה 2: עדכון blog.html
-            status.innerText += "\n2. מעדכן רשימה ב-blog.html...";
+            status.innerText += "\n2. מעדכן את רשימת המאמרים ב-blog.html...";
             await updateBlogMainPage(token, fileName);
             
             status.style.backgroundColor = "#d4edda";
-            status.innerText += "\n✅ הכל עודכן בהצלחה! המאמר מופיע בבלוג.";
+            status.innerText += "\n✅ המאמר פורסם בהצלחה ונוסף לרשימה בבלוג!";
         } catch (e) {
             status.style.backgroundColor = "#f8d7da";
             status.innerText += "\n❌ שגיאה: " + e.message;
-            console.error(e);
         }
     }
 
@@ -117,14 +125,15 @@
         const dateHe = new Date().toLocaleDateString('he-IL', {day:'numeric', month:'long', year:'numeric'});
         const dateEn = new Date().toLocaleDateString('en-US', {day:'numeric', month:'long', year:'numeric'});
 
+        const catHe = escapeJS(document.getElementById('cat-he').value) || "מאמר";
+        const catEn = escapeJS(document.getElementById('cat-en').value) || "Article";
         const titleHe = escapeJS(document.getElementById('title-he').value);
         const excerptHe = escapeJS(document.getElementById('excerpt-he').value);
         const titleEn = escapeJS(document.getElementById('title-en').value);
         const excerptEn = escapeJS(document.getElementById('excerpt-en').value);
 
-        // בניית האובייקטים להזרקה
         const entryHe = `          {
-            "cat": "מאמר חדש",
+            "cat": "${catHe}",
             "title": "${titleHe}",
             "excerpt": "${excerptHe}",
             "date": "${dateHe}",
@@ -132,25 +141,23 @@
           },`;
 
         const entryEn = `          {
-            "cat": "New Article",
+            "cat": "${catEn}",
             "title": "${titleEn}",
             "excerpt": "${excerptEn}",
             "date": "${dateEn}",
             "link": "articles/${fileName}"
           },`;
 
-        // הזרקה חכמה באמצעות החלפת תחילת המערך
-        // מחפש את articles: [ (עם או בלי רווחים) ומזריק מיד אחריו
-        content = content.replace(/(articles:\s*\[)/, `$1\n${entryHe}`); // הזרקה ראשונה (לעברית)
+        // הזרקה חכמה לפי שפה
+        content = content.replace(/(he:\s*{[\s\S]*?articles:\s*\[)/, `$1\n${entryHe}`);
         
-        // כדי להזריק לאנגלית שנמצאת בהמשך הקובץ, נחפש את ה-articles הבא אחרי המילה 'en:'
         const parts = content.split('en:');
         if (parts.length > 1) {
             parts[1] = parts[1].replace(/(articles:\s*\[)/, `$1\n${entryEn}`);
             content = parts.join('en:');
         }
 
-        await uploadToGithub(CONFIG.blogFilePath, "Auto-update blog list", content, token, data.sha);
+        await uploadToGithub(CONFIG.blogFilePath, "Auto-update blog articles list", content, token, data.sha);
     }
 
     async function uploadToGithub(path, message, content, token, sha = null) {
@@ -166,10 +173,7 @@
             headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
         });
-        if (!res.ok) {
-            const err = await res.json();
-            throw new Error(err.message);
-        }
+        if (!res.ok) throw new Error((await res.json()).message);
     }
 
     function generateArticleTemplate() {
@@ -186,9 +190,9 @@
     <title>\${tHe.title}</title>
     <link rel="stylesheet" href="../style.css">
     <style>
-        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; --bg-light: #ffffff; }
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
         body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
-        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: var(--bg-light); box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
         .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
         .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
         .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
