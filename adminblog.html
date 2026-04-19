@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ניהול מאמרים - Habit Tracker</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f7f6; padding: 40px; }
+        .admin-box { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { background: #3498db; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; }
+        button:hover { background: #2980b9; }
+        #output { margin-top: 20px; background: #eee; padding: 15px; border-radius: 5px; display: none; white-space: pre-wrap; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="admin-box">
+    <h2>הוספת מאמר חדש ✍️</h2>
+    
+    <div class="form-group">
+        <label>שפה:</label>
+        <select id="lang">
+            <option value="he">עברית</option>
+            <option value="en">English</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>קטגוריה:</label>
+        <input type="text" id="cat" placeholder="למשל: פרודוקטיביות">
+    </div>
+
+    <div class="form-group">
+        <label>כותרת המאמר:</label>
+        <input type="text" id="title" placeholder="הכנס כותרת...">
+    </div>
+
+    <div class="form-group">
+        <label>תקציר (Excerpt):</label>
+        <textarea id="excerpt" rows="3" placeholder="טקסט קצר שיופיע בדף הראשי..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>שם הקובץ (Link):</label>
+        <input type="text" id="link" placeholder="article-name.html">
+    </div>
+
+    <button onclick="generateJSON()">צור קוד למאמר</button>
+
+    <div id="output"></div>
+</div>
+
+<script>
+    function generateJSON() {
+        const lang = document.getElementById('lang').value;
+        const art = {
+            cat: document.getElementById('cat').value,
+            title: document.getElementById('title').value,
+            excerpt: document.getElementById('excerpt').value,
+            date: new Date().toLocaleDateString(lang === 'he' ? 'he-IL' : 'en-US', { day:'numeric', month:'long', year:'numeric'}),
+            link: "articles/" + document.getElementById('link').value
+        };
+
+        const output = document.getElementById('output');
+        output.style.display = "block";
+        output.innerText = "העתק והדבק את האובייקט הבא לתוך רשימת המאמרים ב-JS:\n\n" + JSON.stringify(art, null, 2) + ",";
+    }
+</script>
+
+</body>
+</html>
