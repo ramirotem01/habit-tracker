@@ -2,71 +2,231 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>ניהול מאמרים - Habit Tracker</title>
+    <title>מערכת הוספת מאמרים - Habit Tracker</title>
     <style>
-        body { font-family: sans-serif; background: #f4f7f6; padding: 40px; }
-        .admin-box { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h2 { color: #2c3e50; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, textarea, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        button { background: #3498db; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; }
-        button:hover { background: #2980b9; }
-        #output { margin-top: 20px; background: #eee; padding: 15px; border-radius: 5px; display: none; white-space: pre-wrap; font-family: monospace; font-size: 12px; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; padding: 20px; direction: rtl; }
+        .admin-container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-bottom: 8px; color: #2c3e50; }
+        input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        textarea { height: 250px; font-family: monospace; }
+        .config-bar { background: #ebf5fb; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #d6eaf8; }
+        .btn-submit { background: #27ae60; color: white; border: none; padding: 15px 30px; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; width: 100%; transition: 0.3s; }
+        .btn-submit:hover { background: #219150; }
+        #status { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; white-space: pre-line; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="admin-box">
-    <h2>הוספת מאמר חדש ✍️</h2>
-    
-    <div class="form-group">
-        <label>שפה:</label>
-        <select id="lang">
-            <option value="he">עברית</option>
-            <option value="en">English</option>
-        </select>
+<div class="admin-container">
+    <h1>הוספת מאמר ל-GitHub 🚀</h1>
+
+    <div class="config-bar">
+        <div class="section" style="grid-template-columns: 2fr 1fr 1fr;">
+            <div>
+                <label>GitHub Personal Token:</label>
+                <input type="password" id="gh-token" placeholder="הדבק כאן את הטוקן">
+            </div>
+            <div>
+                <label>User/Repo:</label>
+                <input type="text" id="gh-repo" value="YourUser/YourRepo">
+            </div>
+            <div>
+                <label>Branch:</label>
+                <input type="text" id="gh-branch" value="main">
+            </div>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label>קטגוריה:</label>
-        <input type="text" id="cat" placeholder="למשל: פרודוקטיביות">
+    <div class="section">
+        <div>
+            <label>כותרת המאמר (עברית):</label>
+            <input type="text" id="title-he" placeholder="למשל: איך לבנות הרגל חדש">
+        </div>
+        <div>
+            <label>Article Title (English):</label>
+            <input type="text" id="title-en" placeholder="e.g: How to build a new habit">
+        </div>
     </div>
 
-    <div class="form-group">
-        <label>כותרת המאמר:</label>
-        <input type="text" id="title" placeholder="הכנס כותרת...">
+    <div class="section">
+        <div>
+            <label>תקציר קצר (עברית):</label>
+            <input type="text" id="excerpt-he" placeholder="יופיע בדף הבלוג הראשי...">
+        </div>
+        <div>
+            <label>Short Excerpt (English):</label>
+            <input type="text" id="excerpt-en" placeholder="Will appear on main blog page...">
+        </div>
     </div>
 
-    <div class="form-group">
-        <label>תקציר (Excerpt):</label>
-        <textarea id="excerpt" rows="3" placeholder="טקסט קצר שיופיע בדף הראשי..."></textarea>
+    <div class="section">
+        <div>
+            <label>תוכן המאמר ב-HTML (עברית):</label>
+            <textarea id="body-he" placeholder="<h2>כותרת</h2><p>תוכן...</p>"></textarea>
+        </div>
+        <div>
+            <label>Article Body in HTML (English):</label>
+            <textarea id="body-en" placeholder="<h2>Sub-title</h2><p>Content...</p>"></textarea>
+        </div>
     </div>
 
-    <div class="form-group">
-        <label>שם הקובץ (Link):</label>
-        <input type="text" id="link" placeholder="article-name.html">
-    </div>
-
-    <button onclick="generateJSON()">צור קוד למאמר</button>
-
-    <div id="output"></div>
+    <button class="btn-submit" onclick="startPublishing()">פרסם מאמר עכשיו ✨</button>
+    <div id="status"></div>
 </div>
 
 <script>
-    function generateJSON() {
-        const lang = document.getElementById('lang').value;
-        const art = {
-            cat: document.getElementById('cat').value,
-            title: document.getElementById('title').value,
-            excerpt: document.getElementById('excerpt').value,
-            date: new Date().toLocaleDateString(lang === 'he' ? 'he-IL' : 'en-US', { day:'numeric', month:'long', year:'numeric'}),
-            link: "articles/" + document.getElementById('link').value
+    const CONFIG = {
+        blogFilePath: 'blog.html' // נתיב קובץ הבלוג הראשי ב-GitHub
+    };
+
+    async function startPublishing() {
+        const status = document.getElementById('status');
+        const token = document.getElementById('gh-token').value;
+        const repo = document.getElementById('gh-repo').value;
+        const titleEn = document.getElementById('title-en').value;
+        
+        if(!token || !titleEn) return alert("נא למלא טוקן וכותרת באנגלית");
+
+        status.style.display = "block";
+        status.style.backgroundColor = "#fff3cd";
+        status.innerText = "מתחיל בתהליך...\n1. יוצר דף מאמר חדש...";
+
+        const fileName = titleEn.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w-]/g, '') + ".html";
+        const articlePath = `articles/${fileName}`;
+
+        try {
+            // פעולה 1: יצירת דף המאמר החדש
+            const articleHtml = generateArticleTemplate();
+            await uploadToGithub(repo, articlePath, `New article: ${titleEn}`, articleHtml, token);
+            status.innerText += "\n✅ דף המאמר נוצר.";
+
+            // פעולה 2: עדכון דף הבלוג הראשי
+            status.innerText += "\n2. מעדכן את דף הבלוג הראשי...";
+            await updateBlogMainPage(repo, token, fileName);
+            
+            status.innerText += "\n✅ הבלוג הראשי עודכן!";
+            status.style.backgroundColor = "#d4edda";
+            status.innerText += "\n\nהמאמר פורסם בהצלחה!";
+        } catch (e) {
+            status.style.backgroundColor = "#f8d7da";
+            status.innerText += "\n❌ שגיאה: " + e.message;
+        }
+    }
+
+    async function uploadToGithub(repo, path, message, content, token, sha = null) {
+        const body = {
+            message: message,
+            content: btoa(unescape(encodeURIComponent(content))),
+            branch: document.getElementById('gh-branch').value
+        };
+        if (sha) body.sha = sha;
+
+        const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error(await res.text());
+        return await res.json();
+    }
+
+    async function updateBlogMainPage(repo, token, fileName) {
+        // משיכת הקובץ הקיים
+        const res = await fetch(`https://api.github.com/repos/${repo}/contents/${CONFIG.blogFilePath}`);
+        const data = await res.json();
+        const currentContent = decodeURIComponent(escape(atob(data.content)));
+
+        const dateHe = new Date().toLocaleDateString('he-IL', {day:'numeric', month:'long', year:'numeric'});
+        const dateEn = new Date().toLocaleDateString('en-US', {day:'numeric', month:'long', year:'numeric'});
+
+        // יצירת האובייקטים להזרקה
+        const newArtHe = {
+            cat: "מאמר חדש",
+            title: document.getElementById('title-he').value,
+            excerpt: document.getElementById('excerpt-he').value,
+            date: dateHe,
+            link: `articles/${fileName}`
+        };
+        const newArtEn = {
+            cat: "New Article",
+            title: document.getElementById('title-en').value,
+            excerpt: document.getElementById('excerpt-en').value,
+            date: dateEn,
+            link: `articles/${fileName}`
         };
 
-        const output = document.getElementById('output');
-        output.style.display = "block";
-        output.innerText = "העתק והדבק את האובייקט הבא לתוך רשימת המאמרים ב-JS:\n\n" + JSON.stringify(art, null, 2) + ",";
+        // הזרקה לקוד (מחפש את תחילת מערך ה-articles במחרוזת)
+        let updatedContent = currentContent;
+        updatedContent = updatedContent.replace(/(he:\s*{[\s\S]*?articles:\s*\[)/, `$1\n          ${JSON.stringify(newArtHe, null, 10)},`);
+        updatedContent = updatedContent.replace(/(en:\s*{[\s\S]*?articles:\s*\[)/, `$1\n          ${JSON.stringify(newArtEn, null, 10)},`);
+
+        await uploadToGithub(repo, CONFIG.blogFilePath, "Update blog list", updatedContent, token, data.sha);
+    }
+
+    function generateArticleTemplate() {
+        // כאן נמצאת התבנית שסיפקת למאמר בודד
+        const tHe = { title: document.getElementById('title-he').value, body: document.getElementById('body-he').value };
+        const tEn = { title: document.getElementById('title-en').value, body: document.getElementById('body-en').value };
+        const dateHe = new Date().toLocaleDateString('he-IL', {day:'numeric', month:'long', year:'numeric'});
+        const dateEn = new Date().toLocaleDateString('en-US', {day:'numeric', month:'long', year:'numeric'});
+
+        return `<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>\${tHe.title}</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; --bg-light: #ffffff; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: var(--bg-light); box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time">⏱️ 5 דקות קריאה</span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { back: "← חזרה לבלוג", date: "${dateHe}", h1: \`${tHe.title}\`, body: \`${tHe.body}\`, footerH3: "מוכנים להתחיל?", footerBtn: "חזרה לאפליקציה" },
+            en: { back: "Back to Blog →", date: "${dateEn}", h1: \`${tEn.title}\`, body: \`${tEn.body}\`, footerH3: "Ready to Start?", footerBtn: "Back to App" }
+        };
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('main-h1').innerText = t.h1;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    <\/script>
+</body>
+</html>`;
     }
 </script>
 
