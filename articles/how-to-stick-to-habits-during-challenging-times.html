@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${tHe.title}</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; --bg-light: #ffffff; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: var(--bg-light); box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time">⏱️ 5 דקות קריאה</span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { back: "← חזרה לבלוג", date: "19 באפריל 2026", h1: `איך להתמיד בהרגלים גם כשהחיים נהיים מאתגרים`, body: `<p>קל לשמור על הרגלים כשהכל הולך לפי התכנית. אבל מה קורה כשיש שבוע עמוס בעבודה, הילדים חולים, או שפשוט קמתם בלי טיפת אנרגיה? כאן נמדדת היכולת האמיתית שלנו לבנות שינוי ארוך טווח.</p>
+
+<h2>הסוד: חוק ה-2 דקות ו"הרגלי חירום"</h2>
+<p>בתקופות מאתגרות, הטעות הכי גדולה היא "הכל או כלום". אם לא הצלחתי להתאמן שעה, אז לא אתאמן בכלל. במקום זה, עברו למצב חירום:</p>
+<ul>
+  <li><strong>במקום אימון מלא:</strong> עשו רק 5 שכיבות סמיכה או מתיחות של 2 דקות.</li>
+  <li><strong>במקום תזונה מושלמת:</strong> פשוט תוודאו שאתם שותים מספיק מים היום.</li>
+  <li><strong>במקום כתיבה של שעה:</strong> כתבו רק משפט אחד ביומן.</li>
+</ul>
+
+<h2>למה זה עובד?</h2>
+<p>כי המטרה היא לא התוצאה באותו יום, אלא <strong>שמירה על הרצף</strong>. כשאתם עושים משהו קטן, אתם מוכיחים לעצמכם שאתם עדיין האנשים שלא מוותרים, גם כשקשה. הרבה יותר קל להגביר את הקצב כשהתקופה עוברת מאשר להתחיל מאפס אחרי הפסקה ארוכה.</p>
+
+<p>זכרו: הגרסה הכי גרועה של ההרגל שלכם תמיד טובה יותר מלא לעשות כלום.</p>`, footerH3: "מוכנים להתחיל?", footerBtn: "חזרה לאפליקציה" },
+            en: { back: "Back to Blog →", date: "April 19, 2026", h1: `How to stick to habits during challenging times`, body: `<p>It's easy to stick to habits when everything goes according to plan. But what happens when work is overwhelming, the kids are sick, or you just wake up with zero energy? This is where long-term change is truly built.</p>
+
+<h2>The Secret: The 2-Minute Rule and "Emergency Habits"</h2>
+<p>During challenging times, the biggest mistake is the "all or nothing" mindset. Instead of quitting, switch to emergency mode:</p>
+<ul>
+  <li><strong>Instead of a full workout:</strong> Just do 5 push-ups or 2 minutes of stretching.</li>
+  <li><strong>Instead of perfect eating:</strong> Just focus on drinking enough water today.</li>
+  <li><strong>Instead of an hour of writing:</strong> Just write a single sentence.</li>
+</ul>
+
+<h2>Why does it work?</h2>
+<p>Because the goal isn't today's result – it's <strong>maintaining the streak</strong>. By doing something small, you prove to yourself that you are still the person who doesn't quit. It's much easier to ramp back up later than to start from zero after a long break.</p>
+
+<p>Remember: The worst version of your habit is always better than doing nothing at all.</p>`, footerH3: "Ready to Start?", footerBtn: "Back to App" }
+        };
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('main-h1').innerText = t.h1;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
