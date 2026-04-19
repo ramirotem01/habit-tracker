@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${tHe.title}</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time">⏱️ 5 דקות קריאה</span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { back: "← חזרה לבלוג", date: "19 באפריל 2026", h1: `להתמיד בקריאה: הדרך הנכונה`, body: `<p>רבים מאיתנו קונים ספרים עם כוונות טובות, אבל מוצאים את עצמם בסוף היום גוללים בטלפון במקום לפתוח דף. הנה הדרך הנכונה להפוך את הקריאה לחלק בלתי נפרד מהיום שלכם.</p>
+
+<h2>1. שיטת ה-5 דפים</h2>
+<p>הטעות הנפוצה היא להחליט ש"מהיום קוראים שעה ביום". במקום זה, התחייבו ל-5 דפים בלבד. זה כל כך קטן שאי אפשר להגיד לזה לא, ורוב הסיכויים שברגע שתתחילו – תמשיכו ליותר.</p>
+
+<h2>2. הצמדה להרגל קיים (Anchor)</h2>
+<p>אל תחכו ל"זמן פנוי". הצמידו את הקריאה לפעולה קבועה: קפה של בוקר, הנסיעה ברכבת, או מיד כשנכנסים למיטה. ההרגל הקיים ישמש כטריגר לקריאה.</p>
+
+<h2>3. אל תפחדו לנטוש ספרים</h2>
+<p>הדרך המהירה ביותר להרוס את הרגל הקריאה היא להכריח את עצמכם לסיים ספר משעמם. אם הספר לא תפס אתכם תוך 30 עמודים – הניחו אותו ועברו למשהו שמרגש אתכם.</p>`, footerH3: "מוכנים להתחיל?", footerBtn: "חזרה לאפליקציה" },
+            en: { back: "Back to Blog →", date: "April 19, 2026", h1: `Mastering the Reading Habit: The Right Way`, body: `<p>Many of us buy books with the best intentions, only to find ourselves scrolling through our phones at the end of the day. Here is the right way to make reading a seamless part of your life.</p>
+
+<h2>1. The 5-Page Rule</h2>
+<p>A common mistake is committing to "an hour a day." Instead, commit to just 5 pages. It's such a small task that you can't say no to it, and once you start, you'll likely read much more.</p>
+
+<h2>2. Habit Stacking (The Anchor)</h2>
+<p>Don't wait for "free time." Attach reading to an existing routine: your morning coffee, your commute, or right when you get into bed. The existing habit acts as a trigger.</p>
+
+<h2>3. Permission to Quit</h2>
+<p>The fastest way to kill a reading habit is forcing yourself to finish a boring book. If a book doesn't grab you within 30 pages, put it down and find something that excites you.</p>`, footerH3: "Ready to Start?", footerBtn: "Back to App" }
+        };
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('main-h1').innerText = t.h1;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
