@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${tHe.title}</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; --bg-light: #ffffff; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: var(--bg-light); box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time">⏱️ 5 דקות קריאה</span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { back: "← חזרה לבלוג", date: "19 באפריל 2026", h1: `איך לשמור על תזונה נכונה בלי להרגיש במלחמה עם עצמך`, body: `<p>בואו נודה באמת: רובנו לא צריכים עוד תפריט דיאטה שתלוי על המקרר. אנחנו יודעים שירקות זה טוב וסוכר פחות. הבעיה היא לא בידע, אלא ב<strong>הרגלים</strong>.</p>
+
+<h2>למה הדיאטה נכשלת והרגל מצליח?</h2>
+<p>דיאטה היא פרויקט זמני עם תאריך סיום. הרגל הוא חלק מהזהות שלנו. כשאתם בונים הרגל אכילה, אתם לא "מנסים להוריד במשקל", אתם פשוט הופכים לאנשים שדואגים לגוף שלהם.</p>
+
+<h2>3 צעדים קטנים לשינוי גדול:</h2>
+<ul>
+  <li><strong>חוק ה-20 דקות:</strong> המוח שלנו צריך זמן לעכל שהבטן מלאה. נסו לאכול לאט יותר, בלי מסכים בצד.</li>
+  <li><strong>סביבה מנצחת:</strong> אל תסמכו על כוח הרצון שלכם ב-10 בלילה. אם הנשנוש לא יהיה בארון, אתם לא תאכלו אותו.</li>
+  <li><strong>הקשיבו לרעב האמיתי:</strong> לפני כל ארוחה, שאלו את עצמכם - האם אני רעב או שמא פשוט משעמם לי?</li>
+</ul>
+
+<p>זכרו, המטרה היא לא שלמות, אלא עקביות. פספסתם ארוחה? לא נורא. חוזרים למסלול בארוחה הבאה.</p>`, footerH3: "מוכנים להתחיל?", footerBtn: "חזרה לאפליקציה" },
+            en: { back: "Back to Blog →", date: "April 19, 2026", h1: `How to maintain healthy eating habits without the struggle`, body: `<p>Let's be honest: most of us don't need another diet plan stuck to the fridge. We know vegetables are good and sugar is less so. The problem isn't knowledge; it's <strong>habits</strong>.</p>
+
+<h2>Why diets fail and habits succeed</h2>
+<p>A diet is a temporary project with an end date. A habit is part of who we are. When you build an eating habit, you're not just "trying to lose weight" – you're becoming a person who takes care of their body.</p>
+
+<h2>3 Small steps for big change:</h2>
+<ul>
+  <li><strong>The 20-minute rule:</strong> Our brain needs time to register that the stomach is full. Try eating slower, without screens nearby.</li>
+  <li><strong>Winning environment:</strong> Don't rely on your willpower at 10 PM. If the snack isn't in the cupboard, you won't eat it.</li>
+  <li><strong>Listen to true hunger:</strong> Before every meal, ask yourself – am I actually hungry, or just bored?</li>
+</ul>
+
+<p>Remember, the goal isn't perfection; it's consistency. Missed a meal? No big deal. Get back on track with the next one.</p>`, footerH3: "Ready to Start?", footerBtn: "Back to App" }
+        };
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('main-h1').innerText = t.h1;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
