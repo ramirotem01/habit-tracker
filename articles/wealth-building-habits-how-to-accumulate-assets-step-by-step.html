@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${tHe.title}</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time">⏱️ 5 דקות קריאה</span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { back: "← חזרה לבלוג", date: "20 באפריל 2026", h1: `הרגלים של מיליונרים: איך לבנות הון בעזרת פעולות קטנות`, body: `<p>רוב האנשים חושבים שכסף מגיע מ"מכה" גדולה או מזל. המציאות היא שרוב העושר בעולם נבנה באמצעות הרגלים עקביים שמאפשרים לכסף לעבוד עבורכם. הנה שלושת ההרגלים הקריטיים ביותר:</p>
+
+<h2>1. הרגל ה-"שלם לעצמך תחילה"</h2>
+<p>זהו חוק הברזל של עולם הכסף. במקום לחסוך את מה שנשאר בסוף החודש (בדרך כלל לא נשאר כלום), הגדירו העברה אוטומטית לחיסכון או השקעה ביום קבלת השכר. הפכו את צבירת הנכסים להוצאה קבועה שאי אפשר לוותר עליה.</p>
+
+<h2>2. מינוף זמן וריבית דריבית</h2>
+<p>הכוח החזק ביותר ביקום, לפי אלברט איינשטיין, הוא הריבית דריבית. ההרגל כאן הוא <strong>סבלנות</strong>. השקעה קטנה ועקבית לאורך שנים בנכסים מניבים (מניות, נדל"ן או עסקים) מייצרת כדור שלג שגדל מעצמו.</p>
+
+<h2>3. הרגל הלמידה הפיננסית</h2>
+<p>הנכס הכי גדול שלכם הוא אתם. הקדישו 20 דקות ביום לקריאה על כלכלה, ניהול סיכונים או הבנת שוק ההון. ככל שה"אוריינות הפיננסית" שלכם תעלה, כך תזהו הזדמנויות במקומות שאחרים רואים בהם סיכון.</p>
+
+<h2>סיכום: להפסיק לצרוך, להתחיל לצבור</h2>
+<p>המעבר מנטליות של "צרכן" לנטליות של "משקיע" קורה ברגע שמתחילים למדוד הצלחה לא לפי מה שקנינו, אלא לפי כמות הנכסים שבבעלותנו.</p>`, footerH3: "מוכנים להתחיל?", footerBtn: "חזרה לאפליקציה" },
+            en: { back: "Back to Blog →", date: "April 20, 2026", h1: `Wealth-Building Habits: How to Accumulate Assets Step-by-Step`, body: `<p>Most people think wealth comes from a "big break" or luck. The reality is that most wealth is built through consistent habits that let money work for you. Here are the three most critical habits:</p>
+
+<h2>1. The "Pay Yourself First" Habit</h2>
+<p>This is the golden rule of finance. Instead of saving what's left at the end of the month, set an automatic transfer to your investments on payday. Treat asset building as a non-negotiable fixed expense.</p>
+
+<h2>2. Leveraging Time and Compound Interest</h2>
+<p>The most powerful force in the universe, according to Albert Einstein, is compound interest. The habit here is <strong>patience</strong>. Small, consistent investments in income-generating assets (stocks, real estate, or businesses) create a snowball effect over time.</p>
+
+<h2>3. The Financial Education Habit</h2>
+<p>Your greatest asset is yourself. Spend 20 minutes a day reading about economics, risk management, or the capital markets. As your financial literacy grows, you'll spot opportunities where others only see risk.</p>
+
+<h2>Summary: From Consumer to Investor</h2>
+<p>The shift happens when you stop measuring success by what you buy, and start measuring it by the assets you own.</p>`, footerH3: "Ready to Start?", footerBtn: "Back to App" }
+        };
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('main-h1').innerText = t.h1;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
