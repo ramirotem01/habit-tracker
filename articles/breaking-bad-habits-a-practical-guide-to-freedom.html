@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${tHe.title}</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time">⏱️ 5 דקות קריאה</span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { back: "← חזרה לבלוג", date: "21 באפריל 2026", h1: `איך להפסיק הרגלים רעים: המדריך המעשי למשתחרר`, body: `<p>הרגלים רעים הם לא בעיה של "כוח רצון" חלש, אלא תוצאה של חיווט מוחי שמחפש פתרון מהיר ללחץ או לשעמום. כדי להפסיק אותם, אנחנו לא צריכים להילחם בעצמנו, אלא לשנות את הסביבה שלנו.</p>
+
+<h2>1. הפיכת ההרגל לבלתי נראה</h2>
+<p>המוח שלנו מגיב לטריגרים ויזואליים. אם אתם מנסים להפסיק עם מתוקים, אל תניחו אותם על השידה. אם אתם רוצים להפחית בעישון, אל תשאירו מצית בכיס. כשאתם מסירים את הטריגר מהעין, אתם חוסכים לעצמכם עשרות קרבות מול כוח הרצון בכל יום.</p>
+
+<h2>2. הגדלת ה"חיכוך"</h2>
+<p>אנחנו יצורים עצלנים מטבענו. כדי להפסיק הרגל רע, הפכו אותו לקשה לביצוע. רוצים לצפות פחות בטלוויזיה? הוציאו את הסוללות מהשלט אחרי כל שימוש. החיכוך הנוסף של דקה אחת יגרום לכם לעצור ולחשוב: "האם אני באמת רוצה את זה עכשיו?".</p>
+
+<h2>3. חוק ה-5 דקות (השהיית הדחף)</h2>
+<p>דחף (Craving) הוא כמו גל – הוא עולה, מגיע לשיא ואז דועך. כשמגיע הצורך במתוק או בסיגריה, אמרו לעצמכם: "אני לא אומר לא, אני פשוט מחכה 5 דקות". ברוב המקרים, עוצמת הדחף תרד משמעותית אחרי הזמן הזה.</p>
+
+<h2>4. מצאו תחליף לצורך</h2>
+<p>הרגל רע תמיד ממלא צורך מסוים (הפגת מתח, הנאה מהירה). אם תורידו את ההרגל בלי לשים משהו אחר במקומו, ייווצר חלל. מצאו פעולה חיובית שנותנת מענה דומה: למשל, כוס תה צמחים במקום קינוח, או הליכה קצרה כשיש לחץ בעבודה.</p>
+
+<p><strong>זכרו:</strong> המטרה היא לא להיות מושלמים מהיום הראשון, אלא לצמצם את כמות הפעמים שאתם נכנעים להרגל, עד שהקשר העצבי במוח פשוט נחלש ונעלם.</p>`, footerH3: "מוכנים להתחיל?", footerBtn: "חזרה לאפליקציה" },
+            en: { back: "Back to Blog →", date: "April 21, 2026", h1: `Breaking Bad Habits: A Practical Guide to Freedom`, body: `<p>Bad habits aren't a sign of weak "willpower." They are neural pathways looking for a quick fix for stress or boredom. To quit, we don't need to fight ourselves; we need to redesign our environment.</p>
+
+<h2>1. Make it Invisible</h2>
+<p>Our brains react to visual cues. If you want to stop eating sweets, keep them out of sight. If you want to smoke less, don't keep a lighter in your pocket. By removing the cue, you save yourself dozens of willpower battles every day.</p>
+
+<h2>2. Increase Friction</h2>
+<p>Humans are naturally wired for the path of least resistance. To break a bad habit, make it difficult to perform. Want to watch less TV? Take the batteries out of the remote after every use. That one minute of extra effort forces you to ask: "Do I really want this?"</p>
+
+<h2>3. The 5-Minute Rule (Delaying the Urge)</h2>
+<p>A craving is like a wave – it rises, peaks, and then subsides. When the urge for sugar or a cigarette hits, tell yourself: "I'm not saying no, I'm just waiting 5 minutes." In most cases, the intensity will drop significantly.</p>
+
+<h2>4. Find a Substitute</h2>
+<p>Bad habits always serve a purpose (stress relief, quick dopamine). If you remove a habit without replacing it, you leave a void. Find a positive action that fills the same need: try herbal tea instead of dessert, or a short walk when work gets stressful.</p>
+
+<p><strong>Remember:</strong> The goal isn't perfection from day one. It's about reducing the frequency of the habit until the neural connection eventually weakens and fades away.</p>`, footerH3: "Ready to Start?", footerBtn: "Back to App" }
+        };
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('main-h1').innerText = t.h1;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
