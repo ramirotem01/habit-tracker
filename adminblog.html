@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>ניהול תוכן - Habit Tracker</title>
+    <title>ניהול תוכן - Habit Tracker 🚀</title>
     <style>
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f2f5; padding: 20px; direction: rtl; }
         .admin-container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
@@ -29,11 +29,11 @@
     <div class="section">
         <div>
             <label>קטגוריה (עברית):</label>
-            <input type="text" id="cat-he" placeholder="למשל: בניית הרגלים">
+            <input type="text" id="cat-he" placeholder="למשל: פרודוקטיביות">
         </div>
         <div>
             <label>Category (English):</label>
-            <input type="text" id="cat-en" placeholder="e.g: Habit Building">
+            <input type="text" id="cat-en" placeholder="e.g: Productivity">
         </div>
     </div>
 
@@ -83,6 +83,7 @@
 
     function escapeJS(str) {
         if (!str) return "";
+        // בורח ממירכאות כפולות ומבטל ירידות שורה כדי לא לשבור את ה-JSON
         return str.replace(/"/g, '\\"').replace(/\n/g, ' ');
     }
 
@@ -149,12 +150,14 @@
             "link": "articles/${fileName}"
           },`;
 
-        content = content.replace(/(he:\s*{[\s\S]*?articles:\s*\[)/, `$1\n${entryHe}`);
+        // הזרקה חסינה - מחפש את המקום הנכון בתוך מערך ה-articles של עברית
+        content = content.replace(/(he:[\s\S]*?articles:\s*\[)/, `$1\n${entryHe}`);
         
-        const parts = content.split('en:');
+        // הזרקה חסינה לאנגלית - מפצל ומחפש בנפרד
+        let parts = content.split(/en:\s*{/);
         if (parts.length > 1) {
             parts[1] = parts[1].replace(/(articles:\s*\[)/, `$1\n${entryEn}`);
-            content = parts.join('en:');
+            content = parts[0] + "en: {" + parts[1];
         }
 
         await uploadToGithub(CONFIG.blogFilePath, "Auto-update blog list", content, token, data.sha);
@@ -229,7 +232,6 @@
                 back: "← חזרה לבלוג", 
                 date: "${dateHe}", 
                 readTime: "⏱️ 5 דקות קריאה",
-                h1: \`${bodyHe ? escapeJS(titleHe) : ""}\`.replace(/\\\\"/g, '"'), 
                 title: "${titleHe}",
                 body: \`${bodyHe}\`, 
                 footerH3: "מוכנים להתחיל?", 
@@ -239,15 +241,12 @@
                 back: "Back to Blog →", 
                 date: "${dateEn}", 
                 readTime: "⏱️ 5 min read",
-                h1: \`${bodyEn ? escapeJS(titleEn) : ""}\`.replace(/\\\\"/g, '"'),
                 title: "${titleEn}",
                 body: \`${bodyEn}\`, 
                 footerH3: "Ready to Start?", 
                 footerBtn: "Back to App" 
             }
         };
-
-        function escapeJS(str) { return str.replace(/"/g, '\\\\\\"'); }
 
         const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
         const t = translations[userLang];
