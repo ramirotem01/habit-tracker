@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5 סיבות שאתם חייבים להתחיל לנהל את ההרגלים והמשימות שלכם בכל יום</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "21 באפריל 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                h1: `5 סיבות שאתם חייבים להתחיל לנהל את ההרגלים והמשימות שלכם בכל יום`.replace(/\\"/g, '"'), 
+                title: "5 סיבות שאתם חייבים להתחיל לנהל את ההרגלים והמשימות שלכם בכל יום",
+                body: `<p>ההבדל בין יום עמוס ליום אפקטיבי טמון בדבר אחד: <strong>ניהול מודע</strong>. אם אתם מרגישים שאתם רצים סביב הזנב שלכם, הנה 5 סיבות שיגרמו לכם להתחיל לנהל את היום שלכם כבר עכשיו:</p>
+
+<h2>1. הפחתת העומס המנטלי</h2>
+<p>המוח שלנו מעולה ביצירת רעיונות, אבל גרוע באחסון שלהם. ברגע שאתם כותבים משימה או מסמנים הרגל, אתם משחררים "רוחב פס" במוח ומתפנים לביצוע במקום לזכירה.</p>
+
+<h2>2. יצירת מומנטום של הצלחה</h2>
+<p>כל "V" שאתם מסמנים משחרר דופמין. המוח לומד לקשר בין עשייה להנאה, מה שגורם לכם לרצות לבצע עוד משימות ולהתמיד בהרגלים לאורך זמן.</p>
+
+<h2>3. שליטה מול תגובתיות</h2>
+<p>בלי רשימה, אתם מגיבים לעולם (מיילים, הודעות, בקשות). עם רשימה, אתם קובעים מה חשוב לכם. אתם הופכים מהשחקן שעל המגרש למאמן שמנהל את המשחק.</p>
+
+<h2>4. שבירת דחיינות</h2>
+<p>משימות גדולות מפחידות אותנו. ניהול יומי מפרק מטרות גדולות לפעולות קטנות וברורות. כשזה פשוט, קשה להגיד לזה "אחר כך".</p>
+
+<h2>5. מעקב אחר התקדמות אמתית</h2>
+<p>בלי ניהול, קל לשכוח כמה רחוק הגעתם. ניהול הרגלים מאפשר לכם להביט לאחור ולראות את הגרף עולה – וזה הדלק הכי חזק להתמדה.</p>
+
+<p><strong>התחילו היום:</strong> בחרו 3 משימות והרגל אחד, והכניסו אותם למערכת. השינוי יורגש כבר בערב.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "April 21, 2026", 
+                readTime: "⏱️ 5 min read",
+                h1: `5 Reasons Why You Must Manage Your Habits and Tasks Daily`.replace(/\\"/g, '"'),
+                title: "5 Reasons Why You Must Manage Your Habits and Tasks Daily",
+                body: `<p>The difference between a busy day and an effective one lies in one thing: <strong>Conscious Management</strong>. If you feel like you're constantly catching up, here are 5 reasons to start managing your day right now:</p>
+
+<h2>1. Reducing Mental Overload</h2>
+<p>The brain is great for having ideas, but terrible at holding them. Once you write down a task or track a habit, you free up "mental bandwidth" to focus on doing rather than remembering.</p>
+
+<h2>2. Creating Success Momentum</h2>
+<p>Every checkmark releases dopamine. Your brain learns to associate action with pleasure, making you want to complete more tasks and stick to your habits longer.</p>
+
+<h2>3. Control vs. Reactivity</h2>
+<p>Without a list, you react to the world (emails, messages, requests). With a list, you define what's important. You move from being a reactive player to the coach of your own life.</p>
+
+<h2>4. Crushing Procrastination</h2>
+<p>Big goals are scary. Daily management breaks them down into small, clear actions. When it’s simple, it’s hard to say "later."</p>
+
+<h2>5. Tracking Real Progress</h2>
+<p>Without management, it's easy to forget how far you've come. Tracking habits allows you to look back and see your progress – the strongest fuel for persistence.</p>
+
+<p><strong>Start today:</strong> Pick 3 tasks and 1 habit, and put them in the system. You’ll feel the difference by tonight.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        function escapeJS(str) { return str.replace(/"/g, '\\\"'); }
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
