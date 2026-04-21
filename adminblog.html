@@ -19,7 +19,7 @@
 <body>
 
 <div class="admin-container">
-    <h1>ניהול תוכן - הוספת מאמר לבלוג 🚀</h1>
+    <h1>ניהול תוכן - Habit Tracker 🚀</h1>
 
     <div class="config-bar">
         <label>GitHub Personal Token:</label>
@@ -29,11 +29,11 @@
     <div class="section">
         <div>
             <label>קטגוריה (עברית):</label>
-            <input type="text" id="cat-he" placeholder="למשל: פרודוקטיביות, תזונה...">
+            <input type="text" id="cat-he" placeholder="למשל: בניית הרגלים">
         </div>
         <div>
             <label>Category (English):</label>
-            <input type="text" id="cat-en" placeholder="e.g: Productivity, Health...">
+            <input type="text" id="cat-en" placeholder="e.g: Habit Building">
         </div>
     </div>
 
@@ -90,9 +90,10 @@
         const status = document.getElementById('status');
         const token = document.getElementById('gh-token').value;
         const titleEn = document.getElementById('title-en').value;
+        const titleHe = document.getElementById('title-he').value;
         
         if(!token) return alert("נא להזין את ה-GitHub Token");
-        if(!titleEn) return alert("חובה כותרת באנגלית עבור שם הקובץ");
+        if(!titleEn || !titleHe) return alert("חובה להזין כותרת בשתי השפות");
 
         status.style.display = "block";
         status.style.backgroundColor = "#fff3cd";
@@ -148,7 +149,6 @@
             "link": "articles/${fileName}"
           },`;
 
-        // הזרקה חכמה לפי שפה
         content = content.replace(/(he:\s*{[\s\S]*?articles:\s*\[)/, `$1\n${entryHe}`);
         
         const parts = content.split('en:');
@@ -157,7 +157,7 @@
             content = parts.join('en:');
         }
 
-        await uploadToGithub(CONFIG.blogFilePath, "Auto-update blog articles list", content, token, data.sha);
+        await uploadToGithub(CONFIG.blogFilePath, "Auto-update blog list", content, token, data.sha);
     }
 
     async function uploadToGithub(path, message, content, token, sha = null) {
@@ -176,18 +176,21 @@
         if (!res.ok) throw new Error((await res.json()).message);
     }
 
- function generateArticleTemplate() {
-    const tHe = { title: document.getElementById('title-he').value, body: document.getElementById('body-he').value };
-    const tEn = { title: document.getElementById('title-en').value, body: document.getElementById('body-en').value };
-    const dateHe = new Date().toLocaleDateString('he-IL', {day:'numeric', month:'long', year:'numeric'});
-    const dateEn = new Date().toLocaleDateString('en-US', {day:'numeric', month:'long', year:'numeric'});
+    function generateArticleTemplate() {
+        const titleHe = document.getElementById('title-he').value;
+        const bodyHe = document.getElementById('body-he').value;
+        const titleEn = document.getElementById('title-en').value;
+        const bodyEn = document.getElementById('body-en').value;
+        
+        const dateHe = new Date().toLocaleDateString('he-IL', {day:'numeric', month:'long', year:'numeric'});
+        const dateEn = new Date().toLocaleDateString('en-US', {day:'numeric', month:'long', year:'numeric'});
 
-    return `<!DOCTYPE html>
+        return `<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>\${tHe.title}</title>
+    <title>${titleHe}</title>
     <link rel="stylesheet" href="../style.css">
     <style>
         :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
@@ -226,8 +229,9 @@
                 back: "← חזרה לבלוג", 
                 date: "${dateHe}", 
                 readTime: "⏱️ 5 דקות קריאה",
-                h1: \`${tHe.title}\`, 
-                body: \`${tHe.body}\`, 
+                h1: \`${bodyHe ? escapeJS(titleHe) : ""}\`.replace(/\\\\"/g, '"'), 
+                title: "${titleHe}",
+                body: \`${bodyHe}\`, 
                 footerH3: "מוכנים להתחיל?", 
                 footerBtn: "חזרה לאפליקציה" 
             },
@@ -235,28 +239,34 @@
                 back: "Back to Blog →", 
                 date: "${dateEn}", 
                 readTime: "⏱️ 5 min read",
-                h1: \`${tEn.title}\`, 
-                body: \`${tEn.body}\`, 
+                h1: \`${bodyEn ? escapeJS(titleEn) : ""}\`.replace(/\\\\"/g, '"'),
+                title: "${titleEn}",
+                body: \`${bodyEn}\`, 
                 footerH3: "Ready to Start?", 
                 footerBtn: "Back to App" 
             }
         };
+
+        function escapeJS(str) { return str.replace(/"/g, '\\\\\\"'); }
+
         const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
         const t = translations[userLang];
+        
         document.documentElement.lang = userLang;
         document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
         
+        document.title = t.title;
         document.getElementById('back-link').innerText = t.back;
         document.getElementById('meta-date').innerText = t.date;
         document.getElementById('meta-read-time').innerText = t.readTime;
-        document.getElementById('main-h1').innerText = t.h1;
+        document.getElementById('main-h1').innerText = t.title;
         document.getElementById('article-body-content').innerHTML = t.body;
         document.getElementById('footer-h3').innerText = t.footerH3;
         document.getElementById('footer-btn').innerText = t.footerBtn;
     <\/script>
 </body>
 </html>`;
-}
+    }
 </script>
 </body>
 </html>
