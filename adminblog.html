@@ -176,13 +176,13 @@
         if (!res.ok) throw new Error((await res.json()).message);
     }
 
-    function generateArticleTemplate() {
-        const tHe = { title: document.getElementById('title-he').value, body: document.getElementById('body-he').value };
-        const tEn = { title: document.getElementById('title-en').value, body: document.getElementById('body-en').value };
-        const dateHe = new Date().toLocaleDateString('he-IL', {day:'numeric', month:'long', year:'numeric'});
-        const dateEn = new Date().toLocaleDateString('en-US', {day:'numeric', month:'long', year:'numeric'});
+ function generateArticleTemplate() {
+    const tHe = { title: document.getElementById('title-he').value, body: document.getElementById('body-he').value };
+    const tEn = { title: document.getElementById('title-en').value, body: document.getElementById('body-en').value };
+    const dateHe = new Date().toLocaleDateString('he-IL', {day:'numeric', month:'long', year:'numeric'});
+    const dateEn = new Date().toLocaleDateString('en-US', {day:'numeric', month:'long', year:'numeric'});
 
-        return `<!DOCTYPE html>
+    return `<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -209,7 +209,7 @@
             <header class="article-header">
                 <div class="meta-info">
                     <span id="meta-date"></span>
-                    <span id="meta-read-time">⏱️ 5 דקות קריאה</span>
+                    <span id="meta-read-time"></span>
                 </div>
                 <h1 id="main-h1"></h1>
             </header>
@@ -222,15 +222,33 @@
     </div>
     <script>
         const translations = {
-            he: { back: "← חזרה לבלוג", date: "${dateHe}", h1: \`${tHe.title}\`, body: \`${tHe.body}\`, footerH3: "מוכנים להתחיל?", footerBtn: "חזרה לאפליקציה" },
-            en: { back: "Back to Blog →", date: "${dateEn}", h1: \`${tEn.title}\`, body: \`${tEn.body}\`, footerH3: "Ready to Start?", footerBtn: "Back to App" }
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "${dateHe}", 
+                readTime: "⏱️ 5 דקות קריאה",
+                h1: \`${tHe.title}\`, 
+                body: \`${tHe.body}\`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "${dateEn}", 
+                readTime: "⏱️ 5 min read",
+                h1: \`${tEn.title}\`, 
+                body: \`${tEn.body}\`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
         };
         const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
         const t = translations[userLang];
         document.documentElement.lang = userLang;
         document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
         document.getElementById('back-link').innerText = t.back;
         document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
         document.getElementById('main-h1').innerText = t.h1;
         document.getElementById('article-body-content').innerHTML = t.body;
         document.getElementById('footer-h3').innerText = t.footerH3;
@@ -238,7 +256,7 @@
     <\/script>
 </body>
 </html>`;
-    }
+}
 </script>
 </body>
 </html>
