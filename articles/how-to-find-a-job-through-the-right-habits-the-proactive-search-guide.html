@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>איך למצוא עבודה בעזרת הרגלים נכונים: המדריך למחפש העבודה האקטיבי</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "22 באפריל 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "איך למצוא עבודה בעזרת הרגלים נכונים: המדריך למחפש העבודה האקטיבי",
+                body: `<p>חיפוש עבודה יכול להיות רכבת הרים רגשית. יום אחד אתם אופטימיים, וביום השני השקט מהמעסיקים שובר אתכם. המפתח לשמור על שפיות ועל תוצאות הוא להפסיק לסמוך על "מוטיבציה" ולעבור לניהול מבוסס הרגלים.</p>
+
+<h2>1. הרגל ה-"Deep Work" היומי</h2>
+<p>אל תחפשו עבודה לאורך כל היום – זה מתכון לשחיקה. קבעו "בלוק" של שעתיים בבוקר שבו אתם מרוכזים ב-100% רק בחיפוש. בזמן הזה אין רשתות חברתיות, רק שליחת קורות חיים מותאמים אישית ומחקר על חברות.</p>
+
+<h2>2. חוק ה-5 פניות ביום</h2>
+<p>במקום לשלוח 50 קורות חיים גנריים בבת אחת, אמצו הרגל של איכות: 5 פניות ביום, אבל כאלו שכוללות הודעה מותאמת אישית למגייס או לעובד בחברה ב-LinkedIn. העקביות הזו בונה "צנרת" של הזדמנויות לאורך זמן.</p>
+
+<h2>3. הרגל הנטוורקינג היזום</h2>
+<p>העבודות הטובות באמת נמצאות ב-"שוק הסמוי". הגדירו הרגל שבועי: שיחה אחת או פגישת קפה אחת עם מישהו מהתחום שלכם. המטרה היא לא לבקש עבודה, אלא לבקש עצות ולייצר נוכחות בראש של אנשים.</p>
+
+<h2>4. ניהול ומעקב (CRM אישי)</h2>
+<p>אל תסתמכו על הזיכרון. הפכו לניהול רישום של כל פנייה להרגל. מתי פניתם? מי איש הקשר? מתי צריך לבצע Follow-up? שימוש במערכת ניהול משימות הופך אתכם ממחפשים פסיביים למנהלי פרויקט של הקריירה שלכם.</p>
+
+<h2>5. הרגל ה"התנתקות" המתוכננת</h2>
+<p>כדי להישאר חדים בראיונות, אתם חייבים זמן שבו אתם לא מחפשים עבודה. הגדירו שעה ביום שבה המחשב נסגר ואתם מתמקדים בתחביב או בפעילות גופנית. הנטען המנטלי הזה קריטי כדי להגיע לראיונות עם אנרגיה גבוהה.</p>
+
+<p><strong>לסיכום:</strong> העבודה הבאה שלכם לא תגיע בגלל מזל, היא תגיע בגלל המערכת שבניתם כדי למצוא אותה.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "April 22, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "How to Find a Job Through the Right Habits: The Proactive Search Guide",
+                body: `<p>Job hunting can be an emotional rollercoaster. One day you're optimistic, the next, the silence from employers breaks you. The key to maintaining sanity and results is to stop relying on "motivation" and switch to habit-based management.</p>
+
+<h2>1. The Daily "Deep Work" Block</h2>
+<p>Don't search for a job all day long—it's a recipe for burnout. Set a 2-hour block in the morning where you are 100% focused only on searching. During this time, no social media—just sending tailored CVs and researching companies.</p>
+
+<h2>2. The Rule of 5 per Day</h2>
+<p>Instead of sending 50 generic CVs at once, adopt a quality habit: 5 applications per day, but each including a personalized message to a recruiter or an employee at the company via LinkedIn. This consistency builds a "pipeline" of opportunities over time.</p>
+
+<h2>3. Proactive Networking Habit</h2>
+<p>The best jobs are often in the "hidden market." Set a weekly habit: one call or one coffee meeting with someone in your field. The goal isn't to ask for a job, but to ask for advice and create presence in people's minds.</p>
+
+<h2>4. Tracking and Follow-up</h2>
+<p>Don't rely on your memory. Make it a habit to log every application. When did you apply? Who is the contact person? When should you follow up? Using a task management system turns you from a passive seeker into a project manager of your career.</p>
+
+<h2>5. The Planned "Disconnection" Habit</h2>
+<p>To stay sharp in interviews, you must have time where you are NOT searching. Define an hour each day when the computer closes and you focus on a hobby or exercise. This mental recharge is critical for arriving at interviews with high energy.</p>
+
+<p><strong>Summary:</strong> Your next job won't come because of luck; it will come because of the system you built to find it.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
