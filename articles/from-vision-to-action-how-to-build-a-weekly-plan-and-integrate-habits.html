@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מהחזון לביצוע: איך לגזור תוכנית עבודה שבועית ולשלב בה הרגלים</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "23 באפריל 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "מהחזון לביצוע: איך לגזור תוכנית עבודה שבועית ולשלב בה הרגלים",
+                body: `<p>הטעות הגדולה ביותר בניהול זמן היא להסתכל על היום הבודד במנותק מהשבוע. כשמתכננים שבוע קדימה, אנחנו מפסיקים "לכבות שריפות" ומתחילים להזיז את המחט באמת. הנה השיטה לגזירת תוכנית עבודה מנצחת:</p>
+
+<h2>1. שלב ה-"Brain Dump" השבועי</h2>
+<p>בסוף השבוע (או בראשון בבוקר), רוקנו את כל המשימות שיושבות לכם בראש לתוך רשימה אחת ארוכה. אל תסננו – פשוט תוציאו הכל. המטרה היא להוריד את הלחץ מהמוח למערכת הניהול.</p>
+
+<h2>2. בחירת "שלושת הגדולים"</h2>
+<p>מתוך הרשימה, בחרו רק 3 משימות קריטיות שחייבות לקרות השבוע כדי שתגישו תחושת הצלחה. אלו המשימות שסביבן תבנו את שאר הלו"ז. כל השאר הן בונוס.</p>
+
+<h2>3. שילוב הרגלים כ"עוגנים"</h2>
+<p>משימות הן דברים שמסיימים, הרגלים הם דברים שהופכים להיות חלק מכם. בתוכנית השבועית, שבצו את ההרגלים שלכם (כמו אימון, קריאה או מדיטציה) כעוגנים קבועים בלו"ז. הם הבסיס שעליו המשימות נשענות.</p>
+
+<h2>4. יצירת סנכרון בין הרגל למשימה</h2>
+<p>השתמשו בהרגלים כדי לקדם משימות. לדוגמה: אם יש לכם משימה גדולה של "כתיבת דוח", הצמידו אותה להרגל של "קפה של בוקר". ברגע שההרגל הופך לאוטומטי, הביצוע של המשימה הופך לקל הרבה יותר.</p>
+
+<h2>5. ניתוח תובנות בסוף השבוע</h2>
+<p>אל תסגרו את השבוע בלי להסתכל בנתונים. השתמשו ב-AI כדי להבין: אילו הרגלים הצלחתם לשמר? אילו משימות נגררו לשבוע הבא? הניתוח הזה הוא מה שהופך את השבוע הבא שלכם לטוב פי כמה.</p>
+
+<p><strong>טיפ של מקצוענים:</strong> תוכנית עבודה שבועית היא לא "חוק בל יעבור", היא מפת דרכים. תהיו גמישים, אבל תמיד תחזרו למסלול.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "April 23, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "From Vision to Action: How to Build a Weekly Plan and Integrate Habits",
+                body: `<p>The biggest mistake in time management is looking at a single day in isolation. When you plan a week ahead, you stop "firefighting" and start making real progress. Here is the method for creating a winning weekly work plan:</p>
+
+<h2>1. The Weekly Brain Dump</h2>
+<p>At the end of the week or Sunday morning, clear all tasks from your head into one long list. Don't filter—just get it all out. The goal is to transfer the stress from your brain to your management system.</p>
+
+<h2>2. Selecting the "Big Three"</h2>
+<p>From your list, choose only 3 critical tasks that MUST happen this week for you to feel successful. These are the pillars of your schedule; everything else is a bonus.</p>
+
+<h2>3. Integrating Habits as "Anchors"</h2>
+<p>Tasks are things you finish; habits are things you become. In your weekly plan, schedule your habits (like exercise, reading, or meditation) as fixed anchors. They are the foundation upon which your tasks rest.</p>
+
+<h2>4. Syncing Habits with Tasks</h2>
+<p>Use habits to drive task completion. For example, if you have a big task like "Writing a report," attach it to a habit like "Morning Coffee." Once the habit becomes automatic, executing the task becomes much easier.</p>
+
+<h2>5. Weekend Insight Analysis</h2>
+<p>Don't end the week without looking at the data. Use AI to understand: Which habits did you maintain? Which tasks rolled over to next week? This analysis is what makes your next week significantly better.</p>
+
+<p><strong>Pro Tip:</strong> A weekly plan isn't a rigid law—it's a roadmap. Be flexible, but always return to the path.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
