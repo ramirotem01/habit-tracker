@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>להיות הבוס של עצמך: המדריך לניהול יום עבודה אפקטיבי כעצמאי</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "24 באפריל 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "להיות הבוס של עצמך: המדריך לניהול יום עבודה אפקטיבי כעצמאי",
+                body: `<p>החופש של פרילנסר הוא ברכה, אבל הוא גם מלכודת. בלי מסגרת ברורה, קל מאוד למצוא את עצמכם עובדים ב-2 בלילה או לחילופין – לא מצליחים להתניע את היום עד הצהריים. הנה איך לבנות יום עבודה מנצח:</p>
+
+<h2>1. הגדרת "שעות הליבה"</h2>
+<p>הטעות הנפוצה היא לעבוד "מתי שיש לחץ". במקום זה, הגדירו 4-5 שעות ביום שהן שעות העבודה הקבועות שלכם. בשעות האלו המוח יודע שהוא במצב עבודה, מה שמפחית את הצורך ב"כוח רצון" בכל פעם מחדש.</p>
+
+<h2>2. הפרדה ויזואלית ופיזית</h2>
+<p>אם אתם עובדים מהבית, אל תעבדו מהמיטה או מהספה. צרו פינת עבודה ייעודית. ברגע שאתם מתיישבים שם, זהו "טריגר" מוחי להתחלת עבודה. כשאתם יוצאים מהפינה הזו – העבודה נגמרת.</p>
+
+<h2>3. שיטת הבלוקים (Time Blocking)</h2>
+<p>חלקו את היום לבלוקים נושאיים: בלוק לביצוע פרויקטים, בלוק למשימות אדמיניסטרציה (חשבוניות, מיילים) ובלוק לשיווק עצמי. אל תערבבו ביניהם – המעבר בין סוגי משימות (Context Switching) הוא בזבזן הזמן הגדול ביותר.</p>
+
+<h2>4. ההרגל של "פגישת סיכום עצמית"</h2>
+<p>בסוף כל יום עבודה, הקדישו 10 דקות לסיכום המשימות שבוצעו ותכנון המשימות למחר. כשאתם קמים בבוקר ויודעים בדיוק מה הצעד הראשון, אתם מנצחים את הדחיינות עוד לפני שהיא התחילה.</p>
+
+<h2>5. ניתוח רווחיות עם AI</h2>
+<p>השתמשו בתובנות המערכת כדי להבין: האם המשימות שאתם משקיעים בהן הכי הרבה זמן הן גם אלו שמכניסות הכי הרבה כסף? ניתוח חכם של הביצועים שלכם יעזור לכם להחליט על אילו פרויקטים לוותר ואילו להגדיל.</p>
+
+<p><strong>זכרו:</strong> המשמעת העצמית שלכם היא מה שקונה לכם את החופש שחיפשתם כשיצאתם לדרך עצמאית.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "April 24, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Being Your Own Boss: A Guide to Effective Daily Management for Freelancers",
+                body: `<p>The freedom of freelancing is a blessing, but also a trap. Without a clear framework, you can easily find yourself working at 2 AM or, conversely, failing to start your day until noon. Here is how to build a winning workday:</p>
+
+<h2>1. Define "Core Hours"</h2>
+<p>A common mistake is working "whenever there's pressure." Instead, define 4-5 hours a day as your fixed working hours. During this time, your brain knows it's in work mode, reducing the need for constant willpower.</p>
+
+<h2>2. Visual and Physical Separation</h2>
+<p>If you work from home, don't work from your bed or sofa. Create a dedicated workspace. Sitting there acts as a neural trigger to start work. When you leave that spot, work ends.</p>
+
+<h2>3. Time Blocking</h2>
+<p>Divide your day into thematic blocks: a block for project execution, a block for admin tasks (invoices, emails), and a block for self-marketing. Avoid mixing them—context switching is the ultimate time-waster.</p>
+
+<h2>4. The "Daily Wrap-up" Habit</h2>
+<p>At the end of each workday, spend 10 minutes summarizing completed tasks and planning for tomorrow. When you wake up knowing exactly what your first step is, you beat procrastination before it starts.</p>
+
+<h2>5. Profitability Analysis with AI</h2>
+<p>Use system insights to understand: Are the tasks you spend the most time on also the ones generating the most income? Smart performance analysis helps you decide which projects to drop and which to scale.</p>
+
+<p><strong>Remember:</strong> Your self-discipline is what buys you the freedom you sought when you became a freelancer.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
