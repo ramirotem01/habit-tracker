@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>כוחה של עקביות: איך להתמיד ביצירת ובניית קשרים חברתיים</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "26 באפריל 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "כוחה של עקביות: איך להתמיד ביצירת ובניית קשרים חברתיים",
+                body: `<p>מחקרים מראים שצריך כ-200 שעות משותפות כדי להפוך מיכר לחבר קרוב. הבעיה היא שרובנו עוצרים אחרי המפגש השני. כדי לבנות רשת חברתית חזקה, אנחנו צריכים להפסיק להסתמך על אירועים מקריים ולהתחיל לייצר מערכת של התמדה חברתית.</p>
+
+<h2>1. חוק ה-Reach Out השבועי</h2>
+<p>אל תחכו שאחרים יפנו אליכם. הגדירו הרגל שבועי: בכל יום שלישי (למשל), אתם שולחים הודעה או מתקשרים לשני אנשים שלא דיברתם איתם בחודש האחרון. זה יכול להיות "היי, חשבתי עליך", או שיתוף של מאמר שמעניין אותם. העקביות הזו שומרת אתכם בתודעה שלהם.</p>
+
+<h2>2. יצירת "עוגנים חברתיים"</h2>
+<p>הדרך הקלה ביותר להתמיד היא להפוך את המפגש להרגל קבוע בלו"ז. במקום להגיד "צריך להיפגש מתישהו", קבעו עוגן: "פרלמנט" שישי בבוקר, הליכה משותפת פעם בשבוע, או פגישת זום חודשית. כשהמפגש הופך לחלק מהשגרה, הוא לא דורש מאמץ מנטלי לקבוע אותו מחדש.</p>
+
+<h2>3. התמדה בהקשבה (The Follow-up Habit)</h2>
+<p>קשרים עמוקים נבנים על הפרטים הקטנים. אם חבר סיפר לכם על פרויקט חשוב בעבודה או על בדיקה רפואית, הכניסו לעצמכם משימה ב-PCS365: "לשאול את דני איך עבר הראיון". הודעה קטנה כזו יוצרת תחושת אכפתיות ששווה יותר מאלף מפגשים מקריים.</p>
+
+<h2>4. חוק ה-"לא אומרים לא" (במידה)</h2>
+<p>לפעמים אין לנו כוח לצאת. אבל התמדה חברתית דורשת לפעמים דחיפה קטנה. אמצו הרגל של להגיד "כן" לפחות להזמנה אחת בשבוע שבאופן רגיל הייתם דוחים מחוסר חשק. המומנטום שנוצר מהיציאה מהבית הוא הדלק של חיי החברה שלכם.</p>
+
+<h2>5. ניתוח המעגל החברתי</h2>
+<p>השתמשו בתובנות המערכת כדי להבין איפה אתם משקיעים את האנרגיה שלכם. האם אתם מתמידים בקשרים שמעצימים אתכם? AI יכול לעזור לכם לזהות את תדירות האינטראקציות שלכם ולוודא שאתם לא מזניחים את האנשים שחשובים לכם באמת.</p>
+
+<p><strong>לסיכום:</strong> חברות היא לא רגש, היא פעולה חוזרת. כשמתמידים בפעולות הקטנות, הקשרים הגדולים נוצרים מעצמם.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "April 26, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "The Power of Consistency: Building Lasting Social Connections",
+                body: `<p>Research shows it takes about 200 hours together to turn an acquaintance into a close friend. The problem? Most of us stop after the second meeting. To build a strong social network, we must stop relying on chance and start creating a system of social consistency.</p>
+
+<h2>1. The Weekly Reach Out Habit</h2>
+<p>Don't wait for others to contact you. Set a weekly habit: every Tuesday (for example), message or call two people you haven't spoken to in the last month. It could be a simple "Thinking of you" or sharing an interesting article. This consistency keeps you present in their lives.</p>
+
+<h2>2. Creating "Social Anchors"</h2>
+<p>The easiest way to persist is to make the meeting a fixed part of your schedule. Instead of saying "We should meet sometime," set an anchor: a Friday morning coffee, a weekly walk, or a monthly Zoom call. When it's part of the routine, it requires no mental effort to reschedule.</p>
+
+<h2>3. The Follow-up Habit</h2>
+<p>Deep connections are built on small details. If a friend told you about a big project or a medical test, add a task in PCS365: "Ask Dan how the interview went." A small message like this builds a sense of caring that outweighs a thousand random encounters.</p>
+
+<h2>4. The "Don't Say No" Rule (Within Reason)</h2>
+<p>Sometimes we just don't feel like going out. But social persistence requires a small push. Adopt a habit of saying "yes" to at least one invitation per week that you would normally decline. The momentum from leaving the house is the fuel for your social life.</p>
+
+<h2>5. Analyzing Your Social Circle</h2>
+<p>Use system insights to understand where you invest your energy. Are you maintaining connections that empower you? AI can help you identify the frequency of your interactions and ensure you aren't neglecting the people who truly matter.</p>
+
+<p><strong>Summary:</strong> Friendship isn't just a feeling; it's a repetitive action. When you persist in the small actions, great connections happen naturally.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
