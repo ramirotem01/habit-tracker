@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>למה ניהול הרגלים דורש זמן ומעקב? האמת מאחורי התוצאות</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "27 באפריל 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "למה ניהול הרגלים דורש זמן ומעקב? האמת מאחורי התוצאות",
+                body: `<p>אנחנו חיים בעולם של סיפוקים מיידיים, אבל המוח האנושי עדיין פועל לפי חוקים עתיקים. כשמדובר בשינוי הרגלים, אין קיצורי דרך. הנה הסיבות לכך שזמן ומעקב הם הכלים החזקים ביותר בארסנל שלכם:</p>
+
+<h2>1. חיווט מחדש של נוירונים</h2>
+<p>הרגל הוא מסלול פיזי במוח. כדי לבנות מסלול חדש (כמו אימון בוקר) ולהחליש מסלול ישן (כמו אכילת סוכר), המוח צריך חזרתיות. זהו תהליך ביולוגי שלוקח זמן – בדרך כלל בין 18 ל-254 ימים, ולא 21 יום כפי שנוהגים לחשוב.</p>
+
+<h2>2. אפקט הצבירה (The Compound Effect)</h2>
+<p>שיפור של 1% בכל יום נראה זניח באותו רגע, אבל לאורך שנה הוא הופך אתכם לטובים פי 37. המעקב דרך משימות מאפשר לכם לראות את ה-1% הזה גם כשנראה שכלום לא קורה. התוצאות הגדולות מגיעות תמיד בקפיצה מעריכית אחרי תקופה של התמדה "שקטה".</p>
+
+<h2>3. המעקב מנצח את הזיכרון הסלקטיבי</h2>
+<p>המוח שלנו נוטה לשכוח הצלחות קטנות ולהעצים כישלונות. כשאתם מנהלים מעקב מסודר, אתם מייצרים דאטה אובייקטיבי. כשאתם מסתכלים בגרף ההתקדמות ב-PCS365, אתם לא צריכים "להרגיש" שהתקדמתם – אתם פשוט רואים את זה בעיניים.</p>
+
+<h2>4. הבנת הטריגרים דרך זמן</h2>
+<p>רק מעקב לאורך זמן מאפשר ל-AI לזהות דפוסים. אי אפשר לדעת למה נכשלתם בהרגל מסוים אחרי יומיים. אחרי חודש, המערכת יכולה להגיד לכם: "שים לב שבימי חמישי אתה תמיד מפספס את המשימה". התובנה הזו היא המפתח לתיקון המסלול.</p>
+
+<h2>5. בניית זהות חדשה</h2>
+<p>בכל פעם שאתם מסמנים משימה או הרגל, אתם מבצעים "הצבעה" עבור סוג האדם שאתם רוצים להיות. המעקב העקבי הוא ההוכחה העצמית שלכם שאתם אנשים שמתמידים. הזהות הזו היא מה שמחזיקה את התוצאות לשנים קדימה.</p>
+
+<p><strong>זכרו:</strong> אל תחפשו את הניצחון הגדול היום, חפשו את המעקב הקטן והעקבי. התוצאות כבר ידאגו להגיע.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "April 27, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Why Habit Management Takes Time: The Truth Behind Lasting Results",
+                body: `<p>We live in a world of instant gratification, but the human brain still operates by ancient rules. When it comes to changing habits, there are no shortcuts. Here is why time and tracking are the most powerful tools in your arsenal:</p>
+
+<h2>1. Rewiring Neurons</h2>
+<p>A habit is a physical pathway in the brain. To build a new path (like morning exercise) and weaken an old one (like eating sugar), the brain needs repetition. This is a biological process that takes time—usually anywhere from 18 to 254 days, not the mythical 21 days.</p>
+
+<h2>2. The Compound Effect</h2>
+<p>A 1% improvement each day seems negligible in the moment, but over a year, it makes you 37 times better. Tracking through tasks allows you to see that 1% even when it feels like nothing is happening. Major results always come after a period of "quiet" persistence.</p>
+
+<h2>3. Tracking Defeats Selective Memory</h2>
+<p>Our brains tend to forget small wins and amplify failures. By keeping an organized log, you create objective data. When you look at your progress graph in PCS365, you don't have to "feel" progress—you can see it.</p>
+
+<h2>4. Understanding Triggers Over Time</h2>
+<p>Only long-term tracking allows AI to identify patterns. You can't know why you failed a habit after just two days. After a month, the system can tell you: "Notice that on Thursdays, you always miss this task." This insight is the key to course correction.</p>
+
+<h2>5. Building a New Identity</h2>
+<p>Every time you check off a task or habit, you are "casting a vote" for the type of person you want to become. Consistent tracking is your self-proof that you are someone who persists. This identity is what sustains results for years to come.</p>
+
+<p><strong>Remember:</strong> Don't look for the big win today; look for the small, consistent track. The results will take care of themselves.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
