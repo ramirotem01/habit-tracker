@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>סוד הקסם של השגרה: איך לבנות לו"ז מנצח בעולם של הסחות דעת</title>
+    <title>סוד הקסם של השגרה</title>
     <link rel="stylesheet" href="../style.css">
     <style>
         :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
@@ -11,11 +11,17 @@
         .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
         .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
         .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
-        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; line-height: 1.2; }
         .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
         .article-body { font-size: 1.15em; }
+        .article-body h2 { color: var(--secondary-color); margin-top: 1.5em; }
         .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
-        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; transition: opacity 0.2s; }
+        .btn-main:hover { opacity: 0.9; }
+        
+        /* התאמה לשפות - שינוי כיוון גמיש */
+        html[dir="ltr"] .meta-info { flex-direction: row; }
+        html[dir="ltr"] .back-to-blog { direction: ltr; }
     </style>
 </head>
 <body>
@@ -36,31 +42,26 @@
             </div>
         </article>
     </div>
+
     <script>
         const translations = {
             he: { 
                 back: "← חזרה לבלוג", 
                 date: "28 באפריל 2026", 
                 readTime: "⏱️ 5 דקות קריאה",
-                title: "סוד הקסם של השגרה: איך לבנות לו"ז מנצח בעולם של הסחות דעת",
+                title: `סוד הקסם של השגרה: איך לבנות לו"ז מנצח בעולם של הסחות דעת`,
                 body: `<p>רבים מאיתנו תופסים "שגרה" כמשהו נוקשה ומגביל, אבל האמת היא הפוכה לגמרי: שגרה היא הדרך היחידה להבטיח שהזמן שלכם מוקדש לדברים שאתם באמת אוהבים. בלי שגרה, כל החלטה קטנה – מתי להתחיל לעבוד או מתי להתאמן – שואבת מכם אנרגיה מנטלית יקרה.</p>
-
-<h2>1. האוטומציה של המוח</h2>
-<p>שגרה הופכת פעולות ל"אוטומטיות". כשיש לכם שגרת בוקר קבועה, אתם לא צריכים להפעיל כוח רצון כדי להתניע. המוח פשוט עובר למצב "טייס אוטומטי", מה שמשאיר את האנרגיה היצירתית שלכם למשימות החשובות באמת של היום.</p>
-
-<h2>2. טיפ מנצח: חוק ה-80/20 (עקרון פארטו)</h2>
-<p>בניהול זמן, 20% מהפעולות שלכם מייצרות 80% מהתוצאות. שגרה חכמה עוזרת לכם לזהות את ה-20% האלו ולשריין להם את השעות הכי טובות שלכם ביום. אל תבזבזו את הבוקר על מיילים – הקדישו אותו למשימות הליבה.</p>
-
-<h2>3. שיטת "אכילת הצפרדע" (Eat the Frog)</h2>
-<p>הטיפ הפשוט והחזק ביותר: עשו את המשימה הכי מפחידה או קשה שלכם דבר ראשון על הבוקר. ברגע שסיימתם אותה, רמת הלחץ יורדת והמשך היום מרגיש קליל ואפקטיבי הרבה יותר.</p>
-
-<h2>4. הגנה על "זמן עומק" (Deep Work)</h2>
-<p>בעולם של התראות בלתי פוסקות, היכולת להתרכז היא כוח על. שגרה מנצחת כוללת בלוקים של זמן שבהם הטלפון על "נא לא להפריע" והמשימות היחידות שקיימות הן אלו שדורשות ריכוז מקסימלי. אפילו 90 דקות של זמן עומק ביום שוות יותר מ-8 שעות של עבודה מוסחת.</p>
-
-<h2>5. ניתוח עם AI: איפה הזמן באמת הולך?</h2>
-<p>השימוש ב-PCS365 מאפשר לכם להשוות בין הלו"ז המתוכנן לביצוע בפועל. ה-AI יכול להראות לכם איפה השגרה שלכם נשברת ולתת לכם טיפים מותאמים אישית איך לתקן אותה. המעקב הוא זה שהופך תוכנית על הנייר למציאות בשטח.</p>
-
-<p><strong>בשורה התחתונה:</strong> אל תנהלו את הזמן שלכם, תנהלו את השגרות שלכם. הזמן כבר יסתדר מאליו.</p>`, 
+                <h2>1. האוטומציה של המוח</h2>
+                <p>שגרה הופכת פעולות ל"אוטומטיות". כשיש לכם שגרת בוקר קבועה, אתם לא צריכים להפעיל כוח רצון כדי להתניע. המוח פשוט עובר למצב "טייס אוטומטי", מה שמשאיר את האנרגיה היצירתית שלכם למשימות החשובות באמת של היום.</p>
+                <h2>2. טיפ מנצח: חוק ה-80/20 (עקרון פארטו)</h2>
+                <p>בניהול זמן, 20% מהפעולות שלכם מייצרות 80% מהתוצאות. שגרה חכמה עוזרת לכם לזהות את ה-20% האלו ולשריין להם את השעות הכי טובות שלכם ביום. אל תבזבזו את הבוקר על מיילים – הקדישו אותו למשימות הליבה.</p>
+                <h2>3. שיטת "אכילת הצפרדע" (Eat the Frog)</h2>
+                <p>הטיפ הפשוט והחזק ביותר: עשו את המשימה הכי מפחידה או קשה שלכם דבר ראשון על הבוקר. ברגע שסיימתם אותה, רמת הלחץ יורדת והמשך היום מרגיש קליל ואפקטיבי הרבה יותר.</p>
+                <h2>4. הגנה על "זמן עומק" (Deep Work)</h2>
+                <p>בעולם של התראות בלתי פוסקות, היכולת להתרכז היא כוח על. שגרה מנצחת כוללת בלוקים של זמן שבהם הטלפון על "נא לא להפריע" והמשימות היחידות שקיימות הן אלו שדורשות ריכוז מקסימלי. אפילו 90 דקות של זמן עומק ביום שוות יותר מ-8 שעות של עבודה מוסחת.</p>
+                <h2>5. ניתוח עם AI: איפה הזמן באמת הולך?</h2>
+                <p>השימוש ב-PCS365 מאפשר לכם להשוות בין הלו"ז המתוכנן לביצוע בפועל. ה-AI יכול להראות לכם איפה השגרה שלכם נשברת ולתת לכם טיפים מותאמים אישית איך לתקן אותה. המעקב הוא זה שהופך תוכנית על הנייר למציאות בשטח.</p>
+                <p><strong>בשורה התחתונה:</strong> אל תנהלו את הזמן שלכם, תנהלו את השגרות שלכם. הזמן כבר יסתדר מאליו.</p>`, 
                 footerH3: "מוכנים להתחיל?", 
                 footerBtn: "חזרה לאפליקציה" 
             },
@@ -70,23 +71,17 @@
                 readTime: "⏱️ 5 min read",
                 title: "The Magic of Routine: Building a Winning Schedule in a Distracted World",
                 body: `<p>Many of us perceive "routine" as something rigid and limiting, but the truth is quite the opposite: routine is the only way to ensure your time is spent on things you truly love. Without a routine, every small decision—when to start work or when to exercise—drains your precious mental energy.</p>
-
-<h2>1. Brain Automation</h2>
-<p>Routine makes actions "automatic." When you have a fixed morning routine, you don't need to exert willpower to get started. The brain simply switches to "autopilot," leaving your creative energy for the truly important tasks of the day.</p>
-
-<h2>2. Pro Tip: The 80/20 Rule (Pareto Principle)</h2>
-<p>In time management, 20% of your actions produce 80% of your results. A smart routine helps you identify that 20% and reserve your best hours for them. Don't waste your morning on emails—dedicate it to your core tasks.</p>
-
-<h2>3. "Eat the Frog" Method</h2>
-<p>The simplest and most powerful tip: do your scariest or hardest task first thing in the morning. Once it's done, your stress levels drop, and the rest of the day feels significantly lighter and more productive.</p>
-
-<h2>4. Protecting "Deep Work" Time</h2>
-<p>In a world of constant notifications, the ability to focus is a superpower. A winning routine includes blocks of time where your phone is on "Do Not Disturb" and your only focus is on high-concentration tasks. Even 90 minutes of deep work is worth more than 8 hours of distracted work.</p>
-
-<h2>5. AI Analysis: Where Does the Time Actually Go?</h2>
-<p>Using PCS365 allows you to compare your planned schedule with actual execution. AI can show you where your routine breaks down and offer personalized tips to fix it. Tracking is what turns a plan on paper into reality on the ground.</p>
-
-<p><strong>Bottom line:</strong> Don't manage your time; manage your routines. The time will take care of itself.</p>`, 
+                <h2>1. Brain Automation</h2>
+                <p>Routine makes actions "automatic." When you have a fixed morning routine, you don't need to exert willpower to get started. The brain simply switches to "autopilot," leaving your creative energy for the truly important tasks of the day.</p>
+                <h2>2. Pro Tip: The 80/20 Rule (Pareto Principle)</h2>
+                <p>In time management, 20% of your actions produce 80% of your results. A smart routine helps you identify that 20% and reserve your best hours for them. Don't waste your morning on emails—dedicate it to your core tasks.</p>
+                <h2>3. \"Eat the Frog\" Method</h2>
+                <p>The simplest and most powerful tip: do your scariest or hardest task first thing in the morning. Once it's done, your stress levels drop, and the rest of the day feels significantly lighter and more productive.</p>
+                <h2>4. Protecting \"Deep Work\" Time</h2>
+                <p>In a world of constant notifications, the ability to focus is a superpower. A winning routine includes blocks of time where your phone is on \"Do Not Disturb\" and your only focus is on high-concentration tasks. Even 90 minutes of deep work is worth more than 8 hours of distracted work.</p>
+                <h2>5. AI Analysis: Where Does the Time Actually Go?</h2>
+                <p>Using PCS365 allows you to compare your planned schedule with actual execution. AI can show you where your routine breaks down and offer personalized tips to fix it. Tracking is what turns a plan on paper into reality on the ground.</p>
+                <p><strong>Bottom line:</strong> Don't manage your time; manage your routines. The time will take care of itself.</p>`, 
                 footerH3: "Ready to Start?", 
                 footerBtn: "Back to App" 
             }
