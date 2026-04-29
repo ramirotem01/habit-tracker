@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>המדריך המלא לשגרת בוקר מנצחת: איך להתחיל יום פרודוקטיבי עד השעה 09:00</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "29 באפריל 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "המדריך המלא לשגרת בוקר מנצחת: איך להתחיל יום פרודוקטיבי עד השעה 09:00",
+                body: `<p>רוב האנשים מתחילים את היום ב"הגנה" – מכבים את השעון המעורר, בודקים הודעות ורצים אחרי הזמן. כדי להיות פרודוקטיביים באמת, עליכם לעבור ל"התקפה". הנה פרוטוקול הבוקר המנצח:</p>
+
+<h2>06:30 – היקיצה והניצחון הראשון</h2>
+<p>אל תלחצו על ה-Snooze. הניצחון הראשון על היצר שלכם בבוקר בונה חוסן מנטלי. שתו כוס מים גדולה מיד לאחר הקימה כדי להחזיר לגוף נוזלים ולעורר את המערכות.</p>
+
+<h2>06:45 – תנועה ואור שמש</h2>
+<p>צאו למרפסת או פתחו חלון. חשיפה לאור יום בבוקר מסנכרנת את השעון הביולוגי שלכם. הוסיפו 10 דקות של תנועה קלה – מתיחות, יוגה או הליכה קצרה. המטרה היא להזרים דם למוח, לא להתעייף.</p>
+
+<h2>07:15 – זמן איכות מנטלי (ללא מסכים!)</h2>
+<p>זהו זמן הזהב. במקום להיכנס לחדשות או ל-LinkedIn, הקדישו 20 דקות לקריאת ספר, מדיטציה או כתיבת יומן. זה מבטיח שהמחשבות הראשונות של היום יהיו שלכם, ולא של מישהו אחר.</p>
+
+<h2>07:45 – תכנון וסדרי עדיפויות</h2>
+<p>פתחו את מערכת ה-PCS365 שלכם. עברו על ה"שלישייה הגדולה" שקבעתם אתמול. דמיינו איך אתם מסיימים את המשימה החשובה ביותר. כשהיעד ברור, הביצוע הופך לאוטומטי.</p>
+
+<h2>08:15 – התארגנות ויציאה</h2>
+<p>אכלו ארוחת בוקר מזינה שאינה מכבידה (חלבון ושומן בריא הם המפתח לריכוז). בזמן ההתארגנות או הנסיעה, השתמשו בזמן ל"למידה פסיבית" – פודקאסט מקצועי או ספר קולי. זהו הניצחון האינטלקטואלי הראשון שלכם.</p>
+
+<h2>09:00 – ההגעה לעבודה: מצב "Deep Work"</h2>
+<p>כשאתם מתיישבים בכיסא, אתם כבר בשיא המומנטום. אל תפתחו מיילים מיד. הקדישו את ה-60 דקות הראשונות למשימה הקשה ביותר (אכילת הצפרדע). אתם תופתעו לגלות שעד 10:00 כבר עשיתם יותר ממה שרוב האנשים עושים ביום שלם.</p>
+
+<p><strong>הטיפ של המערכת:</strong> עקבו אחר הביצוע של שגרת הבוקר ב-PCS365 למשך שבועיים. ה-AI יראה לכם איך העמידה בשגרה משפיעה ישירות על אחוז סיום המשימות שלכם בערב.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "April 29, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "The Ultimate Morning Routine Guide: How to Start a Productive Day by 9 AM",
+                body: `<p>Most people start their day on "defense"—snoozing the alarm, checking notifications, and chasing time. To be truly productive, you must shift to "offense." Here is your winning morning protocol:</p>
+
+<h2>06:30 – Wake Up & The First Win</h2>
+<p>Avoid the snooze button. Winning the battle against the urge to stay in bed builds immediate mental resilience. Drink a large glass of water right away to rehydrate and jumpstart your metabolism.</p>
+
+<h2>06:45 – Movement & Sunlight</h2>
+<p>Step outside or open a window. Early morning light exposure synchronizes your biological clock. Add 10 minutes of light movement—stretching, yoga, or a brisk walk—to get blood flowing to your brain.</p>
+
+<h2>07:15 – Mental Quality Time (No Screens!)</h2>
+<p>This is the "Golden Hour." Instead of diving into news or LinkedIn, spend 20 minutes reading, meditating, or journaling. Ensure your first thoughts of the day are yours, not someone else's.</p>
+
+<h2>07:45 – Planning & Priorities</h2>
+<p>Open your PCS365 system. Review your "Big Three" tasks. Visualize completing the most important one. When the goal is clear, execution becomes automatic.</p>
+
+<h2>08:15 – Prep & Commute</h2>
+<p>Have a nutritious, light breakfast—protein and healthy fats are key for focus. Use your commute for "passive learning" with a professional podcast or audiobook. This is your first intellectual victory.</p>
+
+<h2>09:00 – Arrival: Deep Work Mode</h2>
+<p>When you sit at your desk, you're already in peak momentum. Don't check emails immediately. Dedicate the first 60 minutes to your hardest task ("Eat the Frog"). You'll be amazed to find that by 10 AM, you've done more than most people do in a day.</p>
+
+<p><strong>System Tip:</strong> Track your morning routine in PCS365 for two weeks. The AI will show you exactly how following this routine directly impacts your task completion rates by evening.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
