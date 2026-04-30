@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אמנות הניתוק: איך לבנות שגרת ערב שתבטיח לכם בוקר מנצח</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "30 באפריל 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "אמנות הניתוק: איך לבנות שגרת ערב שתבטיח לכם בוקר מנצח",
+                body: `<p>רבים מאיתנו משקיעים המון בשגרת הבוקר, אבל שוכחים ששגרה זו נשענת על היסודות שהנחנו בלילה שלפני. שגרת ערב נכונה היא לא רק הירגעות, אלא תהליך אקטיבי של סגירת קצוות והורדת מתח. הנה השלבים לשגרת ערב איכותית:</p>
+
+<h2>1. סגירת יום העבודה (The Shutdown Ritual)</h2>
+<p>השלב הראשון מתחיל עוד לפני שיוצאים מהמשרד או סוגרים את הלפטופ. הקדישו 5-10 דקות למעקב ב-PCS365: סמנו מה בוצע, והגדירו את 3 המשימות החשובות ביותר למחר. כשמשימות המחר רשומות במערכת, המוח שלכם מקבל אישור "לשחרר" ולא להמשיך להריץ אותן בלופ במהלך הלילה.</p>
+
+<h2>2. עוצר דיגיטלי (Digital Sunset)</h2>
+<p>לפחות שעה לפני השינה, כבו מסכים או העבירו אותם למצב סינון אור כחול. האור הכחול מדכא את המלטונין (הורמון השינה). במקום גלילה אינסופית ברשתות החברתיות, עברו לפעילות "אנלוגית": קריאת ספר מודפס, שיחה עם בן/בת הזוג או מתיחות קלות.</p>
+
+<h2>3. הכנת ה"חיכוך האפס" למחר</h2>
+<p>עזרו לעצמכם של הבוקר להיות פרודוקטיבי על ידי צמצום החלטות. הכינו את הבגדים למחר, סדרו את התיק או הכינו את המרכיבים לארוחת הבוקר. כל החלטה שאתם מקבלים בערב היא החלטה אחת פחות שצריך לקבל בבוקר, כשהאנרגיה המנטלית שלכם עדיין נטענת.</p>
+
+<h2>4. ניקוי רעלים מנטלי (Brain Dump)</h2>
+<p>אם אתם מוצאים את עצמכם במיטה עם מחשבות טורדניות, קחו דף ועט (כן, פיזי) וכתבו את כל מה שמטריד אתכם או דברים שאתם מפחדים לשכוח. ברגע שהמידע עובר מהראש לנייר, רמת האדרנלין יורדת והגוף נכנס למצב הרפיה.</p>
+
+<h2>5. יצירת סביבת שינה אופטימלית</h2>
+<p>הפכו את חדר השינה למקדש של מנוחה. הקפידו על טמפרטורה קרירה (סביב 18-22 מעלות), חושך מוחלט ושקט. שגרה שחוזרת על עצמה בכל ערב – כמו מקלחת חמה או שתיית תה צמחים – מאותתת למערכת העצבים שהגיע הזמן להוריד הילוך.</p>
+
+<p><strong>טיפ מה-AI:</strong> עקבו אחר שעות השינה שלכם לעומת רמת הפרודוקטיביות ביום למחרת. המערכת תעזור לכם למצוא את ה"Sweet Spot" שלכם – מספר שעות השינה המדויק שגורם לכם להיות בשיאכם.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "April 30, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "The Art of Unwinding: Building a Evening Routine for a Winning Morning",
+                body: `<p>Many focus on their morning routine but forget that it rests on the foundation laid the night before. A proper evening routine isn't just about relaxing; it's an active process of closing loops and reducing stress. Here are the steps to a quality evening routine:</p>
+
+<h2>1. The Shutdown Ritual</h2>
+<p>The first step begins before you close your laptop. Spend 5-10 minutes in PCS365: check off completed tasks and define the "Big Three" for tomorrow. When tomorrow's tasks are logged, your brain gets permission to "release" them instead of looping them all night.</p>
+
+<h2>2. Digital Sunset</h2>
+<p>At least one hour before bed, turn off screens or enable blue light filters. Blue light suppresses melatonin. Instead of endless scrolling, switch to "analog" activities: reading a printed book, talking to a partner, or light stretching.</p>
+
+<h2>3. Zero-Friction Preparation</h2>
+<p>Help your future morning self by reducing decisions. Set out your clothes, pack your bag, or prep breakfast ingredients. Every decision made at night is one less decision to exhaust you in the morning.</p>
+
+<h2>4. The Brain Dump</h2>
+<p>If you find yourself in bed with racing thoughts, take a physical pen and paper and write down everything bothering you or things you're afraid to forget. Once info moves from head to paper, adrenaline drops and your body relaxes.</p>
+
+<h2>5. Optimal Sleep Environment</h2>
+<p>Turn your bedroom into a sanctuary. Keep it cool (18-22°C), dark, and quiet. A consistent nightly habit—like a warm shower or herbal tea—signals to your nervous system that it's time to downshift.</p>
+
+<p><strong>AI Tip:</strong> Track your sleep hours vs. productivity levels the next day. The system will help you find your "Sweet Spot"—the exact amount of sleep needed for you to be at your peak.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
