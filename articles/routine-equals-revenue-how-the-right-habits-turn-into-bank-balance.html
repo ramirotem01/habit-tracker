@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שגרה שווה כסף: איך הרגלים נכונים הופכים לרווחים בחשבון הבנק</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "1 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "שגרה שווה כסף: איך הרגלים נכונים הופכים לרווחים בחשבון הבנק",
+                body: `<p>יש משפט שאומר: "אנשים מצליחים עושים ביום יום את מה שאנשים רגילים עושים רק מדי פעם". כשמדובר בכסף, השגרה היא ההבדל בין הישרדות כלכלית לבין שגשוג. הנה הדרכים שבהן שגרה נכונה מייצרת לכם רווח:</p>
+
+<h2>1. ביטול "מס הדחיינות"</h2>
+<p>דחיינות עולה כסף. זה מתבטא בקנסות על איחור בתשלומים, באובדן הזדמנויות עסקיות כי "לא היה לנו זמן" לחזור ללקוח, או בפרויקטים שנגררים וגוזלים זמן יקר. שגרה שכוללת "זמן אדמיניסטרציה" קבוע ב-PCS365 מוודא ששום שקל לא נוזל לכם בין האצבעות.</p>
+
+<h2>2. חוק המומנטום והכנסה פסיבית</h2>
+<p>בניית נכסים (דיגיטליים, נדל"ניים או עסקיים) דורשת התמדה. שגרה שמשבצת רק 30 דקות ביום לטיפול בנכס מניב, מייצרת אפקט מצטבר אדיר. הכסף הגדול לא מגיע מפריצה חד פעמית, אלא מהיכולת להתמיד בפעולות שיווק ומכירה יום אחרי יום, גם כשאין חשק.</p>
+
+<h2>3. חיסכון ב"אנרגיית החלטות" (Decision Fatigue)</h2>
+<p>מנכ"לים גדולים לובשים את אותם בגדים כדי לחסוך בהחלטות. למה? כי כל החלטה קטנה בבוקר שוחקת את היכולת שלכם לקבל החלטות פיננסיות כבדות משקל בצהריים. שגרה קבועה משאירה את המוח שלכם חד ורענן לרגעים שבהם צריך לסגור עסקה או לנתח השקעה.</p>
+
+<h2>4. שגרת "בדיקת דופק" פיננסית</h2>
+<p>מי שלא מנהל את הכסף שלו, מגלה שהכסף מנהל אותו. הגדירו הרגל שבועי של 15 דקות: מעבר על הוצאות, הכנסות ויעדים. כשזה הופך לחלק מהשגרה בתוך מערכת המשימות, אתם מפסיקים לפחד מהחשבון ומתחילים לשלוט בו.</p>
+
+<h2>5. השקעה בעצמכם (The Human Capital)</h2>
+<p>היכולת שלכם להרוויח תלויה בערך שאתם מביאים. שגרה שכוללת שעה של למידה או רכישת מיומנות חדשה בכל יום, מעלה את "שווי השוק" שלכם באופן עקבי. ה-AI במערכת יכול לעזור לכם לזהות כמה זמן באמת השקעתם בצמיחה אישית מול עבודה "שחורה".</p>
+
+<p><strong>השורה התחתונה:</strong> עושר הוא תוצר לוואי של משמעת. כשאתם בונים שגרה חזקה, הכסף הופך ממרדף לתוצאה בלתי נמנעת.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 1, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Routine Equals Revenue: How the Right Habits Turn into Bank Balance",
+                body: `<p>There's a saying: "Successful people do daily what ordinary people do only occasionally." When it comes to money, routine is the difference between financial survival and prosperity. Here is how a proper routine generates profit for you:</p>
+
+<h2>1. Eliminating the "Procrastination Tax"</h2>
+<p>Procrastination costs money. It shows up in late fees, lost business opportunities because you "didn't have time" to follow up, or projects that drag on and waste billable hours. A routine that includes fixed "admin time" in PCS365 ensures no dollar slips through the cracks.</p>
+
+<h2>2. Momentum and Passive Income</h2>
+<p>Building assets (digital, real estate, or business) requires persistence. A routine that allocates just 30 minutes a day to a revenue-generating asset creates a massive compound effect. Big money doesn't come from a one-time burst, but from the ability to maintain marketing and sales actions day after day.</p>
+
+<h2>3. Saving Decision Energy</h2>
+<p>Top CEOs wear the same clothes to save on decisions. Why? Because every small morning decision erodes your ability to make high-stakes financial choices in the afternoon. A fixed routine keeps your brain sharp for when it's time to close a deal or analyze an investment.</p>
+
+<h2>4. Financial "Pulse Check" Routine</h2>
+<p>If you don't manage your money, your money manages you. Set a weekly 15-minute habit: review expenses, income, and goals. When this becomes part of your routine within your task system, you stop fearing your bank account and start controlling it.</p>
+
+<h2>5. Investing in Human Capital</h2>
+<p>Your earning potential depends on the value you provide. A routine that includes one hour of learning or skill-building every day consistently raises your "market value." AI can help you identify how much time you actually spent on growth versus "busy work."</p>
+
+<p><strong>Bottom Line:</strong> Wealth is a byproduct of discipline. When you build a strong routine, money shifts from a chase to an inevitable result.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
