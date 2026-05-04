@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מוטיבציה היא שקר, עקביות היא כוח: איך להמשיך כשנגמר ה"חשק"</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "4 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "מוטיבציה היא שקר, עקביות היא כוח: איך להמשיך כשנגמר ה"חשק"",
+                body: `<p>כולנו מכירים את זה: אנחנו קמים בבוקר עם אנרגיה שיא, נחושים לכבוש את העולם. אבל יומיים לאחר מכן, הגשם יורד, הילדים לא נרדמו, ואנחנו פשוט "לא במוד". כאן בדיוק נופל רוב הציבור – הם מחכים שהמוטיבציה תחזור. הסוד של האנשים המצליחים ביותר הוא שהם הפסיקו לסמוך על מוטיבציה מזמן.</p>
+
+<h2>1. הבעיה עם מוטיבציה: היא רגש, לא תוכנית</h2>
+<p>מוטיבציה היא מצב רגשי חולף, כמו שמחה או כעס. לבנות את העתיד שלכם על מוטיבציה זה כמו לבנות בית על חול טובעני. עקביות, לעומת זאת, היא החלטה לוגית. כשאתם עקביים, אתם פועלים כי "זה מה שאני עושה", ולא כי "זה מה שבא לי לעשות".</p>
+
+<h2>2. חוק ה-2 דקות: איך לנצח את חוסר החשק</h2>
+<p>כשאין לכם מצב רוח למשימה גדולה, בצעו רק את ה-2 דקות הראשונות שלה. אל תתאמנו שעה – רק תנעלו נעלי ריצה ותצאו החוצה. ברוב המקרים, הקושי הוא להתחיל. ברגע שהתחלתם, העקביות משתלטת והמומנטום עושה את שלו.</p>
+
+<h2>3. בנו מערכת, לא מטרה</h2>
+<p>במקום לומר "אני רוצה להוריד 10 קילו" (מטרה שדורשת מוטיבציה), אמרו "אני אדם שמסמן משימת תזונה ב-PCS365 בכל ערב" (מערכת). המערכת שלכם לא צריכה מצב רוח טוב כדי לעבוד; היא צריכה רק שתלחצו על הכפתור.</p>
+
+<h2>4. אל תשברו את השרשרת (Don't Break the Chain)</h2>
+<p>הכוח הסודי של עקביות הוא הוויזואליזציה. כשאתם רואים רצף של ימים שבהם ביצעתם את ההרגל, נוצר במוח דחף פסיכולוגי לא "להרוס" את הרצף. המעקב הגרפי במערכת הופך את העקביות למשחק (Gamification), וזה חזק יותר מכל נאום מוטיבציה.</p>
+
+<h2>5. סליחה עצמית ככלי לעקביות</h2>
+<p>עקביות היא לא מושלמות. יום אחד התפקשש? לא נורא. הכלל של המקצוענים הוא: "לעולם לא לפספס פעמיים ברצף". פספוס אחד הוא טעות, פספוס שני הוא כבר התחלה של הרגל חדש (וגרוע). חזרו למסלול מיד, גם אם זה ב-50% יכולת.</p>
+
+<p><strong>השורה התחתונה:</strong> מוטיבציה מביאה אתכם לקו הזינוק, אבל רק העקביות תביא אתכם לקו הסיום. אל תחכו ל"חשק" – פשוט תעשו.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 4, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Motivation is a Myth, Consistency is Power: How to Keep Going When You Don't Feel Like It",
+                body: `<p>We've all been there: waking up with peak energy, determined to conquer the world. But two days later, it's raining, the kids didn't sleep, and you're just "not in the mood." This is where most people fail—they wait for motivation to return. The secret of the most successful people is that they stopped relying on motivation long ago.</p>
+
+<h2>1. The Problem with Motivation: It's a Feeling, Not a Plan</h2>
+<p>Motivation is a fleeting emotional state, like happiness or anger. Building your future on motivation is like building a house on quicksand. Consistency, however, is a logical decision. When you are consistent, you act because "this is what I do," not because "this is what I feel like doing."</p>
+
+<h2>2. The 2-Minute Rule: Defeating "Not Feeling Like It"</h2>
+<p>When you lack the mood for a big task, do just the first 2 minutes. Don't workout for an hour—just put on your running shoes and step outside. In most cases, the hardest part is starting. Once you begin, consistency takes over and momentum does the rest.</p>
+
+<h2>3. Build a System, Not a Goal</h2>
+<p>Instead of saying "I want to lose 10kg" (a goal requiring motivation), say "I am a person who logs a nutrition task in PCS365 every evening" (a system). Your system doesn't need a good mood to function; it just needs you to click the button.</p>
+
+<h2>4. Don't Break the Chain</h2>
+<p>The secret power of consistency is visualization. When you see a streak of days where you performed a habit, your brain develops a psychological urge not to "ruin" the sequence. The graphic tracking in the system turns consistency into a game (Gamification), which is stronger than any motivational speech.</p>
+
+<h2>5. Self-Forgiveness as a Consistency Tool</h2>
+<p>Consistency is not perfection. Messed up one day? It's okay. The pro rule is: "Never miss twice." One miss is a mistake; two misses is the start of a new (bad) habit. Get back on track immediately, even at 50% capacity.</p>
+
+<p><strong>Bottom Line:</strong> Motivation gets you to the starting line, but only consistency gets you to the finish line. Don't wait for the "mood"—just act.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
