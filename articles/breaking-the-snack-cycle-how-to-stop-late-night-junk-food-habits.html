@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>נפרדים מהנשנוש: איך להפסיק לאכול ג'אנק פוד מול הטלוויזיה</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "5 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "נפרדים מהנשנוש: איך להפסיק לאכול ג'אנק פוד מול הטלוויזיה",
+                body: `<p>עבור רבים, הספה מול הטלוויזיה היא "אזור סכנה" תזונתי. השילוב של עייפות מצטברת, גירוי ויזואלי והרפיה מנטלית יוצר תנאים מושלמים לאכילה לא מודעת. הנה הדרך המעשית להיפרד מהג'אנק פוד בערב:</p>
+
+<h2>1. זיהוי הגירוי (The Trigger)</h2>
+<p>הרגלים עובדים בלולאה: גירוי -> פעולה -> גמול. במקרה הזה, הגירוי הוא הישיבה על הספה או הדלקת הטלוויזיה. כדי לשבור את זה, אתם צריכים לשנות את הגירוי. נסו להזיז את מיקום השלט, או להחליט שיושבים בכיסא אחר. שינוי קטן בסביבה הפיזית "מעיר" את המוח מהטייס האוטומטי.</p>
+
+<h2>2. חוק ה"מחוץ לטווח עין"</h2>
+<p>כוח רצון הוא משאב מוגבל, ואחרי יום עבודה ארוך הוא בדרך כלל במינימום. אל תסמכו עליו. אם הג'אנק פוד נמצא בארון במטבח, אתם תאכלו אותו. הכלל פשוט: מה שלא נכנס הביתה, לא נכנס לפה. החליפו את מלאי הממתקים בנשנושים בריאים יותר כמו פופקורן ביתי (ללא חמאה), ירקות חתוכים או פרי.</p>
+
+<h2>3. שנת לילה מוקדמת ב-PCS365</h2>
+<p>מחקרים מראים שככל שאנחנו עייפים יותר, הגוף שלנו דורש יותר סוכר ופחמימות פשוטות כדי "לשרוד" את הערב. הגדירו במערכת משימת "סגירת מסכים" בשעה קבועה. כשהמערכת מאותתת לכם שהגיע זמן לישון, אתם מצמצמים את חלון הזמן שבו אתם עלולים להתפתות לאכילה מיותרת.</p>
+
+<h2>4. מים לפני פחמימות</h2>
+<p>לפעמים המוח מפרש צמא כרעב. לפני שאתם פותחים את המקרר, שתו כוס מים גדולה וחכו 10 דקות. ברוב המקרים, הצורך לנשנש יפחת משמעותית. הפכו את שתיית המים בערב להרגל רשום במעקב המשימות שלכם.</p>
+
+<h2>5. החלפת ההרגל (The Replacement)</h2>
+<p>קשה מאוד פשוט "להפסיק" הרגל, קל יותר להחליף אותו. אם הידיים שלכם חייבות להיות עסוקות מול הטלוויזיה, נסו תחביב אחר כמו סריגה, פתרון תשבצים, או אפילו שתיית תה צמחים חם. הטקס של הכנת התה נותן למוח את ה"גמול" שהוא מחפש בלי הקלוריות המיותרות.</p>
+
+<p><strong>טיפ מהמערכת:</strong> השתמשו בגרף ההתמדה שלכם. כשאתם רואים רצף של 5 ימים ללא ג'אנק פוד בערב, ייווצר בכם דחף פסיכולוגי חזק לשמור על השרשרת הזו שלמה.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 5, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Breaking the Snack Cycle: How to Stop Late-Night Junk Food Habits",
+                body: `<p>For many, the couch in front of the TV is a nutritional "danger zone." The combination of fatigue, visual stimulation, and mental relaxation creates the perfect conditions for mindless eating. Here is the practical way to say goodbye to evening junk food:</p>
+
+<h2>1. Identify the Trigger</h2>
+<p>Habits work in a loop: Trigger -> Action -> Reward. In this case, the trigger is sitting on the couch or turning on the TV. To break this, you must change the trigger. Try moving the remote or sitting in a different chair. A small change in your physical environment wakes your brain up from autopilot.</p>
+
+<h2>2. The "Out of Sight" Rule</h2>
+<p>Willpower is a limited resource, and after a long workday, it's usually at its lowest. Don't rely on it. If junk food is in the pantry, you will eat it. The rule is simple: if it doesn't enter your home, it won't enter your mouth. Replace sweets with healthier snacks like homemade popcorn, cut veggies, or fruit.</p>
+
+<h2>3. Earlier Sleep in PCS365</h2>
+<p>Studies show that the more tired we are, the more our bodies crave sugar and simple carbs to "survive" the evening. Set a "Screens Off" task in your system at a fixed hour. When the system signals bedtime, you shrink the window of time where temptation strikes.</p>
+
+<h2>4. Water Before Carbs</h2>
+<p>Sometimes the brain interprets thirst as hunger. Before opening the fridge, drink a large glass of water and wait 10 minutes. In most cases, the urge to snack will significantly decrease. Make evening water intake a tracked habit in your task list.</p>
+
+<h2>5. Habit Replacement</h2>
+<p>It's hard to simply "stop" a habit; it's easier to replace it. If your hands need to be busy in front of the TV, try a hobby like knitting, crosswords, or drinking herbal tea. The ritual of making tea gives the brain the "reward" it seeks without the empty calories.</p>
+
+<p><strong>System Tip:</strong> Use your consistency graph. When you see a 5-day streak without evening junk food, you'll feel a strong psychological urge to keep that chain unbroken.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
