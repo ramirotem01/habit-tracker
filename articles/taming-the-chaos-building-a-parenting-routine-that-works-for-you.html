@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>לנצח את הכאוס: איך לבנות שגרת הורות שעובדת בשבילכם</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "6 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "לנצח את הכאוס: איך לבנות שגרת הורות שעובדת בשבילכם",
+                body: `<p>הורים רבים מרגישים שהיום שלהם הוא רצף של "כיבוי שריפות" – מהתארגנות הבוקר הלחוצה ועד למאבקי השינה בלילה. הסוד להורות רגועה יותר טמון במילה אחת: שגרה. עבור ילדים, שגרה היא לא מגבלה, היא עוגן של ביטחון.</p>
+
+<h2>1. הכוח של צפיות מראש</h2>
+<p>חרדה אצל ילדים (וגם אצל מבוגרים) נובעת לעיתים קרובות מחוסר ודאות. כשילד יודע בדיוק מה קורה אחרי ארוחת הערב, ההתנגדות שלו פוחתת. שגרה קבועה מאפשרת למוח לעבור למצב של "טייס אוטומטי", מה שחוסך ויכוחים מיותרים על כל שלב ושלב ביום.</p>
+
+<h2>2. שגרת בוקר: הניצחון מתחיל בלילה שלפני</h2>
+<p>בוקר רגוע מתחיל ב-10 דקות של הכנה בערב הקודם. הכנת בגדים, תיקים ובדיקת מערכת השעות. כשאתם מנהלים את המשימות האלו ב-PCS365, אתם לא צריכים להחזיק את רשימת המטלות בראש. זה מפנה לכם מקום להיות סבלניים יותר כלפי הילדים ברגעים הלחוצים של הבוקר.</p>
+
+<h2>3. טקס שינה (The Bedtime Ritual)</h2>
+<p>שינה היא הבסיס לתפקוד קוגניטיבי ורגשי. טקס שינה עקבי – מקלחת, סיפור, כיבוי אורות – מאותת למערכת העצבית של הילד שהגיע זמן להירגע. עקביות כאן היא קריטית: אם השעה משתנה כל יום, הגוף לא יודע מתי להפריש מלטונין, וזה מוביל לילדים עייפים ועצבניים ביום למחרת.</p>
+
+<h2>4. זמן איכות מתוזמן (Quality over Quantity)</h2>
+<p>שגרה נכונה חייבת לכלול זמן לחיבור. זה לא חייב להיות שעות; גם 15 דקות של משחק משותף ללא מסכים עושות הבדל אדיר. הכניסו את זה למערכת כ"משימת חובה". כשהילד יודע שיש זמן שמוקדש רק לו, הוא נוטה לשתף פעולה יותר בשאר חלקי היום.</p>
+
+<h2>5. ניהול הציפיות שלכם כהורים</h2>
+<p>אל תנסו לבנות שגרה מושלמת ביום אחד. השתמשו בניתוח השבועי של המערכת כדי לראות איפה השגרה "נשברת". האם אלו ימי שלישי העמוסים? האם שעת ארוחת הערב מאוחרת מדי? התאמות קטנות בעקבות נתונים יוצרות שינוי גדול לאורך זמן.</p>
+
+<p><strong>לסיכום:</strong> שגרה היא לא כלא, היא חופש. היא משחררת אתכם מהצורך לקבל החלטות קטנות ומתישות בכל רגע, ומאפשרת לכם להתפנות לדבר החשוב באמת – ליהנות מהזמן עם הילדים שלכם.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 6, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Taming the Chaos: Building a Parenting Routine That Works for You",
+                body: `<p>Many parents feel their day is a sequence of "firefighting"—from stressful morning routines to bedtime battles. The secret to calmer parenting lies in one word: Routine. For children, routine is not a limitation; it is an anchor of security.</p>
+
+<h2>1. The Power of Predictability</h2>
+<p>Anxiety in children (and adults) often stems from uncertainty. When a child knows exactly what happens after dinner, resistance decreases. A fixed routine allows the brain to shift into "autopilot," saving unnecessary arguments over every single step of the day.</p>
+
+<h2>2. Morning Routine: Winning the Night Before</h2>
+<p>A calm morning starts with 10 minutes of preparation the previous night. Laying out clothes, packing bags, and checking schedules. When you manage these tasks in PCS365, you don't have to hold the "to-do" list in your head, freeing you to be more patient during stressful morning moments.</p>
+
+<h2>3. The Bedtime Ritual</h2>
+<p>Sleep is the foundation of cognitive and emotional function. A consistent bedtime ritual—bath, story, lights out—signals the child's nervous system that it's time to wind down. Consistency is key: if the hour changes daily, the body doesn't know when to release melatonin, leading to overtired and cranky children the next day.</p>
+
+<h2>4. Scheduled Quality Time</h2>
+<p>A good routine must include time for connection. It doesn't have to be hours; even 15 minutes of undivided, screen-free play makes a huge difference. Mark it as a "must-do" task. When a child knows there is dedicated time just for them, they tend to be more cooperative throughout the rest of the day.</p>
+
+<h2>5. Managing Your Own Expectations</h2>
+<p>Don't try to build a perfect routine in one day. Use the system's weekly analysis to see where the routine "breaks." Are Tuesdays too busy? Is dinner time too late? Small data-driven adjustments create big changes over time.</p>
+
+<p><strong>Summary:</strong> Routine isn't a prison; it's freedom. It releases you from the fatigue of making constant small decisions and allows you to focus on what truly matters—enjoying time with your children.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
