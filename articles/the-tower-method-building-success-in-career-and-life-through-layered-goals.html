@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שיטת המגדל: איך לבנות הצלחה בקריירה ובחיים דרך פירוק לגורמים</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "10 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "שיטת המגדל: איך לבנות הצלחה בקריירה ובחיים דרך פירוק לגורמים",
+                body: `<p>רוב האנשים נכשלים כי הם מנסים לקפוץ ישר לגג של המגדל. הם רוצים "להיות עשירים" או "להיות בכושר", אבל הם שוכחים שמגדל יציב בונים קומה אחר קומה. הכירו את שיטת ה-"כדי ש..." – המנוע שיהפוך את המטרות שלכם ב-PCS365 למציאות.</p>
+
+<h2>מהו מגדל המטרות?</h2>
+<p>מגדל מטרות הוא תהליך שבו אנחנו לוקחים בעיה או רצון, ושואלים עליו "כדי ש..." עד שאנחנו מגיעים להרגל היומיומי הפשוט ביותר. כל תשובה היא קומה במגדל.</p>
+
+<h3>דוגמה 1: קריירה וכלכלה</h3>
+<ul>
+    <li><strong>הבעיה:</strong> אני מרגיש תקוע בשכר שלי.</li>
+    <li><strong>קומה 1:</strong> אני רוצה ללמוד קורס תכנות חדש <strong>כדי ש...</strong> אוכל להתקדם לתפקיד בכיר יותר.</li>
+    <li><strong>קומה 2:</strong> אני רוצה להתקדם לתפקיד בכיר <strong>כדי ש...</strong> השכר שלי יעלה ב-30%.</li>
+    <li><strong>קומה 3:</strong> אני רוצה להרוויח יותר <strong>כדי ש...</strong> אוכל להשקיע בנדל"ן ולייצר חופש כלכלי.</li>
+    <li><strong>ההרגל ב-PCS365:</strong> הקצאת 30 דקות ביום ללמידה בערב, במשימת חובה.</li>
+</ul>
+
+<h3>דוגמה 2: ספורט ובריאות</h3>
+<ul>
+    <li><strong>הבעיה:</strong> אני תמיד עייף וחסר אנרגיה.</li>
+    <li><strong>קומה 1:</strong> אני רוצה להתחיל לרוץ 3 פעמים בשבוע <strong>כדי ש...</strong> סיבולת לב-הריאה שלי תשתפר.</li>
+    <li><strong>קומה 2:</strong> אני רוצה להשתפר <strong>כדי ש...</strong> אוכל לרוץ עם הילדים שלי בפארק בלי להתעייף.</li>
+    <li><strong>קומה 3:</strong> אני רוצה להיות פעיל עם המשפחה <strong>כדי ש...</strong> נבנה זיכרונות משותפים ובריאים.</li>
+    <li><strong>ההרגל ב-PCS365:</strong> הכנת בגדי ספורט על הכיסא בכל ערב לפני השינה.</li>
+</ul>
+
+<h3>דוגמה 3: חיי אהבה וזוגיות</h3>
+<ul>
+    <li><strong>הבעיה:</strong> אנחנו בקושי מדברים בגלל העומס.</li>
+    <li><strong>קומה 1:</strong> אני רוצה לקבוע "דייט נייט" שבועי <strong>כדי ש...</strong> נחזיר את התקשורת בינינו.</li>
+    <li><strong>קומה 2:</strong> אני רוצה תקשורת טובה <strong>כדי ש...</strong> נרגיש שוב כמו צוות ולא רק כמו שותפים לדירה.</li>
+    <li><strong>קומה 3:</strong> אני רוצה להרגיש צוות <strong>כדי ש...</strong> הבית יהיה מקום של שלווה ואהבה.</li>
+    <li><strong>ההרגל ב-PCS365:</strong> שליחת הודעת "בוקר טוב/אוהב" בכל יום ב-10:00 בבוקר.</li>
+</ul>
+
+<h2>איך ליישם את זה במערכת?</h2>
+<p>המגדל נותן לכם את ה-<strong>למה</strong>, אבל PCS365 נותנת לכם את ה-<strong>איך</strong>. 
+כשאתם מגדירים משימה, אל תכתבו רק "ללכת לחדר כושר". כתבו את הקומה העליונה של המגדל בתיאור המשימה. כשקשה לכם לבצע את ההרגל הקטן, הביטו במגדל שבניתם. הבינו שההרגל הפשוט הוא היסודות של המגדל כולו. בלי הקומה הראשונה, הגג לעולם לא יתקיים.</p>
+
+<p><strong>טיפ לביצוע:</strong> בסוף כל שבוע, השתמשו בניתוח ה-AI של המערכת כדי לבדוק: האם ההרגלים שביצעתם באמת תומכים בקומה הבאה במגדל שלכם?</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 10, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "The Tower Method: Building Success in Career and Life Through Layered Goals",
+                body: `<p>Most people fail because they try to jump straight to the roof of the tower. They want to "be rich" or "get fit," but they forget that a stable tower is built floor by floor. Meet the "So That..." method—the engine that turns your goals in PCS365 into reality.</p>
+
+<h2>What is the Goal Tower?</h2>
+<p>A Goal Tower is a process where we take a problem or desire and ask "So that..." until we reach the simplest daily habit. Every answer is a floor in the tower.</p>
+
+<h3>Example 1: Career & Finance</h3>
+<ul>
+    <li><strong>The Problem:</strong> I feel stuck in my salary.</li>
+    <li><strong>Floor 1:</strong> I want to take a new coding course <strong>so that...</strong> I can be promoted to a senior role.</li>
+    <li><strong>Floor 2:</strong> I want to be promoted <strong>so that...</strong> my salary increases by 30%.</li>
+    <li><strong>Floor 3:</strong> I want to earn more <strong>so that...</strong> I can invest in real estate and create financial freedom.</li>
+    <li><strong>The Habit in PCS365:</strong> Allocating 30 minutes a day for evening learning.</li>
+</ul>
+
+<h3>Example 2: Sports & Health</h3>
+<ul>
+    <li><strong>The Problem:</strong> I am always tired and lack energy.</li>
+    <li><strong>Floor 1:</strong> I want to start running 3 times a week <strong>so that...</strong> my cardio improves.</li>
+    <li><strong>Floor 2:</strong> I want to improve <strong>so that...</strong> I can run with my kids in the park without getting tired.</li>
+    <li><strong>Floor 3:</strong> I want to be active with my family <strong>so that...</strong> we build healthy memories together.</li>
+    <li><strong>The Habit in PCS365:</strong> Laying out workout clothes every night before bed.</li>
+</ul>
+
+<h3>Example 3: Love Life & Relationships</h3>
+<ul>
+    <li><strong>The Problem:</strong> We barely talk because of the busyness.</li>
+    <li><strong>Floor 1:</strong> I want to set a weekly "Date Night" <strong>so that...</strong> we restore our communication.</li>
+    <li><strong>Floor 2:</strong> I want good communication <strong>so that...</strong> we feel like a team again, not just roommates.</li>
+    <li><strong>Floor 3:</strong> I want to feel like a team <strong>so that...</strong> the home is a place of peace and love.</li>
+    <li><strong>The Habit in PCS365:</strong> Sending a "Good morning/Love you" text every day at 10:00 AM.</li>
+</ul>
+
+<h2>How to Implement in the System?</h2>
+<p>The Tower gives you the <strong>Why</strong>, but PCS365 gives you the <strong>How</strong>. 
+When you define a task, don't just write "Go to gym." Write the top floor of the tower in the task description. When it's hard to perform the small habit, look at the tower you built. Understand that the simple habit is the foundation of the entire tower. Without the first floor, the roof will never exist.</p>
+
+<p><strong>Execution Tip:</strong> At the end of each week, use the system's AI analysis to check: Do the habits you performed actually support the next floor of your tower?</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
