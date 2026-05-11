@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אסטרטגיית המשפך: איך להפוך חזון של 5 שנים למשימה של היום בבוקר</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "11 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "אסטרטגיית המשפך: איך להפוך חזון של 5 שנים למשימה של היום בבוקר",
+                body: `<p>הבעיה הגדולה ביותר בניהול זמן היא לא חוסר ביצוע, אלא חוסר כיוון. אנשים רבים מסמנים "V" על עשרות משימות, אך בסוף השנה הם מגלים שהם לא התקדמו לעבר החלומות הגדולים שלהם. הפתרון הוא עבודה לפי <strong>משפך המטרות</strong>.</p>
+
+<h2>מהו משפך המטרות?</h2>
+<p>זהו תהליך של "הנדסה לאחור" (Reverse Engineering). אנחנו מתחילים מהפסגה הרחוקה וגוזרים ממנה שלבים קטנים יותר ויותר, עד שהם הופכים למשימה פשוטה במערכת.</p>
+
+<div style="background: #f1f8ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <h3>שלב 1: היעד ל-5 שנים (החזון)</h3>
+    <p>שאלו את עצמכם: איפה אני רוצה להיות ב-2031? אל תחשבו על "איך", תחשבו על "מה". למשל: "להיות בעל עסק עצמאי שמכניס 50,000 ש"ח בחודש" או "לרוץ מרתון מלא".</p>
+    
+    <h3>שלב 2: מטרות לשנה הקרובה (האסטרטגיה)</h3>
+    <p>מה חייב לקרות ב-12 החודשים הקרובים כדי שהיעד של 5 השנים יהיה אפשרי? אם היעד הוא עסק, המטרה לשנה הקרובה היא "הקמת תשתית טכנית וגיוס 10 לקוחות ראשונים".</p>
+    
+    <h3>שלב 3: פרויקטים ל-3 חודשים (הרבעון)</h3>
+    <p>כאן זה הופך לפרקטי. פרויקט הוא קבוצת משימות גדולה. למשל: "בניית אתר אינטרנט לעסק" או "סיום קורס הכשרה מקצועי". רבעון הוא זמן מושלם כי הוא מספיק ארוך להישגים ומספיק קצר כדי לאבד ריכוז.</p>
+    
+    <h3>שלב 4: משימות חודשיות ושבועיות (הטקטיקה)</h3>
+    <p>זהו הלחם והחמאה של <strong>PCS365</strong>. המשימה החודשית היא "כתיבת תוכן לאתר", והמשימה השבועית היא "כתיבת 2 מאמרים השבוע".</p>
+</div>
+
+<h2>איך ליישם את המשפך ב-PCS365?</h2>
+<p>המערכת בנויה בדיוק כדי לתמוך בזרימה הזו:</p>
+<ul>
+    <li><strong>הגדרת יעדים:</strong> השתמשו בלוח היעדים כדי להגדיר את הפרויקטים הרבעוניים שלכם.</li>
+    <li><strong>פירוק למשימות:</strong> כל פרויקט רבעוני צריכים לפרק למשימות קטנות הניתנות לביצוע תוך פחות משעה.</li>
+    <li><strong>מעקב עקביות:</strong> הניתוח השבועי של ה-AI יראה לכם אם המשימות שביצעתם באמת מקדמות את הפרויקט הרבעוני. אם אתם מבצעים המון משימות שלא קשורות למשפך – אתם ב"עבודה פול גז בניוטרל".</li>
+</ul>
+
+<h2>למה זה עובד?</h2>
+<p>כשאתם מבצעים משימה קטנה היום, המוח שלכם יודע שהיא חלק מלבנה בבניין של ה-5 שנים. זה מעלה את רמת המוטיבציה והמשמעות. אתם כבר לא "סתם כותבים מייל", אתם בונים את האימפריה שלכם.</p>
+
+<p><strong>השורה התחתונה:</strong> אל תתנו לחיים "לקרות" לכם. תכננו מלמעלה למטה, ובצעו מלמטה למעלה.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 11, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "The Funnel Strategy: Turning a 5-Year Vision into Today's Task",
+                body: `<p>The biggest problem in time management isn't a lack of action, but a lack of direction. Many people check off dozens of tasks but realize at the end of the year they haven't moved toward their big dreams. The solution is the <strong>Goal Funnel</strong>.</p>
+
+<h2>What is the Goal Funnel?</h2>
+<p>It is a process of reverse engineering. We start from the distant peak and derive smaller and smaller steps until they become a simple task in the system.</p>
+
+<div style="background: #f1f8ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <h3>Step 1: 5-Year Goal (The Vision)</h3>
+    <p>Ask yourself: Where do I want to be in 2031? Don't think about "how," think about "what." For example: "Owning a business earning 50k/month" or "Running a full marathon."</p>
+    
+    <h3>Step 2: 1-Year Goals (The Strategy)</h3>
+    <p>What must happen in the next 12 months to make that 5-year goal possible? If the goal is a business, the yearly goal is "Building technical infrastructure and acquiring the first 10 clients."</p>
+    
+    <h3>Step 3: 3-Month Projects (The Quarter)</h3>
+    <p>This is where it gets practical. A project is a large group of tasks. For example: "Building a business website" or "Completing a professional certification." A quarter is the perfect timeframe—long enough for results, short enough to stay focused.</p>
+    
+    <h3>Step 4: Monthly and Weekly Tasks (The Tactics)</h3>
+    <p>This is the bread and butter of <strong>PCS365</strong>. The monthly task is "Writing website content," and the weekly task is "Writing 2 articles this week."</p>
+</div>
+
+<h2>How to Implement the Funnel in PCS365?</h2>
+<p>The system is designed specifically to support this flow:</p>
+<ul>
+    <li><strong>Goal Setting:</strong> Use the Goals Board to define your quarterly projects.</li>
+    <li><strong>Breaking Down:</strong> Every quarterly project must be broken into small tasks that take less than an hour.</li>
+    <li><strong>Consistency Tracking:</strong> The Weekly AI Analysis will show if your completed tasks actually advance your quarterly project. If you're doing tasks unrelated to your funnel, you're "idling in high gear."</li>
+</ul>
+
+<h2>Why It Works?</h2>
+<p>When you perform a small task today, your brain knows it's a brick in your 5-year building. This boosts motivation and meaning. You aren't "just writing an email"; you're building your empire.</p>
+
+<p><strong>Bottom Line:</strong> Don't let life just "happen" to you. Plan from the top down, and execute from the bottom up.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
