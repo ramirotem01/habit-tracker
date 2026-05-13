@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>המדריך לפרילנסר: איך לשמור על עקביות גם בתקופות של לחץ ודוחק</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "13 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "המדריך לפרילנסר: איך לשמור על עקביות גם בתקופות של לחץ ודוחק",
+                body: `<p>להיות פרילנסר זה אומר להיות המנכ"ל, מנהל השיווק וגם העובד שמבצע את המשימות. כשמגיע "גל" של לחץ – כלכלי, עומס פרויקטים או חוסר ודאות – קל מאוד להיכנס לשיתוק. הנה איך שומרים על הראש מעל המים וממשיכים להתקדם:</p>
+
+<h2>1. חוק משימות ה"עוגן" (Anchor Tasks)</h2>
+<p>בתקופות קשות, אל תנסו להיות סופר-מנים. הגדירו ב-PCS365 שלוש משימות עוגן בלבד לכל יום. אלו משימות שאם תבצעו אותן, היום ייחשב להצלחה. צמצום הרשימה מפחית את החרדה ומאפשר לכם לייצר "ניצחונות קטנים" שמעלים את המומנטום.</p>
+
+<h2>2. הפרדו בין "זמן תכנון" ל"זמן ביצוע"</h2>
+<p>אחד הדברים שהכי שוחקים פרילנסרים הוא הצורך להחליט מה לעשות *תוך כדי* העבודה. כשקשה לכם, קבלת החלטות הופכת למעמסה. הקדישו 10 דקות בכל ערב בתוך המערכת כדי לסדר את המשימות למחר. בבוקר, אתם הופכים ל"חייל" שמבצע פקודות של ה"מנכ"ל" מהערב הקודם.</p>
+
+<h2>3. שגרה היא "חליפת הגנה"</h2>
+<p>כשמרגיש דחוק, המוח מחפש לברוח (לחדשות, לרשתות חברתיות, לשינה). שגרה קבועה – לקום באותה שעה, להתיישב באותו מקום – היא מה ששומר עליכם. השתמשו בגרף העקביות של המערכת כדי לעקוב אחרי הרגלי הבסיס שלכם. גם אם העבודה לא מושלמת, השמירה על השגרה תמנע קריסה מנטלית.</p>
+
+<h2>4. ניהול משימות שיווק גם כשעמוס</h2>
+<p>הטעות הגדולה של פרילנסרים היא להפסיק לשווק כשיש עבודה, ואז להילחץ כשאין. הכניסו הרגל שבועי ב-PCS365 של "תחזוקת קשרים" או "פרסום פוסט". עקביות בשיווק בזמן לחץ מבטיחה שה"דוחק" של מחר יהיה קטן יותר.</p>
+
+<h2>5. השתמשו בניתוח השבועי כדי לקבל פרספקטיבה</h2>
+<p>תחושת דוחק היא לעיתים קרובות סובייקטיבית. כשמסתכלים בניתוח ה-AI של השבוע החולף, לפעמים מגלים שהספקנו הרבה יותר ממה שהרגשנו. הדאטה ב-PCS365 לא משקר – הוא מראה לכם שאתם בתנועה, גם אם נדמה לכם שאתם עומדים במקום.</p>
+
+<p><strong>טיפ לסיכום:</strong> ביום שבו הכל מרגיש כבד מדי, בצעו משימה אחת בלבד במשך 5 דקות. פעולה קטנה היא התרופה הטובה ביותר לדאגה.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 13, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "The Freelancer’s Survival Guide: Staying Consistent Under Pressure",
+                body: `<p>Being a freelancer means being the CEO, the Marketing Manager, and the grunt doing the work. When a wave of pressure hits—financial, workload, or uncertainty—it’s easy to freeze. Here is how to keep your head above water:</p>
+
+<h2>1. The Rule of Anchor Tasks</h2>
+<p>In tough times, don't try to be Superman. Define only three "Anchor Tasks" in PCS365 for each day. These are tasks that, if completed, make the day a success. Reducing your list lowers anxiety and builds the momentum of small wins.</p>
+
+<h2>2. Separate Planning from Execution</h2>
+<p>One of the most draining things for freelancers is deciding what to do *while* working. When stressed, decision-making becomes a burden. Spend 10 minutes every evening in the system organizing tomorrow's tasks. In the morning, you become the "soldier" executing the orders of the "CEO" from the night before.</p>
+
+<h2>3. Routine as a Protective Shield</h2>
+<p>When things feel tight, the brain seeks escape. A fixed routine—waking at the same time, sitting in the same spot—is what keeps you steady. Use the consistency graph to track your base habits. Even if the work isn't perfect, maintaining the routine prevents mental burnout.</p>
+
+<h2>4. Marketing Tasks: Keep the Engine Running</h2>
+<p>The biggest freelancer mistake is stopping marketing when busy, only to panic when the work dries up. Add a weekly "Networking" or "Content" habit in PCS365. Consistency in marketing ensures tomorrow's pressure is manageable.</p>
+
+<h2>5. Use Weekly Analysis for Perspective</h2>
+<p>Feeling "stuck" is often subjective. Looking at the AI Weekly Analysis often reveals you've achieved much more than you felt. The data doesn't lie—it shows you are in motion, even when it feels like you're standing still.</p>
+
+<p><strong>Bottom Line:</strong> On days when everything feels too heavy, do just one task for 5 minutes. Small action is the best cure for worry.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
