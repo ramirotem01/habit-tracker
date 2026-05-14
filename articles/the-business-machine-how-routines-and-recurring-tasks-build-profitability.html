@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>המכונה העסקית: איך רוטינות ומשימות חוזרות בונות רווחיות</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "14 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "המכונה העסקית: איך רוטינות ומשימות חוזרות בונות רווחיות",
+                body: `<p>בעלי עסקים רבים נופלים במלכודת ה'כיבוי שריפות'. הם משקיעים את כל האנרגיה בפתרון בעיות דחופות ושוכחים שהדרך היחידה לצמוח היא לייצר מערכת שעובדת בלעדיהם. המפתח לכך הוא ניהול מדויק של משימות רוטניות וחוזרות.</p>
+
+<h2>1. למה המוח שלכם שונא החלטות קטנות?</h2>
+<p>בכל פעם שאתם צריכים להחליט מחדש 'מה עושים עכשיו', אתם מבזבזים אנרגיה מנטלית יקרה. משימות רוטניות שהוגדרו מראש ב-PCS365 מסירות את הצורך בקבלת החלטות. כשמשימה חוזרת מופיעה בלוח, אתם פשוט מבצעים אותה, מה שמפנה את המוח שלכם לחשיבה אסטרטגית ויצירתית.</p>
+
+<h2>2. שלוש הרוטינות שכל עסק חייב</h2>
+<ul>
+    <li><strong>רוטינת פיננסים שבועית:</strong> בדיקת תזרים, הוצאת חשבוניות ומעקב גבייה. כשזה הופך למשימה חוזרת בכל יום ראשון, העסק נשאר בריא מבחינה כלכלית.</li>
+    <li><strong>רוטינת שיווק יומית:</strong> הקצאת 20 דקות לפרסום תוכן או יצירת קשרים. עקביות קטנה ב-PCS365 שווה יותר מקמפיין ענק פעם בחצי שנה.</li>
+    <li><strong>רוטינת בקרה ותפעול:</strong> בדיקת איכות השירות או המוצר. תיעוד המשימות הללו מבטיח שהסטנדרטים שלכם לא ירדו עם הזמן.</li>
+</ul>
+
+<h2>3. איך להגדיר רוטינה מנצחת ב-PCS365?</h2>
+<p>אל תסתפקו בכותרת כללית כמו 'שיווק'. שבצו בתוך המשימה החוזרת רשימת צעדים פשוטה (Checklist). למשל: '1. להעלות סטורי, 2. להגיב ל-5 לקוחות, 3. לשלוח מייל פולו-אפ'. ככל שהמשימה ברורה יותר, כך קל יותר להתמיד בה לאורך זמן.</p>
+
+<h2>4. הניתוח השבועי ככלי לשיפור המערכת</h2>
+<p>היתרון הגדול בשימוש במשימות חוזרות במערכת הוא הדאטה. הניתוח השבועי של ה-AI יראה לכם בדיוק איפה אתם מזייפים. אם משימת 'גבייה' נדחית פעם אחר פעם, זו אינדיקציה שעליכם לשנות את התהליך או להאציל סמכויות. המערכת עוזרת לכם להפוך ממנהלים שמגיבים לאירועים, למנהלים ששולטים בנתונים.</p>
+
+<p><strong>לסיכום:</strong> עסק הוא אוסף של תהליכים. ככל שתהפכו יותר פעולות לרוטינות מובנות, כך העסק שלכם יהיה יציב, רווחי וחופשי יותר. התחילו היום בהגדרת הרוטינה החשובה ביותר שלכם לשבוע הקרוב.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 14, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "The Business Machine: How Routines and Recurring Tasks Build Profitability",
+                body: `<p>Many business owners fall into the 'firefighting' trap. They spend all their energy solving urgent problems and forget that the only way to grow is to create a system that works without them. The key is precise management of routine and recurring tasks.</p>
+
+<h2>1. Why Your Brain Hates Small Decisions</h2>
+<p>Every time you have to decide 'what to do now', you waste precious mental energy. Predefined routines in PCS365 remove the need for decision-making. When a recurring task appears, you simply execute it, freeing your brain for strategic thinking.</p>
+
+<h2>2. Three Must-Have Business Routines</h2>
+<ul>
+    <li><strong>Weekly Finance Routine:</strong> Checking cash flow, invoicing, and collections. When this is a recurring Sunday task, the business stays financially healthy.</li>
+    <li><strong>Daily Marketing Routine:</strong> Allocating 20 minutes for content or networking. Small consistency in PCS365 is worth more than a huge campaign once every six months.</li>
+    <li><strong>Operations Routine:</strong> Checking service or product quality. Documenting these tasks ensures your standards remain high over time.</li>
+</ul>
+
+<h2>3. How to Define a Winning Routine in PCS365?</h2>
+<p>Don't settle for a general title like 'Marketing'. Include a simple checklist within the recurring task. For example: '1. Post a story, 2. Reply to 5 customers, 3. Send a follow-up email'. The clearer the task, the easier it is to maintain over time.</p>
+
+<h2>4. Weekly Analysis as a System Improvement Tool</h2>
+<p>The big advantage of recurring tasks is the data. The AI Weekly Analysis shows exactly where you struggle. If a 'Collection' task is postponed repeatedly, it is an indication to change the process or delegate. The system helps you shift from reactive to data-driven management.</p>
+
+<p><strong>Summary:</strong> A business is a collection of processes. The more actions you turn into structured routines, the more stable and profitable your business will become.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
