@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>לא רק אימון: היסודות לבניית אורח חיים בריא שבאמת מחזיק מעמד</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "15 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "לא רק אימון: היסודות לבניית אורח חיים בריא שבאמת מחזיק מעמד",
+                body: `<p>בריאות היא לא יעד שמגיעים אליו וזהו, היא אוסף של בחירות קטנות שאנחנו מבצעים בכל יום. כדי להצליח להתמיד לאורך שנים, אנחנו חייבים להפסיק להסתכל על ספורט כעל 'עונש' ועל תזונה כעל 'הגבלה'.</p>
+
+<h2>1. חוק ה-80/20 בתזונה</h2>
+<p>אל תנסו להיות מושלמים. שיטת ה-80/20 אומרת ש-80 אחוז מהזמן אנחנו אוכלים מזון מזין, לא מעובד ועשיר בוויטמינים, וב-20 האחוזים הנותרים אנחנו מאפשרים לעצמנו ליהנות ממאכלים שאנחנו אוהבים. הגישה הזו מונעת תחושת חסך, שהיא הגורם מספר אחת לשבירת דיאטות.</p>
+
+<h2>2. תנועה פונקציונלית לעומת 'אימון'</h2>
+<p>לא חייבים לבלות שעות בחדר הכושר כדי להיות בריאים. המפתח הוא 'צביעת' היום בתנועה. עלייה במדרגות במקום במעלית, הליכה בזמן שיחות טלפון או עמידה מול המחשב. התנועות הקטנות הללו מצטברות לשריפת אנרגיה משמעותית ולשיפור זרימת הדם לאורך כל היום.</p>
+
+<h2>3. חשיבותה של שינה איכותית</h2>
+<p>אפשר להתאמן חזק ולאכול מצוין, אבל ללא שינה של 7 עד 8 שעות בלילה, הגוף לא יצליח להשתקם. בזמן השינה מתרחשים תהליכים קריטיים של בניית שריר, ויסות הורמונלי וניקוי רעלים מהמוח. חוסר בשינה מעלה את רמות הסטרס וגורם לנו לחפש אנרגיה זמינה בסוכרים ופחמימות ריקות.</p>
+
+<h2>4. ניהול עומסים ומניעת שחיקה</h2>
+<p>הטעות הנפוצה ביותר היא להתחיל ב-'פול גז' ולהתעייף אחרי שבועיים. הדרך הנכונה היא להתחיל בקטן. הגדירו לעצמכם יעד של שני אימונים בשבוע והליכה יומית קצרה. רק כשזה הופך לחלק בלתי נפרד מהיומן שלכם, העלו את העצימות. ההתמדה חשובה הרבה יותר מהעצימות של אימון בודד.</p>
+
+<h2>5. הפן המנטלי: למה אתם עושים את זה?</h2>
+<p>חברו את הפעילות הגופנית לערך עמוק יותר. אל תתאמנו רק כדי 'לרדת במשקל', אלא כדי 'להיות עם אנרגיה לשחק עם הילדים' או 'להרגיש חיוניים וחדים בעבודה'. כשמגיעה הירידה במוטיבציה - והיא תגיע - הסיבה העמוקה הזו היא מה שיגרום לכם לנעול נעלי ספורט ולצאת לדרך.</p>
+
+<p><strong>לסיכום:</strong> אורח חיים בריא הוא ריצת מרתון, לא ספרינט. הקשיבו לגוף שלכם, תנו לו את הדלק הנכון ואת המנוחה שהוא זקוק לה, והתוצאות יגיעו כתוצר לוואי של שגרה נכונה.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 15, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Beyond the Workout: Foundations of a Sustainable Healthy Lifestyle",
+                body: `<p>Health is not a destination; it is a collection of small choices we make every day. To sustain this for years, we must stop viewing exercise as a 'punishment' and nutrition as a 'restriction'.</p>
+
+<h2>1. The 80/20 Rule in Nutrition</h2>
+<p>Don't strive for perfection. The 80/20 rule suggests eating nutritious, unprocessed food 80% of the time, while allowing yourself to enjoy your favorite treats for the remaining 20%. This prevents the feeling of deprivation, which is the main cause of diet failure.</p>
+
+<h2>2. Functional Movement vs. 'Workout'</h2>
+<p>You don't need hours in the gym to be healthy. The key is 'painting' your day with movement. Take the stairs instead of the elevator, walk during phone calls, or use a standing desk. These small movements accumulate into significant energy expenditure and improved blood flow.</p>
+
+<h2>3. The Importance of Quality Sleep</h2>
+<p>Without 7 to 8 hours of sleep, the body cannot recover. Crucial processes like muscle building, hormonal regulation, and brain detoxification happen while you sleep. Lack of sleep increases stress and leads to sugar cravings.</p>
+
+<h2>4. Managing Load and Preventing Burnout</h2>
+<p>The most common mistake is starting at full speed and burning out after two weeks. Start small. Set a goal of two weekly workouts and a short daily walk. Consistency is far more important than the intensity of a single session.</p>
+
+<h2>5. The Mental Aspect: Find Your 'Why'</h2>
+<p>Connect physical activity to a deeper value. Don't just exercise to 'lose weight', but to 'have energy for your children' or 'feel sharp at work'. This deep reason is what keeps you going when motivation fades.</p>
+
+<p><strong>Summary:</strong> A healthy lifestyle is a marathon, not a sprint. Listen to your body, give it the right fuel and rest, and results will follow naturally.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
