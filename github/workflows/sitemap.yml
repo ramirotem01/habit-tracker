@@ -1,0 +1,26 @@
+name: Generate Sitemap
+
+on:
+  push:
+    branches:
+      - main # או master, בהתאם לשם הענף הראשי שלך
+
+jobs:
+  sitemap_job:
+    runs-on: ubuntu-latest
+    name: Generate a sitemap
+    steps:
+    - name: Checkout the code
+      uses: actions/checkout@v3
+
+    - name: Generate Sitemap
+      uses: cicirello/generate-sitemap@v1
+      with:
+        base-url-path: https://pcs365.co.il/
+
+    - name: Commit and push if changed
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add sitemap.xml
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Automated sitemap update" && git push)
