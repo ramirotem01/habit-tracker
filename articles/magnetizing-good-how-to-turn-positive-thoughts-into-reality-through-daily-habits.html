@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>למגנט את הטוב: איך להפוך מחשבות חיוביות למציאות בעזרת הרגלים יומיים</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "18 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "למגנט את הטוב: איך להפוך מחשבות חיוביות למציאות בעזרת הרגלים יומיים",
+                body: `<p>רבים מדברים על 'חוק המשיכה' ועל היכולת למגנט דברים טובים לחיים, אבל חשיבה חיובית ללא פעולה היא רק משאלה. כדי להפוך למגנט של הזדמנויות, אנרגיה טובה והצלחה, אתם חייבים לתרגם את המחשבות שלכם לפעולות קטנות ועקביות בלוח הזמנים היומי.</p>
+
+<h2>1. המדע שמאחורי ה'מיגנוט'</h2>
+<p>במוח שלנו קיימת מערכת סינון שנקראת RAS (רשת ההפעלה הרשתית). התפקיד שלה הוא לסנן את מיליוני פיסות המידע שמקיפות אותנו ולהציג לנו רק את מה שחשוב לנו. כשאתם מתמקדים במחשבות שליליות, המוח שלכם ימגנט ויציג לכם עוד קשיים ובעיות. כשאתם מאמנים את המוח לחשוב חיובי, המערכת הזו מתחילה 'לצוד' עבורכם הזדמנויות, אנשים נכונים ופתרונות שלא ראיתם קודם לכן. זה לא קסם - זה פשוט מיקוד מנטלי מדעיי.</p>
+
+<h2>2. הרגל בוקר: הגדרת התדר המנטלי</h2>
+<p>השעה הראשונה של היום קובעת את כיוון המחשבה שלכם. במקום לפתוח את היום בגלילה בטלפון או בקריאת חדשות, צרו לעצמכם הרגל קבוע של 5 דקות של הדמיה (ויזואליזציה). עצמו עיניים וראו את המשימות שלכם מסתיימות בהצלחה, דמיינו את השיחה החשובה שלכם עוברת בצורה חלקה, ותרגישו את תחושת ההישג עוד לפני שהיא קרתה. הפעולה הזו מטעינה את המוח באנרגיה הנכונה.</p>
+
+<h2>3. שילוב הרגלי חיוביות בלוח המשימות</h2>
+<p>כדי למגנט דברים טובים, צריך לפנות להם מקום בלוח הזמנים. הפכו את הפעולות המנטליות האלו למשימות חובה יומיות:</p>
+<ul>
+    <li><strong>משימת 'מילה טובה':</strong> הכניסו משימה יומית לשלוח הודעה מפרגנת או מילת תודה לאדם אחד (לקוח, חבר או בן משפחה). האנרגיה שאתם מוציאים לעולם היא האנרגיה שתחזור אליכם.</li>
+    <li><strong>משימת ניקוי רעלים מנטלי:</strong> הגדירו זמן קבוע ביום שבו אתם מתנתקים מאנשים או מתכנים שמורידים לכם את האנרגיה ומעוררים בכם קנאה או דאגה.</li>
+    <li><strong>תיעוד רגעי שיא:</strong> בסוף כל יום, רשמו משימה של דקה אחת שבה אתם מתעדים דבר אחד טוב שקרה לכם. זהו המגנט שלכם ליום המחרת.</li>
+</ul>
+
+<h2>4. לשנות את השפה הפנימית</h2>
+<p>המילים שאתם אומרים לעצמכם בתוך הראש מעצבות את המציאות שלכם. החליפו את המשפט 'אני מקווה שיהיה בסדר' במשפט 'אני עושה הכל כדי שזה יצליח'. החליפו את 'למה זה תמיד קורה לי' ב-'מה השיעור שהסיטואציה הזו באה ללמד אותי'. שינוי השפה הפנימית משנה באופן מיידי את התחושה הפיזית בגוף ומאפשר לכם לפעול מתוך עוצמה ולא מתוך חולשה.</p>
+
+<h2>5. התמדה היא הסוד</h2>
+<p>אימון המחשבה דומה לאימון כושר. לא נהנים מקוביות בבטן אחרי אימון אחד, ולא ממגנטים שפע אחרי יום אחד של אופטימיות. ככל שתקפידו לבצע את הרגלי החשיבה הללו יום אחרי יום, אתם תבחינו שצירופי מקרים מוזרים וטובים מתחילים להתרחש בחייכם. אתם פשוט תהיו בתדר הנכון כדי לקלוט אותם.</p>
+
+<p><strong>הטיפ שלכם להיום:</strong> אל תחכו שהטוב יגיע כדי להיות מאושרים. התחילו לחשוב ולפעול כאילו הוא כבר כאן, והמציאות כבר תתיישר לפי הקו שלכם.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 18, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Magnetizing Good: How to Turn Positive Thoughts into Reality Through Daily Habits",
+                body: `<p>Many talk about the 'Law of Attraction' and magnetizing good things, but positive thinking without action is just a wish. To attract opportunities and success, you must translate your thoughts into small, consistent daily habits.</p>
+
+<h2>1. The Science Behind 'Manifestation'</h2>
+<p>Our brain contains a filtering system called the RAS (Reticular Activating System). Its job is to filter millions of pieces of data and show us only what matters to us. When you focus on negative thoughts, your brain finds more difficulties. When you train it to think positively, it begins to 'hunt' for opportunities and solutions. It is not magic—it is scientific mental focus.</p>
+
+<h2>2. Morning Habit: Setting Your Frequency</h2>
+<p>The first hour of the day determines your mindset. Instead of scrolling through your phone, create a 5-minute visualization habit. Close your eyes and see your tasks finishing successfully. Feel the achievement before it even happens. This primes your brain with the right energy.</p>
+
+<h2>3. Integrating Positivity Habits into Your Tasks</h2>
+<p>To attract good things, you must clear space for them. Turn these mental exercises into daily tasks:</p>
+<ul>
+    <li><strong>The 'Kind Word' Task:</strong> Send a supportive message or a thank-you note to one person daily. The energy you put out is the energy that returns to you.</li>
+    <li><strong>Mental Detox Task:</strong> Set a fixed time to disconnect from people or content that drain your energy or spark worry.</li>
+    <li><strong>Tracking Highlights:</strong> At the end of each day, spend one minute documenting one good thing that happened. This is your magnet for tomorrow.</li>
+</ul>
+
+<h2>4. Shifting Your Internal Language</h2>
+<p>The words you say to yourself shape your reality. Replace 'I hope it goes well' with 'I am doing everything to make it succeed'. Change 'Why does this always happen to me' to 'What lesson can I learn from this'. Shifting your language immediately alters your emotional state.</p>
+
+<h2>5. Consistency is the Secret</h2>
+<p>Training your mind is like going to the gym. You do not get results after one workout, and you do not attract abundance after one day of optimism. As you practice these habits daily, you will notice positive coincidences entering your life. You will simply be on the right frequency to receive them.</p>
+
+<p><strong>Your Tip for Today:</strong> Do not wait for good things to arrive before being happy. Start thinking and acting as if they are already here, and reality will align with you.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
