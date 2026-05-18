@@ -3,7 +3,7 @@ name: Generate Sitemap
 on:
   push:
     branches:
-      - main # או master, בהתאם לשם הענף הראשי שלך
+      - main
 
 jobs:
   sitemap_job:
@@ -23,4 +23,4 @@ jobs:
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git add sitemap.xml
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Automated sitemap update" && git push)
+        git diff --quiet && git diff --staged --quiet || (git commit -m 'Automated sitemap update' && git push)
