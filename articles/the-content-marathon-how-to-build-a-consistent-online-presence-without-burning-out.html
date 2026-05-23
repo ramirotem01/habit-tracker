@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מרתון התוכן: איך לייצר נוכחות עקבית ברשת בלי להישבר (ולמה זה המנוע של העסק שלך)</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "23 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "מרתון התוכן: איך לייצר נוכחות עקבית ברשת בלי להישבר (ולמה זה המנוע של העסק שלך)",
+                body: `<p>בעידן הדיגיטלי, העסק שלך קיים רק אם הוא נוכח ברשת. פוסט אחד פעם בחודש או סרטון מקרי כש'יש מוזה' כבר לא מספיקים כדי לתפוס את תשומת הלב של הלקוחות. אך הצד השני של המטבע מבהיל לא פחות: יוצרי תוכן ובעלי עסקים רבים קורסים תחת הנטל, חווים שחיקה מהירה ומרימים ידיים. איך בכל זאת מצליחים להתמיד בנוכחות הדיגיטלית לאורך זמן, למה האלגוריתם מעריץ עקביות, ואיך עושים את זה בצורה חכמה ומובנית?</p>
+
+<h2>1. למה נוכחות קבועה היא המפתח לצמיחת העסק?</h2>
+<p>התמדה ברשתות החברתיות, בבלוג או בדיוור האלקטרוני מייצרת שלושה אפקטים קריטיים לעסק שלך:</p>
+<ul>
+    <li><strong>בניית אמון (The Familiarity Effect):</strong> אנשים קונים מאנשים שהם מכירים, אוהבים ומעריכים. כשהתוכן שלך מופיע אצלם בפיד באופן קבוע, המותג שלך נחרט בתת המודע שלהם כסמכות מקצועית מובילה.</li>
+    <li><strong>ריצוי האלגוריתם:</strong> הרשתות החברתיות (גוגל, פייסבוק, אינסטגרם או לינקדאין) הן חברות מסחריות שרוצות להשאיר את המשתמשים בתוך הפלטפורמה. ברגע שהן מזהות פרופיל שמספק תוכן איכותי באופן עקבי, הן מתגמלות אותו בחשיפה אורגנית גבוהה יותר.</li>
+    <li><strong>יצירת נכס דיגיטלי מניב:</strong> כל פוסט, מאמר או סרטון שאתה מעלה לרשת הוא חייל קטן שעובד בשבילך 24 שעות ביממה, 7 ימים בשבוע, ומביא לקוחות פוטנציאליים גם בזמן שאתה ישן.</li>
+</ul>
+
+<h2>2. הסוד המנטלי: החלפת 'מוזה' במערכת עבודה</h2>
+<p>הטעות הגדולה ביותר של עסקים היא פירסום לפי 'מצב רוח'. אם תמתין לרגע שבו תרגיש יצירתי, אתה תפרסם מעט מאוד. משקיעים מצליחים לא מחכים שמחירי המניות יעלו כדי להשקיע, ויוצרי תוכן מקצועיים לא מחכים להשראה. התמדה אמיתית ברשת נשענת על היפוך התפיסה: יצירת התוכן היא משימה ניהולית קבועה ביומן, בדיוק כמו הגשת דוחות או פגישות עם לקוחות.</p>
+
+<h2>3. אסטרטגיית העבודה: איך לא להישבר לעולם?</h2>
+<p>כדי לשמור על שפיות ולמנוע שחיקה, אתה חייב להפסיק לחיות 'מהיד לפה' בעולם התוכן. החלף את הלחץ היומיומי בשיטה מובנית:</p>
+<ul>
+    <li><strong>עבודה במקבצים (Batching):</strong> אל תכתוב פוסט בכל יום. הגדר יום אחד בחודש או חצי יום בכל שבוע שמוקדש אך ורק לייצור תוכן. ביום הזה אתה נכנס ל'זון' היצירתי, כותב 4-5 מאמרים או מצלם מספר סרטונים מראש, ומסיים את המכסה השבועית או החודשית שלך בפעם אחת.</li>
+    <li><strong>בניית בנק רעיונות דינמי:</strong> הרעיונות הטובים ביותר מגיעים במהלך היום - מתוך שאלות של לקוחות, בעיות שפתרת או פודקאסט שהאזנת לו. נהל רשימה קבועה באפליקציית משימות או בפתקים בנייד, ותעד כל רעיון מיד. כשתתיישב לכתוב, לא תצטרך לבהות במסך ריק.</li>
+    <li><strong>תזמון אוטומטי (Automation):</strong> השתמש בכלי תזמון כדי להעלות את התוכן שלך באופן אוטומטי. ברגע שהתוכן מתוזמן שבועיים קדימה, אתה משחרר את הראש מהרדיפה היומיומית ויכול להתמקד בניהול השוטף של העסק.</li>
+</ul>
+
+<h2>4. חוק ה-80/20 בתוכן ומיחזור חכם</h2>
+<p>אתה לא צריך להמציא את הגלגל מחדש בכל פעם. אסטרטגיית תוכן חכמה מבוססת על מיחזור: מאמר עומק אחד שכתבת לבלוג יכול להפוך לשלושה פוסטים קצרים ברשתות החברתיות, למייל לרשימת התפוצה ואפילו לתסריט עבור סרטון קצר. נוכחות חזקה ברשת לא דורשת ממך לעבוד קשה יותר, אלא לעבוד בצורה מודולרית ויעילה.</p>
+
+<p><strong>השורה התחתונה:</strong> נוכחות ברשת היא לא ספרינט קצר, היא מרתון ארוך. אל תנסה לפרסם שלוש פעמים ביום ואז להיעלם לחודשיים. בחר קצב אחד שאתה יכול לעמוד בו בצורה ריאלית - למשל, שני פוסטים בשבוע ומאמר אחד בחודש - והתמד בו באדיקות. לאורך זמן, העקביות הזו תבנה לך קהל נאמן, מנוע שיווקי יציב ועסק שלא מפסיק לגדול.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 23, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "The Content Marathon: How to Build a Consistent Online Presence Without Burning Out",
+                body: `<p>In the digital age, your business only exists if it is active online. Posting once a month or sharing a video only when 'inspiration strikes' is no longer enough to capture your target audience. However, many business owners experience rapid burnout and give up. How do you maintain a consistent digital presence over time, why does the algorithm demand consistency, and how can you do it systematically?</p>
+
+<h2>1. Why Consistency is the Engine of Your Business</h2>
+<p>Maintaining a steady stream of content across social media, blogs, or newsletters drives three major business outcomes:</p>
+<ul>
+    <li><strong>Building Trust (The Familiarity Effect):</strong> People buy from brands they recognize and respect. When your content appears in their feed regularly, your brand becomes their go-to authority.</li>
+    <li><strong>Pleasing the Algorithm:</strong> Digital platforms are commercial entities designed to keep users engaged. When they detect a profile that delivers high-quality content consistently, they reward it with greater organic reach.</li>
+    <li><strong>Creating Everlasting Assets:</strong> Every post or article you publish acts as a digital asset that works for you 24/7, generating leads even while you sleep.</li>
+</ul>
+
+<h2>2. The Mental Shift: Systems Over Moods</h2>
+<p>The biggest mistake businesses make is publishing based on emotion. If you wait until you feel creative, your consistency will suffer. Successful content creators view creation as a standard operational task on their calendar, treat it with the same discipline as a client meeting.</p>
+
+<h2>3. The Content Strategy: How to Avoid Burnout</h2>
+<p>To stay sane, stop creating content from hand to mouth. Replace daily stress with a predictable framework:</p>
+<ul>
+    <li><strong>Batch Processing (Batching):</strong> Do not write a post every single day. Dedicate one block of time each week or month solely to production. Write or film multiple pieces at once while you are in the creative zone.</li>
+    <li><strong>The Idea Bank:</strong> The best content angles come from daily client interactions or problem-solving. Maintain a live list in a task management app so you never face a blank screen.</li>
+    <li><strong>Automation Tools:</strong> Use scheduling tools to automate publication. Having content queued weeks in advance takes the daily pressure off your shoulders.</li>
+</ul>
+
+<h2>4. The 80/20 Rule: Smart Repurposing</h2>
+<p>You do not need to reinvent the wheel. A brilliant content strategy relies on repurposing: one long-form blog post can be broken into three social media updates, a newsletter blast, and a short-form video script. Work smarter by atomizing your core insights.</p>
+
+<p><strong>Bottom Line:</strong> Online presence is a marathon, not a sprint. Choose a realistic pace you can sustain—even if it is just two high-quality updates a week—and stick to it. Over time, this consistency builds authority, compound visibility, and scalable business growth.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
