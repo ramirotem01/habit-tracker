@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אדריכלות של אהבה: איך הרגלים יומיים קטנים בונים זוגיות חזקה לאורך זמן</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "25 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "אדריכלות של אהבה: איך הרגלים יומיים קטנים בונים זוגיות חזקה לאורך זמן",
+                body: `<p>בתחילת הקשר, הכל נראה פשוט וטבעי. ההתרגשות בשיאה, הפרפרים בבטן עושים את שלהם, וההשקעה בבן או בת הזוג מגיעה ללא מאמץ. אך ככל שהשנים עוברות, שגרת החיים, העבודה, הילדים והמחויבויות היומיומיות מתחילים לתפוס את קדמת הבמה. זוגות רבים נופלים במלכודת ה'מובן מאליו' ומניחים שהקשר ישרוד לבד. האמת היא שזוגיות דומה לגינה - אם לא תשקו אותה בכל יום, היא תנבול. הדרך לשמור עליה משגשגת היא לא לחכות ליום האהבה או לחופשה שנתית, אלא להכניס הרגלים זוגיים קטנים ומובנים לתוך השגרה היומית.</p>
+
+<h2>1. חוק 'מיקרו-מחוות' (Micro-Moments)</h2>
+<p>אנחנו נוטים לחשוב שזוגיות דורשת הפקות ענק - מסעדות יוקרה, מתנות יקרות או טיסות לחוץ לארץ. במציאות, מה שבונה את תחושת הביטחון והקרבה אלו דווקא המחוות הקטנות והעקביות. חיבוק ארוך של 20 שניות לפני שיוצאים מהבית בבוקר, הודעת טקסט קצרה באמצע יום עבודה שאומרת 'אני חושב עליך', או הכנת כוס הקפה בבוקר בדיוק כמו שהשני אוהב. הפעולות האלו לוקחות פחות מדקה, אך הן מאותתות לצד השני: 'אתה נמצא בראש סדר העדיפויות שלי'.</p>
+
+<h2>2. שילוב הזוגיות בלוח המשימות היומי</h2>
+<p>בדיוק כפי שאנחנו מכניסים ליוזמן פגישות עבודה, אימוני כושר או תורים לרופא, אנחנו חייבים לפנות מקום רשמי לזוגיות. אל תשאירו את הזמן הזוגי ל'מה שיישאר בסוף היום', כי לרוב לא יישאר כלום מלבד עייפות מול המסך. הפכו את הזמן הזה למשימה קבועה:</p>
+<ul>
+    <li><strong>רוטינת רבע השעה היומית:</strong> הגדירו זמן קבוע בכל ערב (ללא מסכים וטלפונים) שמוקדש אך ורק לשיחה פתוחה. אל תדברו בשלב זה על לוגיסטיקה, חשבונות או הילדים, אלא שאלו שאלות פשוטות כמו 'איך עבר עליך היום?' או 'מה הדבר הכי טוב שקרה לך היום?'.</li>
+    <li><strong>משימת הדייט השבועי (Date Night):</strong> קבעו יום קבוע בשבוע שהוא קודש לקשר שלכם. זה יכול להיות יציאה מהבית או ערב ביתי מושקע אחרי שהילדים נרדמו. התייחסו לפגישה הזו כאל פגישת עבודה עם המנכ'ל של החיים שלכם - לא מזיזים ולא מבטלים אותה אלא במקרי חירום קיצוניים.</li>
+</ul>
+
+<h2>3. ניהול תהליך תקשורת נכון ומניעת משברים</h2>
+<p>חלק בלתי נפרד מהרגלים זוגיים בריאים הוא ניהול נכון של חילוקי דעות. תהליך תקשורת נכון מבוסס על הרגל של 'טיפול שוטף' במקום פיצוצים תקופתיים. אם משהו מפריע לכם, אל תסחבו אותו שבועות בבטן עד שהוא יתפרץ בצורה מכוערת. צרו הרגל לדבר על דברים שמציקים בצורה רגועה, תוך שימוש בשפת ה-'אני' (למשל: 'אני מרגיש עמוס לאחרונה ואשמח לעזרה') במקום בשפת האשמה ('אתה אף פעם לא עוזר').</p>
+
+<h2>4. הרגל הכרת התודה הזוגי</h2>
+<p>קל מאוד לראות את מה שבן הזוג לא עושה טוב, ולשכוח את כל מה שהוא כן עושה. כדי לשנות את הדינמיקה המנטלית הזו, אמצו הרגל יומי או שבועי של הבעת הערכה אקטיבית. אמרו תודה בקול רם על הדברים המובנים מאליהם - על זה שהיא שטפה כלים, על זה שהוא לקח את הילדים לחוג, או על זה שהיא הקשיבה לכם כשהייתם לחוצים. כשאדם מרגיש שרואים ומעריכים את המאמץ שלו, יש לו מוטיבציה גבוהה פי כמה להמשיך ולהשקיע בקשר.</p>
+
+<p><strong>השורה התחתונה:</strong> אהבה היא לא רק רגש, היא פעולה. זוגיות מאושרת לא קורית במקרה, היא נבנית צעד אחר צעד, הרגל אחר הרגל. בחרו עוד היום הרגל קטן אחד - הודעה, חיבוק או שיחה קצרה - והתמידו בו. השינוי באנרגיה של הבית לא יאחר לבוא.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 25, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "The Architecture of Love: How Small Daily Habits Build a Lasting Relationship",
+                body: `<p>At the beginning of a relationship, everything feels effortless. The excitement is high, and investing in your partner comes naturally. However, as years pass, daily routines, work, and responsibilities take over. Many couples fall into the trap of taking each other for granted. The truth is that a relationship is like a garden—without daily watering, it withers. The key to keeping it alive is introducing small, structured relationship habits into your daily schedule.</p>
+
+<h2>1. The Law of Micro-Moments</h2>
+<p>We often think relationships require grand gestures—expensive dinners or lavish vacations. In reality, emotional security is built on small, consistent actions. A 20-second hug before leaving in the morning, a quick text saying 'thinking of you', or making their coffee exactly how they like it. These micro-habits take less than a minute but signal to your partner: 'You are my priority'.</p>
+
+<h2>2. Integrating Your Relationship into Your Task List</h2>
+<p>Just as we schedule business meetings and workouts, we must intentionally block time for our relationship. Do not leave couple time for 'whatever energy is left at the end of the day'. Turn connection into a structured routine:</p>
+<ul>
+    <li><strong>The Daily 15-Minute Routine:</strong> Set a fixed time each evening (completely screen-free) dedicated to open conversation. Avoid logistics or budget talks; instead, ask simple questions like 'How was your day?' or 'What made you smile today?'.</li>
+    <li><strong>The Weekly Date Night Task:</strong> Dedicate a specific night each week to your bond. Whether leaving the house or setting up a cozy evening at home, treat this commitment with high priority. Do not cancel or postpone it for trivial reasons.</li>
+</ul>
+
+<h2>3. Maintaining a Healthy Communication Process</h2>
+<p>A crucial part of relationship habits is how you handle disagreements. A proper process relies on continuous maintenance rather than periodic explosions. If something bothers you, do not suppress it for weeks until it boils over. Create a habit of discussing issues calmly, using 'I' statements (e.g., 'I feel overwhelmed and could use some help') instead of placing blame.</p>
+
+<h2>4. The Habit of Active Appreciation</h2>
+<p>It is easy to focus on what your partner forgets to do, while ignoring what they execute perfectly. To shift this mental bias, practice active gratitude. Say thank you out loud for mundane tasks—taking out the trash, picking up the kids, or listening after a stressful day. When a person feels seen and valued, their motivation to invest in the relationship doubles.</p>
+
+<p><strong>Bottom Line:</strong> Love is a verb. A stellar relationship does not happen by accident; it is built brick by brick, habit by habit. Choose one micro-habit today and stay consistent. The shift in your home environment will follow naturally.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
