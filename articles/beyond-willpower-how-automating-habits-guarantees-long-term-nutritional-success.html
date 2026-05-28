@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מעבר לכוח הרצון: איך בניית הרגלים אוטומטיים מבטיחה שמירה על תזונה בריאה ללא מאמץ</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "28 במאי 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "מעבר לכוח הרצון: איך בניית הרגלים אוטומטיים מבטיחה שמירה על תזונה בריאה ללא מאמץ",
+                body: `<p>כשאנחנו מחליטים לעשות שינוי תזונתי, הצעד הראשון של רובנו הוא לחפש את הדיאטה הטרנדית הבאה. אנחנו מגייסים את כל כוח הרצון שלנו, מרוקנים את המקרר, ומתחילים במשטר קשוח. אבל אחרי שבועיים או חודש, כשהעייפות מצטברת והסטרס של החיים נכנס לתמונה, כוח הרצון נגמר ואנחנו חוזרים בדיוק לנקודת ההתחלה. המדע מוכיח שוב ושוב: כוח רצון הוא משאב מתכלה. כדי לשמור על תזונה נכונה לאורך זמן, אנחנו לא צריכים יותר מוטיבציה - אנחנו צריכים מערכת הרגלים חכמה שתהפוך את הבחירות הבריאות לאוטומטיות.</p>
+
+<h2>1. למה דיאטות נכשלות והרגלים מנצחים?</h2>
+<p>דיאטה היא פרויקט זמני עם תאריך התחלה ותאריך סיום. היא דורשת מאיתנו קבלת החלטות אקטיבית ומתישה בכל ארוחה: 'מה מותר לי לאכול?', 'כמה קלוריות יש בזה?'. המוח שלנו שונא לבזבז אנרגיה על קבלת החלטות, ולכן הוא תמיד ישאף לחזור לרוטינות המוכרות שלו. הרגל, לעומת זאת, הוא פעולה שמבוצעת ללא מחשבה מודעת. כשהתזונה שלכם נשענת על הרגלים מושרשים, אתם לא צריכים להילחם בעצמכם מול המקרר - הבחירה המאוזנת הופכת לפעולה הכי קלה וטבעית עבורכם.</p>
+
+<h2>2. אדריכלות סביבתית: עצבו את המטבח להצלחה</h2>
+<p>אחד החוקים המרכזיים בבניית הרגלים הוא להפוך את ההרגל הטוב לנגיש וקל, ואת ההרגל הרע לקשה ומסורבל. המוח שלנו תמיד יבחר במזון שהכי קל להגיע אליו בעין וביד. לכן, שינוי תזונתי מתחיל בעיצוב הסביבה שלכם:</p>
+<ul>
+    <li><strong>חוק הנגישות:</strong> אל תשאירו חטיפים או עוגיות על השיש במטבח. שימו שם קערת פירות או ירקות שטופים. אם הדבר הראשון שאתם רואים כשאתם נכנסים למטבח הוא תפוח, הסיכוי שתאכלו אותו עולה במאות אחוזים.</li>
+    <li><strong>מחוץ לטווח הראייה:</strong> אם אתם מחזיקים מאכלים פחות בריאים בבית עבור שאר בני המשפחה, אחסנו אותם בארון גבוה, בתוך קופסה אטומה שאינה שקופה. ככל שיידרש מכם מאמץ פיזי גדול יותר כדי להגיע אל החטיף, כך תתנו למוח שלכם עוד כמה שניות קריטיות לעצור ולחשוב.</li>
+</ul>
+
+<h2>3. תהליך אסטרגטי: פירוק משימות התזונה בלוז</h2>
+<p>כדי שהתזונה הנכונה תתמיד שבוע אחרי שבוע, היא חייבת לעבור תהליך של ניהול משימות קבוע. בדיוק כמו בעסק, אי אפשר להשאיר את האוכל שלכם ליד המקרה. שלבו את המשימות הבאות בלוח הזמנים:</p>
+<ul>
+    <li><strong>הרגל הכנת המזון מראש (Meal Prep):</strong> הגדרו זמן קבוע ביומן (למשל, בימי ראשון ורביעי) שבו אתם מבשלים דגנים מלאים, חותכים ירקות ומכינים חלבונים לכמה ימים קדימה. כשיש לכם קופסאות מוכנות במקרר, המרחק ביניכם לבין ארוחה בריאה בשעה שמונה בערב, כשלחץ העבודה נגמר, הוא בדיוק שתי דקות של חימום.</li>
+    <li><strong>עוגני אכילה קבועים:</strong> חברו את האכילה הבריאה להרגלים קיימים. למשל: 'מיד כשאני מסיים את פגישת הבוקר הראשונה, אני שותה כוס מים גדולה ואוכל חופן אגוזים'. החיבור להרגל קיים (פגישה) עוזר למוח לזכור את הפעולה החדשה.</li>
+</ul>
+
+<h2>4. מנגנון משוב ואופטימיזציה ללא שיפוטיות</h2>
+<p>חלק בלתי נפרד משמירה על תהליך נכון הוא מעקב ואנליזה. נהלו יומן אכילה פשוט באפליקציה או במחברת, לא במטרה לספור כל קלוריה באובססיביות, אלא כדי לייצר מודעות. בסוף השבוע, עברו על הנתונים ונתחו אותם בצורה קרה: 'באילו ימים אכלתי פחות מסודר?', 'האם כשאני ישן פחות מ-7 שעות, רמת הדחף שלי למתוק עולה?'. המידע הזה יאפשר לכם לעשות אופטימיזציה ולשנות את האסטרטגיה לשבוע הבא, מבלי להלקות את עצמכם מנטלית.</p>
+
+<p><strong>השורה התחתונה:</strong> תזונה נכונה היא לא תוצאה של סבל, הימנעות מוחלטת או מלחמה יומיומית. היא התוצאה של מערכת הרגלים קטנים, עקביים ומבוקרים שנבנים לאורך זמן. הפסיקו לחפש קיצורי דרך משוגעים, והתחילו להשקיע בבניית השגרה שלכם. כשההרגלים נכונים, הגוף שלכם יגיע לאיזון שלו מעצמו.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "May 28, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Beyond Willpower: How Automating Habits Guarantees Long-Term Nutritional Success",
+                body: `<p>When deciding to make a nutritional change, most people chase the next trending diet. We gather all our willpower, empty the pantry, and begin a strict regime. But after a couple of weeks, when exhaustion builds and daily stress hits, willpower depletes and we slide back to square one. Science proves that willpower is a finite resource. To maintain proper nutrition long-term, you don't need more motivation—you need a system of habits that makes healthy choices automated.</p>
+
+<h2>1. Why Diets Fail and Habits Win</h2>
+<p>A diet is a temporary project with a start and an end date. It forces tiring, active decision-making at every single meal: 'Am I allowed to eat this?', 'How many calories is that?'. The human brain hates wasting energy on constant choices, so it naturally pulls back to familiar routines. A habit, however, is an action executed without conscious thought. When nutrition is anchored in habits, the balanced choice becomes the easiest path.</p>
+
+<h2>2. Environmental Architecture: Design Your Kitchen for Success</h2>
+<p>A core rule of habit formation is making good habits frictionless and bad habits highly inconvenient. The brain defaults to the food that is visually and physically closest. Therefore, structural change starts with organizing your surroundings:</p>
+<ul>
+    <li><strong>The Visibility Rule:</strong> Remove snacks and sweets from your kitchen counters. Replace them with a bowl of fresh fruit or washed vegetables. If a healthy option is the first thing you see, the probability of choosing it surges.</li>
+    <li><strong>Out of Sight, Out of Mind:</strong> If you keep processed foods at home for other family members, store them on a high shelf inside an opaque container. Increasing the physical steps required to reach junk food gives your brain time to intercept the impulse.</li>
+</ul>
+
+<h2>3. Strategic Process: Time-Blocking Your Nutrition Tasks</h2>
+<p>For healthy eating to persist week after week, it must become a scheduled operational task on your calendar. You cannot leave your meals to random luck. Integrate these habits into your routine:</p>
+<ul>
+    <li><strong>The Meal Prep Routine:</strong> Set a recurring block in your calendar to cook whole grains, chop vegetables, and prepare proteins for the days ahead. Having pre-made options in the fridge guarantees that your distance from a wholesome dinner after a late workday is just two minutes of reheating.</li>
+    <li><strong>Habit Stacking Anchors:</strong> Tie your nutritional goals to existing anchors. For example: 'Right after I finish my first morning meeting, I will drink a large glass of water and eat a handful of walnuts'.</li>
+</ul>
+
+<h2>4. Feedback Loops and Judgment-Free Optimization</h2>
+<p>An essential part of maintaining a proper framework is tracking and data analysis. Keep a simple food log in an app, not to count calories obsessively, but to generate raw awareness. At the end of the week, analyze the metrics objectively: 'Which days felt less structured?', 'Does my sugar craving spike when I sleep less than 7 hours?'. This feedback lets you optimize your strategy without emotional guilt.</p>
+
+<p><strong>Bottom Line:</strong> Proper nutrition is not the result of suffering, total restriction, or daily warfare. It is the compound outcome of small, consistent, and analytical habits built over time. Stop looking for frantic shortcuts and invest in your infrastructure. When the systems are right, your body balances itself naturally.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
