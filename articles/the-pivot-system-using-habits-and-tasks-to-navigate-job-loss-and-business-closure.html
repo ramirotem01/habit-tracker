@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ארכיטקטורת מעבר: איך לנהל משימות והרגלים ברגע של פיטורים, התפטרות או סגירת עסק</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "21 ביוני 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "ארכיטקטורת מעבר: איך לנהל משימות והרגלים ברגע של פיטורים, התפטרות או סגירת עסק",
+                body: `<p>פיטורים ממקום עבודה, החלטה אישית על התפטרות, או סגירה של עסק שלא הצליח, הם מהאירועים המטלטלים ביותר בחיים הבוגרים. מעבר לפגיעה הכלכלית הפוטנציאלית, האירועים האלו מייצרים ואקום מיידי ומסוכן: המבנה החיצוני שניהל את החיים שלכם - השעה שבה קמים, המשרד שאליו נוסעים, והמשימות הקבועות - נעלם ביום אחד. בלי המבנה הזה, קל מאוד לצלוח לתוך מערבולת מנטלית של דחיינות, האשמה עצמית, חוסר מעש או לחלופין, עשייה היסטרית ומפוזרת ללא כיוון. שגרה מבוססת הרגלים ומשימות בתקופה זו אינה כלי לייצור פרודוקטיביות קפיטליסטית, אלא חבל הצלה פסיכולוגי שתפקידו להחזיר לכם את תחושת השליטה (Internal Locus of Control) ולבנות את התשתית לפרק הבא שלכם.</p>
+
+<h2>1. חוק ההפרדה המנטלית: ריקון המוח למערכת חיצונית</h2>
+<p>ברגע שחווים משבר מקצועי, המוח מוצף במשימות דחופות מסוגים שונים לחלוטין: עניינים משפטיים, חתימה על אבטלה, סגירת חשבונות מול ספקים, שינוי פרופיל הלינקדאין וחיפושי עבודה. הניסיון לנהל את כל רעשי הרקע האלו בראש מייצר חרדה קבועה ומרוקן את האנרגיה. הצעד הראשון הוא להקים מערכת ניהול משימות קרה וחיצונית. חלקו את רשימת המשימות שלכם לשלושה ערוצים נפרדים לחלוטין, ואל תערבבו ביניהם בתוך היום:</p>
+<ul>
+    <li><strong>ערוץ סגירה וביורוקרטיה:</strong> טפסים, פיצויים, רואי חשבון, מכתבי סיום העסקה. אלו משימות קרות וטכניות שיש לבצען מהר ככל הניתן כדי לנתק קשר רגשי מהעבר.</li>
+    <li><strong>ערוץ תשתית העתיד:</strong> עדכון קורות חיים, שדרוג קוד באתר האישי, יצירת קשר עם קולגות, או בניית תוכנית לעסק החדש.</li>
+    <li><strong>ערוץ שיקום ואנרגיה:</strong> אימונים, זמן משפחתי יזום, או קריאת חומרים מקצועיים שיחזירו לכם את הביטחון ביכולות שלכם.</li>
+</ul>
+
+<h2>2. בניית 'לוז שלד' חסין דכדוך</h2>
+<p>הסכנה הגדולה ביותר בזמן אבטלה או סגירת עסק היא איבוד השעון הביולוגי והתמסמסות הימים. שגרת המעבר שלכם חייבת לכלול 'לוז שלד' קשוח אך מכיל. קבעו חוק ברזל: שעת היקיצה שלכם לא משתנה ביותר משעה משגרה הרגילה שלכם. הגדירו 'בלוק עבודה' קבוע וממוקד של 3 עד 4 שעות בלבד ביום (למשל, בין תשע לאחת בצהריים) המוקדש כולו לחיפוש עבודה או לבניית המיזם הבא. ברגע שהשעה אחת מגיעה, המשימה היומית שלכם הסתיימה. התיחום הזה קריטי - הוא מונע מצב שבו אתם מרגישים אשמים במשך 24 שעות ביממה על כך שאתם לא עושים מספיק, ומאפשר לכם לנוח באמת בשאר היום.</p>
+
+<h2>3. החזרת השליטה דרך מיקרו-הרגלים פיזיים</h2>
+<p>פיטורים או כישלון עסקי פוגעים ישירות בערך העצמי. המוח שלכם מאותת לכם שאיבדתם השפעה על המציאות. כדי להילחם בזה, עליכם לייצר 'ניצחונות קטנים' (Small Wins) דרך מיקרו-הרגלים פיזיולוגיים פשוטים שאינם תלויים באף מעסיק או לקוח חיצוני:</p>
+<ul>
+    <li>סידור המיטה מיד עם הקימה - פעולה ראשונה שמייצרת סדר בעיניים.</li>
+    <li>יציאה מהבית להליכה של 20 דקות בכל בוקר בשעה קבועה - חשיפה לאור שמש שמייצבת את המוליכים העצביים במוח (דופמין וסרוטונין).</li>
+    <li>ביצוע אימון כושר קצר - שימוש באנדורפינים כדי לפרק את הסטרס המצטבר בגוף באופן פיזי.</li>
+</ul>
+<p>הפעולות האלו שומרות על הגוף שלכם חיוני ומוכנות לראיונות עבודה או פגישות עסקיות חדשות, ומונעות את תסמונת השקיעה לתוך הספה.</p>
+
+<h2>4. אנליזה קרה של המצב והפקת לקחים (Post-Mortem)</h2>
+<p>לאחר שהסערה הרגשית הראשונית שככה, שבו מול הנתונים בצורה קרה ואנליטית, בדיוק כפי שהייתם מנתחים פרויקט של חברה אחרת. אם מדובר בעסק שנסגר - מה היו המדדים הקשים? האם אחוזי ההמרה היו נמוכים? האם עלות רכישת לקוח (CAC) הייתה גבוהה מדי? האם קוד המוצר היה מורכב מדי לתחזוקה? אם מדובר בפיטורים - אילו פערים מקצועיים או פוליטיים דרשו התייחסות אחרת? הפיכת הכישלון או המשבר לדף נתונים (Data Sheet) מנטרלת את הבושה והופכת את האירוע הקשה מ'טרגדיה אישית' ל'שיעור עסקי יקר' שימנע מכם לחזור על אותן טעויות בפרק הבא.</p>
+
+<p><strong>השורה התחתונה:</strong> פיטורים או סגירת עסק הם רק נקודה על ציר הזמן המקצועי שלכם, הם לא מגדירים את מי שאתם. כשאתם מסרבים לתת לימים שלכם להתפזר, בונים מערכת משימות חיצונית שמנהלת את המשבר, ושומרים על עוגנים של הרגלי בריאות ותנועה - אתם חוצים את הגשר הזה בצורה יציבה וחזקה יותר. הפרק הבא שלכם לא ייבנה מתוך מזל, הוא ייבנה מתוך המערכת שבניתם כדי להרים את עצמכם מהקרקע.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "June 21, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "The Pivot System: Using Habits and Tasks to Navigate Job Loss and Business Closure",
+                body: `<p>Being laid off from a position, executing a personal resignation, or shuttering an enterprise that failed to achieve product-market fit are among the most volatile psychological events in adult life. Beyond immediate financial friction, these disruptions generate a dangerous structural vacuum: the external architecture that monitored your existence—your commute schedules, workplace settings, and daily task cadences—evaporates in a single day. Absent this framework, it is exceptionally easy to drift into a destructive loop of chronic procrastination, self-blame, or scattered, low-leverage panic actions. Restructuring your transition phase through consistent habits and objective tasks is not a strategy for performance optimization; it is a critical psychological countermeasure designed to restore your internal locus of control and build the runway for your next iteration.</p>
+
+<h2>1. The Boundary Law: Offloading Friction to an External Matrix</h2>
+<p>Navigating a professional crisis forces the brain to process highly disparate, high-friction objectives simultaneously: legal severances, state unemployment registrations, vendor accounts management, and updating optimization vectors on professional networks. Juggling these inputs internally maintains high cortisol profiles and burns creative energy. The baseline step is initializing a structured, external task matrix. Segment your objectives into three distinct tracks, and isolate them completely throughout your working hours:</p>
+<ul>
+    <li><strong>Termination & Administration Track:</strong> Processing severance forms, operational account balancing, and legal exit audits. Treat these as cold, mechanical processes to be executed rapidly to terminate past emotional dependencies.</li>
+    <li><strong>Future Infrastructure Track:</strong> Re-architecting resume layouts, refining source code parameters on personal portfolios, reaching out to legacy networks, or drafting business models for your next venture.</li>
+    <li><strong>System Recovery & Energy Track:</strong> Physical exercise routines, deliberate family integration windows, or absorbing domain literature to re-establish confidence in your underlying skill sets.</li>
+</ul>
+
+<h2>2. Architecture of a Crisis-Responsive 'Skeleton Schedule'</h2>
+<p>The primary hazard during unemployment or after closing an enterprise is the dissolution of your biological clock and daily focus structures. Your transitional routine must enforce a rigid yet compassionate 'skeleton schedule'. Establish an unmovable baseline: your wake-up hour must not deviate by more than sixty minutes from your baseline professional routine. Block a fixed, uninterrupted deep-work window of exactly 3 to 4 hours daily (e.g., 09:00 to 13:00) dedicated exclusively to strategic career re-positioning or next-venture design. Once that block concludes, your operational obligations for the day are dead. This boundary is vital—it prevents chronic, low-grade guilt from infiltrating your resting hours, allowing genuine neuro-recovery to occur.</p>
+
+<h2>3. Restoring Self-Efficacy via Physiological Micro-Habits</h2>
+<p>A career termination or commercial failure strikes directly at an individual's sense of self-efficacy, signaling to the subconscious that environmental control has been compromised. To counteract this perception, you must secure predictable 'micro-victories' through baseline physiological habits that remain entirely decoupled from external validation, corporate entities, or clients:</p>
+<ul>
+    <li>Structuring your immediate environmental workspace upon waking—establishing structural order within your vision field.</li>
+    <li>Executing a 20-minute outdoor walk at an identical hour daily—leveraging direct light exposure to stabilize neurological transmitters (dopamine and serotonin profiles).</li>
+    <li>Engaging in brief resistance or metabolic training—utilizing physical exertion to systematically process systemic mental stress.</li>
+</ul>
+<p>These protocols preserve your biological energy, ensuring you present peak performance profiles during upcoming high-stakes interviews or new venture pitches, while insulating your system from behavioral depression patterns.</p>
+
+<h2>4. Cold Analytical Evaluation and Post-Mortem Audits</h2>
+<p>Once the initial emotional noise subsides, evaluate the operational parameters objectively, analyzing the metrics as if you were an external consultant auditing a separate firm. If reviewing a closed enterprise, parse the hard telemetry: Was customer acquisition cost (CAC) scaling disproportionately against lifetime value (LTV)? Were conversion funnels experiencing systemic friction? Was the underlying application architecture scaling poorly? If processing a layoff, analyze what political or domain variables required alternative management. Transforming a failure into an empirical data sheet neutralizes shame, shifting the experience from a personal narrative into a highly valuable asset that prevents mistake replication in your next cycle.</p>
+
+<p><strong>Bottom Line:</strong> A corporate termination or a dissolved venture is merely a single data point across your macro career trajectory; it lacks the capacity to define your professional authority. By refusing to allow your daily structure to collapse, establishing clear external systems to process the crisis, and protecting your baseline biological energy anchors, you cross this transition bridge with enhanced structural strength. Your upcoming chapter will not rely on chance; it will be engineered by the exact habits you deploy to navigate the ground state.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
