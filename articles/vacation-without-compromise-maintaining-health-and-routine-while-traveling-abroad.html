@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חופשה בלי לאבד את הצפון: איך לשמור על שגרת חיים מאוזנת ובריאה גם כשמטיילים בחו"ל</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "1 באוגוסט 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "חופשה בלי לאבד את הצפון: איך לשמור על שגרת חיים מאוזנת ובריאה גם כשמטיילים בחו"ל",
+                body: `<p>חופשה בחו"ל היא אחד האירועים המהנים ביותר בשנה, אך עבור אנשים רבים היא מגיעה עם מחיר סמוי: תחושת אשמה, עייפות כרונית, וחזרה לארץ עם תחושה ש'השגרה התפרקה לחלוטין'. הנטייה הטבעית היא ליפול למלכודת ה'הכל או כלום' – לחשוב שחופשה משמעותה איבוד מוחלט של כל הבסיס התזונתי, הגופני והמנטלי שבנינו בעמל רב. האמת היא שחופשה אינה דורשת הרס עצמי. בעזרת תכנון חכם וגימיק ניהולי גמיש, אפשר ליהנות מכל רגע בטיול, לטעום מאכלים מקומיים, ולשמור על שגרת חיים טובה, בריאה ומאוזנת.</p>
+
+<h2>1. נפצים את מיתוס ה'הכל או כלום'</h2>
+<p>הטעות המרכזית שאנשים עושים היא להאמין שאם הם לא יכולים לבצע את שגרת היום-יום המלאה שלהם בחו"ל (כמו אימון של שעה בחדר כושר או קימה קבועה ב-06:00), עדיף לוותר לחלוטין. במקום גישת הקיצון הזו, אמצו את <strong>גישת המינימום האפקטיבי (Minimum Effective Dose)</strong>. אם אינכם יכולים לרוץ 10 קילומטרים, בצעו הליכה מהירה של 20 דקות בבוקר. אם אין זמן לאימון מלא, בצעו 10 כפיפות בטן ומתיחות בחדר המלון. העיקר הוא לשמור על רציפות תודעתית ולא על נפח מלא.</p>
+
+<h2>2. שגרת בוקר מינימליסטית (Micro-Routine)</h2>
+<p>התחילו את הבוקר שלכם בחו"ל עם עוגן קטן וקבוע ששומר על האנרגיה שלכם. זה יכול להיות שתיית שתי כוסות מים מיד עם היקיצה, 5 דקות של מתיחות קלות, או כתיבת מספר משפטים ביומן אישי בזמן שתיית קפה שקט. עוגן בוקר קטן משדר למוח שאתם עדיין בשליטה, ומעניק אנרגיה נקייה להמשך היום.</p>
+
+<h2>3. ניהול תזונה חכם לפי חוק ה-80/20</h2>
+<p>חופשה היא הזמן ליהנות מהמטבח המקומי, מקינוחים מיוחדים וממסעדות נפלאות – ואין שום סיבה להיכנס למשטר דיאטה נוקשה. השתמשו בעקרון ה-80/20: שמרו על 80% מהתזונה שלכם נקייה ומאוזנת (למשל, ארוחת בוקר עשירה בחלבון וירקות במלון, או בחירת מנות בריאות במהלך היום), ותנו לעצמכם 20% של הנאה חסרת מעצורים בארוחת הערב או בקינוח המקומי. כך תיהנו מהאוכל בלי לחוש כבדות מיותרת.</p>
+
+<h2>4. ניצול מרבי של תנועה אורגנית (Natural Movement)</h2>
+<p>הדרך הטובה ביותר לחוות עיר חדשה היא ברגליים. במקום להסתמך באופן עיוור על תחבורה ציבורית או מוניות לכל מרחק קצר, הפכו את ההליכה לכלי מרכזי בטיול. הליכה של 10,000 עד 15,000 צעדים ביום תוך כדי סיור ברחובות, פארקים ואתרים היסטוריים שומרת על כושר גופני מצוין, ממריצה את מחזור הדם ומאפשרת לכם לגלות מקומות נסתרים ששום רכב לא יגיע אליהם.</p>
+
+<h2>5. הקצאת זמנים לניתוק טכנולוגי ושקט מנטלי</h2>
+<p>חופשה נועדה גם לטעינת המצברים המנטליים. למרות הצורך להישאר מחוברים או לצלם את החוויות, הגדירו מראש חלונות זמן מוגדרים לטיפול במיילים או גלישה ברשתות החברתיות (למשל, 15 דקות בערב במלון), והשאירו את הטלפון בתיק בזמן סיורים או ארוחות. הנוכחות ברגע המדויק שווה יותר מכל לייק.</p>
+
+<p><strong>השורה התחתונה:</strong> שגרת חיים טובה בחו"ל אינה כלא נוקשה, אלא מצפן גמיש. כשאתם משלבים בין תנועה אורגנית, תזונה מאוזנת ועוגני בוקר קטנים, אתם חוזרים מהחופשה לא רק עם זכרונות נפלאים ותמונות מדהימות, אלא גם עם אנרגיה גבוהה, גוף בריא ומומנטום שלא נפגע.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "August 1, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Vacation Without Compromise: Maintaining Health and Routine While Traveling Abroad",
+                body: `<p>Vacations abroad are among the most anticipated moments of the year, yet they often carry a hidden psychological toll: guilt, chronic fatigue, and returning home with the unsettling feeling that your hard-earned routine completely collapsed. The default human reaction is the all-or-nothing trap—assuming a trip requires total abandonment of baseline nutritional, physical, and mental discipline. The truth is that traveling does not require self-sabotage. By implementing a flexible lifestyle architecture, you can explore the world, indulge in local culture, and maintain an energetic, balanced routine.</p>
+
+<h2>1. Dismantling the All-or-Nothing Fallacy</h2>
+<p>The core error travelers make is assuming that if they cannot execute their full daily routine (such as a 1-hour gym session or a 06:00 wake-up call), they should abandon discipline entirely. Instead, adopt the <strong>Minimum Effective Dose principle</strong>. If you cannot run 10 kilometers, execute a brisk 20-minute morning walk. If there is no time for a full workout, perform 10 bodyweight squats and core stretches in your hotel room. Consistency of identity trumps volume.</p>
+
+<h2>2. Minimalist Morning Anchors (Micro-Routines)</h2>
+<p>Initialize your travel mornings with a small, unmovable anchor that preserves your physiological baseline. Drink two full glasses of water immediately upon waking, execute 5 minutes of light mobility work, or jot down a few notes in a journal over quiet coffee. A micro-routine signals cognitive continuity and sets a high-energy baseline for the day.</p>
+
+<h2>3. Smart Nutrition via the 80/20 Rule</h2>
+<p>Vacation is the premier time to experience local culinary artistry, unique pastries, and fine dining—there is zero reason to impose restrictive dieting. Apply the 80/20 framework: keep 80% of your baseline clean and balanced (e.g., a high-protein, veggie-rich breakfast at the hotel or mindful midday choices), and allocate 20% for uncompromised culinary indulgence during dinner or local treats. Enjoy the food without the heavy physical toll or guilt.</p>
+
+<h2>4. Maximizing Organic Movement</h2>
+<p>The finest way to explore a new city is on foot. Rather than relying blindly on cabs or public transit for every micro-commute, prioritize walking. Accumulating 10,000 to 15,000 steps daily while exploring neighborhoods, parks, and historic architecture maintains exceptional physical conditioning, boosts circulation, and reveals hidden local gems inaccessible via vehicles.</p>
+
+<h2>5. Allocating Boundaries for Digital Detox</h2>
+<p>Vacations are designed to recharge cognitive bandwidth. Despite the operational urge to stay hyper-connected or broadcast every moment, hardcode strict boundaries for checking emails or social media (e.g., a single 15-minute window in the evening), and store your device away during meals and explorations. True presence yields far superior fulfillment.</p>
+
+<p><strong>Bottom Line:</strong> Maintaining a healthy lifestyle abroad is not about imposing rigid imprisonment; it is about carrying a flexible compass. By blending organic movement, balanced nutrition, and micro-morning anchors, you return from your travels not only with unforgettable memories, but with pristine physical energy, mental clarity, and an unbroken execution momentum.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
