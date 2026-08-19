@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soft Landing Deferral Task: המדריך המלא לניהול ודחיית משימות חכמה</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "19 באוגוסט 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "Soft Landing Deferral Task: המדריך המלא לניהול ודחיית משימות חכמה",
+                body: `<p>מערכות ניהול משימות מודרניות מקלות עלינו בלחיצת כפתור אחת: כשמשימה אינה מבוצעת בזמן, פשוט מזיזים אותה ביומן (Drag & Drop) מיום ליום. אלא שהקלות הזו טומנת בחובה מלכודת קשה המכונה <strong>'הלם הדחייה' (Deferral Shock)</strong>. כאשר משימה מורכבת מוזזת כבלוק קשיח ולא מעובד, היא נוחתת במועד החדש בצורה גסה – ומייצרת אצל המשתמש שוב ושוב חרדת ביצוע, דחיינות כרונית ותחושת אובדן שליטה. כפתרון הנדסי לאתגר זה נולדה מתודולוגיית <strong>Soft Landing Deferral Task (משימת דחייה במנגנון נחיתה רכה)</strong>.</p>
+
+<p>העיקרון המוביל במדריך זה הוא שדחיית משימה אינה כישלון – אלא תהליך אקטיבי של <strong>'ארגון מחדש' (Micro-Refactoring)</strong>. במקום להעביר את המשימה כמות שהיא (Hard Deferral), יוצרים עבורה תשתית המבטיחה כניסה חלקה ומהירה לפעולה במועד העתידי.</p>
+
+<h2>1. שלושת מנועי הליבה של הנחיתה הרכה</h2>
+
+<p>כדי שמשימה דחויה תנחת ביומן העתידי בצורה רכה ואפקטיבית, עליה לעבור תהליך קצרצר של עיבוד הכולל שלושה רכיבים:</p>
+
+<ul>
+    <li><strong>תמצית הקשר (Context Snapshot):</strong> תיעוד של 30 שניות בשדה ההערות של המשימה: 'איפה נעצרנו, מה החסם הנוכחי, ומה הפעולה המדויקת שצריך לבצע כעת'. רכיב זה מונע את אובדן הזיכרון ואת החיכוך המנטלי בחזרה למשימה.</li>
+    <li><strong>צעד פתיחה זעיר (Micro-Step Zero):</strong> ניסוח מחדש של כותרת המשימה במועד החדש לפעולה זעירה, ברורה וקלה במיוחד. במקום 'כתיבת מצגת משקיעים', שם המשימה במועד החדש יהיה 'פתיחת השקופית הראשונה וכתיבת כותרת'.</li>
+    <li><strong>התאמה לקיבולת (Capacity Alignment):</strong> שיבוץ המשימה ביום שבו עומס ה-Focus Hours נמוך מ-60%, כדי לוודא שיש מרווח נשימה אמיתי לביצוע.</li>
+</ul>
+
+<h2>2. השוואה אסטרטגית: דחייה קשיחה מול נחיתה רכה</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>פרמטר</th>
+            <th>דחייה קשיחה (Hard Deferral)</th>
+            <th>נחיתה רכה (Soft Landing Deferral)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>פעולת הדחייה</strong></td>
+            <td>שינוי תאריך בלבד (Drag & Drop)</td>
+            <td>עדכון הקשר + הגדרת צעד פתיחה קל</td>
+        </tr>
+        <tr>
+            <td><strong>חיכוך במפגש המחודש</strong></td>
+            <td>גבוה – יש להיזכר מחדש בכל הפרטים והחומרים</td>
+            <td>אפסי – נכנסים ישר לפעולה ממוקדת וברורה</td>
+        </tr>
+        <tr>
+            <td><strong>השפעה פסיכולוגית</strong></td>
+            <td>תחושת אשמה, עומס מנטלי ודחיינות כרונית</td>
+            <td>שליטה בתהליך, הפחתת לחץ ורציפות ביצועית</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>3. מדריך יישומי: 4 צעדים להטמעה במערכת ניהול המשימות</h2>
+
+<ol>
+    <li><strong>הזיהוי:</strong> ברגע שהבנתם שמשימה מורכבת לא תבוצע היום, עצרו. אל תזיזו אותה באופן אוטומטי לתאריך מחר.</li>
+    <li><strong>יצירת ה-Context Hook:</strong> רשמו בהערות המשימה 1-2 משפטים המפרטים את הסטטוס המדויק ואת הצעד הבא.</li>
+    <li><strong>שינוי הכותרת:</strong> עדכנו את כותרת המשימה כך שתשקף רק את 'צעד הנחיתה' הראשון והקל ביותר.</li>
+    <li><strong>שיבוץ במרווח פנוי:</strong> העבירו את המשימה ליום פחות עמוס ביומן, תוך וידוא שקיים חלון פוקוס זמין.</li>
+</ol>
+
+<p><strong>השורה התחתונה:</strong> דחיית משימות היא כלי ניהולי חיוני לוויסות עומסים. מעבר מדחייה קשיחה ואוטומטית לשימוש ב-Soft Landing Deferral Tasks הופך את מערכת ניהול המשימות שלכם ממקור של עומס ושחיקה למנוע עבודה זורם, מדויק ואפקטיבי.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "August 19, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Soft Landing Deferral Task: The Complete Guide to Frictionless Task Rescheduling",
+                body: `<p>Modern task management tools make task delay seamless with a single drag-and-drop action. However, this effortless interface conceals a systemic productivity trap known as <strong>'Deferral Shock.'</strong> When complex, unrefined tasks are repeatedly postponed as monolithic blocks, they land on future dates with high friction—triggering cognitive resistance, chronic procrastination, and operational churn. To address this issue, productivity systems rely on the <strong>Soft Landing Deferral Task</strong> protocol.</p>
+
+<p>The core methodology of this guide posits that task deferral is not operational failure—it is an active **micro-refactoring process**. Rather than postponing a task as-is (Hard Deferral), the operator creates a supportive structure to guarantee a smooth, frictionless start on the new target date.</p>
+
+<h2>1. The Three Core Mechanics of a Soft Landing</h2>
+
+<p>To ensure a postponed task lands softly on a future calendar date, it must undergo a brief refactoring process consisting of three elements:</p>
+
+<ul>
+    <li><strong>Context Snapshot:</strong> A 30-second investment to record precise task status in the notes field: 'Current progress, existing blockers, and the exact resume point.' This eliminates context-switching drag.</li>
+    <li><strong>Micro-Step Zero:</strong> Reframing the primary task title on the new date into an ultra-low-friction action. Instead of 'Draft Investor Presentation,' the landing task title becomes 'Open presentation draft and write title slide.'</li>
+    <li><strong>Capacity Alignment:</strong> Scheduling the task strictly onto a date where total focus bandwidth is below 60%, providing adequate execution buffer.</li>
+</ul>
+
+<h2>2. Comparative Framework: Hard Deferral vs. Soft Landing</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>Hard Deferral</th>
+            <th>Soft Landing Deferral</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Action Required</strong></td>
+            <td>Date shift only (Drag & Drop)</td>
+            <td>Context documentation + Micro-step definition</td>
+        </tr>
+        <tr>
+            <td><strong>Resume Friction</strong></td>
+            <td>High – requires reconstructing context from scratch</td>
+            <td>Near Zero – immediate entry via clear micro-action</td>
+        </tr>
+        <tr>
+            <td><strong>Psychological Impact</strong></td>
+            <td>Guilt, cognitive fatigue, chronic procrastination</td>
+            <td>Control, reduced friction, execution velocity</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>3. Step-by-Step Implementation Protocol</h2>
+
+<ol>
+    <li><strong>Identify the Pivot:</strong> The moment you realize a complex task cannot be completed today, pause instead of auto-shifting.</li>
+    <li><strong>Attach Context Hook:</strong> In the task notes, write a 1-2 sentence snapshot of progress and the next immediate action.</li>
+    <li><strong>Refactor Title:</strong> Rename the task title to reflect strictly the lowest-friction 'Micro-Step Zero.'</li>
+    <li><strong>Strategic Rescheduling:</strong> Shift the task to an uncrowded date with available focus capacity.</li>
+</ol>
+
+<p><strong>Bottom Line:</strong> Task deferral is an essential capacity management strategy. Transitioning from Hard Deferrals to Soft Landing Deferral Tasks converts your task architecture from a source of cognitive overload into a smooth, scalable execution pipeline.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
