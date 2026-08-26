@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Management מול Energy Management: למה ניהול הזמן שלך כבר לא מספיק</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "26 באוגוסט 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "Time Management מול Energy Management: למה ניהול הזמן שלך כבר לא מספיק",
+                body: `<p>אנשים מנהלים את היומן שלהם בדייקנות של שעון שוויצרי: משבצות צבעוניות, פגישות מתוזמנות היטב, ורשימות משימות שמשתרעות מבוקר עד ערב. על הנייר, הכל נראה מושלם. אלא בפועל, ב-14:00 בצהריים, מול משימה מורכבת שדורשת חשיבה אסטרטגית, המוח חסום. הזמן קיים ביומן – אך האנרגיה הנדרשת לביצוע פשוט איננה. זה המקום שבו תפיסת ניהול הזמן המסורתית (Time Management) קורסת.</p>
+
+<p>האמת הפשוטה של עולם העבודה המודרני היא זו: <strong>זמן הוא משאב מוגבל אך קבוע (24 שעות ביממה), בעוד שאנרגיה היא משאב משתנה ומתחדש</strong>. ניהול זמן מלמד אותנו איך לדחוק עוד משימות לתוך השעון; <strong>ניהול אנרגיה (Energy Management)</strong> מלמד אותנו איך להביא את התפוקה המנטלית המקסימלית למשימות החשובות ביותר.</p>
+
+<h2>1. ארבעת מנועי האנרגיה הניהולית</h2>
+
+<p>כדי לעבור לניהול אנרגיה אפקטיבי, יש להבין כי האנרגיה האנושית אינה מורכבת רק משינה או קפה. היא נשענת על ארבעה מנועים נפרדים:</p>
+
+<ul>
+    <li><strong>1. אנרגיה פיזית (Physical):</strong> שינה איכותית, תזונה מעוררת, תנועה ונשימה. בלעדיהם, היכולת המנטלית קורסת מהר מאוד.</li>
+    <li><strong>2. אנרגיה רגשית (Emotional):</strong> התחושה שאתם בשליטה ולא בחרדה. רגשות שליליים כמו תסכול או לחץ שואבים אנרגיה מנטלית במהירות עצומה.</li>
+    <li><strong>3. אנרגיה מנטלית (Mental / Cognitive):</strong> היכולת להתמקד, לבצע עבודה עמוקה (Deep Work) ולפתור בעיות סבוכות ללא הסחות דעת.</li>
+    <li><strong>4. אנרגיה רוחנית/ערכית (Spiritual):</strong> תחושת המשמעות והחיבור למטרה. כשיודעים 'למה' עושים משהו, קל יותר לגייס אנרגיה לביצועו.</li>
+</ul>
+
+<h2>2. השוואה: ניהול זמן מול ניהול אנרגיה</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>פרמטר</th>
+            <th>ניהול זמן מסורתי (Time Management)</th>
+            <th>ניהול אנרגיה מתקדם (Energy Management)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>משאב הליבה</strong></td>
+            <td>שעות ודקות ביומן</td>
+            <td>פוקוס, חיוניות ואיכות הריכוז המנטלי</td>
+        </tr>
+        <tr>
+            <td><strong>התפיסה התפעולית</strong></td>
+            <td>כמה משימות אפשר לוחץ לתוך השעון?</td>
+            <td>איזה סוג אנרגיה נדרש למשימה הזו כעת?</td>
+        </tr>
+        <tr>
+            <td><strong>התוצאה ארוכת הטווח</strong></td>
+            <td>סיכון מוגבר לשחיקה ועבודה באיכות בינונית</td>
+            <td>תוצר באיכות שיא, קצב עבודה יציב ואפס שחיקה</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>3. איך לעבור לניהול אנרגיה ב-3 צעדים מעשיים?</h2>
+
+<ol>
+    <li><strong>מיפוי חלונות שיא האנרגיה (Chronotype Mapping):</strong> מצאו מתי אתם בשיא הפוקוס המנטלי (למשל: בוקר מוקדם או אחה'צ). שריינו את החלונות הללו אך ורק למשימות הקשות והחשובות ביותר (Golden Tasks), והזיזו פגישות או דואר אלקטרוני לשעות השפל.</li>
+    <li><strong>הפסקות יזומות לפריקת עומס (Micro-Rest Intervals):</strong> המוח אינו מסוגל לשמור על פוקוס גבוה מעבר ל-90 דקות ברציפות. עבודה במקטעים מובנים (כמו שיטת פומודורו או ספרינטים של 60-90 דקות) בצירוף הפסקה נקייה ממסכים, מטעינה את האנרגיה המנטלית מחדש.</li>
+    <li><strong>התאמת המשימה למצב הפיזי (Energy-Task Matching):</strong> מרגישים ירידת מתח אחה'צ? אל תילחמו בעצמכם על משימה אסטרטגית. זה הזמן המדויק למשימות תפעוליות בעלות חשיבות נמוכה (Low-Cognitive Tasks), כמו סידור ניירת, מענה להודעות או ארגון לוח הזמנים.</li>
+</ol>
+
+<p><strong>השורה התחתונה:</strong> הפסיקו לנסות לסחוט עוד דקות מהיומן. התחילו לנהל את האנרגיה והפוקוס שלכם, ותראו איך האיכות והתפוקות שלכם מזנקות – בפחות זמן ובקלה רבה יותר.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "August 26, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Time Management vs. Energy Management: Why Optimizing Your Schedule Is No Longer Enough",
+                body: `<p>Professionals meticulously schedule their calendars like Swiss timepieces: color-coded blocks, tightly padded meetings, and task lists stretching from dawn until dusk. On paper, it looks flawless. Yet in reality, at 2:00 PM, when facing a complex strategic task, the brain hits a wall. The allocated time exists on the calendar, but the requisite cognitive bandwidth is entirely depleted. This is precisely where traditional Time Management fails.</p>
+
+<p>The core reality of the modern knowledge economy is simple: <strong>time is a fixed, finite resource (24 hours per day), whereas energy is a dynamic, renewable capacity</strong>. Time management focuses on squeezing more output into hours; <strong>Energy Management</strong> focuses on bringing peak cognitive capacity to high-leverage priorities.</p>
+
+<h2>1. The Four Fuel Tanks of Human Performance</h2>
+
+<p>To transition into systemic Energy Management, performance must be viewed through four distinct energy dimensions:</p>
+
+<ul>
+    <li><strong>1. Physical Energy:</strong> Sleep quality, metabolic nutrition, hydration, and movement. Without this foundation, cognitive performance rapidly deteriorates.</li>
+    <li><strong>2. Emotional Energy:</strong> The state of felt security and emotional control. Negative emotional loops such as anxiety or friction consume massive cognitive reserves.</li>
+    <li><strong>3. Mental/Cognitive Energy:</strong> The capacity for deep work, sustained attention, and complex problem-solving without distraction.</li>
+    <li><strong>4. Spiritual Energy:</strong> Alignment with core purpose and values. Understanding the overarching 'why' provides the drive to sustain high performance over time.</li>
+</ul>
+
+<h2>2. Comparative Framework: Time Management vs. Energy Management</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Dimension</th>
+            <th>Traditional Time Management</th>
+            <th>Advanced Energy Management</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Core Resource</strong></td>
+            <td>Hours and minutes allocated on a calendar</td>
+            <td>Cognitive bandwidth, focus, and vitality</td>
+        </tr>
+        <tr>
+            <td><strong>Operational Question</strong></td>
+            <td>How many tasks can fit into today's schedule?</td>
+            <td>What energy state does this specific task require?</td>
+        </tr>
+        <tr>
+            <td><strong>Long-Term Yield</strong></td>
+            <td>Elevated burnout risk and mediocre execution</td>
+            <td>Peak output quality, sustainable pace, zero exhaustion</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>3. Three Steps to Master Energy Management</h2>
+
+<ol>
+    <li><strong>Map Your Chronotype Peak Windows:</strong> Identify your peak cognitive hours (e.g., early morning vs. late afternoon). Reserve these high-bandwidth windows strictly for strategic priorities (Golden Tasks), routing low-value meetings or email triage to lower energy valleys.</li>
+    <li><strong>Implement Micro-Rest Recovery Cycles:</strong> The human brain cannot maintain peak focus beyond 60-90 consecutive minutes. Structuring work into deliberate sprints followed by screen-free recovery resets cognitive bandwidth.</li>
+    <li><strong>Practice Energy-Task Matching:</strong> Facing an afternoon slump? Stop forcing high-cognition problem solving. Shift immediately to low-cognitive operational tasks, such as file organization, routine communications, or administrative reviews.</li>
+</ol>
+
+<p><strong>Bottom Line:</strong> Stop trying to extract more minutes from your day. Start engineering your energy and mental focus, and watch your strategic output scale exponentially with far less friction.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
