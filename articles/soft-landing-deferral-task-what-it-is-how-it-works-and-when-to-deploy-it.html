@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soft Landing Deferral Task: מה זה, איך זה עובד ומתי כדאי להשתמש בו?</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "28 באוגוסט 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "Soft Landing Deferral Task: מה זה, איך זה עובד ומתי כדאי להשתמש בו?",
+                body: `<p>כל מי שמנהל שגרת עבודה מורכבת מכיר את הסיטואציה: סוף היום מתקרב, היומן עמוס, ומשימה כבדה וחשובה שנשארה פתוחה לא תגיע לסיומה היום. הפתרון האינסטנקטיבי של רוב האנשים הוא לבצע **Hard Deferral** – לגרור את המשימה כמות שהיא ביומן (Drag & Drop) ליום מחר או לשבוע הבא. אלא שבפועל, כשמגיע מועד הביצוע החדש, נתקלים בחרדת ביצוע: הזיכרון הטווח-קצר נעלם, הקשר העבודה (Context) אבד, והמשימה נדחית שוב ושוב.</p>
+
+<p>כדי לפתור את הכשל הזה נולדה מתודולוגיית <strong>Soft Landing Deferral Task (משימת דחייה במנגנון נחיתה רכה)</strong> – פרוטוקול ניהולי המהווה גשר בין דחיית המשימה לבין הקלת הכניסה אליה במועד החדש.</p>
+
+<h2>1. מה זה Soft Landing Deferral Task ואיך זה עובד?</h2>
+
+<p>Soft Landing Deferral Task הוא תהליך קצר של **אופטימיזציה למשימה נדחית** לפני שהיא מועברת ביומן. במקום להעביר את הגוש המורכב כפי שהוא, משקיעים 60 שניות כדי 'להנחית' את המשימה ברכות במערכת:</p>
+
+<ul>
+    <li><strong>לכידת תמונת מצב (Context Snapshot):</strong> כתיבת תמצית קצרה בשדה ההערות: 'איפה נעצרנו, מהם הנתונים שכבר הושגו, ומה הצעד המדויק הבא'.</li>
+    <li><strong>חיתוך ל-Micro-Step Zero:</strong> עדכון כותרת המשימה במועד החדש לפעולה קטנה ופשוטה במיוחד, כזו שאינה דורשת מאמץ מנטלי כדי להתחיל (למשל: 'פתחי את קובץ האקסל ועדכני את שורה 4' במקום 'סיימי את הדוח הפיננסי').</li>
+    <li><strong>קישור משאבים (Asset Anchoring):</strong> הצמדת הקישורים, המסמכים או המיילים הרלוונטיים ישירות לכרטיס המשימה כדי למנוע חיפוש מיותר בעתיד.</li>
+</ul>
+
+<h2>2. מתי כדאי להשתמש במנגנון Soft Landing?</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>תרחיש תפעולי</th>
+            <th>למה לא להשתמש בדחייה רגילה?</th>
+            <th>היתרון של Soft Landing Deferral</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>משימות עבודה עמוקה (Deep Work)</strong></td>
+            <td>מעבר פתאומי בין נושאים גורם לאובדן פוקוס ניהולי</td>
+            <td>מאפשר לחזור לנקודת הסיום המדויקת באפס זמן</td>
+        </tr>
+        <tr>
+            <td><strong>פרויקטים התלויים בגורם חיצוני</strong></td>
+            <td>המשימה נתקעת ומחכה למישהו אחר ללא תיעוד</td>
+            <td>מגדיר בדיוק מה מעכב ואת הטריגר לחזרה לפעולה</td>
+        </tr>
+        <tr>
+            <td><strong>עומס יתר פתאומי בסוף היום</strong></td>
+            <td>דחיפה עיוורת למחר יוצרת הצפה בבוקר הבא</td>
+            <td>מפרקת את הלחץ ע'י תכנון צעד פתיחה זעיר ליום הבא</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>3. שלושה צעדים מעשיים ליישום כבר היום</h2>
+
+<ol>
+    <li><strong>עצרו לפני ה-Drag & Drop:</strong> החלטתם לדחות משימה? אל תזיזו את התאריך מיד. הקדישו 60 שניות לטובת הטיפול בה.</li>
+    <li><strong>רשמו את ה-Context Hook:</strong> הזינו 1-2 משפטים: 'נעצר בסעיף 3. המטרה מחר: לכתוב את הסיכום'.</li>
+    <li><strong>שנו את שם המשימה לצעד הנחיתה:</strong> עדכנו את השם לפעולה הראשונה בלבד כדי ליצור מומנטום מהיר ברגע המפגש המחודש.</li>
+</ol>
+
+<p><strong>השורה התחתונה:</strong> דחיית משימות אינה כישלון – היא חלק מניהול קיבולת חכם. שימוש ב-Soft Landing Deferral Task מעביר אתכם מדחיינות כרונית ותסכול מנטלי למערכת עבודה זורמת, שקטה ואפקטיבית.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "August 28, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Soft Landing Deferral Task: What It Is, How It Works, and When to Deploy It",
+                body: `<p>Every professional navigating a dynamic workload encounters this situation: the end of the day approaches, the calendar is packed, and a high-leverage task remains incomplete. The default reaction for most operators is a **Hard Deferral**—blindly dragging and dropping the raw task onto tomorrow or next week. However, when the target date arrives, they encounter severe task aversion: short-term memory has faded, context is lost, and the task gets repeatedly postponed.</p>
+
+<p>To overcome this execution bottleneck, productivity architecture utilizes the <strong>Soft Landing Deferral Task</strong> methodology—a strategic framework that bridges task deferral with frictionless reactivation on the target date.</p>
+
+<h2>1. What Is a Soft Landing Deferral Task and How Does It Work?</h2>
+
+<p>A Soft Landing Deferral Task is a brief **micro-refactoring protocol** applied to postponed work. Instead of shifting a complex task as a monolithic block, you invest 60 seconds to prepare its landing on the future date:</p>
+
+<ul>
+    <li><strong>Context Snapshot:</strong> Documenting a brief status note: 'Where we stopped, data points already secured, and the exact next step.'</li>
+    <li><strong>Micro-Step Zero Definition:</strong> Renaming the deferred task title to reflect an exceptionally low-barrier action that requires zero cognitive strain to initiate (e.g., 'Open financial spreadsheet and update row 4' instead of 'Complete Q3 report').</li>
+    <li><strong>Asset Anchoring:</strong> Attaching all relevant links, documents, or communication threads directly inside the task card to prevent search friction upon re-entry.</li>
+</ul>
+
+<h2>2. When Should You Deploy a Soft Landing Deferral?</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Operational Scenario</th>
+            <th>Why Hard Deferral Fails</th>
+            <th>Soft Landing Advantage</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Deep Work & Complex Initiatives</strong></td>
+            <td>Abrupt context switching causes high cognitive restart drag</td>
+            <td>Enables immediate entry at the exact stopping point</td>
+        </tr>
+        <tr>
+            <td><strong>External Dependency Blockers</strong></td>
+            <td>Tasks sit idle without tracking current wait states</td>
+            <td>Captures precise blockers and explicit reactivation triggers</td>
+        </tr>
+        <tr>
+            <td><strong>End-of-Day Overload</strong></td>
+            <td>Sliding tasks blindly overwhelms the next morning's queue</td>
+            <td>Relieves mental pressure by scheduling an easy micro-action</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>3. Three Steps to Master Soft Landing Execution</h2>
+
+<ol>
+    <li><strong>Pause Before Drag-and-Drop:</strong> Decided to postpone a task? Do not shift the date instantly. Invest 60 seconds in task prep.</li>
+    <li><strong>Attach a Context Hook:</strong> Write 1-2 lines in the task notes: 'Stopped at Section 3. Next target: draft summary.'</li>
+    <li><strong>Refactor Task Title:</strong> Rename the task to represent strictly the initial micro-action to build immediate execution velocity.</li>
+</ol>
+
+<p><strong>Bottom Line:</strong> Postponing work is not operational failure—it is essential capacity management. Transitioning to Soft Landing Deferral Tasks shifts your workflow from chronic friction and cognitive fatigue to an automated, high-velocity execution pipeline.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
