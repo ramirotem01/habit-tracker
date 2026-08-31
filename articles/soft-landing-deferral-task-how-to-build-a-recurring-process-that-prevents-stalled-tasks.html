@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soft Landing Deferral Task: איך לבנות Recurring Process שמונע משימות חוזרות להיתקע</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "31 באוגוסט 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "Soft Landing Deferral Task: איך לבנות Recurring Process שמונע משימות חוזרות להיתקע",
+                body: `<p>משימות מחזוריות – כמו סקירת דוחות שבועית, יצירת גיבויים, שדרוג תשתיות או ניתוח ביצועים תקופתי – הן דבק שמחזיק את המערכת הארגונית והאישית. עם זאת, הן המועמדות הראשונות לסבול מתופעת ה-Hard Deferral: ברגע שמנהל או מפתח נתקל בדחיפות כזו או אחרת, המשימה המחזורית נגררת כמות שהיא ליום הבא. כשהיא מגיעה למועד החדש, היא כבר מרגישה כמו "עול ישן", הזיכרון הנקודתי סביבה דעך, והיא ממשיכה להידחות עד שהיא נזנחת כליל.</p>
+
+<p>כדי למנוע את ה-Bottleneck הזה, יש להפוך את ה-<strong>Soft Landing Deferral Task</strong> לניטור תהליכי קבוע (Recurring Process). הנה הפרוטוקול המעשי לבניית התהליך.</p>
+
+<h2>1. הגדרת Context Snapshot אוטומטי</h2>
+<p>כשמשימה מחזורית נדחית, הבעיה המרכזית אינה חוסר זמן – אלא חוסר ב-Context. כדי לייצר נחיתה רכה, כל תבנית של משימה מחזורית חייבת להכיל שדות ייעודיים לתיעוד מהיר ברגע הסטייה מהלו"ז:</p>
+<ul>
+  <li><strong>הנקודה שבה עצרנו (Current State):</strong> צילום מצב מדויק של התהליך (למשל: "נעצר בשלב ניתוח הנתונים של שבוע 2").</li>
+  <li><strong>הצעד הראשון לחידוש (Micro-Next Step):</strong> משימה מיקרוסקופית אחת לביצוע מיידי עם הפתיחה (למשל: "לפתוח את קובץ ה-Excel ולסנן לפי עמודה B").</li>
+  <li><strong>קישורים ומשאבים (Assets):</strong> קישור ישיר לטאבים, מסמכים או דאטה-בייסים רלוונטיים כדי להחזיר את מנוע העבודה לאפס חיכוך.</li>
+</ul>
+
+<h2>2. פירוק המשימה לתתי-שלבים עצמאיים (Atomic Sub-tasks)</h2>
+<p>משימה מחזורית מורכבת שנדחית במקשה אחת גוררת חרדת ביצוע. תהליך Recurring בריא בנוי בצורה מודולרית:</p>
+<ul>
+  <li>חלוקת המשימה המחזורית לצ'ק-ליסט שבו כל שלב עומד בפני עצמו.</li>
+  <li>במידה והתרחשה דחייה, מסמנים את מה שבוצע, ומעבירים קדימה **רק את תתי-השלבים שנותרו** ולא את כל המשימה המקורית.</li>
+</ul>
+
+<h2>3. שילוב מנגנון ה-AI כמעטפת ניתוח ותזכורת</h2>
+<p>שימוש במערכת חכמה לניהול משימות מאפשר לזהות דפוסים של משימות מחזוריות שנתקעות שוב ושוב. ניתוח AI תקופתי מעניק תובנות על הרגלי הביצוע:</p>
+<ul>
+  <li><strong>זיהוי חסמים:</strong> אם משימה מחזורית נדחית יותר מפעמיים, ה-AI מציע לחתוך את היקפה או לשנות את תדירותה.</li>
+  <li><strong>שיוך אוטומטי של תובנות שבועיות:</strong> הפקת תמונת מצב מרוכזת של המשימות שנדחו כדי להבין האם העומס הוא תכנוני או תפעולי.</li>
+</ul>
+
+<h2>4. חוק 60 השניות לדחייה (The Soft Landing Rule)</h2>
+<p>איסור מוחלט על "Drag & Drop" עיוור ביומן. כאשר מתקבלת החלטה לדחות משימה מחזורית, מוקדשות 60 שניות למילוי פרוטוקול הנחיתה הרכה:</p>
+<ol>
+  <li>עדכון ה-Context Snapshot והגדרת ה-Micro-Step.</li>
+  <li>שינוי מועד הביצוע ביומן לחלון זמן המותאם לעומס הצפוי.</li>
+  <li>הגדרת התרעה שקטה שתקפיץ את הצעד הראשון בלבד בעת ההפעלה מחדש.</li>
+</ol>
+
+<p>הפיכת מנגנון ה-Soft Landing למתווה עבודה קבוע (Recurring Process) משנה לחלוטין את היחס לדחיית משימות: מדחיקת פינות עמוסת אשמה, לתהליך הנדסי מבוקר שמבטיח רציפות תפעולית ואפס אובדן מומנטום.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "August 31, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Soft Landing Deferral Task: How to Build a Recurring Process That Prevents Stalled Tasks",
+                body: `<p>Recurring tasks—such as weekly reporting, database backups, infrastructure audits, or periodic analytics—are the backbone of operational consistency. However, they are also the primary victims of "Hard Deferrals." When urgent priorities shift, operators tend to blindly drop raw recurring tasks onto the next day. By the time the new date arrives, the momentum is dead, cognitive friction builds up, and the task gets endlessly postponed.</p>
+
+<p>To eliminate this bottleneck, system architecture must turn the <strong>Soft Landing Deferral Task</strong> into an embedded <strong>Recurring Process</strong>. Here is the framework for structuring seamless reactivation.</p>
+
+<h2>1. Automating the Context Snapshot</h2>
+<p>When a recurring task is postponed, the core issue is rarely a lack of time—it is a loss of context. Every recurring task template should mandate a quick 60-second snapshot before it is rescheduled:</p>
+<ul>
+  <li><strong>Current State:</strong> A precise checkpoint (e.g., "Stopped at Step 3: Raw data imported").</li>
+  <li><strong>Micro-Next Step:</strong> A single, low-friction action to trigger momentum upon resumption (e.g., "Open tab X and run script Y").</li>
+  <li><strong>Resource Docking:</strong> Direct hyperlinks to files, dashboards, or resources required for execution.</li>
+</ul>
+
+<h2>2. Modular Sub-Task Architecture</h2>
+<p>Deferring a massive recurring block creates execution anxiety. A robust recurring process breaks complex workflows into atomic sub-tasks:</p>
+<ul>
+  <li>Structure the workflow into independent checklist items.</li>
+  <li>If a deferral occurs, check off completed items and push forward **only the remaining atomic sub-tasks**, rather than the entire bulk container.</li>
+</ul>
+
+<h2>3. AI-Driven Habit Analysis & Optimization</h2>
+<p>Integrating intelligent task analytics allows system architectures to track patterns of recurring friction:</p>
+<ul>
+  <li><strong>Pattern Recognition:</strong> If a recurring task is postponed more than twice, the engine prompts scope reduction or schedule recalibration.</li>
+  <li><strong>Insight Extraction:</strong> AI synthesizes weekly deferral data to identify systemic capacity overestimation versus execution blockages.</li>
+</ul>
+
+<h2>4. The 60-Second Deferral Protocol</h2>
+<p>Strictly eliminate blind drag-and-drop deferrals. When postponing a recurring item, enforce a 60-second transition protocol:</p>
+<ol>
+  <li>Document the Context Snapshot and define the immediate Micro-Step.</li>
+  <li>Reschedule the task into a realistic time slot based on workload density.</li>
+  <li>Set an ignition prompt that displays only the Micro-Step upon reactivation to guarantee immediate execution.</li>
+</ol>
+
+<p>By embedding Soft Landing Deferral as a standard recurring process, task postponement shifts from a guilt-inducing failure into a controlled, friction-free engineering workflow.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
