@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soft Landing Trigger Task: מה זה Trigger, מתי משתמשים בו ואיך הוא עובד?</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "2 בספטמבר 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "Soft Landing Trigger Task: מה זה Trigger, מתי משתמשים בו ואיך הוא עובד?",
+                body: `<p>אחת הרעות החולות בניהול משימות היא משימה שנדחית שוב ושוב ביומן ללא סיבה מוצדקת. אנחנו מסתכלים עליה, מרגישים עומס או חוסר בהירות, ומעבירים אותה ליום מחר. ברוב המקרים, הכשל אינו נובע מחוסר רצון או מעצלנות, אלא מאירוע שנקרא **היעדר טריגר (Missing Trigger)**. כשהמשימה מופיעה ביומן ללא תנאי הפעלה ברור, המוח מפרש אותה כגורם מעורפל ומעדיף להתחמק ממנה.</p>
+
+<p>כאן נכנסת לתמונה מתודולוגיית <strong>Soft Landing Trigger Task (משימת נחיתה רכה מבוססת טריגר)</strong>. מתודולוגיה זו משלבת בין הקפאת משימה מורכבת תוך שימור הקשר העבודה (Context Snapshot), לבין הצמדת **טריגר (Trigger)** – אות מוגדר מראש שקובע מתי ואיך המשימה תתעורר לחיים מחדש.</p>
+
+<h2>1. מה זה Trigger בניהול משימות ואיך הוא עובד?</h2>
+
+<p>טריגר בניהול משימות הוא **תנאי סף מוגדר מראש שמפעיל את מעבר המשימה מסטטוס 'מוקפא' לסטטוס 'פעיל'**. במקום להסתמך על זיכרון אנושי או על הזזה אקראית של תאריכים ביומן, ה-Trigger מייצר חיבור ישיר בין אירוע מסוים לבין תחילת הביצוע.</p>
+
+<p>קיימים שלושה סוגי טריגרים עיקריים במנגנון Soft Landing:</p>
+
+<ul>
+    <li><strong>1. טריגר מבוסס זמן (Time-Based Trigger):</strong> קביעת חלון זמן מדויק בעתיד שבו הקיבולת המנטלית מתאימה. למשל: 'יופעל ביום שלישי ב-10:00 בבוקר, במהלך חלון ה-Deep Work'.</li>
+    <li><strong>2. טריגר מבוסס אירוע/נתון (Event/Data Trigger):</strong> המשימה תתעורר רק ברגע שמתרחש אירוע חיצוני. למשל: 'להתחיל ניתוח קמפיין רק ברגע שמתקבל דוח המכירות מגיא', או 'לחזור ללקוח רק לאחר סגירת הטרנזקציה'.</li>
+    <li><strong>3. טריגר מבוסס מפתח (Micro-Step Trigger):</strong> ניסוח כותרת המשימה כך שהיא תתחיל בפעולה זעירה ואוטומטית לחלוטין (למשל: 'לפתוח את קובץ Google Docs ולרשום כותרת'). הצעד הזעיר עצמו הוא הטריגר שמניע את המומנטום.</li>
+</ul>
+
+<h2>2. מתי כדאי להשתמש ב-Soft Landing Trigger Task?</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>תרחיש תפעולי</th>
+            <th>הבעיה בדחייה רגילה (Hard Deferral)</th>
+            <th>הפתרון באמצעות Trigger Task</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>תלוי במידע מחיצוני</strong></td>
+            <td>המשימה קופצת ביומן מדי יום, עדיין אין מידע, וסתם נוצר עומס בעיניים</td>
+            <td>המשימה מוקפאת עם Event Trigger ומופעלת רק כשהנתון מתקבל</td>
+        </tr>
+        <tr>
+            <td><strong>משימה גדולה ומאיימת</strong></td>
+            <td>המוח חווה חרדת ביצוע ודוחה את המשימה שוב ושוב</td>
+            <td>המשימה מפורקת ל-Micro-Step Trigger שמוריד את החיכוך המנטלי לאפס</td>
+        </tr>
+        <tr>
+            <td><strong>עומס עבודה זמני (Low Bandwidth)</strong></td>
+            <td>דחיפה עיוורת למחר מייצרת הצפה בבוקר הבא</td>
+            <td>Time Trigger משבץ את המשימה בחלון פנוי ייעודי עתידי</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>3. תהליך העבודה (Step-by-Step Execution)</h2>
+
+<ol>
+    <li><strong>חיתוך והקפאה:</strong> החלטתם להשהות משימה? עצרו. רשמו 1-2 משפטים של Context Snapshot (איפה נעצרנו ומה המצב כעת).</li>
+    <li><strong>הגדרת ה-Trigger:</strong> שאלו את עצמכם: 'מה צריך לקרות כדי שאוכל לבצע את המשימה הזו ב-100% פוקוס?' הגדירו את התנאי (זמן, אירוע, או מיקרו-פעולה).</li>
+    <li><strong>עיגון במערכת הניהול:</strong> הזינו את המשימה למערכת ניהול המשימות (כמו PCS365) תחת סטטוס Waiting / Deferred, והגדירו את הטריגר כהתראה או כטריגר אוטומטי.</li>
+</ol>
+
+<p><strong>השורה התחתונה:</strong> דחיית משימה אינה אומרת נטישה שלה. שילוב של Trigger נכון בתוך מתודולוגיית Soft Landing הופך את מערכת ניהול המשימות שלכם ממקור של לחץ ואשמה למנוע אוטומטי, מדויק ורגוע של קבלת החלטות וביצוע.</p>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "September 2, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Soft Landing Trigger Task: What Is a Trigger, When to Deploy It, and How It Works",
+                body: `<p>A primary failure point in productivity architecture is the endless postponement of complex tasks. Professionals repeatedly shift unrefined deliverables across their calendars without clear operational rationale. In most cases, this churn is not caused by poor discipline or laziness, but by a <strong>Missing Trigger</strong>. When a task appears on a schedule without an explicit activation condition, cognitive resistance kicks in, driving avoidance and delay.</p>
+
+<p>This operational friction is solved by the <strong>Soft Landing Trigger Task</strong> framework. This methodology combines context preservation (Context Snapshot) with an explicit <strong>Trigger</strong>—a pre-defined operational rule specifying precisely when and how the task reactivates.</p>
+
+<h2>1. What Is a Trigger in Task Management and How Does It Work?</h2>
+
+<p>A trigger in task architecture is a <strong>pre-defined threshold condition that transitions a task from a 'Paused/Deferred' state into an 'Active Execution' state</strong>. Rather than relying on human memory or arbitrary date adjustments, a Trigger anchors execution directly to a verified event or state.</p>
+
+<p>The Soft Landing framework deploys three primary trigger types:</p>
+
+<ul>
+    <li><strong>1. Time-Based Triggers:</strong> Scheduling execution to a specific high-bandwidth focus window in the future (e.g., 'Reactivate Tuesday at 10:00 AM during Deep Work block').</li>
+    <li><strong>2. Event/Data Triggers:</strong> Execution remains paused until an external dependency clears (e.g., 'Initiate campaign analysis only upon receipt of Q3 analytics export').</li>
+    <li><strong>3. Micro-Step Triggers:</strong> Refactoring the task title into an immediate, frictionless entry point (e.g., 'Open slide deck and draft title page'). The micro-action itself acts as the catalyst for execution momentum.</li>
+</ul>
+
+<h2>2. Operational Deployment: When to Use Trigger Tasks</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Operational Scenario</th>
+            <th>Why Hard Deferral Fails</th>
+            <th>Trigger Task Solution</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>External Data Dependencies</strong></td>
+            <td>Tasks clutter daily views, generating drag while data remains missing</td>
+            <td>Task is paused with an Event Trigger, waking only when data is received</td>
+        </tr>
+        <tr>
+            <td><strong>High-Cognition / Intimidating Work</strong></td>
+            <td>Cognitive aversion triggers repeated task sliding and procrastination</td>
+            <td>Task is refactored into a Micro-Step Trigger, reducing friction to zero</td>
+        </tr>
+        <tr>
+            <td><strong>Bandwidth Saturation</strong></td>
+            <td>Blindly dragging tasks to tomorrow overloads the next morning's queue</td>
+            <td>Time Trigger routes work strictly to an uncrowded future focus block</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>3. Execution Protocol</h2>
+
+<ol>
+    <li><strong>Capture & Pause:</strong> Decided to hold a task? Pause execution and record a 1-2 sentence Context Snapshot detailing current status and immediate blockers.</li>
+    <li><strong>Define the Trigger:</strong> Identify the explicit activation threshold: 'What exact event, time window, or micro-action is required to execute this with 100% focus?'</li>
+    <li><strong>Anchor in Task Architecture:</strong> Move the item into a 'Deferred / Waiting' state within your task system (such as PCS365), setting the trigger as an automated notification or conditional rule.</li>
+</ol>
+
+<p><strong>Bottom Line:</strong> Deferring work is not operational failure—it is essential capacity engineering. Integrating precise Triggers into a Soft Landing protocol transforms your task architecture from a source of cognitive drag into an automated, frictionless execution pipeline.</p>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
