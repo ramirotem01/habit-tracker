@@ -1,136 +1,305 @@
-<style>
-    :root {
-        --primary-color: #3498db;
-        --secondary-color: #2c3e50;
-        --text-color: #333;
-    }
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management, Productivity & Process Engineering</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 800px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.1em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "1 בספטמבר 2026", 
+                readTime: "⏱️ 6 דקות קריאה",
+                title: "תזמון משימות מתקדם: איך מנהלים תהליכים מחזוריים ללא כשלים",
+                body: `<article dir="rtl" lang="he" style="font-family: Arial, Helvetica, sans-serif; line-height: 1.85; color: #263238; max-width: 100%; background: #fff;">
 
-    * {
-        box-sizing: border-box;
-    }
+  <div style="background: linear-gradient(135deg, #eef7ff, #f8fbff); border-right: 6px solid #1976d2; padding: 30px; margin-bottom: 35px; border-radius: 12px;">
+    <h1 style="font-size: 32px; line-height: 1.3; margin: 0 0 15px; color: #12395b;">
+      תזמון משימות מחזוריות (Soft Landing Scheduled Task): המדריך השלם
+    </h1>
+    <p style="font-size: 18px; margin: 0; color: #455a64;">
+      מדריך מעשי לבניית תהליכים אוטומטיים עמידים, שמירה על הקשר המשימה (Context), מניעת ריצות כפולות והתאוששות שקטה מכשלים.
+    </p>
+  </div>
 
-    html {
-        scroll-behavior: smooth;
-    }
+  <p>
+    כמעט בכל מערכת או ארגון קיימות משימות שחוזרות על עצמן: דוחות יומיים, גיבויים, סנכרון נתונים, תזכורות ללקוחות או בדיקות מערכת. במבט ראשון, ניהול משימה מחזורית נראה פשוט: קובעים תאריך ושעה ואומרים למערכת לחזור על הפעולה.
+  </p>
 
-    body {
-        background-color: #f9f9f9;
-        font-family: "Segoe UI", system-ui, Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        line-height: 1.8;
-        color: var(--text-color);
-    }
+  <p>
+    בפועל, תזמון פשטני מדי הוא מתכון לתקלות: הרצות חופפות, אובדן מידע במקרה של ניתוק, עומסי שרתים ודיווחים כפולים. תפיסת ה-<strong>Soft Landing Scheduled Task</strong> באה לפתור בדיוק את הבעיה הזו — היא אינה עוסקת רק ברגע שבו המשימה מתחילה, אלא בניהול מלא של כל לייף-סייקל ההרצה.
+  </p>
 
-    .article-page-container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 40px 20px;
-        background: #fff;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-        min-height: 100vh;
-    }
+  <div style="background: #fff8e1; border-right: 5px solid #ffa000; padding: 20px; border-radius: 8px; margin: 30px 0;">
+    <strong style="font-size: 19px; color: #8d6e00;">תובנת מפתח:</strong>
+    <p style="margin: 8px 0 0;">
+      תזמון נכון אינו עונה רק על השאלה <strong>"מתי להריץ?"</strong>, אלא בעיקר על השאלות <strong>"מה התנאי להפעלה?"</strong>, <strong>"איזה מידע נדרש מההרצה הקודמת?"</strong> ו-<strong>"איך ממשיכים מכשל בלי להרוס נתונים?"</strong>
+    </p>
+  </div>
 
-    .back-to-blog {
-        display: inline-block;
-        margin-bottom: 30px;
-        color: var(--primary-color);
-        text-decoration: none;
-        font-weight: bold;
-    }
+  <h2 style="font-size: 26px; color: #1565c0; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px;">
+    4 אבני היסוד של תזמון יציב
+  </h2>
 
-    .back-to-blog:hover {
-        text-decoration: underline;
-    }
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin: 25px 0;">
+    <div style="background: #e3f2fd; padding: 20px; border-radius: 10px;">
+      <h3 style="margin-top: 0; color: #1565c0;">1. תזמון (Schedule)</h3>
+      <p style="margin-bottom: 0;">הגדרת חלון הזמן, אזור הזמן וימי הפעילות המדויקים.</p>
+    </div>
+    <div style="background: #e8f5e9; padding: 20px; border-radius: 10px;">
+      <h3 style="margin-top: 0; color: #2e7d32;">2. טריגר (Trigger)</h3>
+      <p style="margin-bottom: 0;">התנאי האמיתי שמאפשר את תחילת העבודה (למשל: סיום ההרצה הקודמת).</p>
+    </div>
+    <div style="background: #fff3e0; padding: 20px; border-radius: 10px;">
+      <h3 style="margin-top: 0; color: #ef6c00;">3. הקשר (Context)</h3>
+      <p style="margin-bottom: 0;">שמירת תמונת מצב (Snapshot) להמשכיות מדויקת בין הרצות.</p>
+    </div>
+    <div style="background: #f3e5f5; padding: 20px; border-radius: 10px;">
+      <h3 style="margin-top: 0; color: #8e24aa;">4. התאוששות (Recovery)</h3>
+      <p style="margin-bottom: 0;">מנגנון טיפול בשגיאות, ניסיונות חוזרים (Retry) ומניעת כפילויות.</p>
+    </div>
+  </div>
 
-    .article-header {
-        border-bottom: 2px solid #f0f0f0;
-        padding-bottom: 20px;
-        margin-bottom: 30px;
-    }
+  <h2 style="font-size: 26px; color: #1565c0; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px;">
+    הבדלים מרכזיים: משימה מתוזמנת מול משימה מחזורית
+  </h2>
 
-    .article-header h1 {
-        font-size: 2.2em;
-        line-height: 1.3;
-        color: var(--secondary-color);
-        margin: 10px 0;
-    }
+  <div style="overflow-x: auto; margin: 25px 0;">
+    <table style="width: 100%; border-collapse: collapse; min-width: 600px; text-align: right;">
+      <thead>
+        <tr style="background: #1565c0; color: #fff;">
+          <th style="padding: 12px; border: 1px solid #ddd;">סוג המשימה</th>
+          <th style="padding: 12px; border: 1px solid #ddd;">דוגמה מעשית</th>
+          <th style="padding: 12px; border: 1px solid #ddd;">מאפיין עיקרי</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #ddd;"><strong>Scheduled Task</strong></td>
+          <td style="padding: 12px; border: 1px solid #ddd;">שליחת דוח מיוחד ב-1 בספטמבר</td>
+          <td style="padding: 12px; border: 1px solid #ddd;">חד-פעמי לפי נקודת זמן</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #ddd;"><strong>Recurring Task</strong></td>
+          <td style="padding: 12px; border: 1px solid #ddd;">הרצת גיבוי בכל לילה ב-02:00</td>
+          <td style="padding: 12px; border: 1px solid #ddd;">חזרה קבועה על סמך זמן בלבד</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; border: 1px solid #ddd; background: #eef7ff;"><strong>Soft Landing Task</strong></td>
+          <td style="padding: 12px; border: 1px solid #ddd; background: #eef7ff;">סנכרון נתונים יומי עם בקרת כפילויות ושמירת מנגנון Resume</td>
+          <td style="padding: 12px; border: 1px solid #ddd; background: #eef7ff;">ניהול הקשר, מניעת חפיפות והתאוששות מכשלים</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-    .meta-info {
-        color: #95a5a6;
-        font-size: 0.9em;
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-    }
+  <h2 style="font-size: 26px; color: #1565c0; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px;">
+    איך מונעים קריסה והתנגשויות?
+  </h2>
 
-    .article-body {
-        width: 100%;
-        font-size: 1.08em;
-    }
+  <p>
+    אחת הבעיות הקשות ביותר בתהליכים אוטומטיים היא <strong>Overlapping Executions</strong> (הרצות חופפות). אם הרצה של שעה 09:00 מתעכבת עקב עומס, ובשעה 10:00 מופעלת ההרצה הבאה, שתיהן עלולות לעבד את אותם הנתונים במקביל.
+  </p>
 
-    .article-body img {
-        max-width: 100%;
-        height: auto;
-    }
+  <div style="background: #ffebee; border-right: 5px solid #e53935; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <strong>מנגנון Idempotency (אידמפוטנטיות):</strong><br>
+    יש לתכנן משימות כך שגם אם הן יורצו פעמיים בטעות על אותם הנתונים, התוצאה הסופית תישאר זהה ולא תייצר רשומות כפולות או חיובים כפולים.
+  </div>
 
-    .article-body table {
-        max-width: 100%;
-    }
+  <h2 style="font-size: 26px; color: #1565c0; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px;">
+    רשימת תיוג (Checklist) ליישום במערכת
+  </h2>
 
-    .footer-cta {
-        margin-top: 60px;
-        padding: 30px;
-        background: #f8f9fa;
-        border-radius: 10px;
-        text-align: center;
-    }
+  <div style="background: #f8f9fa; border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
+    <p>☐ האם הגדרת אזור זמן (Timezone) מדויק?</p>
+    <p>☐ האם קיים מנגנון למניעת הרצה מקבילה (Concurrency Lock)?</p>
+    <p>☐ האם נשמר Snapshot של נקודת העצירה למקרה של נפילה?</p>
+    <p>☐ האם יש מנגנון התראות בזמן אמת במידה וההרצה נכשלה?</p>
+    <p style="margin-bottom: 0;">☐ האם התהליך יודע להמשיך מהנקודה שבה נעצר (Resume) במקום להתחיל מאפס?</p>
+  </div>
 
-    .btn-main {
-        display: inline-block;
-        background: var(--primary-color);
-        color: white;
-        padding: 12px 25px;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: bold;
-        transition: opacity 0.2s ease;
-    }
+  <div style="background: linear-gradient(135deg, #1565c0, #0d47a1); color: #fff; padding: 30px; border-radius: 12px; margin-top: 40px;">
+    <h2 style="margin-top: 0; color: #fff; font-size: 24px;">בשורה התחתונה</h2>
+    <p style="font-size: 17px; margin-bottom: 0;">
+      משימה מחזורית מעולה היא לא רק כזו שרצה בזמן, אלא כזו שפותחה להתמודד עם שינויים, עומסים ותקלות בדרך. תכנון נכון של תהליכי Soft Landing מבטיח שקט תפעולי ויציבות ארוכת טווח במערכת.
+    </p>
+  </div>
 
-    .btn-main:hover {
-        opacity: 0.9;
-    }
+</article>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "September 1, 2026", 
+                readTime: "⏱️ 6 min read",
+                title: "Soft Landing Scheduled Task: Advanced Recurring Process Engineering",
+                body: `<article dir="ltr" lang="en" style="font-family:Arial,Helvetica,sans-serif;line-height:1.85;color:#263238;max-width:100%;background:#fff;">
 
-    /* RTL */
-    html[dir="rtl"] .meta-info {
-        flex-direction: row;
-    }
+  <div style="background:linear-gradient(135deg,#eef7ff,#f8fbff);border-left:6px solid #1976d2;padding:30px;margin-bottom:35px;border-radius:12px;">
+    <h1 style="font-size:32px;line-height:1.3;margin:0 0 15px;color:#12395b;">
+      Soft Landing Scheduled Task: How to Build Reliable Recurring Processes
+    </h1>
+    <p style="font-size:18px;margin:0;color:#455a64;">
+      A comprehensive guide to scheduling recurring tasks, preserving context, preventing overlaps, and handling failures gracefully.
+    </p>
+  </div>
 
-    /* Mobile */
-    @media (max-width: 768px) {
-        .article-page-container {
-            padding: 25px 15px;
-        }
+  <p>
+    Almost every modern system relies on recurring background operations: daily data synchronization, system health checks, billing routines, automated reports, or queue processing. At first glance, scheduling seems simple—pick a interval and execute.
+  </p>
 
-        .article-header h1 {
-            font-size: 1.8em;
-        }
+  <p>
+    In real-world production environments, naïve scheduling frequently leads to race conditions, duplicated actions, server overloads, and silent failures. The <strong>Soft Landing Scheduled Task</strong> architecture solves these challenges by treating execution as a managed lifecycle rather than a single event.
+  </p>
 
-        .article-body {
-            font-size: 1em;
-        }
+  <div style="background:#fff8e1;border-left:5px solid #ffa000;padding:20px;border-radius:8px;margin:30px 0;">
+    <strong style="font-size:19px;color:#8d6e00;">Core Philosophy:</strong>
+    <p style="margin:8px 0 0;">
+      Robust scheduling isn't just about <strong>when</strong> a job triggers. It answers <strong>what conditions permit execution</strong>, <strong>what state must persist</strong>, and <strong>how to recover safely when third-party services fail</strong>.
+    </p>
+  </div>
 
-        .article-body h2 {
-            font-size: 24px !important;
-        }
+  <h2 style="font-size:26px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
+    The 4 Pillars of Process Reliability
+  </h2>
 
-        .article-body h3 {
-            font-size: 20px !important;
-        }
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin:25px 0;">
+    <div style="background:#e3f2fd;padding:20px;border-radius:10px;">
+      <h3 style="margin-top:0;color:#1565c0;">1. Schedule</h3>
+      <p style="margin-bottom:0;">Defines execution windows, timezones, and calendar constraints.</p>
+    </div>
+    <div style="background:#e8f5e9;padding:20px;border-radius:10px;">
+      <h3 style="margin-top:0;color:#2e7d32;">2. Trigger</h3>
+      <p style="margin-bottom:0;">Validates pre-execution conditions (e.g., verifying prior run completion).</p>
+    </div>
+    <div style="background:#fff3e0;padding:20px;border-radius:10px;">
+      <h3 style="margin-top:0;color:#ef6c00;">3. Context</h3>
+      <p style="margin-bottom:0;">Stores execution snapshots for seamless state preservation across runs.</p>
+    </div>
+    <div style="background:#f3e5f5;padding:20px;border-radius:10px;">
+      <h3 style="margin-top:0;color:#8e24aa;">4. Recovery</h3>
+      <p style="margin-bottom:0;">Implements exponential backoff, retry safety, and alert mechanisms.</p>
+    </div>
+  </div>
 
-        .article-body table {
-            font-size: 14px;
-        }
-    }
-</style>
+  <h2 style="font-size:26px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
+    Comparing Task Paradigms
+  </h2>
+
+  <div style="overflow-x:auto;margin:25px 0;">
+    <table style="width:100%;border-collapse:collapse;min-width:600px;text-align:left;">
+      <thead>
+        <tr style="background:#1565c0;color:#fff;">
+          <th style="padding:12px;border:1px solid #ddd;">Pattern</th>
+          <th style="padding:12px;border:1px solid #ddd;">Use Case</th>
+          <th style="padding:12px;border:1px solid #ddd;">Key Characteristic</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:12px;border:1px solid #ddd;"><strong>Scheduled Task</strong></td>
+          <td style="padding:12px;border:1px solid #ddd;">Generate quarterly report on Oct 1st</td>
+          <td style="padding:12px;border:1px solid #ddd;">One-time execution at a fixed timestamp</td>
+        </tr>
+        <tr>
+          <td style="padding:12px;border:1px solid #ddd;"><strong>Recurring Task</strong></td>
+          <td style="padding:12px;border:1px solid #ddd;">Run nightly backup at 02:00 AM</td>
+          <td style="padding:12px;border:1px solid #ddd;">Fixed interval repetition without state context</td>
+        </tr>
+        <tr>
+          <td style="padding:12px;border:1px solid #ddd;background:#eef7ff;"><strong>Soft Landing Task</strong></td>
+          <td style="padding:12px;border:1px solid #ddd;background:#eef7ff;">Resilient daily data sync with state recovery</td>
+          <td style="padding:12px;border:1px solid #ddd;background:#eef7ff;">Context-aware, concurrency-locked, fault-tolerant</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 style="font-size:26px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
+    Preventing Overlaps & Data Corruption
+  </h2>
+
+  <p>
+    A major issue in automated workflows is <strong>Execution Overlap</strong>. If a job scheduled for 09:00 AM stalls due to network latency, and the 10:00 AM instance fires while the first is still processing, both workers may attempt to mutate the same records simultaneously.
+  </p>
+
+  <div style="background:#ffebee;border-left:5px solid #e53935;padding:20px;border-radius:8px;margin:20px 0;">
+    <strong>Designing for Idempotency:</strong><br>
+    Always ensure your tasks are idempotent—meaning that executing the exact same operation multiple times produces the exact same side effects without duplicating records or sending multiple emails.
+  </div>
+
+  <h2 style="font-size:26px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
+    Production Readiness Checklist
+  </h2>
+
+  <div style="background:#f8f9fa;border:1px solid #ddd;padding:20px;border-radius:10px;">
+    <p>☐ Is the exact timezone explicitly defined in configuration?</p>
+    <p>☐ Is distributed locking (e.g., Redis lock/Firestore transaction) implemented?</p>
+    <p>☐ Is an execution snapshot saved after processing each batch?</p>
+    <p>☐ Are failure notifications routed to an active alert channel?</p>
+    <p style="margin-bottom:0;">☐ Can the worker resume processing from its last checkpoint (Resume strategy)?</p>
+  </div>
+
+  <div style="background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;padding:30px;border-radius:12px;margin-top:40px;">
+    <h2 style="margin-top:0;color:#fff;font-size:24px;">The Bottom Line</h2>
+    <p style="font-size:17px;margin-bottom:0;">
+      A truly reliable automated process doesn't just run on time—it gracefully handles downtime, network glitches, and state continuity. Adopting a Soft Landing design guarantees long-term system stability and operational peace of mind.
+    </p>
+  </div>
+
+</article>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
