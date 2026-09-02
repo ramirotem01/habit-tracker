@@ -1,801 +1,136 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Management, Productivity & Process Engineering</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
-        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
-        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
-        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
-        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
-        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
-        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
-        .article-body { font-size: 1.15em; }
-        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
-        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <div class="article-page-container">
-        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
-        <article>
-            <header class="article-header">
-                <div class="meta-info">
-                    <span id="meta-date"></span>
-                    <span id="meta-read-time"></span>
-                </div>
-                <h1 id="main-h1"></h1>
-            </header>
-            <div class="article-body" id="article-body-content"></div>
-            <div class="footer-cta">
-                <h3 id="footer-h3"></h3>
-                <a href="../index.html" class="btn-main" id="footer-btn"></a>
-            </div>
-        </article>
-    </div>
-    <script>
-        const translations = {
-            he: { 
-                back: "← חזרה לבלוג", 
-                date: "1 בספטמבר 2026", 
-                readTime: "⏱️ 5 דקות קריאה",
-                title: "ניהול משימות, פרודוקטיביות והנדסת תהליכים",
-                body: `<article dir="rtl" lang="he" style="font-family: Arial, Helvetica, sans-serif; line-height: 1.85; color: #263238; max-width: 1100px; margin: 0 auto; background: #fff;">
-
-  <div style="background: linear-gradient(135deg, #eef7ff, #f8fbff); border-right: 6px solid #1976d2; padding: 30px; margin-bottom: 35px; border-radius: 12px;">
-    <h1 style="font-size: 34px; line-height: 1.3; margin: 0 0 15px; color: #12395b;">
-      תזמון משימות נכון: איך מנהלים משימות מחזוריות ביעילות
-    </h1>
-    <p style="font-size: 19px; margin: 0; color: #455a64;">
-      מדריך מעשי לתזמון משימות חוזרות, שילוב הקשר (Context), מניעת כפילויות ובניית תהליכים אמינים.
-    </p>
-  </div>
-
-  <p>
-    תזמון משימה אינו מסתכם רק בקביעת תאריך ושעה. משימות מחזוריות שתוכננו בצורה לקויה עלולות ליצור כפילויות, הפעלות שהוחמצו, עומס יתר ותהליכי עבודה תקועים.
-  </p>
-
-  <p>
-    מודל <strong>Soft Landing Scheduled Task</strong> משלב תזמון, שימור הקשר, טריגרים ובקרות ביצוע כדי ליצור תהליכים מחזוריים אמינים ויציבים לאורך זמן.
-  </p>
-
-  <div style="background: #fff8e1; border: 1px solid #ffe082; padding: 24px; border-radius: 10px; margin: 30px 0;">
-    <strong style="font-size: 21px; color: #8d6e00;">הרעיון המרכזי:</strong>
-    <p style="margin: 10px 0 0;">
-      תזמון נכון אינו עוסק רק ב-<strong>מתי</strong> משהו רץ, אלא גם במה שקורה לפני, במהלך ואחרי הביצוע — ומה קורה כאשר משהו משתבש.
-    </p>
-  </div>
-
-  <h2 style="font-size: 28px; color: #1565c0; border-bottom: 2px solid #e3f2fd; padding-bottom: 10px;">
-    מהי משימת Soft Landing Scheduled Task?
-  </h2>
-
-  <p>
-    זהו מודל לניהול משימות שבו התזמון מחובר באופן הדוק לשימור ההקשר, תנאי הביצוע, תלויות ומנגנוני התאוששות מכשלים.
-  </p>
-
-  <div style="background: #f8f9fa; border: 1px solid #ddd; padding: 22px; border-radius: 10px; margin: 20px 0;">
-    <strong>בסיסי:</strong> הרץ בכל יום בשעה 09:00.<br><br>
-    <strong>מתקדם ואיכותי:</strong> הרץ בכל יום עסקים בשעה 09:00, בתנאי שההרצה הקודמת הסתיימה בהצלחה וההקשר הנדרש זמין.
-  </div>
-
-</article>`, 
-                footerH3: "מוכנים להתחיל?", 
-                footerBtn: "חזרה לאפליקציה" 
-            },
-            en: { 
-                back: "Back to Blog →", 
-                date: "September 1, 2026", 
-                readTime: "⏱️ 5 min read",
-                title: "Soft Landing Scheduled Task: How to Schedule Recurring Tasks the Right Way",
-                body: `<article dir="ltr" lang="en" style="font-family:Arial,Helvetica,sans-serif;line-height:1.85;color:#263238;max-width:1100px;margin:0 auto;background:#fff;">
-
-  <div style="background:linear-gradient(135deg,#eef7ff,#f8fbff);border-left:6px solid #1976d2;padding:30px;margin-bottom:35px;border-radius:12px;">
-    <h1 style="font-size:34px;line-height:1.3;margin:0 0 15px;color:#12395b;">
-      Soft Landing Scheduled Task: How to Schedule Recurring Tasks the Right Way
-    </h1>
-    <p style="font-size:19px;margin:0;color:#455a64;">
-      A practical guide to scheduling recurring tasks, preserving context, preventing duplicates, and building reliable processes.
-    </p>
-  </div>
-
-  <p>
-    Almost every organization has tasks that repeat. Daily checks, weekly reports, backups, system monitoring, data updates, customer follow-ups, maintenance routines, or automated testing.
-  </p>
-
-  <p>
-    At first glance, recurring work seems simple: choose a date and time and tell the system to repeat the task.
-  </p>
-
-  <p>
-    In practice, a reliable <strong>Recurring Task</strong> requires much more than a schedule.
-  </p>
-
-  <p>
-    You need to decide when the task should start, what triggers it, what happens if the previous execution is still running, how duplicate executions are prevented, how failures are handled, and what context the next execution needs.
-  </p>
-
-  <p>
-    This is where the idea of a <strong>Soft Landing Scheduled Task</strong> becomes useful.
-  </p>
-
-  <div style="background:#fff8e1;border:1px solid #ffe082;padding:24px;border-radius:10px;margin:30px 0;">
-    <strong style="font-size:21px;color:#8d6e00;">The core idea:</strong>
-    <p style="margin:10px 0 0;">
-      Good scheduling is not just about <strong>when</strong> something runs. It also defines what happens before, during, and after execution—and what happens when something goes wrong.
-    </p>
-  </div>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    What Is a Soft Landing Scheduled Task?
-  </h2>
-
-  <p>
-    A <strong>Soft Landing Scheduled Task</strong> is a task-management model in which scheduling is combined with context preservation, execution conditions, dependencies, and recovery behavior.
-  </p>
-
-  <p>
-    The goal is to ensure that when the scheduled execution begins, it has the information and conditions required to proceed smoothly.
-  </p>
-
-  <p>
-    A simple task might be defined as:
-  </p>
-
-  <div style="background:#f5f5f5;padding:18px;border-radius:8px;font-weight:bold;">
-    Every day at 09:00 – run the task.
-  </div>
-
-  <p>
-    A more robust scheduled task also considers:
-  </p>
-
-  <ul>
-    <li>When should the task start?</li>
-    <li>What condition allows it to start?</li>
-    <li>Has the previous execution finished?</li>
-    <li>What happens if execution fails?</li>
-    <li>What happens if an external system is unavailable?</li>
-    <li>Are parallel executions allowed?</li>
-    <li>What context does the next execution need?</li>
-    <li>Who should know whether the task succeeded or failed?</li>
-  </ul>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Scheduled Task vs. Recurring Task
-  </h2>
-
-  <p>
-    The two concepts are related but not identical.
-  </p>
-
-  <p>
-    A <strong>Scheduled Task</strong> is assigned a time or execution window.
-  </p>
-
-  <p>
-    A <strong>Recurring Task</strong> repeats according to a defined rule.
-  </p>
-
-  <div style="overflow-x:auto;margin:25px 0;">
-    <table style="width:100%;border-collapse:collapse;min-width:650px;">
-      <thead>
-        <tr style="background:#1565c0;color:#fff;">
-          <th style="padding:14px;text-align:left;">Type</th>
-          <th style="padding:14px;text-align:left;">Example</th>
-          <th style="padding:14px;text-align:left;">Recurring?</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">Scheduled Task</td>
-          <td style="padding:14px;border:1px solid #ddd;">Generate a report on September 1</td>
-          <td style="padding:14px;border:1px solid #ddd;">Not necessarily</td>
-        </tr>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">Recurring Task</td>
-          <td style="padding:14px;border:1px solid #ddd;">Generate a report every day</td>
-          <td style="padding:14px;border:1px solid #ddd;">Yes</td>
-        </tr>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">Soft Landing Scheduled Task</td>
-          <td style="padding:14px;border:1px solid #ddd;">Daily report with execution controls and context</td>
-          <td style="padding:14px;border:1px solid #ddd;">May be</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p>
-    Soft Landing Scheduled Task can therefore be viewed as an additional layer above basic scheduling: not only <strong>when</strong> a task runs, but <strong>how it enters execution safely and consistently</strong>.
-  </p>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Why Do Recurring Tasks Fail?
-  </h2>
-
-  <p>
-    Ironically, recurring tasks often fail because they are assumed to be simple.
-  </p>
-
-  <p>
-    Over time, a recurring process can encounter:
-  </p>
-
-  <ul>
-    <li>A previous execution that has not finished.</li>
-    <li>Duplicate executions.</li>
-    <li>Changes in data structures.</li>
-    <li>Permission changes.</li>
-    <li>Unavailable external systems.</li>
-    <li>Schedules that no longer make sense.</li>
-    <li>Accumulated missed executions.</li>
-    <li>Failures that nobody is notified about.</li>
-    <li>Loss of context between executions.</li>
-  </ul>
-
-  <p>
-    A reliable recurring process therefore needs to account not only for the happy path but also for failure and recovery scenarios.
-  </p>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    The Four Components of a Reliable Scheduled Task
-  </h2>
-
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin:30px 0;">
-    
-    <div style="background:#e3f2fd;padding:22px;border-radius:10px;">
-      <h3 style="margin-top:0;color:#1565c0;">Schedule</h3>
-      <p>When should the task run?</p>
-    </div>
-
-    <div style="background:#e8f5e9;padding:22px;border-radius:10px;">
-      <h3 style="margin-top:0;color:#2e7d32;">Trigger</h3>
-      <p>What allows the task to start?</p>
-    </div>
-
-    <div style="background:#fff3e0;padding:22px;border-radius:10px;">
-      <h3 style="margin-top:0;color:#ef6c00;">Context</h3>
-      <p>What information is required?</p>
-    </div>
-
-    <div style="background:#f3e5f5;padding:22px;border-radius:10px;">
-      <h3 style="margin-top:0;color:#8e24aa;">Recovery</h3>
-      <p>What happens when execution fails?</p>
-    </div>
-
-  </div>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Step 1: Define a Clear Schedule
-  </h2>
-
-  <p>
-    The first step is defining when the task should run.
-  </p>
-
-  <p>
-    But "every day" is not always enough.
-  </p>
-
-  <ul>
-    <li>At what time?</li>
-    <li>In which time zone?</li>
-    <li>On which days?</li>
-    <li>Does it run on weekends?</li>
-    <li>What happens on holidays?</li>
-    <li>What happens if the system is unavailable at execution time?</li>
-  </ul>
-
-  <div style="background:#f8f9fa;border:1px solid #ddd;padding:22px;border-radius:10px;">
-    <strong>Weak:</strong> Run every day<br><br>
-    <strong>Better:</strong> Run every business day at 09:00 Israel time<br><br>
-    <strong>Better still:</strong> Run every business day at 09:00 Israel time unless the previous execution is still active.
-  </div>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Step 2: Define the Trigger
-  </h2>
-
-  <p>
-    Schedule and Trigger are not necessarily the same thing.
-  </p>
-
-  <p>
-    A Schedule defines <strong>when the system attempts to start the process</strong>.
-  </p>
-
-  <p>
-    A Trigger defines <strong>the condition that actually allows execution to begin</strong>.
-  </p>
-
-  <p>
-    Examples include:
-  </p>
-
-  <ul>
-    <li>The scheduled time has arrived.</li>
-    <li>The previous execution has finished.</li>
-    <li>A new file has arrived.</li>
-    <li>An external API is available.</li>
-    <li>An approval has been received.</li>
-    <li>A required amount of data exists.</li>
-  </ul>
-
-  <p>
-    Combining Schedule and Trigger conditions often produces a more reliable process than relying on time alone.
-  </p>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Step 3: Prevent Overlapping Tasks
-  </h2>
-
-  <p>
-    One of the most important problems with recurring tasks occurs when a new execution starts before the previous execution has finished.
-  </p>
-
-  <div style="background:#ffebee;border-left:5px solid #e53935;padding:22px;border-radius:10px;">
-    <strong>09:00</strong> – Execution starts.<br>
-    <strong>10:00</strong> – Previous execution is still active.<br>
-    <strong>10:00</strong> – Next execution is scheduled.<br>
-    <strong>10:00</strong> – A second execution starts.
-  </div>
-
-  <p>
-    Now both executions may operate on the same data at the same time.
-  </p>
-
-  <p>
-    A clear concurrency policy should therefore be defined:
-  </p>
-
-  <ol>
-    <li>Do not allow parallel execution.</li>
-    <li>Skip the new execution.</li>
-    <li>Delay it.</li>
-    <li>Put it into a queue.</li>
-    <li>Allow concurrency only when the process is explicitly designed for it.</li>
-  </ol>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Step 4: Preserve Context Between Executions
-  </h2>
-
-  <p>
-    Some tasks are completely independent from one execution to another. Complex processes often are not.
-  </p>
-
-  <p>
-    This is where a <strong>Context Snapshot</strong> becomes valuable.
-  </p>
-
-  <p>
-    After each execution, consider storing:
-  </p>
-
-  <ul>
-    <li>When execution started.</li>
-    <li>When it ended.</li>
-    <li>What was processed.</li>
-    <li>What the result was.</li>
-    <li>How many records were processed.</li>
-    <li>Whether errors occurred.</li>
-    <li>What should happen during the next execution.</li>
-  </ul>
-
-  <div style="background:#e8f5e9;border-left:5px solid #43a047;padding:24px;border-radius:10px;margin:25px 0;">
-    <h3 style="margin-top:0;color:#2e7d32;">Example Execution Snapshot</h3>
-    <p><strong>Run:</strong> #184</p>
-    <p><strong>Status:</strong> Completed</p>
-    <p><strong>Duration:</strong> 18 minutes</p>
-    <p><strong>Records:</strong> 2,481</p>
-    <p><strong>Errors:</strong> 3</p>
-    <p><strong>Action required:</strong> Review failed records before next run.</p>
-    <p style="margin-bottom:0;"><strong>Next run:</strong> Tomorrow at 09:00.</p>
-  </div>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    What Happens When a Scheduled Task Fails?
-  </h2>
-
-  <p>
-    A reliable system should assume that some executions will fail.
-  </p>
-
-  <p>
-    Recovery behavior should be defined before the failure happens.
-  </p>
-
-  <div style="overflow-x:auto;margin:25px 0;">
-    <table style="width:100%;border-collapse:collapse;min-width:700px;">
-      <thead>
-        <tr style="background:#37474f;color:#fff;">
-          <th style="padding:14px;text-align:left;">Situation</th>
-          <th style="padding:14px;text-align:left;">Possible Response</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">Temporary error</td>
-          <td style="padding:14px;border:1px solid #ddd;">Retry</td>
-        </tr>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">External service unavailable</td>
-          <td style="padding:14px;border:1px solid #ddd;">Backoff + Retry</td>
-        </tr>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">Permanent error</td>
-          <td style="padding:14px;border:1px solid #ddd;">Stop + Alert</td>
-        </tr>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">Invalid data</td>
-          <td style="padding:14px;border:1px solid #ddd;">Quarantine / Manual Review</td>
-        </tr>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">System unavailable</td>
-          <td style="padding:14px;border:1px solid #ddd;">Move to another execution window</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Retry Is Not Always the Answer
-  </h2>
-
-  <p>
-    A common mistake in automated workflows is adding Retry without considering the nature of the operation.
-  </p>
-
-  <p>
-    If an operation can safely be performed more than once, Retry may be appropriate.
-  </p>
-
-  <p>
-    But if an operation creates a payment, sends a notification, updates data, or creates a new record, a blind retry may create duplicates.
-  </p>
-
-  <p>
-    This is why <strong>Idempotency</strong> matters. The process should be designed so that repeated execution produces a safe and predictable outcome whenever possible.
-  </p>
-
-  <div style="background:#fff3e0;border-left:5px solid #fb8c00;padding:22px;border-radius:10px;">
-    <strong>Example:</strong><br>
-    If a task sends an invoice to a customer, a blind Retry could send it twice.<br><br>
-    If the process first checks whether the invoice has already been sent, the workflow becomes much safer.
-  </div>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    How to Design a Recurring Process Correctly
-  </h2>
-
-  <p>
-    A recurring process should be designed as a cycle rather than as a single task.
-  </p>
-
-  <div style="background:#f8f9fa;border:1px solid #ddd;padding:25px;border-radius:12px;text-align:center;font-size:19px;">
-    <strong>Schedule</strong>
-    →
-    <strong>Trigger</strong>
-    →
-    <strong>Execute</strong>
-    →
-    <strong>Validate</strong>
-    →
-    <strong>Snapshot</strong>
-    →
-    <strong>Next Run</strong>
-  </div>
-
-  <p>
-    Each stage should have a clear purpose. If one is missing, the recurring process becomes more fragile.
-  </p>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Example: A Daily Automated QA Task
-  </h2>
-
-  <p>
-    Imagine a QA team wants to run automated tests every morning.
-  </p>
-
-  <p>
-    A basic definition might be:
-  </p>
-
-  <div style="background:#f5f5f5;padding:20px;border-radius:10px;">
-    Every day at 08:00 → Run tests
-  </div>
-
-  <p>
-    A stronger Soft Landing design could look like this:
-  </p>
-
-  <ol>
-    <li>At 08:00, verify that the environment is available.</li>
-    <li>Verify that no previous execution is still running.</li>
-    <li>Load the relevant application version.</li>
-    <li>Start the automated tests.</li>
-    <li>Store the results.</li>
-    <li>Flag significant failures.</li>
-    <li>Create an Execution Snapshot.</li>
-    <li>Make relevant context available to the next run.</li>
-  </ol>
-
-  <p>
-    This is no longer merely a Scheduled Task. It is a managed <strong>Recurring Process</strong>.
-  </p>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Daily, Weekly, and Monthly Tasks
-  </h2>
-
-  <p>
-    Task frequency should match the value generated by the process.
-  </p>
-
-  <div style="overflow-x:auto;margin:25px 0;">
-    <table style="width:100%;border-collapse:collapse;min-width:700px;">
-      <thead>
-        <tr style="background:#1976d2;color:#fff;">
-          <th style="padding:14px;text-align:left;">Frequency</th>
-          <th style="padding:14px;text-align:left;">Useful When</th>
-          <th style="padding:14px;text-align:left;">Main Risk</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">Daily</td>
-          <td style="padding:14px;border:1px solid #ddd;">Continuous monitoring or updates are required</td>
-          <td style="padding:14px;border:1px solid #ddd;">Accumulated workload</td>
-        </tr>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">Weekly</td>
-          <td style="padding:14px;border:1px solid #ddd;">Reviews or maintenance</td>
-          <td style="padding:14px;border:1px solid #ddd;">Missed execution</td>
-        </tr>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">Monthly</td>
-          <td style="padding:14px;border:1px solid #ddd;">Reports and periodic maintenance</td>
-          <td style="padding:14px;border:1px solid #ddd;">Context loss</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    When Should You Avoid Creating a Recurring Task?
-  </h2>
-
-  <p>
-    Not everything needs to become a recurring task.
-  </p>
-
-  <p>
-    Before creating one, ask:
-  </p>
-
-  <ul>
-    <li>Does this really need to happen at a fixed frequency?</li>
-    <li>Could the task be fully automated?</li>
-    <li>Do the execution conditions change?</li>
-    <li>Would an event-based trigger be better than a fixed schedule?</li>
-    <li>Does anyone actually use the result?</li>
-  </ul>
-
-  <p>
-    Sometimes a Trigger-based Process is better than a rigid schedule.
-  </p>
-
-  <p>
-    For example, instead of checking every hour whether a file has arrived, the process could start when a new file is actually received.
-  </p>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Scheduled Task vs. Trigger Task
-  </h2>
-
-  <div style="overflow-x:auto;margin:25px 0;">
-    <table style="width:100%;border-collapse:collapse;min-width:650px;">
-      <thead>
-        <tr style="background:#37474f;color:#fff;">
-          <th style="padding:14px;text-align:left;">Scheduled</th>
-          <th style="padding:14px;text-align:left;">Trigger-Based</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">Time-based</td>
-          <td style="padding:14px;border:1px solid #ddd;">Event or condition-based</td>
-        </tr>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">Simple to understand</td>
-          <td style="padding:14px;border:1px solid #ddd;">More flexible</td>
-        </tr>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">May perform unnecessary checks</td>
-          <td style="padding:14px;border:1px solid #ddd;">Runs when needed</td>
-        </tr>
-        <tr>
-          <td style="padding:14px;border:1px solid #ddd;">Good for periodic processes</td>
-          <td style="padding:14px;border:1px solid #ddd;">Good for event-driven workflows</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Soft Landing When a Process Is Interrupted
-  </h2>
-
-  <p>
-    One of the most important aspects of a reliable recurring process is what happens when execution stops halfway through.
-  </p>
-
-  <p>
-    Instead of starting from zero, the process should preserve a restart point.
-  </p>
-
-  <div style="background:#e8f5e9;border-left:5px solid #43a047;padding:22px;border-radius:10px;">
-    <p><strong>Processed:</strong> Records 1–8,500</p>
-    <p><strong>Failed:</strong> Records 8,501–8,503</p>
-    <p><strong>Remaining:</strong> 8,504–12,000</p>
-    <p><strong>Next Action:</strong> Resume from record 8,504</p>
-    <p style="margin-bottom:0;"><strong>Reason:</strong> External API timeout</p>
-  </div>
-
-  <p>
-    The next execution does not need to start from the beginning. It can <strong>resume</strong> from the point where the previous execution stopped.
-  </p>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Metrics Worth Tracking
-  </h2>
-
-  <p>
-    Important recurring processes should be measured.
-  </p>
-
-  <ul>
-    <li><strong>Success Rate</strong> – How many executions completed successfully?</li>
-    <li><strong>Failure Rate</strong> – How many failed?</li>
-    <li><strong>Execution Time</strong> – How long does each run take?</li>
-    <li><strong>Retry Rate</strong> – How often is Retry required?</li>
-    <li><strong>Overlap Rate</strong> – How often do executions collide?</li>
-    <li><strong>Recovery Time</strong> – How long does recovery take?</li>
-    <li><strong>Missed Executions</strong> – How many scheduled runs did not happen?</li>
-  </ul>
-
-  <p>
-    These metrics help determine whether a process is genuinely reliable or merely appears to be automated.
-  </p>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    How Can AI Improve Scheduled Tasks?
-  </h2>
-
-  <p>
-    AI can add an analytical layer above recurring processes.
-  </p>
-
-  <p>
-    For example, an AI system could analyze execution history and identify:
-  </p>
-
-  <ul>
-    <li>Repeated failures at the same time of day.</li>
-    <li>Increasing execution duration.</li>
-    <li>A growing number of retries.</li>
-    <li>Tasks that rarely produce useful results.</li>
-    <li>Patterns that consistently appear before a failure.</li>
-  </ul>
-
-  <p>
-    In this model, AI does not merely execute tasks. It helps evaluate the health of the recurring process over time.
-  </p>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Soft Landing Scheduled Task Checklist
-  </h2>
-
-  <div style="background:#f8f9fa;border:1px solid #ddd;padding:25px;border-radius:12px;">
-    <p>☐ Is the Schedule clearly defined?</p>
-    <p>☐ Is the Time Zone defined?</p>
-    <p>☐ Is there a Trigger condition?</p>
-    <p>☐ Are parallel executions allowed?</p>
-    <p>☐ What happens when the previous execution is still running?</p>
-    <p>☐ What happens when execution fails?</p>
-    <p>☐ Is Retry defined?</p>
-    <p>☐ Is Retry safe against duplicates?</p>
-    <p>☐ Is an Execution Snapshot stored?</p>
-    <p>☐ Can the process Resume?</p>
-    <p>☐ Is someone alerted when execution fails?</p>
-    <p style="margin-bottom:0;">☐ Does the recurring execution still provide real value?</p>
-  </div>
-
-  <h2 style="font-size:28px;color:#1565c0;border-bottom:2px solid #e3f2fd;padding-bottom:10px;">
-    Frequently Asked Questions
-  </h2>
-
-  <h3 style="font-size:21px;color:#37474f;">What is a Soft Landing Scheduled Task?</h3>
-  <p>
-    It is an approach to scheduled task design that combines scheduling with context preservation, triggers, recovery mechanisms, and execution controls.
-  </p>
-
-  <h3 style="font-size:21px;color:#37474f;">What is the difference between a Scheduled Task and a Recurring Task?</h3>
-  <p>
-    A Scheduled Task is assigned a specific execution time, while a Recurring Task repeats according to a defined recurring rule.
-  </p>
-
-  <h3 style="font-size:21px;color:#37474f;">Should every Recurring Task be automated?</h3>
-  <p>
-    Not necessarily. However, if a task repeats frequently and follows the same pattern, it is worth evaluating whether part or all of the process can be automated.
-  </p>
-
-  <h3 style="font-size:21px;color:#37474f;">What should happen when a recurring task fails?</h3>
-  <p>
-    First determine whether the failure is temporary or permanent. Depending on the process, possible responses include Retry, Backoff, Alert, Stop, or moving execution to another window.
-  </p>
-
-  <h3 style="font-size:21px;color:#37474f;">Why is Context important?</h3>
-  <p>
-    Context explains what happened during the previous execution, what was completed, what failed, and what should happen next. It becomes especially valuable when executions are not completely independent.
-  </p>
-
-  <h3 style="font-size:21px;color:#37474f;">What is the difference between Schedule and Trigger?</h3>
-  <p>
-    Schedule determines when the system attempts to start a process. Trigger defines the event or condition that allows the process to start.
-  </p>
-
-  <div style="background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;padding:32px;border-radius:14px;margin-top:40px;">
-    <h2 style="margin-top:0;color:#fff;font-size:28px;">
-      The Bottom Line
-    </h2>
-
-    <p style="font-size:18px;">
-      A good recurring task is not simply a task that runs repeatedly. It is a process capable of handling success, failure, delays, changes, and continuity.
-    </p>
-
-    <p style="font-size:18px;">
-      <strong>Scheduled Task</strong> answers: When should it run?
-    </p>
-
-    <p style="font-size:18px;">
-      <strong>Recurring Task</strong> answers: How often should it repeat?
-    </p>
-
-    <p style="font-size:18px;">
-      <strong>Trigger Task</strong> answers: What starts the process?
-    </p>
-
-    <p style="font-size:20px;margin-bottom:0;">
-      <strong>Soft Landing Scheduled Task</strong> adds the most important question: How do we ensure that the next execution can continue smoothly, with the right context and an appropriate recovery mechanism when something goes wrong?
-    </p>
-  </div>
-
-</article>`, 
-                footerH3: "Ready to Start?", 
-                footerBtn: "Back to App" 
-            }
-        };
-
-        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
-        const t = translations[userLang];
-        
-        document.documentElement.lang = userLang;
-        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
-        
-        document.title = t.title;
-        document.getElementById('back-link').innerText = t.back;
-        document.getElementById('meta-date').innerText = t.date;
-        document.getElementById('meta-read-time').innerText = t.readTime;
-        document.getElementById('main-h1').innerText = t.title;
-        document.getElementById('article-body-content').innerHTML = t.body;
-        document.getElementById('footer-h3').innerText = t.footerH3;
-        document.getElementById('footer-btn').innerText = t.footerBtn;
-    </script>
-</body>
-</html>
+<style>
+    :root {
+        --primary-color: #3498db;
+        --secondary-color: #2c3e50;
+        --text-color: #333;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background-color: #f9f9f9;
+        font-family: "Segoe UI", system-ui, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        line-height: 1.8;
+        color: var(--text-color);
+    }
+
+    .article-page-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        background: #fff;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+        min-height: 100vh;
+    }
+
+    .back-to-blog {
+        display: inline-block;
+        margin-bottom: 30px;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .back-to-blog:hover {
+        text-decoration: underline;
+    }
+
+    .article-header {
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+
+    .article-header h1 {
+        font-size: 2.2em;
+        line-height: 1.3;
+        color: var(--secondary-color);
+        margin: 10px 0;
+    }
+
+    .meta-info {
+        color: #95a5a6;
+        font-size: 0.9em;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .article-body {
+        width: 100%;
+        font-size: 1.08em;
+    }
+
+    .article-body img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .article-body table {
+        max-width: 100%;
+    }
+
+    .footer-cta {
+        margin-top: 60px;
+        padding: 30px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .btn-main {
+        display: inline-block;
+        background: var(--primary-color);
+        color: white;
+        padding: 12px 25px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: opacity 0.2s ease;
+    }
+
+    .btn-main:hover {
+        opacity: 0.9;
+    }
+
+    /* RTL */
+    html[dir="rtl"] .meta-info {
+        flex-direction: row;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+        .article-page-container {
+            padding: 25px 15px;
+        }
+
+        .article-header h1 {
+            font-size: 1.8em;
+        }
+
+        .article-body {
+            font-size: 1em;
+        }
+
+        .article-body h2 {
+            font-size: 24px !important;
+        }
+
+        .article-body h3 {
+            font-size: 20px !important;
+        }
+
+        .article-body table {
+            font-size: 14px;
+        }
+    }
+</style>
