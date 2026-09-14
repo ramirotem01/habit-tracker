@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחשבון KPI: חישוב ביצועים ועמידה ביעדים</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "14 בספטמבר 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "מחשבון KPI: חישוב ביצועים ועמידה ביעדים",
+                body: `<div dir="ltr" style="font-family:Arial,Helvetica,sans-serif;line-height:1.7;color:#222;max-width:1100px;margin:0 auto;background:#fff;">
+
+  <div style="background:linear-gradient(135deg,#0071bb,#005b96);color:#fff;padding:38px 28px;border-radius:14px;margin-bottom:28px;text-align:center;">
+    <h1 style="margin:0 0 12px;font-size:34px;line-height:1.2;">KPI Calculator</h1>
+    <p style="margin:0;font-size:18px;opacity:.95;">Calculate KPI performance, achievement rate and weighted KPI scores in seconds.</p>
+  </div>
+
+  <div style="background:#f7f9fb;border:1px solid #e1e7ed;border-radius:14px;padding:28px;margin-bottom:25px;">
+    <h2 style="margin-top:0;color:#005b96;">Calculate KPI Performance</h2>
+
+    <p style="color:#555;margin-bottom:24px;">
+      Enter your KPI target and actual result to calculate the percentage of target achievement.
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+
+      <div>
+        <label for="kpiTarget" style="display:block;font-weight:bold;margin-bottom:7px;">KPI Target</label>
+        <input id="kpiTarget" type="number" min="0" step="any" placeholder="e.g. 100"
+          style="width:100%;box-sizing:border-box;padding:14px;border:1px solid #ccd5dd;border-radius:8px;font-size:16px;">
+      </div>
+
+      <div>
+        <label for="kpiActual" style="display:block;font-weight:bold;margin-bottom:7px;">Actual Result</label>
+        <input id="kpiActual" type="number" min="0" step="any" placeholder="e.g. 87"
+          style="width:100%;box-sizing:border-box;padding:14px;border:1px solid #ccd5dd;border-radius:8px;font-size:16px;">
+      </div>
+
+    </div>
+
+    <button onclick="calculateKPI()" 
+      style="margin-top:24px;background:#0071bb;color:#fff;border:0;padding:14px 28px;border-radius:8px;font-size:17px;font-weight:bold;cursor:pointer;">
+      Calculate KPI
+    </button>
+
+    <div id="kpiResult" style="display:none;margin-top:25px;background:#fff;border:1px solid #dce5ec;border-radius:12px;padding:24px;text-align:center;">
+      <div style="font-size:15px;color:#666;">KPI Achievement</div>
+      <div id="kpiPercentage" style="font-size:46px;font-weight:bold;color:#0071bb;margin:5px 0;"></div>
+      <div id="kpiStatus" style="font-size:18px;font-weight:bold;"></div>
+    </div>
+  </div>
+
+
+  <div style="background:#fff;border:1px solid #e1e7ed;border-radius:14px;padding:28px;margin-bottom:25px;">
+    <h2 style="margin-top:0;color:#005b96;">Weighted KPI Calculator</h2>
+
+    <p style="color:#555;">
+      Use this calculator when you have several KPIs with different weights.
+      The total weight should equal 100%.
+    </p>
+
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;margin-top:20px;min-width:650px;">
+        <thead>
+          <tr style="background:#f1f5f8;">
+            <th style="padding:12px;border:1px solid #dce3e8;text-align:left;">KPI</th>
+            <th style="padding:12px;border:1px solid #dce3e8;">Target</th>
+            <th style="padding:12px;border:1px solid #dce3e8;">Actual</th>
+            <th style="padding:12px;border:1px solid #dce3e8;">Weight %</th>
+          </tr>
+        </thead>
+
+        <tbody id="kpiRows">
+
+          <tr>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="text" placeholder="Sales" class="wkpiName"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiTarget"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiActual"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" max="100" step="any" class="wkpiWeight"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="text" placeholder="Customer Service" class="wkpiName"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiTarget"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiActual"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" max="100" step="any" class="wkpiWeight"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="text" placeholder="Quality" class="wkpiName"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiTarget"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiActual"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" max="100" step="any" class="wkpiWeight"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="text" placeholder="Productivity" class="wkpiName"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiTarget"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce5ec;">
+              <input type="number" min="0" step="any" class="wkpiActual"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" max="100" step="any" class="wkpiWeight"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <button onclick="calculateWeightedKPI()" 
+      style="margin-top:24px;background:#0071bb;color:#fff;border:0;padding:14px 28px;border-radius:8px;font-size:17px;font-weight:bold;cursor:pointer;">
+      Calculate Weighted KPI
+    </button>
+
+    <div id="weightedResult" style="display:none;margin-top:25px;background:#f7f9fb;border:1px solid #dce5ec;border-radius:12px;padding:24px;text-align:center;">
+      <div style="font-size:15px;color:#666;">Overall Weighted KPI Score</div>
+      <div id="weightedScore" style="font-size:46px;font-weight:bold;color:#0071bb;margin:5px 0;"></div>
+      <div id="weightedStatus" style="font-size:18px;font-weight:bold;"></div>
+      <div id="weightMessage" style="margin-top:10px;color:#666;"></div>
+    </div>
+  </div>
+
+
+  <div style="background:#f7f9fb;border-left:5px solid #0071bb;padding:24px;border-radius:8px;margin-bottom:25px;">
+    <h2 style="margin-top:0;color:#005b96;">How Is KPI Performance Calculated?</h2>
+
+    <p>
+      The basic KPI achievement formula is:
+    </p>
+
+    <div style="background:#fff;padding:18px;border-radius:8px;text-align:center;font-size:20px;font-weight:bold;margin:18px 0;">
+      KPI Achievement = (Actual Result ÷ Target) × 100
+    </div>
+
+    <p>
+      For example, if the target is 100 and the actual result is 87,
+      the KPI achievement is <strong>87%</strong>.
+    </p>
+
+    <p>
+      For multiple KPIs, each KPI can receive a different weight.
+      The weighted score reflects the relative importance of each KPI.
+    </p>
+  </div>
+
+
+  <div style="background:#fff;border:1px solid #e1e7ed;border-radius:14px;padding:28px;margin-bottom:25px;">
+    <h2 style="margin-top:0;color:#005b96;">KPI Performance Guide</h2>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;">
+
+      <div style="padding:18px;background:#f7f9fb;border-radius:8px;text-align:center;">
+        <div style="font-size:28px;font-weight:bold;color:#0071bb;">100%+</div>
+        <div style="font-weight:bold;">Excellent</div>
+        <div style="font-size:14px;color:#666;">Target exceeded</div>
+      </div>
+
+      <div style="padding:18px;background:#f7f9fb;border-radius:8px;text-align:center;">
+        <div style="font-size:28px;font-weight:bold;color:#0071bb;">90–99%</div>
+        <div style="font-weight:bold;">Very Good</div>
+        <div style="font-size:14px;color:#666;">Close to target</div>
+      </div>
+
+      <div style="padding:18px;background:#f7f9fb;border-radius:8px;text-align:center;">
+        <div style="font-size:28px;font-weight:bold;color:#0071bb;">75–89%</div>
+        <div style="font-weight:bold;">Needs Attention</div>
+        <div style="font-size:14px;color:#666;">Below target</div>
+      </div>
+
+      <div style="padding:18px;background:#f7f9fb;border-radius:8px;text-align:center;">
+        <div style="font-size:28px;font-weight:bold;color:#0071bb;">&lt;75%</div>
+        <div style="font-weight:bold;">At Risk</div>
+        <div style="font-size:14px;color:#666;">Significantly below target</div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script>
+    function calculateKPI() {
+      var target = parseFloat(document.getElementById("kpiTarget").value);
+      var actual = parseFloat(document.getElementById("kpiActual").value);
+
+      if (isNaN(target) || isNaN(actual) || target <= 0) {
+        alert("Please enter a valid KPI target and actual result.");
+        return;
+      }
+
+      var percentage = (actual / target) * 100;
+
+      document.getElementById("kpiResult").style.display = "block";
+      document.getElementById("kpiPercentage").innerHTML = percentage.toFixed(1) + "%";
+
+      var status = "";
+      if (percentage >= 100) {
+        status = "Excellent – Target Exceeded";
+      } else if (percentage >= 90) {
+        status = "Very Good – Close to Target";
+      } else if (percentage >= 75) {
+        status = "Needs Attention – Below Target";
+      } else {
+        status = "At Risk – Significantly Below Target";
+      }
+
+      document.getElementById("kpiStatus").innerHTML = status;
+    }
+
+
+    function calculateWeightedKPI() {
+      var targets = document.querySelectorAll(".wkpiTarget");
+      var actuals = document.querySelectorAll(".wkpiActual");
+      var weights = document.querySelectorAll(".wkpiWeight");
+
+      var totalWeight = 0;
+      var weightedScore = 0;
+      var hasData = false;
+
+      for (var i = 0; i < targets.length; i++) {
+        var target = parseFloat(targets[i].value);
+        var actual = parseFloat(actuals[i].value);
+        var weight = parseFloat(weights[i].value);
+
+        if (!isNaN(weight) && weight > 0) {
+          if (isNaN(target) || target <= 0 || isNaN(actual)) {
+            alert("Please complete the target and actual result for every KPI with a weight.");
+            return;
+          }
+
+          totalWeight += weight;
+
+          var achievement = (actual / target) * 100;
+
+          weightedScore += achievement * (weight / 100);
+          hasData = true;
+        }
+      }
+
+      if (!hasData) {
+        alert("Please enter at least one KPI with a weight.");
+        return;
+      }
+
+      document.getElementById("weightedResult").style.display = "block";
+
+      if (Math.abs(totalWeight - 100) > 0.01) {
+        document.getElementById("weightedScore").innerHTML = weightedScore.toFixed(1) + "%";
+        document.getElementById("weightedStatus").innerHTML = "Please check your KPI weights";
+        document.getElementById("weightMessage").innerHTML =
+          "Your total KPI weight is " + totalWeight.toFixed(1) + "%. For a standard weighted KPI calculation, the total weight should equal 100%.";
+        return;
+      }
+
+      document.getElementById("weightedScore").innerHTML = weightedScore.toFixed(1) + "%";
+
+      var status = "";
+
+      if (weightedScore >= 100) {
+        status = "Excellent – Overall Target Exceeded";
+      } else if (weightedScore >= 90) {
+        status = "Very Good – Strong Performance";
+      } else if (weightedScore >= 75) {
+        status = "Needs Attention – Performance Below Target";
+      } else {
+        status = "At Risk – Significant Improvement Needed";
+      }
+
+      document.getElementById("weightedStatus").innerHTML = status;
+      document.getElementById("weightMessage").innerHTML =
+        "Total KPI weight: 100%. The score is calculated using the weighted performance of all KPIs.";
+    }
+  </script>
+
+</div>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "September 14, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "KPI Calculator: Measure Performance and Goal Achievement",
+                body: `<div dir="ltr" style="font-family:Arial,Helvetica,sans-serif;line-height:1.7;color:#222;max-width:1100px;margin:0 auto;background:#fff;">
+
+  <div style="background:linear-gradient(135deg,#0071bb,#005b96);color:#fff;padding:38px 28px;border-radius:14px;margin-bottom:28px;text-align:center;">
+    <h1 style="margin:0 0 12px;font-size:34px;line-height:1.2;">KPI Calculator</h1>
+    <p style="margin:0;font-size:18px;opacity:.95;">Calculate KPI performance, achievement rate and weighted KPI scores in seconds.</p>
+  </div>
+
+  <div style="background:#f7f9fb;border:1px solid #e1e7ed;border-radius:14px;padding:28px;margin-bottom:25px;">
+    <h2 style="margin-top:0;color:#005b96;">Calculate KPI Performance</h2>
+
+    <p style="color:#555;margin-bottom:24px;">
+      Enter your KPI target and actual result to calculate the percentage of target achievement.
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+
+      <div>
+        <label for="kpiTarget" style="display:block;font-weight:bold;margin-bottom:7px;">KPI Target</label>
+        <input id="kpiTarget" type="number" min="0" step="any" placeholder="e.g. 100"
+          style="width:100%;box-sizing:border-box;padding:14px;border:1px solid #ccd5dd;border-radius:8px;font-size:16px;">
+      </div>
+
+      <div>
+        <label for="kpiActual" style="display:block;font-weight:bold;margin-bottom:7px;">Actual Result</label>
+        <input id="kpiActual" type="number" min="0" step="any" placeholder="e.g. 87"
+          style="width:100%;box-sizing:border-box;padding:14px;border:1px solid #ccd5dd;border-radius:8px;font-size:16px;">
+      </div>
+
+    </div>
+
+    <button onclick="calculateKPI()" 
+      style="margin-top:24px;background:#0071bb;color:#fff;border:0;padding:14px 28px;border-radius:8px;font-size:17px;font-weight:bold;cursor:pointer;">
+      Calculate KPI
+    </button>
+
+    <div id="kpiResult" style="display:none;margin-top:25px;background:#fff;border:1px solid #dce5ec;border-radius:12px;padding:24px;text-align:center;">
+      <div style="font-size:15px;color:#666;">KPI Achievement</div>
+      <div id="kpiPercentage" style="font-size:46px;font-weight:bold;color:#0071bb;margin:5px 0;"></div>
+      <div id="kpiStatus" style="font-size:18px;font-weight:bold;"></div>
+    </div>
+  </div>
+
+
+  <div style="background:#fff;border:1px solid #e1e7ed;border-radius:14px;padding:28px;margin-bottom:25px;">
+    <h2 style="margin-top:0;color:#005b96;">Weighted KPI Calculator</h2>
+
+    <p style="color:#555;">
+      Use this calculator when you have several KPIs with different weights.
+      The total weight should equal 100%.
+    </p>
+
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;margin-top:20px;min-width:650px;">
+        <thead>
+          <tr style="background:#f1f5f8;">
+            <th style="padding:12px;border:1px solid #dce3e8;text-align:left;">KPI</th>
+            <th style="padding:12px;border:1px solid #dce3e8;">Target</th>
+            <th style="padding:12px;border:1px solid #dce3e8;">Actual</th>
+            <th style="padding:12px;border:1px solid #dce3e8;">Weight %</th>
+          </tr>
+        </thead>
+
+        <tbody id="kpiRows">
+
+          <tr>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="text" placeholder="Sales" class="wkpiName"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiTarget"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiActual"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" max="100" step="any" class="wkpiWeight"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="text" placeholder="Customer Service" class="wkpiName"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiTarget"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiActual"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" max="100" step="any" class="wkpiWeight"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="text" placeholder="Quality" class="wkpiName"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiTarget"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiActual"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" max="100" step="any" class="wkpiWeight"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="text" placeholder="Productivity" class="wkpiName"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" step="any" class="wkpiTarget"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce5ec;">
+              <input type="number" min="0" step="any" class="wkpiActual"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+            <td style="padding:10px;border:1px solid #dce3e8;">
+              <input type="number" min="0" max="100" step="any" class="wkpiWeight"
+                style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #ccd5dd;border-radius:6px;">
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <button onclick="calculateWeightedKPI()" 
+      style="margin-top:24px;background:#0071bb;color:#fff;border:0;padding:14px 28px;border-radius:8px;font-size:17px;font-weight:bold;cursor:pointer;">
+      Calculate Weighted KPI
+    </button>
+
+    <div id="weightedResult" style="display:none;margin-top:25px;background:#f7f9fb;border:1px solid #dce5ec;border-radius:12px;padding:24px;text-align:center;">
+      <div style="font-size:15px;color:#666;">Overall Weighted KPI Score</div>
+      <div id="weightedScore" style="font-size:46px;font-weight:bold;color:#0071bb;margin:5px 0;"></div>
+      <div id="weightedStatus" style="font-size:18px;font-weight:bold;"></div>
+      <div id="weightMessage" style="margin-top:10px;color:#666;"></div>
+    </div>
+  </div>
+
+
+  <div style="background:#f7f9fb;border-left:5px solid #0071bb;padding:24px;border-radius:8px;margin-bottom:25px;">
+    <h2 style="margin-top:0;color:#005b96;">How Is KPI Performance Calculated?</h2>
+
+    <p>
+      The basic KPI achievement formula is:
+    </p>
+
+    <div style="background:#fff;padding:18px;border-radius:8px;text-align:center;font-size:20px;font-weight:bold;margin:18px 0;">
+      KPI Achievement = (Actual Result ÷ Target) × 100
+    </div>
+
+    <p>
+      For example, if the target is 100 and the actual result is 87,
+      the KPI achievement is <strong>87%</strong>.
+    </p>
+
+    <p>
+      For multiple KPIs, each KPI can receive a different weight.
+      The weighted score reflects the relative importance of each KPI.
+    </p>
+  </div>
+
+
+  <div style="background:#fff;border:1px solid #e1e7ed;border-radius:14px;padding:28px;margin-bottom:25px;">
+    <h2 style="margin-top:0;color:#005b96;">KPI Performance Guide</h2>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;">
+
+      <div style="padding:18px;background:#f7f9fb;border-radius:8px;text-align:center;">
+        <div style="font-size:28px;font-weight:bold;color:#0071bb;">100%+</div>
+        <div style="font-weight:bold;">Excellent</div>
+        <div style="font-size:14px;color:#666;">Target exceeded</div>
+      </div>
+
+      <div style="padding:18px;background:#f7f9fb;border-radius:8px;text-align:center;">
+        <div style="font-size:28px;font-weight:bold;color:#0071bb;">90–99%</div>
+        <div style="font-weight:bold;">Very Good</div>
+        <div style="font-size:14px;color:#666;">Close to target</div>
+      </div>
+
+      <div style="padding:18px;background:#f7f9fb;border-radius:8px;text-align:center;">
+        <div style="font-size:28px;font-weight:bold;color:#0071bb;">75–89%</div>
+        <div style="font-weight:bold;">Needs Attention</div>
+        <div style="font-size:14px;color:#666;">Below target</div>
+      </div>
+
+      <div style="padding:18px;background:#f7f9fb;border-radius:8px;text-align:center;">
+        <div style="font-size:28px;font-weight:bold;color:#0071bb;">&lt;75%</div>
+        <div style="font-weight:bold;">At Risk</div>
+        <div style="font-size:14px;color:#666;">Significantly below target</div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script>
+    function calculateKPI() {
+      var target = parseFloat(document.getElementById("kpiTarget").value);
+      var actual = parseFloat(document.getElementById("kpiActual").value);
+
+      if (isNaN(target) || isNaN(actual) || target <= 0) {
+        alert("Please enter a valid KPI target and actual result.");
+        return;
+      }
+
+      var percentage = (actual / target) * 100;
+
+      document.getElementById("kpiResult").style.display = "block";
+      document.getElementById("kpiPercentage").innerHTML = percentage.toFixed(1) + "%";
+
+      var status = "";
+      if (percentage >= 100) {
+        status = "Excellent – Target Exceeded";
+      } else if (percentage >= 90) {
+        status = "Very Good – Close to Target";
+      } else if (percentage >= 75) {
+        status = "Needs Attention – Below Target";
+      } else {
+        status = "At Risk – Significantly Below Target";
+      }
+
+      document.getElementById("kpiStatus").innerHTML = status;
+    }
+
+
+    function calculateWeightedKPI() {
+      var targets = document.querySelectorAll(".wkpiTarget");
+      var actuals = document.querySelectorAll(".wkpiActual");
+      var weights = document.querySelectorAll(".wkpiWeight");
+
+      var totalWeight = 0;
+      var weightedScore = 0;
+      var hasData = false;
+
+      for (var i = 0; i < targets.length; i++) {
+        var target = parseFloat(targets[i].value);
+        var actual = parseFloat(actuals[i].value);
+        var weight = parseFloat(weights[i].value);
+
+        if (!isNaN(weight) && weight > 0) {
+          if (isNaN(target) || target <= 0 || isNaN(actual)) {
+            alert("Please complete the target and actual result for every KPI with a weight.");
+            return;
+          }
+
+          totalWeight += weight;
+
+          var achievement = (actual / target) * 100;
+
+          weightedScore += achievement * (weight / 100);
+          hasData = true;
+        }
+      }
+
+      if (!hasData) {
+        alert("Please enter at least one KPI with a weight.");
+        return;
+      }
+
+      document.getElementById("weightedResult").style.display = "block";
+
+      if (Math.abs(totalWeight - 100) > 0.01) {
+        document.getElementById("weightedScore").innerHTML = weightedScore.toFixed(1) + "%";
+        document.getElementById("weightedStatus").innerHTML = "Please check your KPI weights";
+        document.getElementById("weightMessage").innerHTML =
+          "Your total KPI weight is " + totalWeight.toFixed(1) + "%. For a standard weighted KPI calculation, the total weight should equal 100%.";
+        return;
+      }
+
+      document.getElementById("weightedScore").innerHTML = weightedScore.toFixed(1) + "%";
+
+      var status = "";
+
+      if (weightedScore >= 100) {
+        status = "Excellent – Overall Target Exceeded";
+      } else if (weightedScore >= 90) {
+        status = "Very Good – Strong Performance";
+      } else if (weightedScore >= 75) {
+        status = "Needs Attention – Performance Below Target";
+      } else {
+        status = "At Risk – Significant Improvement Needed";
+      }
+
+      document.getElementById("weightedStatus").innerHTML = status;
+      document.getElementById("weightMessage").innerHTML =
+        "Total KPI weight: 100%. The score is calculated using the weighted performance of all KPIs.";
+    }
+  </script>
+
+</div>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
