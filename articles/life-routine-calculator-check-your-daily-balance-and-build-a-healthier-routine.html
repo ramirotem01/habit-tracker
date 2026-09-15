@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחשבון שגרת החיים: בדקו את האיזון היומי ובנו שגרה נכונה ובריאה יותר</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "15 בספטמבר 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "מחשבון שגרת החיים: בדקו את האיזון היומי ובנו שגרה נכונה ובריאה יותר",
+                body: `<div id="life-routine-calculator-he" style="font-family:Arial,Helvetica,sans-serif;direction:rtl;max-width:1100px;margin:30px auto;padding:20px;box-sizing:border-box;color:#222;">
+
+    <div style="background:linear-gradient(135deg,#0f4c81,#1976b5);color:#fff;border-radius:18px;padding:35px 25px;margin-bottom:25px;text-align:center;">
+        <h1 style="margin:0 0 12px;font-size:34px;line-height:1.3;">מחשבון שגרת החיים</h1>
+
+        <p style="margin:0 auto;max-width:800px;font-size:18px;line-height:1.8;">
+            עד כמה השגרה שלך מאוזנת? ענה על מספר שאלות וקבל ציון אישי, ניתוח של אורח החיים שלך והמלצות מעשיות לשיפור השגרה היומית.
+        </p>
+    </div>
+
+
+    <form id="lrc-he-form">
+
+        <!-- DAILY SCHEDULE -->
+
+        <div style="background:#fff;border:1px solid #ddd;border-radius:15px;padding:25px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+
+            <h2 style="margin:0 0 20px;font-size:24px;color:#0f4c81;">
+                1. איך נראה היום שלך?
+            </h2>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
+
+                <div>
+                    <label for="he-wake" style="display:block;font-weight:bold;margin-bottom:7px;">
+                        שעת קימה
+                    </label>
+
+                    <input id="he-wake" type="time" value="06:30"
+                    style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+
+                <div>
+                    <label for="he-sleep" style="display:block;font-weight:bold;margin-bottom:7px;">
+                        שעת שינה
+                    </label>
+
+                    <input id="he-sleep" type="time" value="22:30"
+                    style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+
+                <div>
+                    <label for="he-work" style="display:block;font-weight:bold;margin-bottom:7px;">
+                        שעות עבודה ביום
+                    </label>
+
+                    <input id="he-work" type="number" min="0" max="20" step="0.5" value="8"
+                    style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+
+                <div>
+                    <label for="he-commute" style="display:block;font-weight:bold;margin-bottom:7px;">
+                        שעות נסיעה ביום
+                    </label>
+
+                    <input id="he-commute" type="number" min="0" max="10" step="0.25" value="1"
+                    style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+
+                <div>
+                    <label for="he-family" style="display:block;font-weight:bold;margin-bottom:7px;">
+                        זמן משפחה וחברה ביום
+                    </label>
+
+                    <input id="he-family" type="number" min="0" max="12" step="0.25" value="2"
+                    style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+
+                <div>
+                    <label for="he-personal" style="display:block;font-weight:bold;margin-bottom:7px;">
+                        זמן אישי ופנוי ביום
+                    </label>
+
+                    <input id="he-personal" type="number" min="0" max="12" step="0.25" value="1"
+                    style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HABITS -->
+
+        <div style="background:#fff;border:1px solid #ddd;border-radius:15px;padding:25px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+
+            <h2 style="margin:0 0 20px;font-size:24px;color:#0f4c81;">
+                2. הרגלים ואורח חיים
+            </h2>
+
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
+
+                <div>
+                    <label for="he-exercise" style="display:block;font-weight:bold;margin-bottom:7px;">
+                        אימונים בשבוע
+                    </label>
+
+                    <input id="he-exercise" type="number" min="0" max="14" value="3"
+                    style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+
+                <div>
+                    <label for="he-exercise-min" style="display:block;font-weight:bold;margin-bottom:7px;">
+                        דקות בממוצע בכל אימון
+                    </label>
+
+                    <input id="he-exercise-min" type="number" min="0" max="300" step="5" value="30"
+                    style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+
+                <div>
+                    <label for="he-learning" style="display:block;font-weight:bold;margin-bottom:7px;">
+                        שעות למידה והתפתחות בשבוע
+                    </label>
+
+                    <input id="he-learning" type="number" min="0" max="40" step="0.5" value="2"
+                    style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+
+                <div>
+                    <label for="he-planning" style="display:block;font-weight:bold;margin-bottom:7px;">
+                        האם אתה מתכנן את השבוע?
+                    </label>
+
+                    <select id="he-planning"
+                    style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+
+                        <option value="2">כן, באופן קבוע</option>
+                        <option value="1">לפעמים</option>
+                        <option value="0">לא</option>
+
+                    </select>
+                </div>
+
+
+                <div>
+                    <label for="he-screen" style="display:block;font-weight:bold;margin-bottom:7px;">
+                        זמן ללא מסכים לפני השינה
+                    </label>
+
+                    <select id="he-screen"
+                    style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+
+                        <option value="2">30 דקות ומעלה</option>
+                        <option value="1">10–29 דקות</option>
+                        <option value="0">כמעט שאין</option>
+
+                    </select>
+                </div>
+
+
+                <div>
+                    <label for="he-stress" style="display:block;font-weight:bold;margin-bottom:7px;">
+                        באיזו תדירות אתה מרגיש מוצף?
+                    </label>
+
+                    <select id="he-stress"
+                    style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+
+                        <option value="2">לעיתים רחוקות</option>
+                        <option value="1">לפעמים</option>
+                        <option value="0">לעיתים קרובות</option>
+
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+
+        <div style="text-align:center;margin:25px 0;">
+
+            <button type="submit"
+            style="background:#0f4c81;color:#fff;border:0;border-radius:10px;padding:15px 35px;font-size:18px;font-weight:bold;cursor:pointer;">
+
+                חשב את ציון שגרת החיים
+
+            </button>
+
+
+            <button type="button" id="he-reset"
+            style="background:#fff;color:#333;border:1px solid #bbb;border-radius:10px;padding:14px 25px;font-size:16px;cursor:pointer;margin-right:8px;">
+
+                איפוס
+
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <!-- RESULTS -->
+
+    <div id="he-results" style="display:none;">
+
+        <!-- SCORE -->
+
+        <div style="background:#fff;border:1px solid #ddd;border-radius:15px;padding:30px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+
+            <div style="text-align:center;">
+
+                <div style="font-size:18px;color:#666;margin-bottom:8px;">
+                    ציון שגרת החיים שלך
+                </div>
+
+
+                <div id="he-score"
+                style="font-size:64px;font-weight:bold;color:#0f4c81;line-height:1;">
+                    0
+                </div>
+
+
+                <div id="he-score-title"
+                style="font-size:25px;font-weight:bold;margin-top:12px;">
+                    -
+                </div>
+
+
+                <p id="he-score-message"
+                style="font-size:17px;line-height:1.8;color:#555;max-width:800px;margin:12px auto 20px;">
+                </p>
+
+
+                <div style="background:#eee;height:14px;border-radius:20px;overflow:hidden;max-width:700px;margin:0 auto;">
+
+                    <div id="he-score-bar"
+                    style="height:100%;width:0;background:#1976b5;border-radius:20px;transition:width .6s;">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BREAKDOWN -->
+
+        <div style="background:#fff;border:1px solid #ddd;border-radius:15px;padding:25px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+
+            <h2 style="margin:0 0 20px;color:#0f4c81;">
+                ניתוח שגרת החיים שלך
+            </h2>
+
+
+            <div id="he-metrics"
+            style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;">
+            </div>
+
+        </div>
+
+
+        <!-- RECOMMENDATIONS -->
+
+        <div style="background:#fff;border:1px solid #ddd;border-radius:15px;padding:25px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+
+            <h2 style="margin:0 0 20px;color:#0f4c81;">
+                שלושת הדברים שכדאי לך לשפר קודם
+            </h2>
+
+
+            <div id="he-recommendations"></div>
+
+        </div>
+
+
+        <!-- ROUTINE -->
+
+        <div style="background:#fff;border:1px solid #ddd;border-radius:15px;padding:25px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+
+            <h2 style="margin:0 0 8px;color:#0f4c81;">
+                הצעה לשגרת היום שלך
+            </h2>
+
+
+            <p style="color:#666;line-height:1.8;margin-top:0;">
+                זו אינה תוכנית קשיחה. המטרה היא ליצור מסגרת שתוכל להתמיד בה לאורך זמן.
+            </p>
+
+
+            <div id="he-plan"></div>
+
+        </div>
+
+
+        <!-- FINAL MESSAGE -->
+
+        <div style="background:#eef7fc;border-right:5px solid #1976b5;padding:18px;border-radius:8px;margin-top:20px;line-height:1.8;color:#333;">
+
+            <strong>הנקודה החשובה ביותר:</strong>
+            שגרה טובה אינה שגרה מושלמת. המטרה היא ליצור אורח חיים מאוזן שאפשר להתמיד בו גם בתקופות עמוסות.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+(function() {
+
+    var form = document.getElementById("lrc-he-form");
+
+    var results = document.getElementById("he-results");
+
+    var resetButton = document.getElementById("he-reset");
+
+
+    function getNumber(id) {
+
+        var value = parseFloat(document.getElementById(id).value);
+
+        if (!isFinite(value) || value < 0) {
+            return 0;
+        }
+
+        return value;
+
+    }
+
+
+    function getTimeMinutes(id) {
+
+        var value = document.getElementById(id).value;
+
+        if (!value || value.indexOf(":") === -1) {
+            return 0;
+        }
+
+        var parts = value.split(":");
+
+        var hours = parseInt(parts[0], 10);
+
+        var minutes = parseInt(parts[1], 10);
+
+        if (isNaN(hours) || isNaN(minutes)) {
+            return 0;
+        }
+
+        return hours * 60 + minutes;
+
+    }
+
+
+    function calculateSleepHours() {
+
+        var wake = getTimeMinutes("he-wake");
+
+        var sleep = getTimeMinutes("he-sleep");
+
+        if (!wake || !sleep) {
+            return 8;
+        }
+
+        var difference = wake - sleep;
+
+        if (difference <= 0) {
+            difference += 1440;
+        }
+
+        return difference / 60;
+
+    }
+
+
+    function clamp(value, min, max) {
+
+        return Math.max(min, Math.min(max, value));
+
+    }
+
+
+    function calculateScore() {
+
+        var sleep = calculateSleepHours();
+
+        var work = getNumber("he-work");
+
+        var commute = getNumber("he-commute");
+
+        var family = getNumber("he-family");
+
+        var personal = getNumber("he-personal");
+
+        var exercise = getNumber("he-exercise");
+
+        var exerciseMinutes = getNumber("he-exercise-min");
+
+        var learning = getNumber("he-learning");
+
+
+        var planning =
+            parseInt(document.getElementById("he-planning").value, 10);
+
+
+        var screen =
+            parseInt(document.getElementById("he-screen").value, 10);
+
+
+        var stress =
+            parseInt(document.getElementById("he-stress").value, 10);
+
+
+        /*
+        שינה
+        */
+
+        var sleepScore = clamp(
+            100 - Math.abs(sleep - 8) * 28,
+            0,
+            100
+        );
+
+
+        /*
+        פעילות גופנית
+        */
+
+        var exerciseScore =
+            (exercise / 4) * 65 +
+            (
+                exerciseMinutes >= 30
+                ? 35
+                : (exerciseMinutes / 30) * 35
+            );
+
+
+        exerciseScore =
+            clamp(exerciseScore, 0, 100);
+
+
+        /*
+        עבודה
+        */
+
+        var workScore =
+            work <= 8
+            ? 100
+            : clamp(
+                100 - ((work - 8) * 18),
+                0,
+                100
+            );
+
+
+        /*
+        זמן אישי
+        */
+
+        var personalScore =
+            clamp(
+                (personal / 2) * 100,
+                0,
+                100
+            );
+
+
+        /*
+        משפחה וחברה
+        */
+
+        var familyScore =
+            clamp(
+                (family / 2) * 100,
+                0,
+                100
+            );
+
+
+        /*
+        למידה
+        */
+
+        var learningScore =
+            clamp(
+                (learning / 3) * 100,
+                0,
+                100
+            );
+
+
+        /*
+        תכנון שבועי
+        */
+
+        var planningScore =
+            planning * 50;
+
+
+        /*
+        זמן ללא מסכים
+        */
+
+        var screenScore =
+            screen * 50;
+
+
+        /*
+        עומס
+        */
+
+        var stressScore =
+            stress * 50;
+
+
+        /*
+        קנס על עומס עבודה + נסיעות
+        */
+
+        var workloadPenalty =
+            (work + commute) > 11
+            ? 10
+            : 0;
+
+
+        /*
+        ציון סופי
+        */
+
+        var total =
+            sleepScore * 0.22 +
+            exerciseScore * 0.16 +
+            workScore * 0.14 +
+            personalScore * 0.12 +
+            familyScore * 0.10 +
+            learningScore * 0.06 +
+            planningScore * 0.07 +
+            screenScore * 0.05 +
+            stressScore * 0.08 -
+            workloadPenalty;
+
+
+        total =
+            clamp(
+                Math.round(total),
+                0,
+                100
+            );
+
+
+        return {
+
+            total: total,
+
+            sleepScore: sleepScore,
+
+            exerciseScore: exerciseScore,
+
+            workScore: workScore,
+
+            personalScore: personalScore,
+
+            familyScore: familyScore,
+
+            learningScore: learningScore,
+
+            planningScore: planningScore,
+
+            screenScore: screenScore,
+
+            stressScore: stressScore,
+
+            sleep: sleep,
+
+            work: work,
+
+            commute: commute,
+
+            family: family,
+
+            personal: personal,
+
+            exercise: exercise,
+
+            exerciseMinutes: exerciseMinutes,
+
+            learning: learning
+
+        };
+
+    }
+
+
+    function metricHTML(name, score) {
+
+        var rounded =
+            Math.round(score);
+
+
+        return `
+
+            <div style="border:1px solid #ddd;border-radius:10px;padding:15px;background:#fafafa;">
+
+                <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:8px;font-size:15px;">
+
+                    <strong>${name}</strong>
+
+                    <strong style="color:#0f4c81;">
+                        ${rounded}/100
+                    </strong>
+
+                </div>
+
+
+                <div style="background:#e5e5e5;height:9px;border-radius:20px;overflow:hidden;">
+
+                    <div style="height:100%;width:${rounded}%;background:#1976b5;border-radius:20px;"></div>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    function generateRecommendations(data) {
+
+        var recommendations = [];
+
+
+        if (data.sleep < 7) {
+
+            recommendations.push(
+                "<strong>שינה:</strong> זמן השינה המחושב שלך הוא " +
+                data.sleep.toFixed(1) +
+                " שעות. כדאי לבדוק האם ניתן להקדים מעט את שעת השינה או לשפר את עקביות השגרה."
+            );
+
+        }
+
+
+        if (data.exercise < 3 || data.exerciseMinutes < 30) {
+
+            recommendations.push(
+                "<strong>פעילות גופנית:</strong> נסה להגיע בהדרגה לפחות ל־3 אימונים בשבוע ולבנות פעילות של כ־30 דקות או יותר."
+            );
+
+        }
+
+
+        if (data.work > 8) {
+
+            recommendations.push(
+                "<strong>עבודה:</strong> יום העבודה שלך ארוך מ־8 שעות. כדאי להגדיר גבול ברור יותר בין זמן העבודה לזמן הפרטי."
+            );
+
+        }
+
+
+        if (data.personal < 1) {
+
+            recommendations.push(
+                "<strong>זמן אישי:</strong> כמעט ואין לך זמן שמוקדש לעצמך. אפילו 20–30 דקות ביום יכולות ליצור שינוי משמעותי בתחושת השליטה בשגרה."
+            );
+
+        }
+
+
+        if (data.family < 1) {
+
+            recommendations.push(
+                "<strong>משפחה וחברה:</strong> כדאי לקבוע זמן איכות מראש ולא להסתמך רק על הזמן הפנוי שנשאר בסוף היום."
+            );
+
+        }
+
+
+        if (
+            parseInt(
+                document.getElementById("he-planning").value,
+                10
+            ) < 2
+        ) {
+
+            recommendations.push(
+                "<strong>תכנון:</strong> הקדש 15–20 דקות בתחילת השבוע כדי להחליט מהם הדברים החשובים באמת ולבנות סביבם את השבוע."
+            );
+
+        }
+
+
+        if (
+            parseInt(
+                document.getElementById("he-screen").value,
+                10
+            ) < 2
+        ) {
+
+            recommendations.push(
+                "<strong>ערב:</strong> נסה ליצור לפחות 30 דקות ללא מסכים לפני השינה כדי לבנות טקס מעבר רגוע יותר ללילה."
+            );
+
+        }
+
+
+        if (
+            parseInt(
+                document.getElementById("he-stress").value,
+                10
+            ) < 2
+        ) {
+
+            recommendations.push(
+                "<strong>עומס:</strong> לפני שאתה מוסיף עוד הרגלים, בדוק איזה דבר אחד ניתן להוריד, לצמצם, להאציל או לדחות."
+            );
+
+        }
+
+
+        if (recommendations.length === 0) {
+
+            recommendations.push(
+                "<strong>המשך כך:</strong> לשגרה שלך יש בסיס טוב. במקום להוסיף עוד ועוד משימות, התמקד בהתמדה."
+            );
+
+        }
+
+
+        /*
+        מציגים עד 3 המלצות בלבד
+        */
+
+        return recommendations.slice(0, 3);
+
+    }
+
+
+    function generatePlan() {
+
+        var wakeTime =
+            document.getElementById("he-wake").value;
+
+
+        var sleepTime =
+            document.getElementById("he-sleep").value;
+
+
+        var rows = [
+
+            [
+                "קימה",
+                wakeTime
+            ],
+
+            [
+                "בוקר",
+                "10–20 דקות של תנועה, התארגנות והתחלה רגועה של היום"
+            ],
+
+            [
+                "עבודה",
+                "עבודה ממוקדת בבלוקים עם הפסקות קצרות"
+            ],
+
+            [
+                "צהריים",
+                "הפסקת אוכל אמיתית, רצוי הרחק ממסך העבודה"
+            ],
+
+            [
+                "סיום עבודה",
+                "טקס מעבר ברור בין העבודה לחיים האישיים"
+            ],
+
+            [
+                "ערב",
+                "משפחה, חברים או זמן אישי"
+            ],
+
+            [
+                "הכנה לשינה",
+                "לפחות 30 דקות ללא מסכים"
+            ],
+
+            [
+                "שינה",
+                sleepTime
+            ]
+
+        ];
+
+
+        var html = "";
+
+
+        rows.forEach(function(row) {
+
+            html += `
+
+                <div style="display:grid;grid-template-columns:110px 1fr;gap:15px;padding:13px 0;border-bottom:1px solid #eee;">
+
+                    <div style="font-weight:bold;color:#0f4c81;">
+                        ${row[0]}
+                    </div>
+
+                    <div style="line-height:1.7;">
+                        ${row[1]}
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+        return html;
+
+    }
+
+
+    function displayResults() {
+
+        var data =
+            calculateScore();
+
+
+        document.getElementById("he-score").textContent =
+            data.total;
+
+
+        var title = "";
+
+        var message = "";
+
+
+        if (data.total >= 85) {
+
+            title =
+                "שגרה מצוינת";
+
+
+            message =
+                "לשגרה שלך יש בסיס מאוזן וחזק. המטרה העיקרית שלך היא לשמור על עקביות ולא להעמיס על עצמך יותר מדי.";
+
+        }
+
+
+        else if (data.total >= 70) {
+
+            title =
+                "בסיס טוב";
+
+
+            message =
+                "יש לך בסיס טוב לשגרה מאוזנת. מספר שינויים ממוקדים יכולים לשפר משמעותית את איכות היום שלך.";
+
+        }
+
+
+        else if (data.total >= 50) {
+
+            title =
+                "יש מקום לשיפור";
+
+
+            message =
+                "יש מספר תחומים בשגרה שלך שכדאי לשפר. אל תנסה לשנות הכול בבת אחת — התחל מההמלצות בעלות ההשפעה הגדולה ביותר.";
+
+        }
+
+
+        else {
+
+            title =
+                "הגיע הזמן לעשות סדר";
+
+
+            message =
+                "נראה שהשגרה שלך עמוסה או שחסרים בה כמה מרכיבים חשובים. אל תנסה לשנות הכול ביום אחד. התחל בצעד קטן אחד.";
+
+        }
+
+
+        document.getElementById("he-score-title").textContent =
+            title;
+
+
+        document.getElementById("he-score-message").textContent =
+            message;
+
+
+        document.getElementById("he-score-bar").style.width =
+            data.total + "%";
+
+
+        document.getElementById("he-metrics").innerHTML =
+
+            metricHTML(
+                "שינה",
+                data.sleepScore
+            ) +
+
+            metricHTML(
+                "פעילות גופנית",
+                data.exerciseScore
+            ) +
+
+            metricHTML(
+                "עומס עבודה",
+                data.workScore
+            ) +
+
+            metricHTML(
+                "זמן אישי",
+                data.personalScore
+            ) +
+
+            metricHTML(
+                "משפחה וחברה",
+                data.familyScore
+            ) +
+
+            metricHTML(
+                "למידה והתפתחות",
+                data.learningScore
+            ) +
+
+            metricHTML(
+                "תכנון שבועי",
+                data.planningScore
+            ) +
+
+            metricHTML(
+                "שגרת ערב",
+                data.screenScore
+            );
+
+
+        var recommendations =
+            generateRecommendations(data);
+
+
+        var recommendationsHTML =
+            "";
+
+
+        recommendations.forEach(function(item) {
+
+            recommendationsHTML += `
+
+                <div style="padding:15px 0;border-bottom:1px solid #eee;line-height:1.8;">
+
+                    ${item}
+
+                </div>
+
+            `;
+
+        });
+
+
+        document.getElementById(
+            "he-recommendations"
+        ).innerHTML =
+            recommendationsHTML;
+
+
+        document.getElementById(
+            "he-plan"
+        ).innerHTML =
+            generatePlan();
+
+
+        results.style.display =
+            "block";
+
+
+        setTimeout(function() {
+
+            results.scrollIntoView({
+                behavior:"smooth",
+                block:"start"
+            });
+
+        },100);
+
+    }
+
+
+    form.addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+            displayResults();
+
+        }
+    );
+
+
+    resetButton.addEventListener(
+        "click",
+        function() {
+
+            form.reset();
+
+            results.style.display =
+                "none";
+
+            window.scrollTo({
+                top:0,
+                behavior:"smooth"
+            });
+
+        }
+    );
+
+
+})();
+
+</script>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "September 15, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Life Routine Calculator: Check Your Daily Balance and Build a Healthier Routine",
+                body: `<div id="life-routine-calculator" style="font-family:Arial,Helvetica,sans-serif;max-width:1100px;margin:30px auto;padding:20px;box-sizing:border-box;color:#222;direction:ltr;">
+
+    <div style="background:linear-gradient(135deg,#0f4c81,#1976b5);color:#fff;border-radius:18px;padding:35px 25px;margin-bottom:25px;text-align:center;">
+        <h1 style="margin:0 0 12px;font-size:34px;line-height:1.25;">Life Routine Calculator</h1>
+        <p style="margin:0 auto;max-width:750px;font-size:18px;line-height:1.7;">
+            Discover how balanced your daily routine is and get practical recommendations to improve your sleep, exercise, work-life balance, personal time and overall lifestyle.
+        </p>
+    </div>
+
+    <form id="lrc-form">
+
+        <div style="background:#fff;border:1px solid #ddd;border-radius:15px;padding:25px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+            <h2 style="margin:0 0 20px;font-size:24px;color:#0f4c81;">1. Your Daily Schedule</h2>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
+
+                <div>
+                    <label for="lrc-wake" style="display:block;font-weight:bold;margin-bottom:7px;">Wake-up time</label>
+                    <input id="lrc-wake" type="time" value="06:30" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+                <div>
+                    <label for="lrc-sleep" style="display:block;font-weight:bold;margin-bottom:7px;">Bedtime</label>
+                    <input id="lrc-sleep" type="time" value="22:30" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+                <div>
+                    <label for="lrc-work" style="display:block;font-weight:bold;margin-bottom:7px;">Work hours per day</label>
+                    <input id="lrc-work" type="number" min="0" max="20" step="0.5" value="8" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+                <div>
+                    <label for="lrc-commute" style="display:block;font-weight:bold;margin-bottom:7px;">Commute hours per day</label>
+                    <input id="lrc-commute" type="number" min="0" max="10" step="0.25" value="1" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+                <div>
+                    <label for="lrc-family" style="display:block;font-weight:bold;margin-bottom:7px;">Family / social time per day</label>
+                    <input id="lrc-family" type="number" min="0" max="12" step="0.25" value="2" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+                <div>
+                    <label for="lrc-personal" style="display:block;font-weight:bold;margin-bottom:7px;">Personal / free time per day</label>
+                    <input id="lrc-personal" type="number" min="0" max="12" step="0.25" value="1" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+            </div>
+        </div>
+
+
+        <div style="background:#fff;border:1px solid #ddd;border-radius:15px;padding:25px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+
+            <h2 style="margin:0 0 20px;font-size:24px;color:#0f4c81;">2. Healthy Habits</h2>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;">
+
+                <div>
+                    <label for="lrc-exercise" style="display:block;font-weight:bold;margin-bottom:7px;">Exercise sessions per week</label>
+                    <input id="lrc-exercise" type="number" min="0" max="14" value="3" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+                <div>
+                    <label for="lrc-exercise-min" style="display:block;font-weight:bold;margin-bottom:7px;">Average exercise minutes</label>
+                    <input id="lrc-exercise-min" type="number" min="0" max="300" step="5" value="30" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+                <div>
+                    <label for="lrc-learning" style="display:block;font-weight:bold;margin-bottom:7px;">Learning / development hours per week</label>
+                    <input id="lrc-learning" type="number" min="0" max="40" step="0.5" value="2" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                </div>
+
+                <div>
+                    <label for="lrc-planning" style="display:block;font-weight:bold;margin-bottom:7px;">Do you plan your week?</label>
+                    <select id="lrc-planning" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                        <option value="2">Yes, consistently</option>
+                        <option value="1">Sometimes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="lrc-screen" style="display:block;font-weight:bold;margin-bottom:7px;">Screen-free time before bed</label>
+                    <select id="lrc-screen" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                        <option value="2">30+ minutes</option>
+                        <option value="1">10–29 minutes</option>
+                        <option value="0">Almost none</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="lrc-stress" style="display:block;font-weight:bold;margin-bottom:7px;">How often do you feel overwhelmed?</label>
+                    <select id="lrc-stress" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;">
+                        <option value="2">Rarely</option>
+                        <option value="1">Sometimes</option>
+                        <option value="0">Often</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div style="text-align:center;margin:25px 0;">
+            <button type="submit" style="background:#0f4c81;color:#fff;border:0;border-radius:10px;padding:15px 35px;font-size:18px;font-weight:bold;cursor:pointer;">
+                Calculate My Life Routine
+            </button>
+
+            <button type="button" id="lrc-reset" style="background:#fff;color:#333;border:1px solid #bbb;border-radius:10px;padding:14px 25px;font-size:16px;cursor:pointer;margin-left:8px;">
+                Reset
+            </button>
+        </div>
+
+    </form>
+
+
+    <div id="lrc-results" style="display:none;">
+
+        <div style="background:#fff;border:1px solid #ddd;border-radius:15px;padding:30px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+
+            <div style="text-align:center;">
+
+                <div style="font-size:18px;color:#666;margin-bottom:8px;">
+                    Your Life Balance Score
+                </div>
+
+                <div id="lrc-score" style="font-size:64px;font-weight:bold;color:#0f4c81;line-height:1;">
+                    0
+                </div>
+
+                <div id="lrc-score-title" style="font-size:25px;font-weight:bold;margin-top:12px;">
+                    -
+                </div>
+
+                <p id="lrc-score-message" style="font-size:17px;line-height:1.7;color:#555;max-width:750px;margin:12px auto 20px;"></p>
+
+                <div style="background:#eee;height:14px;border-radius:20px;overflow:hidden;max-width:700px;margin:0 auto;">
+                    <div id="lrc-score-bar" style="height:100%;width:0;background:#1976b5;border-radius:20px;transition:width .6s;"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div style="background:#fff;border:1px solid #ddd;border-radius:15px;padding:25px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+
+            <h2 style="margin:0 0 20px;color:#0f4c81;">
+                Your Routine Breakdown
+            </h2>
+
+            <div id="lrc-metrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;"></div>
+
+        </div>
+
+
+        <div style="background:#fff;border:1px solid #ddd;border-radius:15px;padding:25px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+
+            <h2 style="margin:0 0 20px;color:#0f4c81;">
+                Your Top Priorities
+            </h2>
+
+            <div id="lrc-recommendations"></div>
+
+        </div>
+
+
+        <div style="background:#fff;border:1px solid #ddd;border-radius:15px;padding:25px;margin-bottom:20px;box-shadow:0 3px 12px rgba(0,0,0,.05);">
+
+            <h2 style="margin:0 0 8px;color:#0f4c81;">
+                Your Suggested Daily Routine
+            </h2>
+
+            <p style="color:#666;line-height:1.6;margin-top:0;">
+                Use this as a practical starting point. Your ideal routine should be realistic enough to maintain consistently.
+            </p>
+
+            <div id="lrc-plan"></div>
+
+        </div>
+
+
+        <div style="background:#eef7fc;border-left:5px solid #1976b5;padding:18px;border-radius:8px;margin-top:20px;line-height:1.7;color:#333;">
+            <strong>Remember:</strong> A good routine is not about being perfect. The goal is to build a lifestyle that you can realistically maintain over time.
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+(function() {
+
+    var form = document.getElementById("lrc-form");
+    var results = document.getElementById("lrc-results");
+    var resetButton = document.getElementById("lrc-reset");
+
+    function getNumber(id) {
+        var value = parseFloat(document.getElementById(id).value);
+
+        if (!isFinite(value) || value < 0) {
+            return 0;
+        }
+
+        return value;
+    }
+
+
+    function getTimeMinutes(id) {
+
+        var value = document.getElementById(id).value;
+
+        if (!value || value.indexOf(":") === -1) {
+            return 0;
+        }
+
+        var parts = value.split(":");
+
+        var hours = parseInt(parts[0], 10);
+        var minutes = parseInt(parts[1], 10);
+
+        if (isNaN(hours) || isNaN(minutes)) {
+            return 0;
+        }
+
+        return hours * 60 + minutes;
+    }
+
+
+    function calculateSleepHours() {
+
+        var wake = getTimeMinutes("lrc-wake");
+        var sleep = getTimeMinutes("lrc-sleep");
+
+        if (!wake || !sleep) {
+            return 8;
+        }
+
+        var difference = wake - sleep;
+
+        if (difference <= 0) {
+            difference += 1440;
+        }
+
+        return difference / 60;
+    }
+
+
+    function clamp(value, min, max) {
+
+        return Math.max(min, Math.min(max, value));
+
+    }
+
+
+    function calculateScore() {
+
+        var sleep = calculateSleepHours();
+
+        var work = getNumber("lrc-work");
+        var commute = getNumber("lrc-commute");
+        var family = getNumber("lrc-family");
+        var personal = getNumber("lrc-personal");
+
+        var exercise = getNumber("lrc-exercise");
+        var exerciseMinutes = getNumber("lrc-exercise-min");
+        var learning = getNumber("lrc-learning");
+
+        var planning = parseInt(document.getElementById("lrc-planning").value, 10);
+        var screen = parseInt(document.getElementById("lrc-screen").value, 10);
+        var stress = parseInt(document.getElementById("lrc-stress").value, 10);
+
+
+        /*
+         * Sleep
+         * Optimal target: approximately 8 hours.
+         */
+
+        var sleepScore = clamp(
+            100 - Math.abs(sleep - 8) * 28,
+            0,
+            100
+        );
+
+
+        /*
+         * Exercise
+         * Target: 4 sessions/week × 30 minutes.
+         */
+
+        var exerciseScore =
+            (exercise / 4) * 65 +
+            (exerciseMinutes >= 30 ? 35 : (exerciseMinutes / 30) * 35);
+
+        exerciseScore = clamp(exerciseScore, 0, 100);
+
+
+        /*
+         * Workload
+         */
+
+        var workScore = work <= 8
+            ? 100
+            : clamp(100 - ((work - 8) * 18), 0, 100);
+
+
+        /*
+         * Personal time
+         */
+
+        var personalScore = clamp(
+            (personal / 2) * 100,
+            0,
+            100
+        );
+
+
+        /*
+         * Family / social time
+         */
+
+        var familyScore = clamp(
+            (family / 2) * 100,
+            0,
+            100
+        );
+
+
+        /*
+         * Learning
+         */
+
+        var learningScore = clamp(
+            (learning / 3) * 100,
+            0,
+            100
+        );
+
+
+        /*
+         * Planning
+         */
+
+        var planningScore = planning * 50;
+
+
+        /*
+         * Screen-free evening
+         */
+
+        var screenScore = screen * 50;
+
+
+        /*
+         * Stress
+         */
+
+        var stressScore = stress * 50;
+
+
+        /*
+         * Extra workload penalty
+         */
+
+        var workloadPenalty = (work + commute) > 11 ? 10 : 0;
+
+
+        /*
+         * Final score
+         */
+
+        var total =
+            sleepScore * 0.22 +
+            exerciseScore * 0.16 +
+            workScore * 0.14 +
+            personalScore * 0.12 +
+            familyScore * 0.10 +
+            learningScore * 0.06 +
+            planningScore * 0.07 +
+            screenScore * 0.05 +
+            stressScore * 0.08 -
+            workloadPenalty;
+
+
+        total = clamp(Math.round(total), 0, 100);
+
+
+        return {
+            total: total,
+            sleepScore: sleepScore,
+            exerciseScore: exerciseScore,
+            workScore: workScore,
+            personalScore: personalScore,
+            familyScore: familyScore,
+            learningScore: learningScore,
+            planningScore: planningScore,
+            screenScore: screenScore,
+            stressScore: stressScore,
+
+            sleep: sleep,
+            work: work,
+            commute: commute,
+            family: family,
+            personal: personal,
+            exercise: exercise,
+            exerciseMinutes: exerciseMinutes,
+            learning: learning
+        };
+
+    }
+
+
+    function metricHTML(name, score) {
+
+        var rounded = Math.round(score);
+
+        return `
+            <div style="border:1px solid #ddd;border-radius:10px;padding:15px;background:#fafafa;">
+
+                <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:8px;font-size:15px;">
+                    <strong>${name}</strong>
+                    <strong style="color:#0f4c81;">${rounded}/100</strong>
+                </div>
+
+                <div style="background:#e5e5e5;height:9px;border-radius:20px;overflow:hidden;">
+                    <div style="height:100%;width:${rounded}%;background:#1976b5;border-radius:20px;"></div>
+                </div>
+
+            </div>
+        `;
+
+    }
+
+
+    function generateRecommendations(data) {
+
+        var recommendations = [];
+
+
+        if (data.sleep < 7) {
+
+            recommendations.push(
+                "<strong>Improve your sleep:</strong> Your calculated sleep time is " +
+                data.sleep.toFixed(1) +
+                " hours. Consider moving your bedtime earlier or adjusting your morning schedule."
+            );
+
+        }
+
+
+        if (data.exercise < 3 || data.exerciseMinutes < 30) {
+
+            recommendations.push(
+                "<strong>Add more movement:</strong> Try to build toward at least three exercise sessions per week and gradually increase the duration."
+            );
+
+        }
+
+
+        if (data.work > 8) {
+
+            recommendations.push(
+                "<strong>Protect your work-life boundary:</strong> Your average workday is above eight hours. Consider establishing a clear end-of-work routine."
+            );
+
+        }
+
+
+        if (data.personal < 1) {
+
+            recommendations.push(
+                "<strong>Create personal time:</strong> Your schedule contains very little time for yourself. Start with 20–30 minutes a day."
+            );
+
+        }
+
+
+        if (data.family < 1) {
+
+            recommendations.push(
+                "<strong>Protect relationships:</strong> Schedule intentional family or social time instead of waiting for free time to appear."
+            );
+
+        }
+
+
+        if (parseInt(document.getElementById("lrc-planning").value, 10) < 2) {
+
+            recommendations.push(
+                "<strong>Plan your week:</strong> Spend 15–20 minutes each week deciding what matters most before your schedule fills up."
+            );
+
+        }
+
+
+        if (parseInt(document.getElementById("lrc-screen").value, 10) < 2) {
+
+            recommendations.push(
+                "<strong>Create an evening wind-down:</strong> Try to spend at least 30 minutes away from screens before going to bed."
+            );
+
+        }
+
+
+        if (parseInt(document.getElementById("lrc-stress").value, 10) < 2) {
+
+            recommendations.push(
+                "<strong>Reduce overload:</strong> Instead of adding more habits, identify one commitment you can remove, delegate or simplify."
+            );
+
+        }
+
+
+        if (recommendations.length === 0) {
+
+            recommendations.push(
+                "<strong>Keep going:</strong> Your routine has a strong foundation. Focus on consistency rather than adding unnecessary commitments."
+            );
+
+        }
+
+
+        return recommendations.slice(0, 5);
+
+    }
+
+
+    function generatePlan(data) {
+
+        var wakeTime = document.getElementById("lrc-wake").value;
+        var sleepTime = document.getElementById("lrc-sleep").value;
+
+
+        var rows = [
+
+            ["Wake up", wakeTime],
+
+            ["Morning", "10–20 minutes of movement, preparation and a calm start"],
+
+            ["Work", "Focused work blocks with short breaks"],
+
+            ["Midday", "Take a proper lunch break away from your main work screen"],
+
+            ["After work", "Create a clear transition from work to personal life"],
+
+            ["Evening", "Family, social activities or personal time"],
+
+            ["Wind down", "30 minutes without screens before bed"],
+
+            ["Bedtime", sleepTime]
+
+        ];
+
+
+        var html = "";
+
+
+        rows.forEach(function(row) {
+
+            html += `
+                <div style="display:grid;grid-template-columns:110px 1fr;gap:15px;padding:13px 0;border-bottom:1px solid #eee;">
+
+                    <div style="font-weight:bold;color:#0f4c81;">
+                        ${row[0]}
+                    </div>
+
+                    <div style="line-height:1.6;">
+                        ${row[1]}
+                    </div>
+
+                </div>
+            `;
+
+        });
+
+
+        return html;
+
+    }
+
+
+    function displayResults() {
+
+        var data = calculateScore();
+
+
+        document.getElementById("lrc-score").textContent = data.total;
+
+
+        var title = "";
+        var message = "";
+
+
+        if (data.total >= 85) {
+
+            title = "Excellent Routine";
+            message = "Your routine is well balanced. Your main goal should be maintaining consistency without unnecessarily adding more commitments.";
+
+        } else if (data.total >= 70) {
+
+            title = "Good Foundation";
+            message = "You have a solid foundation. A few targeted changes could significantly improve your overall routine.";
+
+        } else if (data.total >= 50) {
+
+            title = "Room for Improvement";
+            message = "Your routine has several areas that could be improved. Start with the two or three recommendations that will have the biggest impact.";
+
+        } else {
+
+            title = "Time for a Reset";
+            message = "Your current routine may be overloaded or missing important recovery habits. Avoid trying to change everything at once. Start small.";
+
+        }
+
+
+        document.getElementById("lrc-score-title").textContent = title;
+
+        document.getElementById("lrc-score-message").textContent = message;
+
+        document.getElementById("lrc-score-bar").style.width = data.total + "%";
+
+
+        document.getElementById("lrc-metrics").innerHTML =
+
+            metricHTML("Sleep", data.sleepScore) +
+
+            metricHTML("Exercise", data.exerciseScore) +
+
+            metricHTML("Workload", data.workScore) +
+
+            metricHTML("Personal Time", data.personalScore) +
+
+            metricHTML("Family & Social", data.familyScore) +
+
+            metricHTML("Learning", data.learningScore) +
+
+            metricHTML("Weekly Planning", data.planningScore) +
+
+            metricHTML("Evening Routine", data.screenScore);
+
+
+        var recommendations = generateRecommendations(data);
+
+        var recommendationsHTML = "";
+
+
+        recommendations.forEach(function(item) {
+
+            recommendationsHTML += `
+                <div style="padding:15px 0;border-bottom:1px solid #eee;line-height:1.7;">
+                    ${item}
+                </div>
+            `;
+
+        });
+
+
+        document.getElementById("lrc-recommendations").innerHTML = recommendationsHTML;
+
+
+        document.getElementById("lrc-plan").innerHTML = generatePlan(data);
+
+
+        results.style.display = "block";
+
+
+        setTimeout(function() {
+
+            results.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+        }, 100);
+
+    }
+
+
+    form.addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        displayResults();
+
+    });
+
+
+    resetButton.addEventListener("click", function() {
+
+        form.reset();
+
+        results.style.display = "none";
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    });
+
+
+})();
+</script>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
