@@ -4,48 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מחשבון Soft Landing: האם המשימה שלך מוכנה לדחייה?</title>
-    <link rel="stylesheet" href="../style.css">
+
     <style>
-        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
-        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
-        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
-        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
-        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
-        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
-        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
-        .article-body { font-size: 1.15em; }
-        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
-        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --text-color: #333;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            font-family: "Segoe UI", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+            color: var(--text-color);
+        }
+
+        .article-page-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #ffffff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            min-height: 100vh;
+        }
+
+        .back-to-blog {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .article-header {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .article-header h1 {
+            font-size: 2.2em;
+            color: var(--secondary-color);
+            margin: 10px 0;
+            line-height: 1.3;
+        }
+
+        .meta-info {
+            color: #95a5a6;
+            font-size: 0.9em;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .article-body {
+            font-size: 1.15em;
+        }
+
+        .footer-cta {
+            margin-top: 60px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .btn-main {
+            display: inline-block;
+            background: var(--primary-color);
+            color: #ffffff;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .article-page-container {
+                padding: 25px 12px;
+            }
+
+            .article-header h1 {
+                font-size: 1.8em;
+            }
+        }
     </style>
 </head>
+
 <body>
-    <div class="article-page-container">
-        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
-        <article>
-            <header class="article-header">
-                <div class="meta-info">
-                    <span id="meta-date"></span>
-                    <span id="meta-read-time"></span>
-                </div>
-                <h1 id="main-h1"></h1>
-            </header>
-            <div class="article-body" id="article-body-content"></div>
-            <div class="footer-cta">
-                <h3 id="footer-h3"></h3>
-                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+
+<div class="article-page-container">
+
+    <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+
+    <article>
+
+        <header class="article-header">
+
+            <div class="meta-info">
+                <span id="meta-date"></span>
+                <span id="meta-read-time"></span>
             </div>
-        </article>
-    </div>
-    <script>
-        const translations = {
-            he: { 
-                back: "← חזרה לבלוג", 
-                date: "18 בספטמבר 2026", 
-                readTime: "⏱️ 5 דקות קריאה",
-                title: "מחשבון Soft Landing: האם המשימה שלך מוכנה לדחייה?",
-                body: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:1050px;margin:30px auto;padding:0 15px;direction:rtl;color:#172033;">
+
+            <h1 id="main-h1"></h1>
+
+        </header>
+
+        <div class="article-body" id="article-body-content"></div>
+
+        <div class="footer-cta">
+
+            <h3 id="footer-h3"></h3>
+
+            <a href="../index.html"
+               class="btn-main"
+               id="footer-btn">
+            </a>
+
+        </div>
+
+    </article>
+
+</div>
+
+
+<script>
+
+(function () {
+
+    var translations = {
+
+        he: {
+
+            back: "← חזרה לבלוג",
+
+            date: "18 בספטמבר 2026",
+
+            readTime: "5 דקות קריאה",
+
+            title: "מחשבון Soft Landing: האם המשימה שלך מוכנה לדחייה?",
+
+            footerH3: "מוכנים להתחיל?",
+
+            footerBtn: "חזרה לאפליקציה",
+
+            body: `
+
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:1050px;margin:30px auto;padding:0 15px;direction:rtl;color:#172033;">
 
     <div style="background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border-radius:18px;padding:35px 30px;margin-bottom:25px;text-align:right;">
+
         <div style="font-size:14px;text-transform:uppercase;letter-spacing:1px;opacity:.8;margin-bottom:10px;">
             ניהול משימות ופרודוקטיביות
         </div>
@@ -59,6 +169,7 @@
             המחשבון בוחן את הסיבה לדחייה, מועד החזרה, התיעוד, הפעולה הבאה,
             המשאבים, הקיבולת והעדיפות של המשימה.
         </p>
+
     </div>
 
 
@@ -73,7 +184,7 @@
         </p>
 
         <select id="sl_reason"
-            style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+                style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
 
             <option value="10">הופיעה משימה בעדיפות גבוהה יותר</option>
             <option value="10">אני ממתין לאדם או לצוות אחר</option>
@@ -101,13 +212,26 @@
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
 
             <label style="flex:1;min-width:220px;border:2px solid #2563eb;background:#eff6ff;padding:15px;border-radius:10px;cursor:pointer;">
-                <input type="radio" name="sl_return" value="20" checked style="margin-left:8px;">
+
+                <input type="radio"
+                       name="sl_return"
+                       value="20"
+                       checked
+                       style="margin-left:8px;">
+
                 כן, יש תאריך חזרה מוגדר
+
             </label>
 
             <label style="flex:1;min-width:220px;border:1px solid #cbd5e1;background:#fff;padding:15px;border-radius:10px;cursor:pointer;">
-                <input type="radio" name="sl_return" value="0" style="margin-left:8px;">
+
+                <input type="radio"
+                       name="sl_return"
+                       value="0"
+                       style="margin-left:8px;">
+
                 לא, אין תאריך מוגדר
+
             </label>
 
         </div>
@@ -126,7 +250,7 @@
         </p>
 
         <select id="sl_context"
-            style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+                style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
 
             <option value="0">שום דבר לא מתועד</option>
             <option value="5">אני זוכר בערך איפה עצרתי</option>
@@ -149,7 +273,7 @@
         </p>
 
         <select id="sl_next"
-            style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+                style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
 
             <option value="0">אין פעולה הבאה מוגדרת</option>
             <option value="5">אני יודע באופן כללי מה צריך לעשות</option>
@@ -172,7 +296,7 @@
         </p>
 
         <select id="sl_resources"
-            style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+                style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
 
             <option value="0">חסרים משאבים חשובים</option>
             <option value="5">חלק מהמשאבים זמינים</option>
@@ -195,7 +319,7 @@
         </p>
 
         <select id="sl_capacity"
-            style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+                style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
 
             <option value="0">כנראה אהיה בעומס גדול</option>
             <option value="5">ייתכן שעומס העבודה יהיה גבוה</option>
@@ -218,21 +342,24 @@
         </p>
 
         <select id="sl_priority"
-            style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+                style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
 
             <option value="5">עדיפות נמוכה</option>
             <option value="7">עדיפות רגילה</option>
             <option value="10">עדיפות גבוהה</option>
-            <option value="5">משימה קריטית / עם דדליין</option>
+            <option value="15">משימה קריטית / עם דדליין</option>
 
         </select>
 
     </div>
 
 
-    <button onclick="calculateSoftLanding()"
-        style="width:100%;padding:17px;background:#2563eb;color:#fff;border:0;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin-bottom:25px;">
+    <button type="button"
+            onclick="calculateSoftLanding()"
+            style="width:100%;padding:17px;background:#2563eb;color:#fff;border:0;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin-bottom:25px;">
+
         חשב את ציון ה־Soft Landing שלי
+
     </button>
 
 
@@ -245,24 +372,24 @@
             </div>
 
             <div id="sl_score"
-                style="font-size:64px;font-weight:800;line-height:1.1;margin:10px 0;color:#2563eb;">
+                 style="font-size:64px;font-weight:800;line-height:1.1;margin:10px 0;color:#2563eb;">
                 0
             </div>
 
             <div style="height:14px;background:#e5e7eb;border-radius:20px;overflow:hidden;max-width:650px;margin:0 auto 20px;">
 
                 <div id="sl_bar"
-                    style="height:100%;width:0%;background:#2563eb;border-radius:20px;transition:width .5s ease;">
+                     style="height:100%;width:0%;background:#2563eb;border-radius:20px;transition:width .5s ease;">
                 </div>
 
             </div>
 
             <div id="sl_status"
-                style="font-size:24px;font-weight:bold;margin-bottom:10px;">
+                 style="font-size:24px;font-weight:bold;margin-bottom:10px;">
             </div>
 
             <p id="sl_description"
-                style="max-width:700px;margin:0 auto;color:#64748b;font-size:16px;line-height:1.7;">
+               style="max-width:700px;margin:0 auto;color:#64748b;font-size:16px;line-height:1.7;">
             </p>
 
         </div>
@@ -275,7 +402,7 @@
             </h3>
 
             <div id="sl_recommendations"
-                style="color:#334155;line-height:1.8;">
+                 style="color:#334155;line-height:1.8;">
             </div>
 
         </div>
@@ -317,164 +444,34 @@
 
     </div>
 
+</div>
 
-    <script>
+`
 
-    function calculateSoftLanding() {
-
-        var reason =
-            parseInt(document.getElementById("sl_reason").value);
-
-        var context =
-            parseInt(document.getElementById("sl_context").value);
-
-        var next =
-            parseInt(document.getElementById("sl_next").value);
-
-        var resources =
-            parseInt(document.getElementById("sl_resources").value);
-
-        var capacity =
-            parseInt(document.getElementById("sl_capacity").value);
-
-        var priority =
-            parseInt(document.getElementById("sl_priority").value);
-
-        var returnDate =
-            document.querySelector('input[name="sl_return"]:checked');
-
-        var returnScore =
-            returnDate ? parseInt(returnDate.value) : 0;
-
-        var score =
-            reason +
-            returnScore +
-            context +
-            next +
-            resources +
-            capacity +
-            priority;
-
-        if (score > 100) {
-            score = 100;
-        }
-
-        document.getElementById("sl_result").style.display = "block";
-
-        document.getElementById("sl_score").innerHTML = score;
-
-        document.getElementById("sl_bar").style.width =
-            score + "%";
+        },
 
 
-        var status = "";
-        var description = "";
-        var recommendations = "";
 
+        en: {
 
-        if (score >= 85) {
+            back: "Back to Blog →",
 
-            status = "נחיתה רכה מוכנה";
+            date: "September 18, 2026",
 
-            description =
-                "המשימה נראית מוכנה היטב לדחייה. נקודת החזרה ברורה, ההקשר נשמר, והמידע הדרוש להמשך העבודה זמין.";
+            readTime: "5 min read",
 
-            recommendations =
-                "<ul style='margin:0;padding-right:22px;'>" +
-                "<li>אשרו את תאריך החזרה.</li>" +
-                "<li>השאירו את ההקשר ואת הפעולה הבאה בתוך המשימה.</li>" +
-                "<li>בדקו את המשימה כאשר היא חוזרת לתור העבודה.</li>" +
-                "</ul>";
+            title: "Soft Landing Calculator: Is Your Task Ready to Be Deferred?",
 
-        }
+            footerH3: "Ready to Start?",
 
+            footerBtn: "Back to App",
 
-        else if (score >= 70) {
+            body: `
 
-            status = "מוכן יחסית – כדאי לשפר";
-
-            description =
-                "למשימה יש בסיס טוב לנחיתה רכה, אך עדיין קיימים פרטים שכדאי להשלים לפני הדחייה כדי להקל על החזרה אליה.";
-
-            recommendations =
-                "<ul style='margin:0;padding-right:22px;'>" +
-                "<li>הגדירו פעולה ראשונה ברורה יותר.</li>" +
-                "<li>תעדו היכן בדיוק עצרתם.</li>" +
-                "<li>בדקו שהקיבולת העתידית אכן ריאלית.</li>" +
-                "</ul>";
-
-        }
-
-
-        else if (score >= 50) {
-
-            status = "קיים סיכון לנחיתה קשה";
-
-            description =
-                "אפשר לדחות את המשימה, אך חסר מידע חשוב. כאשר תחזרו אליה ייתכן שתצטרכו לשחזר את ההקשר או להחליט מחדש מה צריך לעשות.";
-
-            recommendations =
-                "<ul style='margin:0;padding-right:22px;'>" +
-                "<li>הגדירו תאריך חזרה מדויק.</li>" +
-                "<li>כתבו תקציר קצר של המצב הנוכחי.</li>" +
-                "<li>הגדירו פעולה ראשונה קטנה וברורה.</li>" +
-                "<li>צרפו קבצים, קישורים ותלויות חשובות.</li>" +
-                "</ul>";
-
-        }
-
-
-        else {
-
-            status = "מוכנות נמוכה ל־Soft Landing";
-
-            description =
-                "המשימה אינה מוכנה מספיק לדחייה. העברה שלה למועד אחר ללא הכנה עלולה לגרום לאובדן הקשר, דחיות חוזרות וקושי להתחיל מחדש.";
-
-            recommendations =
-                "<ul style='margin:0;padding-right:22px;'>" +
-                "<li>אל תסתפקו בהעברת המשימה לתאריך אחר.</li>" +
-                "<li>תעדו מדוע המשימה נדחית.</li>" +
-                "<li>בחרו תאריך חזרה מוגדר.</li>" +
-                "<li>תעדו את המצב הנוכחי.</li>" +
-                "<li>הגדירו את הצעד הראשון לביצוע.</li>" +
-                "<li>בדקו תלויות וקיבולת עתידית.</li>" +
-                "</ul>";
-
-        }
-
-
-        document.getElementById("sl_status").innerHTML =
-            status;
-
-        document.getElementById("sl_description").innerHTML =
-            description;
-
-        document.getElementById("sl_recommendations").innerHTML =
-            recommendations;
-
-
-        document.getElementById("sl_result").scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-
-    }
-
-    </script>
-
-</div>`, 
-                footerH3: "מוכנים להתחיל?", 
-                footerBtn: "חזרה לאפליקציה" 
-            },
-            en: { 
-                back: "Back to Blog →", 
-                date: "September 18, 2026", 
-                readTime: "⏱️ 5 min read",
-                title: "Soft Landing Calculator: Is Your Task Ready to Be Deferred?",
-                body: `<div style="font-family:Arial,Helvetica,sans-serif;max-width:1050px;margin:30px auto;padding:0 15px;direction:ltr;color:#172033;">
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:1050px;margin:30px auto;padding:0 15px;direction:ltr;color:#172033;">
 
     <div style="background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border-radius:18px;padding:35px 30px;margin-bottom:25px;">
+
         <div style="font-size:14px;text-transform:uppercase;letter-spacing:1px;opacity:.8;margin-bottom:10px;">
             Productivity & Task Management
         </div>
@@ -488,7 +485,9 @@
             This calculator evaluates the information, timing, priority and execution conditions
             needed to make a deferred task easy to restart.
         </p>
+
     </div>
+
 
     <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:25px;margin-bottom:20px;">
 
@@ -501,7 +500,8 @@
         </p>
 
         <select id="sl_reason"
-            style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+                style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+
             <option value="10">Higher-priority work appeared</option>
             <option value="10">Waiting for another person or team</option>
             <option value="10">Missing information or resources</option>
@@ -509,6 +509,7 @@
             <option value="6">Not enough time today</option>
             <option value="3">I simply did not get to it</option>
             <option value="0">I am not sure why</option>
+
         </select>
 
     </div>
@@ -527,13 +528,26 @@
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
 
             <label style="flex:1;min-width:220px;border:2px solid #2563eb;background:#eff6ff;padding:15px;border-radius:10px;cursor:pointer;">
-                <input type="radio" name="sl_return" value="20" checked style="margin-right:8px;">
+
+                <input type="radio"
+                       name="sl_return"
+                       value="20"
+                       checked
+                       style="margin-right:8px;">
+
                 Yes, a specific date
+
             </label>
 
             <label style="flex:1;min-width:220px;border:1px solid #cbd5e1;background:#fff;padding:15px;border-radius:10px;cursor:pointer;">
-                <input type="radio" name="sl_return" value="0" style="margin-right:8px;">
+
+                <input type="radio"
+                       name="sl_return"
+                       value="0"
+                       style="margin-right:8px;">
+
                 No specific date
+
             </label>
 
         </div>
@@ -552,7 +566,7 @@
         </p>
 
         <select id="sl_context"
-            style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+                style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
 
             <option value="0">Nothing is documented</option>
             <option value="5">I remember roughly where I stopped</option>
@@ -575,7 +589,7 @@
         </p>
 
         <select id="sl_next"
-            style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+                style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
 
             <option value="0">No next action defined</option>
             <option value="5">I know generally what to do</option>
@@ -598,7 +612,7 @@
         </p>
 
         <select id="sl_resources"
-            style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+                style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
 
             <option value="0">Important resources are missing</option>
             <option value="5">Some resources are available</option>
@@ -621,7 +635,7 @@
         </p>
 
         <select id="sl_capacity"
-            style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+                style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
 
             <option value="0">My future workload will probably be overloaded</option>
             <option value="5">My future workload may be heavy</option>
@@ -644,21 +658,24 @@
         </p>
 
         <select id="sl_priority"
-            style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
+                style="width:100%;padding:14px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:16px;">
 
             <option value="5">Low priority</option>
             <option value="7">Normal priority</option>
             <option value="10">High priority</option>
-            <option value="5">Critical / deadline-driven task</option>
+            <option value="15">Critical / deadline-driven task</option>
 
         </select>
 
     </div>
 
 
-    <button onclick="calculateSoftLanding()"
-        style="width:100%;padding:17px;background:#2563eb;color:#fff;border:0;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin-bottom:25px;">
+    <button type="button"
+            onclick="calculateSoftLanding()"
+            style="width:100%;padding:17px;background:#2563eb;color:#fff;border:0;border-radius:10px;font-size:18px;font-weight:bold;cursor:pointer;margin-bottom:25px;">
+
         Calculate My Soft Landing Score
+
     </button>
 
 
@@ -671,36 +688,37 @@
             </div>
 
             <div id="sl_score"
-                style="font-size:64px;font-weight:800;line-height:1.1;margin:10px 0;color:#2563eb;">
+                 style="font-size:64px;font-weight:800;line-height:1.1;margin:10px 0;color:#2563eb;">
                 0
             </div>
 
             <div style="height:14px;background:#e5e7eb;border-radius:20px;overflow:hidden;max-width:650px;margin:0 auto 20px;">
+
                 <div id="sl_bar"
-                    style="height:100%;width:0%;background:#2563eb;border-radius:20px;transition:width .5s ease;">
+                     style="height:100%;width:0%;background:#2563eb;border-radius:20px;transition:width .5s ease;">
                 </div>
+
             </div>
 
             <div id="sl_status"
-                style="font-size:24px;font-weight:bold;margin-bottom:10px;">
+                 style="font-size:24px;font-weight:bold;margin-bottom:10px;">
             </div>
 
             <p id="sl_description"
-                style="max-width:700px;margin:0 auto;color:#64748b;font-size:16px;line-height:1.7;">
+               style="max-width:700px;margin:0 auto;color:#64748b;font-size:16px;line-height:1.7;">
             </p>
 
         </div>
 
 
-        <div id="sl_actions"
-            style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:16px;padding:25px;margin-bottom:20px;">
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:16px;padding:25px;margin-bottom:20px;">
 
             <h3 style="margin:0 0 15px;font-size:21px;">
                 Before you defer this task
             </h3>
 
             <div id="sl_recommendations"
-                style="color:#334155;line-height:1.8;">
+                 style="color:#334155;line-height:1.8;">
             </div>
 
         </div>
@@ -730,75 +748,321 @@
 
 
     <div style="margin-top:25px;padding:18px;background:#f8fafc;border-radius:12px;color:#64748b;font-size:13px;line-height:1.6;">
+
         <strong>How this works:</strong>
+
         The calculator evaluates seven practical dimensions of task deferral:
         reason, return date, context, next action, resources, future capacity and priority.
+
         A higher score indicates that the task has more of the information and conditions
         needed for a controlled soft landing.
+
     </div>
 
+</div>
 
-    <script>
-    function calculateSoftLanding() {
+`
 
-        var reason = parseInt(document.getElementById("sl_reason").value);
-        var context = parseInt(document.getElementById("sl_context").value);
-        var next = parseInt(document.getElementById("sl_next").value);
-        var resources = parseInt(document.getElementById("sl_resources").value);
-        var capacity = parseInt(document.getElementById("sl_capacity").value);
-        var priority = parseInt(document.getElementById("sl_priority").value);
-
-        var returnDate = document.querySelector('input[name="sl_return"]:checked');
-        var returnScore = returnDate ? parseInt(returnDate.value) : 0;
-
-        var score = reason + returnScore + context + next + resources + capacity + priority;
-
-        if (score > 100) {
-            score = 100;
         }
 
-        document.getElementById("sl_result").style.display = "block";
+    };
 
-        document.getElementById("sl_score").innerHTML = score;
-        document.getElementById("sl_bar").style.width = score + "%";
 
-        var status = "";
-        var description = "";
-        var recommendations = "";
+    var userLang =
+        navigator.language &&
+        navigator.language.toLowerCase().indexOf("he") === 0
+            ? "he"
+            : "en";
 
-        if (score >= 85) {
 
-            status = "Strong Soft Landing";
-            description =
+    var t = translations[userLang];
+
+
+    document.documentElement.lang = userLang;
+
+    document.documentElement.dir =
+        userLang === "he" ? "rtl" : "ltr";
+
+
+    document.title = t.title;
+
+
+    document.getElementById("back-link").textContent =
+        t.back;
+
+
+    document.getElementById("meta-date").textContent =
+        t.date;
+
+
+    document.getElementById("meta-read-time").textContent =
+        t.readTime;
+
+
+    document.getElementById("main-h1").textContent =
+        t.title;
+
+
+    document.getElementById("article-body-content").innerHTML =
+        t.body;
+
+
+    document.getElementById("footer-h3").textContent =
+        t.footerH3;
+
+
+    document.getElementById("footer-btn").textContent =
+        t.footerBtn;
+
+
+})();
+
+
+
+function calculateSoftLanding() {
+
+    var reasonElement =
+        document.getElementById("sl_reason");
+
+    var contextElement =
+        document.getElementById("sl_context");
+
+    var nextElement =
+        document.getElementById("sl_next");
+
+    var resourcesElement =
+        document.getElementById("sl_resources");
+
+    var capacityElement =
+        document.getElementById("sl_capacity");
+
+    var priorityElement =
+        document.getElementById("sl_priority");
+
+
+    if (
+        !reasonElement ||
+        !contextElement ||
+        !nextElement ||
+        !resourcesElement ||
+        !capacityElement ||
+        !priorityElement
+    ) {
+        return;
+    }
+
+
+    var reason =
+        parseInt(reasonElement.value, 10) || 0;
+
+    var context =
+        parseInt(contextElement.value, 10) || 0;
+
+    var next =
+        parseInt(nextElement.value, 10) || 0;
+
+    var resources =
+        parseInt(resourcesElement.value, 10) || 0;
+
+    var capacity =
+        parseInt(capacityElement.value, 10) || 0;
+
+    var priority =
+        parseInt(priorityElement.value, 10) || 0;
+
+
+    var returnDate =
+        document.querySelector('input[name="sl_return"]:checked');
+
+
+    var returnScore =
+        returnDate
+            ? parseInt(returnDate.value, 10) || 0
+            : 0;
+
+
+    /*
+     * Maximum possible score:
+     *
+     * Reason       = 10
+     * Return date  = 20
+     * Context      = 15
+     * Next action  = 15
+     * Resources    = 15
+     * Capacity     = 15
+     * Priority     = 15
+     *
+     * Total = 105
+     *
+     * The score is normalized to 100.
+     */
+
+
+    var rawScore =
+        reason +
+        returnScore +
+        context +
+        next +
+        resources +
+        capacity +
+        priority;
+
+
+    var maxScore = 105;
+
+
+    var score =
+        Math.round((rawScore / maxScore) * 100);
+
+
+    if (score < 0) {
+        score = 0;
+    }
+
+
+    if (score > 100) {
+        score = 100;
+    }
+
+
+    var result =
+        document.getElementById("sl_result");
+
+    var scoreElement =
+        document.getElementById("sl_score");
+
+    var bar =
+        document.getElementById("sl_bar");
+
+    var status =
+        document.getElementById("sl_status");
+
+    var description =
+        document.getElementById("sl_description");
+
+    var recommendations =
+        document.getElementById("sl_recommendations");
+
+
+    result.style.display = "block";
+
+
+    scoreElement.textContent =
+        score;
+
+
+    bar.style.width =
+        score + "%";
+
+
+    var isHebrew =
+        document.documentElement.lang === "he";
+
+
+    var statusText = "";
+
+    var descriptionText = "";
+
+    var recommendationText = "";
+
+
+    if (score >= 85) {
+
+        if (isHebrew) {
+
+            statusText =
+                "נחיתה רכה מוכנה";
+
+            descriptionText =
+                "המשימה נראית מוכנה היטב לדחייה. נקודת החזרה ברורה, ההקשר נשמר, והמידע הדרוש להמשך העבודה זמין.";
+
+            recommendationText =
+                "<ul style='margin:0;padding-right:22px;'>" +
+                "<li>אשרו את תאריך החזרה.</li>" +
+                "<li>השאירו את ההקשר ואת הפעולה הבאה בתוך המשימה.</li>" +
+                "<li>בדקו את המשימה כאשר היא חוזרת לתור העבודה.</li>" +
+                "</ul>";
+
+        } else {
+
+            statusText =
+                "Strong Soft Landing";
+
+            descriptionText =
                 "This task appears well prepared for deferral. The future restart point is clear, the required context is available, and the task has a defined destination.";
 
-            recommendations =
+            recommendationText =
                 "<ul style='margin:0;padding-left:22px;'>" +
                 "<li>Confirm the return date.</li>" +
                 "<li>Keep the context and next action attached to the task.</li>" +
                 "<li>Review the task when it returns to the active queue.</li>" +
                 "</ul>";
 
-        } else if (score >= 70) {
+        }
 
-            status = "Good, But Improve Before Deferring";
-            description =
+
+    } else if (score >= 70) {
+
+        if (isHebrew) {
+
+            statusText =
+                "מוכן יחסית – כדאי לשפר";
+
+            descriptionText =
+                "למשימה יש בסיס טוב לנחיתה רכה, אך עדיין קיימים פרטים שכדאי להשלים לפני הדחייה כדי להקל על החזרה אליה.";
+
+            recommendationText =
+                "<ul style='margin:0;padding-right:22px;'>" +
+                "<li>הגדירו פעולה ראשונה ברורה יותר.</li>" +
+                "<li>תעדו היכן בדיוק עצרתם.</li>" +
+                "<li>בדקו שהקיבולת העתידית אכן ריאלית.</li>" +
+                "</ul>";
+
+        } else {
+
+            statusText =
+                "Good, But Improve Before Deferring";
+
+            descriptionText =
                 "The task has a reasonable foundation for a soft landing, but one or more elements could still create friction when you return to it.";
 
-            recommendations =
+            recommendationText =
                 "<ul style='margin:0;padding-left:22px;'>" +
                 "<li>Make the first action more specific.</li>" +
                 "<li>Document where you stopped.</li>" +
                 "<li>Check that future capacity is realistic.</li>" +
                 "</ul>";
 
-        } else if (score >= 50) {
+        }
 
-            status = "At Risk of a Hard Landing";
-            description =
+
+    } else if (score >= 50) {
+
+        if (isHebrew) {
+
+            statusText =
+                "קיים סיכון לנחיתה קשה";
+
+            descriptionText =
+                "אפשר לדחות את המשימה, אך חסר מידע חשוב. כאשר תחזרו אליה ייתכן שתצטרכו לשחזר את ההקשר או להחליט מחדש מה צריך לעשות.";
+
+            recommendationText =
+                "<ul style='margin:0;padding-right:22px;'>" +
+                "<li>הגדירו תאריך חזרה מדויק.</li>" +
+                "<li>כתבו תקציר קצר של המצב הנוכחי.</li>" +
+                "<li>הגדירו פעולה ראשונה קטנה וברורה.</li>" +
+                "<li>צרפו קבצים, קישורים ותלויות חשובות.</li>" +
+                "</ul>";
+
+        } else {
+
+            statusText =
+                "At Risk of a Hard Landing";
+
+            descriptionText =
                 "The task can be deferred, but important information is missing. Returning to it later may require reconstructing context or deciding what to do next.";
 
-            recommendations =
+            recommendationText =
                 "<ul style='margin:0;padding-left:22px;'>" +
                 "<li>Define an exact return date.</li>" +
                 "<li>Write a short context snapshot.</li>" +
@@ -806,13 +1070,38 @@
                 "<li>Attach important files, links or dependencies.</li>" +
                 "</ul>";
 
+        }
+
+
+    } else {
+
+        if (isHebrew) {
+
+            statusText =
+                "מוכנות נמוכה ל־Soft Landing";
+
+            descriptionText =
+                "המשימה אינה מוכנה מספיק לדחייה. העברה שלה למועד אחר ללא הכנה עלולה לגרום לאובדן הקשר, דחיות חוזרות וקושי להתחיל מחדש.";
+
+            recommendationText =
+                "<ul style='margin:0;padding-right:22px;'>" +
+                "<li>אל תסתפקו בהעברת המשימה לתאריך אחר.</li>" +
+                "<li>תעדו מדוע המשימה נדחית.</li>" +
+                "<li>בחרו תאריך חזרה מוגדר.</li>" +
+                "<li>תעדו את המצב הנוכחי.</li>" +
+                "<li>הגדירו את הצעד הראשון לביצוע.</li>" +
+                "<li>בדקו תלויות וקיבולת עתידית.</li>" +
+                "</ul>";
+
         } else {
 
-            status = "Poor Soft Landing Readiness";
-            description =
+            statusText =
+                "Poor Soft Landing Readiness";
+
+            descriptionText =
                 "This task is not sufficiently prepared for deferral. Moving it without additional information increases the chance of repeated postponement, lost context and execution friction.";
 
-            recommendations =
+            recommendationText =
                 "<ul style='margin:0;padding-left:22px;'>" +
                 "<li>Do not simply move the task to another date.</li>" +
                 "<li>Record why it is being deferred.</li>" +
@@ -821,39 +1110,32 @@
                 "<li>Define the first micro-action.</li>" +
                 "<li>Check dependencies and available capacity.</li>" +
                 "</ul>";
+
         }
 
-        document.getElementById("sl_status").innerHTML = status;
-        document.getElementById("sl_description").innerHTML = description;
-        document.getElementById("sl_recommendations").innerHTML = recommendations;
-
-        document.getElementById("sl_result").scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
     }
-    </script>
 
-</div>`, 
-                footerH3: "Ready to Start?", 
-                footerBtn: "Back to App" 
-            }
-        };
 
-        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
-        const t = translations[userLang];
-        
-        document.documentElement.lang = userLang;
-        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
-        
-        document.title = t.title;
-        document.getElementById('back-link').innerText = t.back;
-        document.getElementById('meta-date').innerText = t.date;
-        document.getElementById('meta-read-time').innerText = t.readTime;
-        document.getElementById('main-h1').innerText = t.title;
-        document.getElementById('article-body-content').innerHTML = t.body;
-        document.getElementById('footer-h3').innerText = t.footerH3;
-        document.getElementById('footer-btn').innerText = t.footerBtn;
-    </script>
+    status.textContent =
+        statusText;
+
+
+    description.textContent =
+        descriptionText;
+
+
+    recommendations.innerHTML =
+        recommendationText;
+
+
+    result.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+}
+
+</script>
+
 </body>
 </html>
