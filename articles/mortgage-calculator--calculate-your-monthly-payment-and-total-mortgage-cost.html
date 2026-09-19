@@ -4,1524 +4,1529 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מחשבון משכנתא חינם – חישוב החזר חודשי ועלות המשכנתא</title>
+
     <link rel="stylesheet" href="../style.css">
+
     <style>
-        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
-        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
-        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
-        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
-        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
-        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
-        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
-        .article-body { font-size: 1.15em; }
-        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
-        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --text-color: #333;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+            color: var(--text-color);
+        }
+
+        .article-page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            min-height: 100vh;
+        }
+
+        .back-to-blog {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .article-header {
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .article-header h1 {
+            font-size: 2.2em;
+            color: var(--secondary-color);
+            margin: 10px 0;
+        }
+
+        .meta-info {
+            color: #95a5a6;
+            font-size: 0.9em;
+            display: flex;
+            gap: 15px;
+        }
+
+        .article-body {
+            font-size: 1.05em;
+        }
+
+        .footer-cta {
+            margin-top: 60px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .btn-main {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Mortgage Calculator */
+
+        .mortgage-box {
+            max-width: 920px;
+            margin: 30px auto;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #172033;
+        }
+
+        .mortgage-card {
+            background: #f5f7fb;
+            border: 1px solid #e2e7ef;
+            border-radius: 18px;
+            padding: 28px;
+        }
+
+        .mortgage-title {
+            text-align: center;
+            margin: 0 0 8px;
+            font-size: 30px;
+            color: #14213d;
+        }
+
+        .mortgage-subtitle {
+            text-align: center;
+            color: #667085;
+            margin: 0 0 28px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .mortgage-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .mortgage-field {
+            background: #fff;
+            border: 1px solid #e1e6ee;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .mortgage-field label {
+            display: block;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #344054;
+        }
+
+        .mortgage-field input,
+        .mortgage-field select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid #cfd6e1;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #fff;
+            outline: none;
+        }
+
+        .mortgage-field input:focus,
+        .mortgage-field select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+        }
+
+        .mortgage-hint {
+            font-size: 12px;
+            color: #667085;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .mortgage-button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border: 0;
+            border-radius: 10px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .mortgage-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .mortgage-results {
+            margin-top: 24px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .mortgage-result {
+            background: #fff;
+            border: 1px solid #e1e6ee;
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+        }
+
+        .mortgage-result.primary {
+            background: #eaf2ff;
+            border-color: #bfdbfe;
+        }
+
+        .mortgage-result span {
+            display: block;
+            color: #667085;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .mortgage-result strong {
+            font-size: 21px;
+            color: #14213d;
+        }
+
+        .mortgage-breakdown {
+            margin-top: 22px;
+            background: #fff;
+            border: 1px solid #e1e6ee;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .mortgage-breakdown-title {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #14213d;
+        }
+
+        .mortgage-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #edf0f5;
+            font-size: 14px;
+        }
+
+        .mortgage-row:last-child {
+            border-bottom: 0;
+        }
+
+        .mortgage-row strong {
+            white-space: nowrap;
+        }
+
+        .mortgage-chart-wrap {
+            margin-top: 22px;
+            background: #fff;
+            border: 1px solid #e1e6ee;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .mortgage-chart-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #14213d;
+        }
+
+        .mortgage-chart {
+            width: 100%;
+            height: 270px;
+            display: block;
+        }
+
+        .mortgage-warning {
+            display: none;
+            margin-top: 16px;
+            padding: 12px 15px;
+            border-radius: 9px;
+            background: #fff4e5;
+            border: 1px solid #f4c98b;
+            color: #8a4b08;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .mortgage-note {
+            font-size: 12px;
+            line-height: 1.7;
+            color: #667085;
+            margin-top: 18px;
+        }
+
+        @media(max-width:700px) {
+            .article-page-container {
+                padding: 25px 15px;
+            }
+
+            .article-header h1 {
+                font-size: 1.7em;
+            }
+
+            .mortgage-card {
+                padding: 18px;
+            }
+
+            .mortgage-title {
+                font-size: 24px;
+            }
+
+            .mortgage-grid,
+            .mortgage-results {
+                grid-template-columns: 1fr;
+            }
+
+            .mortgage-result strong {
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
+
 <body>
-    <div class="article-page-container">
-        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
-        <article>
-            <header class="article-header">
-                <div class="meta-info">
-                    <span id="meta-date"></span>
-                    <span id="meta-read-time"></span>
-                </div>
-                <h1 id="main-h1"></h1>
-            </header>
-            <div class="article-body" id="article-body-content"></div>
-            <div class="footer-cta">
-                <h3 id="footer-h3"></h3>
-                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+
+<div class="article-page-container">
+
+    <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+
+    <article>
+
+        <header class="article-header">
+
+            <div class="meta-info">
+                <span id="meta-date"></span>
+                <span id="meta-read-time"></span>
             </div>
-        </article>
-    </div>
-    <script>
-        const translations = {
-            he: { 
-                back: "← חזרה לבלוג", 
-                date: "19 בספטמבר 2026", 
-                readTime: "⏱️ 5 דקות קריאה",
-                title: "מחשבון משכנתא חינם – חישוב החזר חודשי ועלות המשכנתא",
-                body: `<div style="max-width:920px;margin:30px auto;font-family:Arial,Helvetica,sans-serif;color:#172033;direction:rtl;">
-  <style>
-    .il-mortgage-box{background:#f5f7fb;border:1px solid #e2e7ef;border-radius:18px;padding:28px;box-sizing:border-box}
-    .il-mortgage-title{text-align:center;margin:0 0 8px;font-size:30px;color:#14213d}
-    .il-mortgage-sub{text-align:center;color:#667085;margin:0 0 28px;font-size:15px;line-height:1.6}
-    .il-mortgage-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-    .il-mortgage-field{background:#fff;border:1px solid #e1e6ee;border-radius:12px;padding:15px}
-    .il-mortgage-field label{display:block;font-weight:700;font-size:14px;margin-bottom:8px;color:#344054}
-    .il-mortgage-field input,
-    .il-mortgage-field select{
-      width:100%;
-      box-sizing:border-box;
-      padding:12px;
-      border:1px solid #cfd6e1;
-      border-radius:8px;
-      font-size:16px;
-      background:#fff;
-      outline:none;
-    }
-    .il-mortgage-field input:focus,
-    .il-mortgage-field select:focus{
-      border-color:#2563eb;
-      box-shadow:0 0 0 3px rgba(37,99,235,.1)
-    }
-    .il-mortgage-hint{font-size:12px;color:#667085;margin-top:6px;line-height:1.5}
-    .il-mortgage-button{
-      width:100%;
-      margin-top:20px;
-      padding:15px;
-      border:0;
-      border-radius:10px;
-      background:#2563eb;
-      color:#fff;
-      font-size:17px;
-      font-weight:700;
-      cursor:pointer;
-    }
-    .il-mortgage-button:hover{background:#1d4ed8}
-    .il-mortgage-results{
-      margin-top:24px;
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:12px
-    }
-    .il-mortgage-result{
-      background:#fff;
-      border:1px solid #e1e6ee;
-      border-radius:12px;
-      padding:18px;
-      text-align:center
-    }
-    .il-mortgage-result.primary{
-      background:#eaf2ff;
-      border-color:#bfdbfe
-    }
-    .il-mortgage-result span{
-      display:block;
-      color:#667085;
-      font-size:13px;
-      margin-bottom:8px
-    }
-    .il-mortgage-result strong{
-      font-size:21px;
-      color:#14213d
-    }
-    .il-mortgage-breakdown{
-      margin-top:22px;
-      background:#fff;
-      border:1px solid #e1e6ee;
-      border-radius:12px;
-      padding:20px
-    }
-    .il-mortgage-row{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:15px;
-      padding:10px 0;
-      border-bottom:1px solid #edf0f5;
-      font-size:14px
-    }
-    .il-mortgage-row:last-child{border-bottom:0}
-    .il-mortgage-row strong{white-space:nowrap}
-    .il-mortgage-chart-wrap{
-      margin-top:22px;
-      background:#fff;
-      border:1px solid #e1e6ee;
-      border-radius:12px;
-      padding:20px
-    }
-    .il-mortgage-chart-title{
-      font-weight:700;
-      margin-bottom:15px
-    }
-    .il-mortgage-chart{
-      width:100%;
-      height:270px;
-      display:block
-    }
-    .il-mortgage-warning{
-      display:none;
-      margin-top:16px;
-      padding:12px 15px;
-      border-radius:9px;
-      background:#fff4e5;
-      border:1px solid #f4c98b;
-      color:#8a4b08;
-      font-size:13px;
-      line-height:1.6
-    }
-    .il-mortgage-note{
-      font-size:12px;
-      line-height:1.7;
-      color:#667085;
-      margin-top:18px
-    }
-    @media(max-width:700px){
-      .il-mortgage-box{padding:18px}
-      .il-mortgage-title{font-size:24px}
-      .il-mortgage-grid,
-      .il-mortgage-results{grid-template-columns:1fr}
-      .il-mortgage-result strong{font-size:24px}
-    }
-  </style>
 
-  <div class="il-mortgage-box">
+            <h1 id="main-h1"></h1>
 
-    <h2 class="il-mortgage-title">מחשבון משכנתא</h2>
+        </header>
 
-    <p class="il-mortgage-sub">
-      חשבו את ההחזר החודשי, עלות הריבית וסך עלות המשכנתא בהתאם לנתונים שלכם.
-    </p>
+        <div class="article-body">
 
-    <div class="il-mortgage-grid">
+            <div class="mortgage-box">
 
-      <div class="il-mortgage-field">
-        <label for="ilHomePrice">מחיר הנכס (₪)</label>
-        <input id="ilHomePrice" type="number" value="2000000" min="0" step="10000">
-        <div class="il-mortgage-hint">מחיר הדירה או הנכס שאתם מתכננים לרכוש</div>
-      </div>
+                <div class="mortgage-card">
 
-      <div class="il-mortgage-field">
-        <label for="ilDownPayment">הון עצמי (₪)</label>
-        <input id="ilDownPayment" type="number" value="500000" min="0" step="10000">
-        <div class="il-mortgage-hint">הסכום שאתם מביאים ממקורות עצמיים</div>
-      </div>
+                    <h2 class="mortgage-title" id="calculator-title"></h2>
 
-      <div class="il-mortgage-field">
-        <label for="ilInterestRate">ריבית שנתית ממוצעת (%)</label>
-        <input id="ilInterestRate" type="number" value="4.5" min="0" max="20" step="0.01">
-        <div class="il-mortgage-hint">לצורך חישוב משוער של ההחזר</div>
-      </div>
+                    <p class="mortgage-subtitle" id="calculator-subtitle"></p>
 
-      <div class="il-mortgage-field">
-        <label for="ilLoanTerm">תקופת המשכנתא (שנים)</label>
-        <select id="ilLoanTerm">
-          <option value="5">5 שנים</option>
-          <option value="7">7 שנים</option>
-          <option value="10">10 שנים</option>
-          <option value="15">15 שנים</option>
-          <option value="20">20 שנים</option>
-          <option value="25">25 שנים</option>
-          <option value="30" selected>30 שנים</option>
-        </select>
-        <div class="il-mortgage-hint">תקופות נפוצות במשכנתאות בישראל</div>
-      </div>
+                    <div class="mortgage-grid">
 
-      <div class="il-mortgage-field">
-        <label for="ilIndexRate">שיעור הצמדה משוער למדד (%)</label>
-        <input id="ilIndexRate" type="number" value="0" min="0" max="10" step="0.1">
-        <div class="il-mortgage-hint">הזן 0 אם המשכנתא אינה צמודה למדד</div>
-      </div>
+                        <div class="mortgage-field">
+                            <label for="homePrice" id="label-home-price"></label>
+                            <input id="homePrice" type="number" min="0" step="1000">
+                            <div class="mortgage-hint" id="hint-home-price"></div>
+                        </div>
 
-      <div class="il-mortgage-field">
-        <label for="ilInsurance">ביטוח משכנתא חודשי (₪)</label>
-        <input id="ilInsurance" type="number" value="150" min="0" step="10">
-        <div class="il-mortgage-hint">ביטוח חיים ומבנה – הערכה חודשית</div>
-      </div>
+                        <div class="mortgage-field">
+                            <label for="downPayment" id="label-down-payment"></label>
+                            <input id="downPayment" type="number" min="0" step="1000">
+                            <div class="mortgage-hint" id="hint-down-payment"></div>
+                        </div>
 
-      <div class="il-mortgage-field">
-        <label for="ilMonthlyExpenses">הוצאות חודשיות נוספות (₪)</label>
-        <input id="ilMonthlyExpenses" type="number" value="0" min="0" step="50">
-        <div class="il-mortgage-hint">לדוגמה: עמלות או הוצאות הקשורות למשכנתא</div>
-      </div>
+                        <div class="mortgage-field">
+                            <label for="interestRate" id="label-interest"></label>
+                            <input id="interestRate" type="number" min="0" max="30" step="0.01">
+                            <div class="mortgage-hint" id="hint-interest"></div>
+                        </div>
 
-      <div class="il-mortgage-field">
-        <label for="ilCalculationType">סוג החישוב</label>
-        <select id="ilCalculationType">
-          <option value="standard" selected>החזר חודשי קבוע – חישוב משוער</option>
-          <option value="scenario">תרחיש הכולל השפעת הצמדה</option>
-        </select>
-        <div class="il-mortgage-hint">החישוב אינו מחליף תמהיל משכנתא אמיתי מהבנק</div>
-      </div>
+                        <div class="mortgage-field">
+                            <label for="loanTerm" id="label-term"></label>
 
-    </div>
+                            <select id="loanTerm">
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="25">25</option>
+                                <option value="30">30</option>
+                            </select>
 
-    <button class="il-mortgage-button" id="ilCalculateMortgage">
-      חשבו את המשכנתא
-    </button>
+                            <div class="mortgage-hint" id="hint-term"></div>
+                        </div>
 
-    <div class="il-mortgage-warning" id="ilMortgageWarning"></div>
+                        <div class="mortgage-field">
+                            <label for="propertyTax" id="label-tax"></label>
+                            <input id="propertyTax" type="number" min="0" max="10" step="0.01">
+                            <div class="mortgage-hint" id="hint-tax"></div>
+                        </div>
 
-    <div class="il-mortgage-results">
+                        <div class="mortgage-field">
+                            <label for="insurance" id="label-insurance"></label>
+                            <input id="insurance" type="number" min="0" step="100">
+                            <div class="mortgage-hint" id="hint-insurance"></div>
+                        </div>
 
-      <div class="il-mortgage-result primary">
-        <span>החזר חודשי משוער</span>
-        <strong id="ilMonthlyPayment">₪0</strong>
-      </div>
+                        <div class="mortgage-field">
+                            <label for="hoa" id="label-hoa"></label>
+                            <input id="hoa" type="number" min="0" step="10">
+                            <div class="mortgage-hint" id="hint-hoa"></div>
+                        </div>
 
-      <div class="il-mortgage-result">
-        <span>סכום המשכנתא</span>
-        <strong id="ilLoanAmount">₪0</strong>
-      </div>
+                        <div class="mortgage-field">
+                            <label for="pmi" id="label-pmi"></label>
+                            <input id="pmi" type="number" min="0" step="10">
+                            <div class="mortgage-hint" id="hint-pmi"></div>
+                        </div>
 
-      <div class="il-mortgage-result">
-        <span>סך הריבית</span>
-        <strong id="ilTotalInterest">₪0</strong>
-      </div>
+                    </div>
 
-      <div class="il-mortgage-result">
-        <span>עלות כוללת משוערת</span>
-        <strong id="ilTotalCost">₪0</strong>
-      </div>
+                    <button class="mortgage-button" id="calculate-button"></button>
 
-    </div>
+                    <div class="mortgage-warning" id="mortgage-warning"></div>
 
-    <div class="il-mortgage-breakdown">
+                    <div class="mortgage-results">
 
-      <div class="il-mortgage-row">
-        <span>מחיר הנכס</span>
-        <strong id="ilBreakdownHome">₪0</strong>
-      </div>
+                        <div class="mortgage-result primary">
+                            <span id="result-monthly-label"></span>
+                            <strong id="monthlyPayment">$0</strong>
+                        </div>
 
-      <div class="il-mortgage-row">
-        <span>הון עצמי</span>
-        <strong id="ilBreakdownDown">₪0</strong>
-      </div>
+                        <div class="mortgage-result">
+                            <span id="result-pi-label"></span>
+                            <strong id="principalInterest">$0</strong>
+                        </div>
 
-      <div class="il-mortgage-row">
-        <span>סכום המשכנתא</span>
-        <strong id="ilBreakdownLoan">₪0</strong>
-      </div>
+                        <div class="mortgage-result">
+                            <span id="result-interest-label"></span>
+                            <strong id="totalInterest">$0</strong>
+                        </div>
 
-      <div class="il-mortgage-row">
-        <span>החזר קרן וריבית</span>
-        <strong id="ilBreakdownPI">₪0</strong>
-      </div>
+                        <div class="mortgage-result">
+                            <span id="result-cost-label"></span>
+                            <strong id="totalMortgageCost">$0</strong>
+                        </div>
 
-      <div class="il-mortgage-row">
-        <span>ביטוח משכנתא</span>
-        <strong id="ilBreakdownInsurance">₪0</strong>
-      </div>
+                    </div>
 
-      <div class="il-mortgage-row">
-        <span>הוצאות חודשיות נוספות</span>
-        <strong id="ilBreakdownExpenses">₪0</strong>
-      </div>
+                    <div class="mortgage-breakdown">
 
-      <div class="il-mortgage-row">
-        <span>עלות הצמדה חודשית ממוצעת בתרחיש</span>
-        <strong id="ilBreakdownIndex">₪0</strong>
-      </div>
+                        <div class="mortgage-breakdown-title" id="breakdown-title"></div>
 
-      <div class="il-mortgage-row">
-        <span>סה״כ החזר חודשי משוער</span>
-        <strong id="ilBreakdownTotal">₪0</strong>
-      </div>
+                        <div class="mortgage-row">
+                            <span id="row-home"></span>
+                            <strong id="resultHomePrice">$0</strong>
+                        </div>
 
-    </div>
+                        <div class="mortgage-row">
+                            <span id="row-down"></span>
+                            <strong id="resultDownPayment">$0</strong>
+                        </div>
 
-    <div class="il-mortgage-chart-wrap">
-      <div class="il-mortgage-chart-title">ירידת יתרת המשכנתא לאורך השנים</div>
-      <canvas class="il-mortgage-chart" id="ilMortgageChart"></canvas>
-    </div>
+                        <div class="mortgage-row">
+                            <span id="row-loan"></span>
+                            <strong id="loanAmount">$0</strong>
+                        </div>
 
-    <div class="il-mortgage-note">
-      <strong>חשוב:</strong>
-      זהו מחשבון הערכה בלבד. בישראל משכנתאות מורכבות בדרך כלל מתמהיל של מספר מסלולים,
-      כגון ריבית קבועה, ריבית משתנה ומסלולים הצמודים למדד. בפועל ההחזר יכול להשתנות
-      בהתאם לתמהיל, לריבית, למדד, לשינויים בריבית, לעמלות, לביטוחים ולתנאי הבנק.
-      המחשבון אינו מהווה הצעה למשכנתא או ייעוץ פיננסי.
-    </div>
+                        <div class="mortgage-row">
+                            <span id="row-pi"></span>
+                            <strong id="resultPI">$0</strong>
+                        </div>
 
-  </div>
+                        <div class="mortgage-row">
+                            <span id="row-tax"></span>
+                            <strong id="monthlyTax">$0</strong>
+                        </div>
 
-  <script>
-    (function(){
+                        <div class="mortgage-row">
+                            <span id="row-insurance"></span>
+                            <strong id="monthlyInsurance">$0</strong>
+                        </div>
 
-      const $ = function(id){
-        return document.getElementById(id);
-      };
+                        <div class="mortgage-row">
+                            <span id="row-hoa"></span>
+                            <strong id="resultHOA">$0</strong>
+                        </div>
 
-      function getNumber(id){
-        const value = parseFloat($(id).value);
-        return isFinite(value) && value >= 0 ? value : 0;
-      }
+                        <div class="mortgage-row">
+                            <span id="row-pmi"></span>
+                            <strong id="resultPMI">$0</strong>
+                        </div>
 
-      function money(value){
-        if(!isFinite(value)) value = 0;
+                    </div>
 
-        return new Intl.NumberFormat('he-IL',{
-          style:'currency',
-          currency:'ILS',
-          maximumFractionDigits:0
-        }).format(value);
-      }
+                    <div class="mortgage-chart-wrap">
 
-      function calculateMortgage(){
+                        <div class="mortgage-chart-title" id="chart-title"></div>
 
-        const homePrice = getNumber('ilHomePrice');
+                        <canvas
+                            class="mortgage-chart"
+                            id="mortgageChart">
+                        </canvas>
 
-        let downPayment = getNumber('ilDownPayment');
+                    </div>
 
-        if(downPayment > homePrice){
-          downPayment = homePrice;
-          $('ilDownPayment').value = homePrice;
+                    <div class="mortgage-note" id="mortgage-note"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="footer-cta">
+
+            <h3 id="footer-h3"></h3>
+
+            <a
+                href="../index.html"
+                class="btn-main"
+                id="footer-btn">
+            </a>
+
+        </div>
+
+    </article>
+
+</div>
+
+
+<script>
+
+(function() {
+
+    const isHebrew =
+        navigator.language &&
+        navigator.language.toLowerCase().startsWith('he');
+
+    const lang = isHebrew ? 'he' : 'en';
+
+    const translations = {
+
+        he: {
+
+            back: '← חזרה לבלוג',
+
+            date: '19 בספטמבר 2026',
+
+            readTime: '5 דקות קריאה',
+
+            title:
+                'מחשבון משכנתא חינם – חישוב החזר חודשי ועלות המשכנתא',
+
+            calculatorTitle:
+                'מחשבון משכנתא',
+
+            calculatorSubtitle:
+                'חשבו את ההחזר החודשי, עלות הריבית וסך עלות המשכנתא בהתאם לנתונים שלכם.',
+
+            homePrice:
+                'מחיר הנכס (₪)',
+
+            homePriceHint:
+                'מחיר הדירה או הנכס שאתם מתכננים לרכוש',
+
+            downPayment:
+                'הון עצמי (₪)',
+
+            downPaymentHint:
+                'הסכום שאתם מביאים ממקורות עצמיים',
+
+            interest:
+                'ריבית שנתית ממוצעת (%)',
+
+            interestHint:
+                'ריבית משוערת לצורך החישוב',
+
+            term:
+                'תקופת המשכנתא (שנים)',
+
+            termHint:
+                'בחרו את תקופת ההלוואה',
+
+            tax:
+                'שיעור מס רכוש / ארנונה משוער (%)',
+
+            taxHint:
+                'לצורך המחשה בלבד. בפועל החישוב תלוי בנכס וברשות המקומית',
+
+            insurance:
+                'ביטוח משכנתא חודשי (₪)',
+
+            insuranceHint:
+                'הערכה חודשית לביטוח',
+
+            hoa:
+                'הוצאות חודשיות נוספות (₪)',
+
+            hoaHint:
+                'למשל הוצאות הקשורות לנכס',
+
+            pmi:
+                'עלות ביטוח משכנתא נוספת (₪)',
+
+            pmiHint:
+                'השאירו 0 אם אינו רלוונטי',
+
+            calculate:
+                'חשב את המשכנתא',
+
+            monthly:
+                'החזר חודשי משוער',
+
+            pi:
+                'קרן וריבית',
+
+            interestTotal:
+                'סך הריבית',
+
+            totalCost:
+                'עלות כוללת משוערת',
+
+            breakdown:
+                'פירוט החזר חודשי',
+
+            home:
+                'מחיר הנכס',
+
+            down:
+                'הון עצמי',
+
+            loan:
+                'סכום המשכנתא',
+
+            piRow:
+                'קרן וריבית',
+
+            taxRow:
+                'הוצאה חודשית משוערת',
+
+            insuranceRow:
+                'ביטוח',
+
+            hoaRow:
+                'הוצאות נוספות',
+
+            pmiRow:
+                'ביטוח נוסף',
+
+            chart:
+                'יתרת המשכנתא לאורך התקופה',
+
+            warning:
+                'שימו לב: ההון העצמי נמוך מ־25% ממחיר הנכס. תנאי המימון בפועל תלויים בין היתר בסוג העסקה, בשווי הנכס ובתנאי הבנק.',
+
+            noLoan:
+                'ההון העצמי שווה למחיר הנכס ולכן אין סכום משכנתא לחישוב.',
+
+            note:
+                '<strong>חשוב:</strong> זהו מחשבון הערכה בלבד. משכנתאות בישראל עשויות לכלול מספר מסלולים, ריביות שונות, הצמדה למדד, עמלות, ביטוחים ותנאים נוספים. התוצאה אינה מהווה הצעה למשכנתא או ייעוץ פיננסי.',
+
+            footer:
+                'מוכנים להתחיל?',
+
+            footerButton:
+                'חזרה לאפליקציה',
+
+            termSuffix:
+                ' שנים',
+
+            chartStart:
+                'תחילת המשכנתא',
+
+            chartEnd:
+                'סיום',
+
+            currency:
+                'ILS'
+
+        },
+
+        en: {
+
+            back:
+                '← Back to Blog',
+
+            date:
+                'September 19, 2026',
+
+            readTime:
+                '5 min read',
+
+            title:
+                'US Mortgage Calculator – Calculate Your Monthly Payment and Total Cost',
+
+            calculatorTitle:
+                'US Mortgage Calculator',
+
+            calculatorSubtitle:
+                'Estimate your monthly mortgage payment, interest cost and total homeownership cost.',
+
+            homePrice:
+                'Home Price ($)',
+
+            homePriceHint:
+                'Purchase price of the home',
+
+            downPayment:
+                'Down Payment ($)',
+
+            downPaymentHint:
+                'Amount you plan to pay upfront',
+
+            interest:
+                'Mortgage Interest Rate (%)',
+
+            interestHint:
+                'Estimated annual mortgage interest rate',
+
+            term:
+                'Loan Term (years)',
+
+            termHint:
+                'Choose your mortgage term',
+
+            tax:
+                'Property Tax (% per year)',
+
+            taxHint:
+                'Estimated annual property tax as a percentage of home value',
+
+            insurance:
+                'Homeowners Insurance ($/year)',
+
+            insuranceHint:
+                'Estimated annual homeowners insurance',
+
+            hoa:
+                'HOA Fee ($/month)',
+
+            hoaHint:
+                'Monthly Homeowners Association fee',
+
+            pmi:
+                'PMI ($/month)',
+
+            pmiHint:
+                'Private Mortgage Insurance, if applicable',
+
+            calculate:
+                'Calculate My Mortgage',
+
+            monthly:
+                'Estimated Monthly Payment',
+
+            pi:
+                'Principal & Interest',
+
+            interestTotal:
+                'Total Interest',
+
+            totalCost:
+                'Total Homeownership Cost',
+
+            breakdown:
+                'Monthly Payment Breakdown',
+
+            home:
+                'Home Price',
+
+            down:
+                'Down Payment',
+
+            loan:
+                'Mortgage Amount',
+
+            piRow:
+                'Principal & Interest',
+
+            taxRow:
+                'Property Tax',
+
+            insuranceRow:
+                'Homeowners Insurance',
+
+            hoaRow:
+                'HOA Fee',
+
+            pmiRow:
+                'PMI',
+
+            chart:
+                'Estimated Mortgage Balance Over Time',
+
+            warning:
+                'Your down payment is below 20% of the home price. Depending on the loan type and lender, PMI may apply.',
+
+            noLoan:
+                'Your down payment equals the home price, so there is no mortgage balance to calculate.',
+
+            note:
+                '<strong>Disclaimer:</strong> This calculator provides an estimate for educational purposes only. Actual mortgage payments may vary based on loan type, lender, interest rate, credit profile, property taxes, insurance, PMI, HOA fees, closing costs and other factors. This calculator is not financial advice.',
+
+            footer:
+                'Ready to Start?',
+
+            footerButton:
+                'Back to App',
+
+            termSuffix:
+                ' years',
+
+            chartStart:
+                'Start',
+
+            chartEnd:
+                'End',
+
+            currency:
+                'USD'
         }
 
-        const interestRate = getNumber('ilInterestRate');
-        const years = Math.max(1, getNumber('ilLoanTerm'));
-        const indexRate = getNumber('ilIndexRate');
-        const insurance = getNumber('ilInsurance');
-        const expenses = getNumber('ilMonthlyExpenses');
-        const calculationType = $('ilCalculationType').value;
+    };
 
-        const loanAmount = Math.max(0,homePrice - downPayment);
+    const t = translations[lang];
 
-        const months = Math.round(years * 12);
+    document.documentElement.lang = lang;
+    document.documentElement.dir =
+        lang === 'he' ? 'rtl' : 'ltr';
 
-        const monthlyRate = interestRate / 100 / 12;
+    document.title = t.title;
 
-        let monthlyPrincipalInterest = 0;
 
-        if(loanAmount > 0 && monthlyRate > 0){
+    function setText(id, text) {
+        const element = document.getElementById(id);
 
-          monthlyPrincipalInterest =
-            loanAmount *
-            (
-              monthlyRate *
-              Math.pow(1 + monthlyRate,months)
-            ) /
-            (
-              Math.pow(1 + monthlyRate,months) - 1
+        if (element) {
+            element.textContent = text;
+        }
+    }
+
+
+    setText('back-link', t.back);
+    setText('meta-date', t.date);
+    setText('meta-read-time', t.readTime);
+    setText('main-h1', t.title);
+
+    setText('calculator-title', t.calculatorTitle);
+    setText('calculator-subtitle', t.calculatorSubtitle);
+
+    setText('label-home-price', t.homePrice);
+    setText('hint-home-price', t.homePriceHint);
+
+    setText('label-down-payment', t.downPayment);
+    setText('hint-down-payment', t.downPaymentHint);
+
+    setText('label-interest', t.interest);
+    setText('hint-interest', t.interestHint);
+
+    setText('label-term', t.term);
+    setText('hint-term', t.termHint);
+
+    setText('label-tax', t.tax);
+    setText('hint-tax', t.taxHint);
+
+    setText('label-insurance', t.insurance);
+    setText('hint-insurance', t.insuranceHint);
+
+    setText('label-hoa', t.hoa);
+    setText('hint-hoa', t.hoaHint);
+
+    setText('label-pmi', t.pmi);
+    setText('hint-pmi', t.pmiHint);
+
+    setText('calculate-button', t.calculate);
+
+    setText('result-monthly-label', t.monthly);
+    setText('result-pi-label', t.pi);
+    setText('result-interest-label', t.interestTotal);
+    setText('result-cost-label', t.totalCost);
+
+    setText('breakdown-title', t.breakdown);
+
+    setText('row-home', t.home);
+    setText('row-down', t.down);
+    setText('row-loan', t.loan);
+    setText('row-pi', t.piRow);
+    setText('row-tax', t.taxRow);
+    setText('row-insurance', t.insuranceRow);
+    setText('row-hoa', t.hoaRow);
+    setText('row-pmi', t.pmiRow);
+
+    setText('chart-title', t.chart);
+
+    document.getElementById('mortgage-note').innerHTML =
+        t.note;
+
+    setText('footer-h3', t.footer);
+    setText('footer-btn', t.footerButton);
+
+
+    /* Default values */
+
+    if (lang === 'en') {
+
+        document.getElementById('homePrice').value = 400000;
+        document.getElementById('downPayment').value = 80000;
+        document.getElementById('interestRate').value = 6.5;
+        document.getElementById('loanTerm').value = 30;
+        document.getElementById('propertyTax').value = 1.1;
+        document.getElementById('insurance').value = 1800;
+        document.getElementById('hoa').value = 0;
+        document.getElementById('pmi').value = 0;
+
+    } else {
+
+        document.getElementById('homePrice').value = 2000000;
+        document.getElementById('downPayment').value = 500000;
+        document.getElementById('interestRate').value = 4.5;
+        document.getElementById('loanTerm').value = 30;
+        document.getElementById('propertyTax').value = 0;
+        document.getElementById('insurance').value = 150;
+        document.getElementById('hoa').value = 0;
+        document.getElementById('pmi').value = 0;
+
+    }
+
+
+    function getNumber(id) {
+
+        const value =
+            parseFloat(document.getElementById(id).value);
+
+        return isFinite(value) && value >= 0
+            ? value
+            : 0;
+    }
+
+
+    function money(value) {
+
+        if (!isFinite(value)) {
+            value = 0;
+        }
+
+        return new Intl.NumberFormat(
+            lang === 'he' ? 'he-IL' : 'en-US',
+            {
+                style: 'currency',
+                currency: t.currency,
+                maximumFractionDigits: 0
+            }
+        ).format(value);
+    }
+
+
+    function calculateMortgage() {
+
+        const homePrice =
+            getNumber('homePrice');
+
+        let downPayment =
+            getNumber('downPayment');
+
+        if (downPayment > homePrice) {
+
+            downPayment = homePrice;
+
+            document.getElementById(
+                'downPayment'
+            ).value = homePrice;
+        }
+
+
+        const interestRate =
+            getNumber('interestRate');
+
+        const years =
+            Math.max(
+                1,
+                parseInt(
+                    document.getElementById('loanTerm').value
+                ) || 30
             );
 
-        }else if(loanAmount > 0){
+        const propertyTaxRate =
+            getNumber('propertyTax');
 
-          monthlyPrincipalInterest = loanAmount / months;
+        const insurance =
+            getNumber('insurance');
 
-        }
+        const hoa =
+            getNumber('hoa');
 
-        /*
-          תרחיש הצמדה:
-          לצורך המחשה בלבד, אנו מחשבים את ההשפעה
-          של שיעור הצמדה שנתי ממוצע על יתרת הקרן.
-        */
+        const pmi =
+            getNumber('pmi');
 
-        let indexImpact = 0;
 
-        if(calculationType === 'scenario' && indexRate > 0 && loanAmount > 0){
-
-          indexImpact =
-            loanAmount *
-            (
-              Math.pow(1 + indexRate / 100,1/12) - 1
+        const loanAmount =
+            Math.max(
+                0,
+                homePrice - downPayment
             );
 
+        const months =
+            years * 12;
+
+        const monthlyRate =
+            interestRate / 100 / 12;
+
+
+        let principalInterest = 0;
+
+
+        if (loanAmount > 0) {
+
+            if (monthlyRate > 0) {
+
+                const factor =
+                    Math.pow(
+                        1 + monthlyRate,
+                        months
+                    );
+
+                principalInterest =
+                    loanAmount *
+                    (
+                        monthlyRate * factor
+                    ) /
+                    (
+                        factor - 1
+                    );
+
+            } else {
+
+                principalInterest =
+                    loanAmount / months;
+            }
         }
+
+
+        const monthlyPropertyTax =
+            homePrice *
+            (propertyTaxRate / 100) /
+            12;
+
+
+        const monthlyInsurance =
+            lang === 'en'
+                ? insurance / 12
+                : insurance;
+
 
         const monthlyPayment =
-          monthlyPrincipalInterest +
-          insurance +
-          expenses +
-          indexImpact;
+            principalInterest +
+            monthlyPropertyTax +
+            monthlyInsurance +
+            hoa +
+            pmi;
+
 
         const totalPrincipalInterest =
-          monthlyPrincipalInterest * months;
+            principalInterest * months;
+
 
         const totalInterest =
-          Math.max(
-            0,
-            totalPrincipalInterest - loanAmount
-          );
+            Math.max(
+                0,
+                totalPrincipalInterest -
+                loanAmount
+            );
+
 
         const totalInsurance =
-          insurance * months;
+            monthlyInsurance * months;
 
-        const totalExpenses =
-          expenses * months;
 
-        const totalIndexImpact =
-          indexImpact * months;
+        const totalTax =
+            monthlyPropertyTax * months;
+
+
+        const totalHoa =
+            hoa * months;
+
+
+        const totalPmi =
+            pmi * months;
+
 
         const totalCost =
-          downPayment +
-          totalPrincipalInterest +
-          totalInsurance +
-          totalExpenses +
-          totalIndexImpact;
+            downPayment +
+            totalPrincipalInterest +
+            totalInsurance +
+            totalTax +
+            totalHoa +
+            totalPmi;
 
-        $('ilMonthlyPayment').textContent = money(monthlyPayment);
 
-        $('ilLoanAmount').textContent = money(loanAmount);
+        document.getElementById(
+            'monthlyPayment'
+        ).textContent =
+            money(monthlyPayment);
 
-        $('ilTotalInterest').textContent = money(totalInterest);
 
-        $('ilTotalCost').textContent = money(totalCost);
+        document.getElementById(
+            'principalInterest'
+        ).textContent =
+            money(principalInterest);
 
-        $('ilBreakdownHome').textContent = money(homePrice);
 
-        $('ilBreakdownDown').textContent = money(downPayment);
+        document.getElementById(
+            'totalInterest'
+        ).textContent =
+            money(totalInterest);
 
-        $('ilBreakdownLoan').textContent = money(loanAmount);
 
-        $('ilBreakdownPI').textContent =
-          money(monthlyPrincipalInterest);
+        document.getElementById(
+            'totalMortgageCost'
+        ).textContent =
+            money(totalCost);
 
-        $('ilBreakdownInsurance').textContent =
-          money(insurance);
 
-        $('ilBreakdownExpenses').textContent =
-          money(expenses);
+        document.getElementById(
+            'resultHomePrice'
+        ).textContent =
+            money(homePrice);
 
-        $('ilBreakdownIndex').textContent =
-          money(indexImpact);
 
-        $('ilBreakdownTotal').textContent =
-          money(monthlyPayment);
+        document.getElementById(
+            'resultDownPayment'
+        ).textContent =
+            money(downPayment);
 
-        const warning = $('ilMortgageWarning');
 
-        if(loanAmount === 0){
+        document.getElementById(
+            'loanAmount'
+        ).textContent =
+            money(loanAmount);
 
-          warning.style.display = 'block';
 
-          warning.textContent =
-            'ההון העצמי שווה למחיר הנכס ולכן אין סכום משכנתא לחישוב.';
+        document.getElementById(
+            'resultPI'
+        ).textContent =
+            money(principalInterest);
 
-        }else if(
-          homePrice > 0 &&
-          downPayment / homePrice < 0.25
-        ){
 
-          warning.style.display = 'block';
+        document.getElementById(
+            'monthlyTax'
+        ).textContent =
+            money(monthlyPropertyTax);
 
-          warning.textContent =
-            'שימו לב: שיעור ההון העצמי נמוך מ־25% ממחיר הנכס. תנאי המימון בפועל תלויים בין היתר בסוג העסקה, בשווי הנכס ובתנאי הבנק.';
 
-        }else{
+        document.getElementById(
+            'monthlyInsurance'
+        ).textContent =
+            money(monthlyInsurance);
 
-          warning.style.display = 'none';
 
+        document.getElementById(
+            'resultHOA'
+        ).textContent =
+            money(hoa);
+
+
+        document.getElementById(
+            'resultPMI'
+        ).textContent =
+            money(pmi);
+
+
+        const warning =
+            document.getElementById(
+                'mortgage-warning'
+            );
+
+
+        if (loanAmount === 0) {
+
+            warning.style.display =
+                'block';
+
+            warning.textContent =
+                t.noLoan;
+
+        } else if (
+            homePrice > 0 &&
+            downPayment / homePrice < 0.20
+        ) {
+
+            warning.style.display =
+                'block';
+
+            warning.textContent =
+                t.warning;
+
+        } else {
+
+            warning.style.display =
+                'none';
         }
 
-        drawChart(
-          loanAmount,
-          monthlyRate,
-          monthlyPrincipalInterest,
-          months
-        );
-      }
 
-      function drawChart(
+        drawChart(
+            loanAmount,
+            monthlyRate,
+            principalInterest,
+            months
+        );
+    }
+
+
+    function drawChart(
         principal,
         monthlyRate,
         payment,
         months
-      ){
+    ) {
 
-        const canvas = $('ilMortgageChart');
+        const canvas =
+            document.getElementById(
+                'mortgageChart'
+            );
 
-        const ctx = canvas.getContext('2d');
+        if (!canvas) {
+            return;
+        }
+
+
+        const ctx =
+            canvas.getContext('2d');
+
 
         const width =
-          canvas.clientWidth || 750;
+            canvas.clientWidth ||
+            750;
 
-        const height = 270;
+        const height =
+            270;
+
 
         const dpr =
-          window.devicePixelRatio || 1;
+            window.devicePixelRatio || 1;
 
-        canvas.width = width * dpr;
 
-        canvas.height = height * dpr;
+        canvas.width =
+            width * dpr;
+
+        canvas.height =
+            height * dpr;
+
 
         ctx.setTransform(
-          dpr,
-          0,
-          0,
-          dpr,
-          0,
-          0
+            dpr,
+            0,
+            0,
+            dpr,
+            0,
+            0
         );
+
 
         ctx.clearRect(
-          0,
-          0,
-          width,
-          height
+            0,
+            0,
+            width,
+            height
         );
 
-        const left = 70;
-        const right = 20;
+
+        if (
+            principal <= 0 ||
+            months <= 0
+        ) {
+
+            return;
+        }
+
+
+        const left =
+            lang === 'he' ? 70 : 60;
+
+        const right = 25;
         const top = 20;
         const bottom = 42;
 
+
         const chartWidth =
-          width - left - right;
+            width - left - right;
 
         const chartHeight =
-          height - top - bottom;
+            height - top - bottom;
 
-        let balance = principal;
+
+        let balance =
+            principal;
+
 
         const points = [];
 
+
         const interval =
-          Math.max(
-            1,
-            Math.ceil(months / 60)
-          );
+            Math.max(
+                1,
+                Math.ceil(months / 60)
+            );
 
-        for(
-          let month = 0;
-          month <= months;
-          month++
-        ){
 
-          if(
-            month % interval === 0 ||
-            month === months
-          ){
+        for (
+            let month = 0;
+            month <= months;
+            month++
+        ) {
 
-            points.push({
-              month:month,
-              balance:Math.max(0,balance)
-            });
+            if (
+                month % interval === 0 ||
+                month === months
+            ) {
 
-          }
-
-          if(month < months){
-
-            if(monthlyRate > 0){
-
-              const interest =
-                balance * monthlyRate;
-
-              const principalPaid =
-                Math.max(
-                  0,
-                  payment - interest
-                );
-
-              balance =
-                Math.max(
-                  0,
-                  balance - principalPaid
-                );
-
-            }else{
-
-              balance =
-                Math.max(
-                  0,
-                  balance - payment
-                );
-
+                points.push({
+                    month: month,
+                    balance: Math.max(
+                        0,
+                        balance
+                    )
+                });
             }
 
-          }
 
+            if (month < months) {
+
+                let interest =
+                    balance *
+                    monthlyRate;
+
+
+                let principalPaid =
+                    payment -
+                    interest;
+
+
+                if (principalPaid < 0) {
+                    principalPaid = 0;
+                }
+
+
+                balance =
+                    Math.max(
+                        0,
+                        balance -
+                        principalPaid
+                    );
+            }
         }
 
-        const maxBalance =
-          Math.max(principal,1);
 
-        ctx.strokeStyle = '#d9dee8';
+        const maxBalance =
+            Math.max(
+                principal,
+                1
+            );
+
+
+        /* Grid */
+
+        ctx.strokeStyle =
+            '#d9dee8';
 
         ctx.lineWidth = 1;
 
-        for(let i=0;i<=4;i++){
 
-          const y =
-            top +
-            chartHeight * i / 4;
+        for (
+            let i = 0;
+            i <= 4;
+            i++
+        ) {
 
-          ctx.beginPath();
+            const y =
+                top +
+                chartHeight *
+                i / 4;
 
-          ctx.moveTo(left,y);
 
-          ctx.lineTo(
-            width - right,
-            y
-          );
+            ctx.beginPath();
 
-          ctx.stroke();
+            ctx.moveTo(
+                left,
+                y
+            );
 
-          const value =
-            maxBalance *
-            (1 - i / 4);
+            ctx.lineTo(
+                width - right,
+                y
+            );
 
-          ctx.fillStyle =
-            '#667085';
+            ctx.stroke();
 
-          ctx.font =
-            '11px Arial';
 
-          ctx.textAlign =
-            'right';
+            const value =
+                maxBalance *
+                (1 - i / 4);
 
-          ctx.fillText(
-            money(value),
-            left - 8,
-            y + 4
-          );
 
+            ctx.fillStyle =
+                '#667085';
+
+            ctx.font =
+                '11px Arial';
+
+
+            ctx.textAlign =
+                lang === 'he'
+                    ? 'right'
+                    : 'right';
+
+
+            ctx.fillText(
+                money(value),
+                left - 8,
+                y + 4
+            );
         }
+
+
+        /* Chart line */
 
         ctx.beginPath();
 
-        points.forEach(function(point,index){
 
-          const x =
-            left +
-            (point.month / months) *
-            chartWidth;
+        points.forEach(
+            function(point, index) {
 
-          const y =
-            top +
-            chartHeight -
-            (point.balance / maxBalance) *
-            chartHeight;
+                const x =
+                    left +
+                    (
+                        point.month /
+                        months
+                    ) *
+                    chartWidth;
 
-          if(index === 0){
 
-            ctx.moveTo(x,y);
+                const y =
+                    top +
+                    chartHeight -
+                    (
+                        point.balance /
+                        maxBalance
+                    ) *
+                    chartHeight;
 
-          }else{
 
-            ctx.lineTo(x,y);
+                if (index === 0) {
 
-          }
+                    ctx.moveTo(
+                        x,
+                        y
+                    );
 
-        });
+                } else {
+
+                    ctx.lineTo(
+                        x,
+                        y
+                    );
+                }
+            }
+        );
+
 
         ctx.strokeStyle =
-          '#2563eb';
+            '#2563eb';
 
         ctx.lineWidth = 3;
 
         ctx.stroke();
 
+
+        /* Labels */
+
         ctx.fillStyle =
-          '#667085';
+            '#667085';
 
         ctx.font =
-          '11px Arial';
+            '11px Arial';
 
         ctx.textAlign =
-          'center';
+            'center';
+
 
         ctx.fillText(
-          'תחילת המשכנתא',
-          left,
-          height - 12
+            t.chartStart,
+            left,
+            height - 12
         );
+
 
         ctx.fillText(
-          yearsText(months),
-          width - right,
-          height - 12
+            t.chartEnd,
+            width - right,
+            height - 12
         );
+    }
 
-      }
 
-      function yearsText(months){
-
-        const years =
-          Math.round(months / 12);
-
-        return years + ' שנים';
-
-      }
-
-      $('ilCalculateMortgage')
+    document
+        .getElementById('calculate-button')
         .addEventListener(
-          'click',
-          calculateMortgage
+            'click',
+            calculateMortgage
         );
 
-      [
-        'ilHomePrice',
-        'ilDownPayment',
-        'ilInterestRate',
-        'ilLoanTerm',
-        'ilIndexRate',
-        'ilInsurance',
-        'ilMonthlyExpenses',
-        'ilCalculationType'
-      ].forEach(function(id){
 
-        $(id).addEventListener(
-          'input',
-          calculateMortgage
+    [
+        'homePrice',
+        'downPayment',
+        'interestRate',
+        'loanTerm',
+        'propertyTax',
+        'insurance',
+        'hoa',
+        'pmi'
+    ].forEach(function(id) {
+
+        const element =
+            document.getElementById(id);
+
+        element.addEventListener(
+            'input',
+            calculateMortgage
         );
 
-        $(id).addEventListener(
-          'change',
-          calculateMortgage
+        element.addEventListener(
+            'change',
+            calculateMortgage
         );
-
-      });
-
-      window.addEventListener(
-        'resize',
-        calculateMortgage
-      );
-
-      calculateMortgage();
-
-    })();
-  </script>
-</div>`, 
-                footerH3: "מוכנים להתחיל?", 
-                footerBtn: "חזרה לאפליקציה" 
-            },
-            en: { 
-                back: "Back to Blog →", 
-                date: "September 19, 2026", 
-                readTime: "⏱️ 5 min read",
-                title: "Mortgage Calculator – Calculate Your Monthly Payment and Total Mortgage Cost",
-                body: `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>US Mortgage Calculator – Monthly Payment & Total Cost</title>
-
-<style>
-    * {
-        box-sizing: border-box;
-    }
-
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background: #f5f7fb;
-        color: #1f2937;
-    }
-
-    .mortgage-wrapper {
-        max-width: 1050px;
-        margin: 40px auto;
-        padding: 20px;
-    }
-
-    .mortgage-card {
-        background: #ffffff;
-        border-radius: 18px;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-        overflow: hidden;
-    }
-
-    .mortgage-header {
-        background: linear-gradient(135deg, #1d4ed8, #2563eb);
-        color: white;
-        padding: 32px 25px;
-        text-align: center;
-    }
-
-    .mortgage-header h1 {
-        margin: 0 0 10px;
-        font-size: 32px;
-    }
-
-    .mortgage-header p {
-        margin: 0;
-        font-size: 16px;
-        opacity: 0.95;
-    }
-
-    .mortgage-content {
-        padding: 30px;
-    }
-
-    .calculator-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-
-    .input-group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .input-group label {
-        font-weight: bold;
-        margin-bottom: 8px;
-        font-size: 14px;
-    }
-
-    .input-group input,
-    .input-group select {
-        width: 100%;
-        padding: 13px 14px;
-        border: 1px solid #d1d5db;
-        border-radius: 9px;
-        font-size: 16px;
-        background: white;
-    }
-
-    .input-group input:focus,
-    .input-group select:focus {
-        outline: none;
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
-    }
-
-    .input-description {
-        margin-top: 5px;
-        font-size: 12px;
-        color: #6b7280;
-    }
-
-    .calculate-button {
-        width: 100%;
-        margin-top: 25px;
-        padding: 15px;
-        border: none;
-        border-radius: 10px;
-        background: #2563eb;
-        color: white;
-        font-size: 18px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .calculate-button:hover {
-        background: #1d4ed8;
-        transform: translateY(-1px);
-    }
-
-    .results {
-        display: none;
-        margin-top: 35px;
-    }
-
-    .results-title {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 24px;
-    }
-
-    .main-result {
-        background: #eff6ff;
-        border: 1px solid #bfdbfe;
-        border-radius: 14px;
-        padding: 25px;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .main-result span {
-        display: block;
-        font-size: 14px;
-        color: #4b5563;
-        margin-bottom: 8px;
-    }
-
-    .main-result strong {
-        font-size: 38px;
-        color: #1d4ed8;
-    }
-
-    .result-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-    }
-
-    .result-box {
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 18px;
-        text-align: center;
-    }
-
-    .result-box span {
-        display: block;
-        color: #6b7280;
-        font-size: 13px;
-        margin-bottom: 8px;
-    }
-
-    .result-box strong {
-        font-size: 20px;
-        color: #111827;
-    }
-
-    .breakdown {
-        margin-top: 25px;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        overflow: hidden;
-    }
-
-    .breakdown h3 {
-        margin: 0;
-        padding: 18px;
-        background: #f9fafb;
-        font-size: 18px;
-    }
-
-    .breakdown-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 14px 18px;
-        border-top: 1px solid #e5e7eb;
-        font-size: 14px;
-    }
-
-    .breakdown-row strong {
-        color: #111827;
-    }
-
-    .chart-container {
-        margin-top: 30px;
-        padding: 20px;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        background: white;
-    }
-
-    .chart-container h3 {
-        margin-top: 0;
-        text-align: center;
-    }
-
-    canvas {
-        width: 100%;
-        max-height: 350px;
-    }
-
-    .warning {
-        display: none;
-        margin-top: 20px;
-        padding: 15px;
-        border-radius: 10px;
-        background: #fff7ed;
-        border: 1px solid #fed7aa;
-        color: #9a3412;
-        font-size: 14px;
-        line-height: 1.5;
-    }
-
-    .disclaimer {
-        margin-top: 25px;
-        padding: 15px;
-        background: #f9fafb;
-        border-radius: 10px;
-        color: #6b7280;
-        font-size: 12px;
-        line-height: 1.6;
-    }
-
-    @media (max-width: 750px) {
-        .calculator-grid,
-        .result-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .mortgage-header h1 {
-            font-size: 25px;
-        }
-
-        .mortgage-content {
-            padding: 20px;
-        }
-
-        .main-result strong {
-            font-size: 30px;
-        }
-    }
-</style>
-</head>
-
-<body>
-
-<div class="mortgage-wrapper">
-
-    <div class="mortgage-card">
-
-        <div class="mortgage-header">
-            <h1>US Mortgage Calculator</h1>
-            <p>Estimate your monthly mortgage payment and total homeownership cost</p>
-        </div>
-
-        <div class="mortgage-content">
-
-            <div class="calculator-grid">
-
-                <div class="input-group">
-                    <label for="homePrice">Home Price ($)</label>
-                    <input type="number" id="homePrice" value="400000" min="0">
-                    <div class="input-description">
-                        Purchase price of the home
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label for="downPayment">Down Payment ($)</label>
-                    <input type="number" id="downPayment" value="80000" min="0">
-                    <div class="input-description">
-                        Amount you plan to pay upfront
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label for="interestRate">Mortgage Interest Rate (%)</label>
-                    <input type="number" id="interestRate" value="6.5" min="0" step="0.01">
-                    <div class="input-description">
-                        Annual mortgage interest rate
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label for="loanTerm">Loan Term</label>
-                    <select id="loanTerm">
-                        <option value="10">10 years</option>
-                        <option value="15">15 years</option>
-                        <option value="20">20 years</option>
-                        <option value="25">25 years</option>
-                        <option value="30" selected>30 years</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label for="propertyTax">Property Tax (% per year)</label>
-                    <input type="number" id="propertyTax" value="1.1" min="0" step="0.01">
-                    <div class="input-description">
-                        Estimated annual property tax as a percentage of home value
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label for="insurance">Homeowners Insurance ($/year)</label>
-                    <input type="number" id="insurance" value="1800" min="0">
-                    <div class="input-description">
-                        Estimated annual homeowners insurance
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label for="hoa">HOA Fee ($/month)</label>
-                    <input type="number" id="hoa" value="0" min="0">
-                    <div class="input-description">
-                        Homeowners Association monthly fee
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label for="pmi">PMI ($/month)</label>
-                    <input type="number" id="pmi" value="0" min="0">
-                    <div class="input-description">
-                        Private Mortgage Insurance, if applicable
-                    </div>
-                </div>
-
-            </div>
-
-            <button class="calculate-button" onclick="calculateMortgage()">
-                Calculate My Mortgage
-            </button>
-
-            <div class="warning" id="downPaymentWarning">
-                Your down payment is below 20% of the home price. Depending on the loan type and lender,
-                Private Mortgage Insurance (PMI) may apply.
-            </div>
-
-            <div class="results" id="results">
-
-                <h2 class="results-title">Your Mortgage Estimate</h2>
-
-                <div class="main-result">
-                    <span>Estimated Monthly Housing Payment</span>
-                    <strong id="monthlyPayment">$0</strong>
-                </div>
-
-                <div class="result-grid">
-
-                    <div class="result-box">
-                        <span>Principal & Interest</span>
-                        <strong id="principalInterest">$0</strong>
-                    </div>
-
-                    <div class="result-box">
-                        <span>Total Interest</span>
-                        <strong id="totalInterest">$0</strong>
-                    </div>
-
-                    <div class="result-box">
-                        <span>Total Mortgage Cost</span>
-                        <strong id="totalMortgageCost">$0</strong>
-                    </div>
-
-                </div>
-
-                <div class="breakdown">
-
-                    <h3>Monthly Payment Breakdown</h3>
-
-                    <div class="breakdown-row">
-                        <span>Home Price</span>
-                        <strong id="resultHomePrice">$0</strong>
-                    </div>
-
-                    <div class="breakdown-row">
-                        <span>Down Payment</span>
-                        <strong id="resultDownPayment">$0</strong>
-                    </div>
-
-                    <div class="breakdown-row">
-                        <span>Mortgage Amount</span>
-                        <strong id="loanAmount">$0</strong>
-                    </div>
-
-                    <div class="breakdown-row">
-                        <span>Principal & Interest</span>
-                        <strong id="resultPI">$0</strong>
-                    </div>
-
-                    <div class="breakdown-row">
-                        <span>Property Tax</span>
-                        <strong id="monthlyTax">$0</strong>
-                    </div>
-
-                    <div class="breakdown-row">
-                        <span>Homeowners Insurance</span>
-                        <strong id="monthlyInsurance">$0</strong>
-                    </div>
-
-                    <div class="breakdown-row">
-                        <span>HOA Fee</span>
-                        <strong id="resultHOA">$0</strong>
-                    </div>
-
-                    <div class="breakdown-row">
-                        <span>PMI</span>
-                        <strong id="resultPMI">$0</strong>
-                    </div>
-
-                </div>
-
-                <div class="chart-container">
-
-                    <h3>Estimated Mortgage Balance Over Time</h3>
-
-                    <canvas id="mortgageChart" width="900" height="350"></canvas>
-
-                </div>
-
-            </div>
-
-            <div class="disclaimer">
-                <strong>Disclaimer:</strong>
-                This calculator provides an estimate for educational purposes only.
-                Actual mortgage payments and borrowing costs may vary depending on the lender,
-                loan type, interest rate, credit score, property taxes, insurance, PMI,
-                HOA fees, closing costs and other factors. This calculator is not financial advice.
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<script>
-
-function formatCurrency(value) {
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 0
-    }).format(value);
-}
-
-function calculateMortgage() {
-
-    const homePrice = parseFloat(document.getElementById('homePrice').value) || 0;
-    const downPayment = parseFloat(document.getElementById('downPayment').value) || 0;
-    const annualRate = parseFloat(document.getElementById('interestRate').value) || 0;
-    const years = parseInt(document.getElementById('loanTerm').value) || 30;
-    const propertyTaxRate = parseFloat(document.getElementById('propertyTax').value) || 0;
-    const insuranceYearly = parseFloat(document.getElementById('insurance').value) || 0;
-    const hoa = parseFloat(document.getElementById('hoa').value) || 0;
-    const pmi = parseFloat(document.getElementById('pmi').value) || 0;
-
-    const loanAmount = Math.max(homePrice - downPayment, 0);
-
-    const months = years * 12;
-    const monthlyRate = annualRate / 100 / 12;
-
-    let principalInterest = 0;
-
-    if (loanAmount > 0) {
-
-        if (monthlyRate === 0) {
-            principalInterest = loanAmount / months;
-        } else {
-
-            principalInterest =
-                loanAmount *
-                (
-                    monthlyRate *
-                    Math.pow(1 + monthlyRate, months)
-                ) /
-                (
-                    Math.pow(1 + monthlyRate, months) - 1
-                );
-        }
-    }
-
-    const monthlyPropertyTax =
-        homePrice * (propertyTaxRate / 100) / 12;
-
-    const monthlyInsurance =
-        insuranceYearly / 12;
-
-    const monthlyPayment =
-        principalInterest +
-        monthlyPropertyTax +
-        monthlyInsurance +
-        hoa +
-        pmi;
-
-    const totalPrincipalInterest =
-        principalInterest * months;
-
-    const totalInterest =
-        Math.max(totalPrincipalInterest - loanAmount, 0);
-
-    const totalMortgageCost =
-        totalPrincipalInterest +
-        monthlyPropertyTax * months +
-        monthlyInsurance * months +
-        hoa * months +
-        pmi * months +
-        downPayment;
-
-    document.getElementById('monthlyPayment').textContent =
-        formatCurrency(monthlyPayment);
-
-    document.getElementById('principalInterest').textContent =
-        formatCurrency(principalInterest);
-
-    document.getElementById('totalInterest').textContent =
-        formatCurrency(totalInterest);
-
-    document.getElementById('totalMortgageCost').textContent =
-        formatCurrency(totalMortgageCost);
-
-    document.getElementById('resultHomePrice').textContent =
-        formatCurrency(homePrice);
-
-    document.getElementById('resultDownPayment').textContent =
-        formatCurrency(downPayment);
-
-    document.getElementById('loanAmount').textContent =
-        formatCurrency(loanAmount);
-
-    document.getElementById('resultPI').textContent =
-        formatCurrency(principalInterest);
-
-    document.getElementById('monthlyTax').textContent =
-        formatCurrency(monthlyPropertyTax);
-
-    document.getElementById('monthlyInsurance').textContent =
-        formatCurrency(monthlyInsurance);
-
-    document.getElementById('resultHOA').textContent =
-        formatCurrency(hoa);
-
-    document.getElementById('resultPMI').textContent =
-        formatCurrency(pmi);
-
-    document.getElementById('results').style.display = 'block';
-
-    const downPaymentPercentage =
-        homePrice > 0
-            ? (downPayment / homePrice) * 100
-            : 0;
-
-    const warning =
-        document.getElementById('downPaymentWarning');
-
-    if (downPaymentPercentage < 20 && homePrice > 0) {
-        warning.style.display = 'block';
-    } else {
-        warning.style.display = 'none';
-    }
-
-    drawMortgageChart(
-        loanAmount,
-        monthlyRate,
-        principalInterest,
-        months
-    );
-}
-
-function drawMortgageChart(
-    loanAmount,
-    monthlyRate,
-    monthlyPayment,
-    months
-) {
-
-    const canvas =
-        document.getElementById('mortgageChart');
-
-    const ctx = canvas.getContext('2d');
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    if (loanAmount <= 0) {
-        return;
-    }
-
-    const padding = 55;
-
-    const chartWidth =
-        canvas.width - padding * 2;
-
-    const chartHeight =
-        canvas.height - padding * 2;
-
-    const balances = [];
-
-    let balance = loanAmount;
-
-    const step =
-        Math.max(1, Math.floor(months / 60));
-
-    for (let month = 0; month <= months; month += step) {
-
-        balances.push({
-            month: month,
-            balance: balance
-        });
-
-        for (
-            let i = 0;
-            i < step && month + i < months;
-            i++
-        ) {
-
-            let interest =
-                balance * monthlyRate;
-
-            let principal =
-                monthlyPayment - interest;
-
-            balance -= principal;
-
-            if (balance < 0) {
-                balance = 0;
-            }
-        }
-    }
-
-    if (
-        balances[balances.length - 1].month < months
-    ) {
-        balances.push({
-            month: months,
-            balance: 0
-        });
-    }
-
-    const maxBalance = loanAmount;
-
-    ctx.strokeStyle = '#d1d5db';
-    ctx.lineWidth = 1;
-
-    ctx.beginPath();
-    ctx.moveTo(padding, padding);
-    ctx.lineTo(
-        padding,
-        canvas.height - padding
-    );
-    ctx.lineTo(
-        canvas.width - padding,
-        canvas.height - padding
-    );
-    ctx.stroke();
-
-    ctx.strokeStyle = '#2563eb';
-    ctx.lineWidth = 3;
-
-    ctx.beginPath();
-
-    balances.forEach((point, index) => {
-
-        const x =
-            padding +
-            (point.month / months) *
-            chartWidth;
-
-        const y =
-            padding +
-            (1 - point.balance / maxBalance) *
-            chartHeight;
-
-        if (index === 0) {
-            ctx.moveTo(x, y);
-        } else {
-            ctx.lineTo(x, y);
-        }
     });
 
-    ctx.stroke();
 
-    ctx.fillStyle = '#4b5563';
-    ctx.font = '13px Arial';
-
-    ctx.fillText(
-        'Starting Balance',
-        padding,
-        canvas.height - 20
+    window.addEventListener(
+        'resize',
+        calculateMortgage
     );
 
-    ctx.fillText(
-        'Paid Off',
-        canvas.width - padding - 55,
-        canvas.height - 20
-    );
 
-    ctx.fillText(
-        formatCurrency(loanAmount),
-        5,
-        padding + 5
-    );
+    calculateMortgage();
 
-    ctx.fillText(
-        '$0',
-        25,
-        canvas.height - padding
-    );
-}
-
-calculateMortgage();
+})();
 
 </script>
 
-</body>
-</html>`, 
-                footerH3: "Ready to Start?", 
-                footerBtn: "Back to App" 
-            }
-        };
-
-        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
-        const t = translations[userLang];
-        
-        document.documentElement.lang = userLang;
-        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
-        
-        document.title = t.title;
-        document.getElementById('back-link').innerText = t.back;
-        document.getElementById('meta-date').innerText = t.date;
-        document.getElementById('meta-read-time').innerText = t.readTime;
-        document.getElementById('main-h1').innerText = t.title;
-        document.getElementById('article-body-content').innerHTML = t.body;
-        document.getElementById('footer-h3').innerText = t.footerH3;
-        document.getElementById('footer-btn').innerText = t.footerBtn;
-    </script>
 </body>
 </html>
