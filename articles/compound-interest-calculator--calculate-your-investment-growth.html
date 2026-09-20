@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחשבון ריבית דריבית – חישוב צמיחת החיסכון לאורך זמן</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "20 בספטמבר 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "מחשבון ריבית דריבית – חישוב צמיחת החיסכון לאורך זמן",
+                body: `<div id="compound-interest-calculator">
+<style>
+#compound-interest-calculator {
+    max-width: 850px;
+    margin: 30px auto;
+    font-family: Arial, sans-serif;
+    color: #222;
+    direction: ltr;
+}
+
+#compound-interest-calculator .ci-box {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+#compound-interest-calculator h2 {
+    margin: 0 0 8px;
+    font-size: 30px;
+    color: #1f2937;
+}
+
+#compound-interest-calculator .ci-subtitle {
+    margin: 0 0 25px;
+    color: #6b7280;
+    font-size: 16px;
+}
+
+#compound-interest-calculator .ci-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+#compound-interest-calculator .ci-field {
+    display: flex;
+    flex-direction: column;
+}
+
+#compound-interest-calculator label {
+    font-weight: bold;
+    margin-bottom: 7px;
+    color: #374151;
+}
+
+#compound-interest-calculator input,
+#compound-interest-calculator select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 16px;
+    background: #fff;
+    outline: none;
+}
+
+#compound-interest-calculator input:focus,
+#compound-interest-calculator select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+
+#compound-interest-calculator .ci-button {
+    width: 100%;
+    margin-top: 22px;
+    padding: 15px;
+    border: 0;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#compound-interest-calculator .ci-button:hover {
+    background: #1d4ed8;
+}
+
+#compound-interest-calculator .ci-results {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+#compound-interest-calculator .ci-result {
+    background: #f8fafc;
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+}
+
+#compound-interest-calculator .ci-result-title {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+#compound-interest-calculator .ci-result-value {
+    font-size: 25px;
+    font-weight: bold;
+    color: #111827;
+}
+
+#compound-interest-calculator .ci-profit {
+    color: #15803d;
+}
+
+#compound-interest-calculator .ci-summary {
+    margin-top: 20px;
+    background: #eff6ff;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+#compound-interest-calculator .ci-summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+#compound-interest-calculator .ci-summary-row:last-child {
+    border-bottom: 0;
+}
+
+#compound-interest-calculator .ci-summary-label {
+    color: #4b5563;
+}
+
+#compound-interest-calculator .ci-summary-value {
+    font-weight: bold;
+}
+
+#compound-interest-calculator .ci-note {
+    margin-top: 20px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #6b7280;
+}
+
+@media (max-width: 650px) {
+    #compound-interest-calculator .ci-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #compound-interest-calculator .ci-results {
+        grid-template-columns: 1fr;
+    }
+
+    #compound-interest-calculator .ci-box {
+        padding: 20px;
+    }
+
+    #compound-interest-calculator h2 {
+        font-size: 25px;
+    }
+}
+</style>
+
+<div class="ci-box">
+
+    <h2>Compound Interest Calculator</h2>
+    <p class="ci-subtitle">
+        See how your money can grow over time with compound interest.
+    </p>
+
+    <div class="ci-grid">
+
+        <div class="ci-field">
+            <label for="ci-initial">Initial Investment ($)</label>
+            <input type="number" id="ci-initial" value="10000" min="0" step="100">
+        </div>
+
+        <div class="ci-field">
+            <label for="ci-monthly">Monthly Contribution ($)</label>
+            <input type="number" id="ci-monthly" value="200" min="0" step="10">
+        </div>
+
+        <div class="ci-field">
+            <label for="ci-rate">Annual Interest Rate (%)</label>
+            <input type="number" id="ci-rate" value="7" min="0" step="0.1">
+        </div>
+
+        <div class="ci-field">
+            <label for="ci-years">Investment Period (Years)</label>
+            <input type="number" id="ci-years" value="20" min="1" max="100" step="1">
+        </div>
+
+        <div class="ci-field">
+            <label for="ci-frequency">Compounding Frequency</label>
+            <select id="ci-frequency">
+                <option value="1">Annually</option>
+                <option value="2">Semi-annually</option>
+                <option value="4">Quarterly</option>
+                <option value="12" selected>Monthly</option>
+                <option value="365">Daily</option>
+            </select>
+        </div>
+
+    </div>
+
+    <button type="button" class="ci-button" id="ci-calculate">
+        Calculate
+    </button>
+
+    <div class="ci-results">
+
+        <div class="ci-result">
+            <div class="ci-result-title">Future Value</div>
+            <div class="ci-result-value" id="ci-future">$0</div>
+        </div>
+
+        <div class="ci-result">
+            <div class="ci-result-title">Total Contributions</div>
+            <div class="ci-result-value" id="ci-contributions">$0</div>
+        </div>
+
+        <div class="ci-result">
+            <div class="ci-result-title">Interest Earned</div>
+            <div class="ci-result-value ci-profit" id="ci-interest">$0</div>
+        </div>
+
+    </div>
+
+    <div class="ci-summary">
+
+        <div class="ci-summary-row">
+            <span class="ci-summary-label">Initial Investment</span>
+            <span class="ci-summary-value" id="ci-summary-initial">$0</span>
+        </div>
+
+        <div class="ci-summary-row">
+            <span class="ci-summary-label">Monthly Contribution</span>
+            <span class="ci-summary-value" id="ci-summary-monthly">$0</span>
+        </div>
+
+        <div class="ci-summary-row">
+            <span class="ci-summary-label">Annual Interest Rate</span>
+            <span class="ci-summary-value" id="ci-summary-rate">0%</span>
+        </div>
+
+        <div class="ci-summary-row">
+            <span class="ci-summary-label">Investment Period</span>
+            <span class="ci-summary-value" id="ci-summary-years">0 years</span>
+        </div>
+
+    </div>
+
+    <div class="ci-note">
+        This calculator provides an estimate based on the information entered.
+        Actual investment returns may vary. It does not account for taxes,
+        fees, inflation, or changes in interest rates.
+    </div>
+
+</div>
+
+<script>
+(function () {
+
+    function formatMoney(value) {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0
+        }).format(value);
+    }
+
+    function calculateCompoundInterest() {
+
+        var initial = parseFloat(document.getElementById('ci-initial').value) || 0;
+        var monthly = parseFloat(document.getElementById('ci-monthly').value) || 0;
+        var annualRate = parseFloat(document.getElementById('ci-rate').value) || 0;
+        var years = parseInt(document.getElementById('ci-years').value) || 0;
+        var frequency = parseInt(document.getElementById('ci-frequency').value) || 12;
+
+        if (initial < 0) initial = 0;
+        if (monthly < 0) monthly = 0;
+        if (annualRate < 0) annualRate = 0;
+        if (years < 1) years = 1;
+        if (years > 100) years = 100;
+
+        var totalMonths = years * 12;
+        var balance = initial;
+
+        /*
+         * We calculate month by month so that monthly
+         * contributions are included naturally.
+         */
+        var periodicRate = annualRate / 100 / frequency;
+
+        for (var month = 1; month <= totalMonths; month++) {
+
+            if (frequency === 12) {
+                balance = balance * (1 + periodicRate);
+                balance += monthly;
+            } else {
+
+                /*
+                 * For non-monthly compounding frequencies,
+                 * approximate the equivalent monthly growth rate.
+                 */
+                var monthlyRate = Math.pow(
+                    1 + periodicRate,
+                    frequency / 12
+                ) - 1;
+
+                balance = balance * (1 + monthlyRate);
+                balance += monthly;
+            }
+        }
+
+        var totalContributions = initial + (monthly * totalMonths);
+        var interestEarned = balance - totalContributions;
+
+        if (interestEarned < 0) {
+            interestEarned = 0;
+        }
+
+        document.getElementById('ci-future').textContent =
+            formatMoney(balance);
+
+        document.getElementById('ci-contributions').textContent =
+            formatMoney(totalContributions);
+
+        document.getElementById('ci-interest').textContent =
+            formatMoney(interestEarned);
+
+        document.getElementById('ci-summary-initial').textContent =
+            formatMoney(initial);
+
+        document.getElementById('ci-summary-monthly').textContent =
+            formatMoney(monthly);
+
+        document.getElementById('ci-summary-rate').textContent =
+            annualRate.toFixed(2) + '%';
+
+        document.getElementById('ci-summary-years').textContent =
+            years + (years === 1 ? ' year' : ' years');
+    }
+
+    document.getElementById('ci-calculate')
+        .addEventListener('click', calculateCompoundInterest);
+
+    document.querySelectorAll(
+        '#compound-interest-calculator input, #compound-interest-calculator select'
+    ).forEach(function (element) {
+        element.addEventListener('input', calculateCompoundInterest);
+        element.addEventListener('change', calculateCompoundInterest);
+    });
+
+    calculateCompoundInterest();
+
+})();
+</script>
+</div>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "September 20, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Compound Interest Calculator – Calculate Your Investment Growth",
+                body: `<div id="compound-interest-calculator">
+<style>
+#compound-interest-calculator {
+    max-width: 850px;
+    margin: 30px auto;
+    font-family: Arial, sans-serif;
+    color: #222;
+    direction: ltr;
+}
+
+#compound-interest-calculator .ci-box {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+#compound-interest-calculator h2 {
+    margin: 0 0 8px;
+    font-size: 30px;
+    color: #1f2937;
+}
+
+#compound-interest-calculator .ci-subtitle {
+    margin: 0 0 25px;
+    color: #6b7280;
+    font-size: 16px;
+}
+
+#compound-interest-calculator .ci-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+#compound-interest-calculator .ci-field {
+    display: flex;
+    flex-direction: column;
+}
+
+#compound-interest-calculator label {
+    font-weight: bold;
+    margin-bottom: 7px;
+    color: #374151;
+}
+
+#compound-interest-calculator input,
+#compound-interest-calculator select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 16px;
+    background: #fff;
+    outline: none;
+}
+
+#compound-interest-calculator input:focus,
+#compound-interest-calculator select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+}
+
+#compound-interest-calculator .ci-button {
+    width: 100%;
+    margin-top: 22px;
+    padding: 15px;
+    border: 0;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#compound-interest-calculator .ci-button:hover {
+    background: #1d4ed8;
+}
+
+#compound-interest-calculator .ci-results {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+#compound-interest-calculator .ci-result {
+    background: #f8fafc;
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+}
+
+#compound-interest-calculator .ci-result-title {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+#compound-interest-calculator .ci-result-value {
+    font-size: 25px;
+    font-weight: bold;
+    color: #111827;
+}
+
+#compound-interest-calculator .ci-profit {
+    color: #15803d;
+}
+
+#compound-interest-calculator .ci-summary {
+    margin-top: 20px;
+    background: #eff6ff;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+#compound-interest-calculator .ci-summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+#compound-interest-calculator .ci-summary-row:last-child {
+    border-bottom: 0;
+}
+
+#compound-interest-calculator .ci-summary-label {
+    color: #4b5563;
+}
+
+#compound-interest-calculator .ci-summary-value {
+    font-weight: bold;
+}
+
+#compound-interest-calculator .ci-note {
+    margin-top: 20px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #6b7280;
+}
+
+@media (max-width: 650px) {
+    #compound-interest-calculator .ci-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #compound-interest-calculator .ci-results {
+        grid-template-columns: 1fr;
+    }
+
+    #compound-interest-calculator .ci-box {
+        padding: 20px;
+    }
+
+    #compound-interest-calculator h2 {
+        font-size: 25px;
+    }
+}
+</style>
+
+<div class="ci-box">
+
+    <h2>Compound Interest Calculator</h2>
+    <p class="ci-subtitle">
+        See how your money can grow over time with compound interest.
+    </p>
+
+    <div class="ci-grid">
+
+        <div class="ci-field">
+            <label for="ci-initial">Initial Investment ($)</label>
+            <input type="number" id="ci-initial" value="10000" min="0" step="100">
+        </div>
+
+        <div class="ci-field">
+            <label for="ci-monthly">Monthly Contribution ($)</label>
+            <input type="number" id="ci-monthly" value="200" min="0" step="10">
+        </div>
+
+        <div class="ci-field">
+            <label for="ci-rate">Annual Interest Rate (%)</label>
+            <input type="number" id="ci-rate" value="7" min="0" step="0.1">
+        </div>
+
+        <div class="ci-field">
+            <label for="ci-years">Investment Period (Years)</label>
+            <input type="number" id="ci-years" value="20" min="1" max="100" step="1">
+        </div>
+
+        <div class="ci-field">
+            <label for="ci-frequency">Compounding Frequency</label>
+            <select id="ci-frequency">
+                <option value="1">Annually</option>
+                <option value="2">Semi-annually</option>
+                <option value="4">Quarterly</option>
+                <option value="12" selected>Monthly</option>
+                <option value="365">Daily</option>
+            </select>
+        </div>
+
+    </div>
+
+    <button type="button" class="ci-button" id="ci-calculate">
+        Calculate
+    </button>
+
+    <div class="ci-results">
+
+        <div class="ci-result">
+            <div class="ci-result-title">Future Value</div>
+            <div class="ci-result-value" id="ci-future">$0</div>
+        </div>
+
+        <div class="ci-result">
+            <div class="ci-result-title">Total Contributions</div>
+            <div class="ci-result-value" id="ci-contributions">$0</div>
+        </div>
+
+        <div class="ci-result">
+            <div class="ci-result-title">Interest Earned</div>
+            <div class="ci-result-value ci-profit" id="ci-interest">$0</div>
+        </div>
+
+    </div>
+
+    <div class="ci-summary">
+
+        <div class="ci-summary-row">
+            <span class="ci-summary-label">Initial Investment</span>
+            <span class="ci-summary-value" id="ci-summary-initial">$0</span>
+        </div>
+
+        <div class="ci-summary-row">
+            <span class="ci-summary-label">Monthly Contribution</span>
+            <span class="ci-summary-value" id="ci-summary-monthly">$0</span>
+        </div>
+
+        <div class="ci-summary-row">
+            <span class="ci-summary-label">Annual Interest Rate</span>
+            <span class="ci-summary-value" id="ci-summary-rate">0%</span>
+        </div>
+
+        <div class="ci-summary-row">
+            <span class="ci-summary-label">Investment Period</span>
+            <span class="ci-summary-value" id="ci-summary-years">0 years</span>
+        </div>
+
+    </div>
+
+    <div class="ci-note">
+        This calculator provides an estimate based on the information entered.
+        Actual investment returns may vary. It does not account for taxes,
+        fees, inflation, or changes in interest rates.
+    </div>
+
+</div>
+
+<script>
+(function () {
+
+    function formatMoney(value) {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0
+        }).format(value);
+    }
+
+    function calculateCompoundInterest() {
+
+        var initial = parseFloat(document.getElementById('ci-initial').value) || 0;
+        var monthly = parseFloat(document.getElementById('ci-monthly').value) || 0;
+        var annualRate = parseFloat(document.getElementById('ci-rate').value) || 0;
+        var years = parseInt(document.getElementById('ci-years').value) || 0;
+        var frequency = parseInt(document.getElementById('ci-frequency').value) || 12;
+
+        if (initial < 0) initial = 0;
+        if (monthly < 0) monthly = 0;
+        if (annualRate < 0) annualRate = 0;
+        if (years < 1) years = 1;
+        if (years > 100) years = 100;
+
+        var totalMonths = years * 12;
+        var balance = initial;
+
+        /*
+         * We calculate month by month so that monthly
+         * contributions are included naturally.
+         */
+        var periodicRate = annualRate / 100 / frequency;
+
+        for (var month = 1; month <= totalMonths; month++) {
+
+            if (frequency === 12) {
+                balance = balance * (1 + periodicRate);
+                balance += monthly;
+            } else {
+
+                /*
+                 * For non-monthly compounding frequencies,
+                 * approximate the equivalent monthly growth rate.
+                 */
+                var monthlyRate = Math.pow(
+                    1 + periodicRate,
+                    frequency / 12
+                ) - 1;
+
+                balance = balance * (1 + monthlyRate);
+                balance += monthly;
+            }
+        }
+
+        var totalContributions = initial + (monthly * totalMonths);
+        var interestEarned = balance - totalContributions;
+
+        if (interestEarned < 0) {
+            interestEarned = 0;
+        }
+
+        document.getElementById('ci-future').textContent =
+            formatMoney(balance);
+
+        document.getElementById('ci-contributions').textContent =
+            formatMoney(totalContributions);
+
+        document.getElementById('ci-interest').textContent =
+            formatMoney(interestEarned);
+
+        document.getElementById('ci-summary-initial').textContent =
+            formatMoney(initial);
+
+        document.getElementById('ci-summary-monthly').textContent =
+            formatMoney(monthly);
+
+        document.getElementById('ci-summary-rate').textContent =
+            annualRate.toFixed(2) + '%';
+
+        document.getElementById('ci-summary-years').textContent =
+            years + (years === 1 ? ' year' : ' years');
+    }
+
+    document.getElementById('ci-calculate')
+        .addEventListener('click', calculateCompoundInterest);
+
+    document.querySelectorAll(
+        '#compound-interest-calculator input, #compound-interest-calculator select'
+    ).forEach(function (element) {
+        element.addEventListener('input', calculateCompoundInterest);
+        element.addEventListener('change', calculateCompoundInterest);
+    });
+
+    calculateCompoundInterest();
+
+})();
+</script>
+</div>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
