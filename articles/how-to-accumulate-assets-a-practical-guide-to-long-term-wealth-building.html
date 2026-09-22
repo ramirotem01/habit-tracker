@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>איך לבנות נכסים לאורך זמן: המדריך המעשי לצבירת עושר יציב</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "22 בספטמבר 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "איך לבנות נכסים לאורך זמן: המדריך המעשי לצבירת עושר יציב",
+                body: `<div dir="rtl" style="font-family:Arial,Helvetica,sans-serif;max-width:1100px;margin:0 auto;color:#222;line-height:1.8;background:#fff;">
+
+  <div style="background:linear-gradient(135deg,#0071bb,#004f87);padding:45px 30px;border-radius:14px;margin-bottom:30px;color:#fff;text-align:center;">
+    <h1 style="font-size:36px;margin:0 0 18px;font-weight:700;">בניית עושר יציב: איך לבנות חופש פיננסי לאורך זמן</h1>
+    <p style="font-size:20px;margin:0;line-height:1.7;">
+      בניית עושר אינה תוצאה של מכה פיננסית חד-פעמית. היא תהליך עקבי של צבירת נכסים,
+      השקעה חכמה, שליטה בהוצאות ומתן זמן לריבית דריבית לעשות את העבודה.
+    </p>
+  </div>
+
+  <div style="background:#f4f9fc;border-right:5px solid #0071bb;padding:22px 25px;border-radius:8px;margin-bottom:30px;">
+    <strong style="font-size:21px;">השורה התחתונה:</strong>
+    <p style="margin:8px 0 0;font-size:17px;">
+      עושר פיננסי נבנה כאשר חלק מההכנסה שלך הופך באופן עקבי לנכסים שיכולים לשמור על ערכם,
+      לייצר הכנסה או לצמוח לאורך זמן. לא צריך להתחיל עם הון גדול – צריך להתחיל עם תהליך שאפשר להתמיד בו.
+    </p>
+  </div>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">מהו בכלל עושר פיננסי?</h2>
+
+  <p>
+    אנשים רבים מגדירים עושר לפי גובה המשכורת, סוג הרכב או גודל הבית. אבל מבחינה פיננסית,
+    מדד חשוב הרבה יותר הוא <strong>השווי הנקי</strong>: סך הנכסים פחות סך ההתחייבויות.
+  </p>
+
+  <div style="background:#fafafa;border:1px solid #ddd;padding:25px;border-radius:10px;text-align:center;margin:25px 0;">
+    <div style="font-size:24px;font-weight:bold;color:#0071bb;">שווי נקי = נכסים − התחייבויות</div>
+  </div>
+
+  <p>
+    לדוגמה, אדם יכול להרוויח 30,000 ₪ בחודש ועדיין לצבור מעט מאוד עושר אם רוב ההכנסה
+    מופנית לצריכה ולהתחייבויות. אדם אחר עשוי להרוויח פחות, אך להשקיע באופן עקבי חלק
+    מהכנסתו ולצבור לאורך השנים תיק נכסים משמעותי.
+  </p>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">מהו נכס אמיתי?</h2>
+
+  <p>
+    נכס הוא משאב בעל ערך כלכלי. כאשר חושבים על בניית עושר, חשוב להבחין בין נכסים
+    שיכולים לתרום להון העתידי לבין הוצאות צריכה שמאבדות ערך או מייצרות התחייבויות.
+  </p>
+
+  <div style="overflow-x:auto;margin:25px 0;">
+    <table style="width:100%;border-collapse:collapse;font-size:16px;">
+      <thead>
+        <tr style="background:#0071bb;color:#fff;">
+          <th style="padding:14px;border:1px solid #ddd;">סוג</th>
+          <th style="padding:14px;border:1px solid #ddd;">דוגמאות</th>
+          <th style="padding:14px;border:1px solid #ddd;">תרומה אפשרית לעושר</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:14px;border:1px solid #ddd;"><strong>השקעות פיננסיות</strong></td>
+          <td style="padding:14px;border:1px solid #ddd;">מניות, אג"ח, קרנות, קופות ומוצרים פיננסיים אחרים</td>
+          <td style="padding:14px;border:1px solid #ddd;">פוטנציאל לצמיחה והכנסה לאורך זמן</td>
+        </tr>
+        <tr style="background:#f7f7f7;">
+          <td style="padding:14px;border:1px solid #ddd;"><strong>נדל"ן</strong></td>
+          <td style="padding:14px;border:1px solid #ddd;">דירה, נכס להשכרה או נכס מסחרי</td>
+          <td style="padding:14px;border:1px solid #ddd;">עשוי לייצר הכנסה ולצבור ערך</td>
+        </tr>
+        <tr>
+          <td style="padding:14px;border:1px solid #ddd;"><strong>עסק</strong></td>
+          <td style="padding:14px;border:1px solid #ddd;">עסק עצמאי, חברה או זכויות בעסק</td>
+          <td style="padding:14px;border:1px solid #ddd;">עשוי לייצר תזרים ולצמוח</td>
+        </tr>
+        <tr style="background:#f7f7f7;">
+          <td style="padding:14px;border:1px solid #ddd;"><strong>הון אנושי</strong></td>
+          <td style="padding:14px;border:1px solid #ddd;">ידע, ניסיון, מיומנויות והשכלה</td>
+          <td style="padding:14px;border:1px solid #ddd;">יכולת להגדיל הכנסה עתידית</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="background:#fff8e8;border:1px solid #f0d48a;padding:22px;border-radius:10px;margin:25px 0;">
+    <strong style="font-size:19px;">חשוב:</strong>
+    <p style="margin:8px 0 0;">
+      לא כל דבר בעל ערך הוא בהכרח השקעה טובה, ולא כל נכס עולה בערכו. השקעות כרוכות בסיכון,
+      והעבר אינו מבטיח תשואה עתידית. המטרה היא לבנות מערכת פיננסית מאוזנת ולא להמר על נכס בודד.
+    </p>
+  </div>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">הריבית דריבית – מנוע הצמיחה של ההון</h2>
+
+  <p>
+    אחד המושגים החשובים ביותר בבניית עושר הוא <strong>ריבית דריבית</strong>.
+    המשמעות היא שהתשואה שמתקבלת על השקעה יכולה להישאר מושקעת ולייצר תשואה נוספת בעתיד.
+  </p>
+
+  <p>
+    במילים פשוטות: בהתחלה הכסף עובד בשבילכם. בהמשך, גם הרווחים שהכסף כבר יצר מתחילים לעבוד בשבילכם.
+  </p>
+
+  <div style="background:#eef7fc;padding:28px;border-radius:10px;margin:25px 0;">
+    <h3 style="color:#0071bb;margin-top:0;">דוגמה פשוטה</h3>
+    <p>
+      נניח השקעה ראשונית של 100,000 ₪ ותשואה ממוצעת היפותטית של 6% לשנה,
+      כאשר התשואה נשארת מושקעת.
+    </p>
+
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;text-align:center;">
+        <tr style="background:#0071bb;color:#fff;">
+          <th style="padding:12px;border:1px solid #ddd;">תקופה</th>
+          <th style="padding:12px;border:1px solid #ddd;">שווי משוער</th>
+        </tr>
+        <tr>
+          <td style="padding:12px;border:1px solid #ddd;">התחלה</td>
+          <td style="padding:12px;border:1px solid #ddd;">100,000 ₪</td>
+        </tr>
+        <tr style="background:#fff;">
+          <td style="padding:12px;border:1px solid #ddd;">10 שנים</td>
+          <td style="padding:12px;border:1px solid #ddd;">כ-179,085 ₪</td>
+        </tr>
+        <tr>
+          <td style="padding:12px;border:1px solid #ddd;">20 שנים</td>
+          <td style="padding:12px;border:1px solid #ddd;">כ-320,714 ₪</td>
+        </tr>
+        <tr style="background:#fff;">
+          <td style="padding:12px;border:1px solid #ddd;">30 שנים</td>
+          <td style="padding:12px;border:1px solid #ddd;">כ-574,349 ₪</td>
+        </tr>
+      </table>
+    </div>
+
+    <p style="font-size:14px;margin-bottom:0;">
+      החישוב הוא המחשה בלבד ואינו תחזית או הבטחת תשואה. בפועל התשואות משתנות משנה לשנה,
+      ועלויות, מסים ואינפלציה משפיעים על התוצאה.
+    </p>
+  </div>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">למה הזמן חשוב יותר מניסיון למצוא את ההשקעה המושלמת?</h2>
+
+  <p>
+    אחת הטעויות הנפוצות היא לחפש כל הזמן את ההשקעה שתייצר את התשואה הגבוהה ביותר.
+    בפועל, בניית עושר ארוכת טווח נשענת גם על התמדה, פיזור, שליטה בסיכון וזמן.
+  </p>
+
+  <p>
+    ניסיון לתזמן באופן מושלם את השוק עלול לגרום למשקיע להישאר מחוץ לשוק בתקופות שבהן
+    מתרחשות עליות. לכן חשוב להגדיר מראש אסטרטגיה שמתאימה למטרות, לטווח הזמן וליכולת
+    להתמודד עם ירידות.
+  </p>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">7 שלבים מעשיים לבניית עושר</h2>
+
+  <div style="display:block;">
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">1. הגדירו יעד פיננסי</h3>
+      <p>הגדירו מספר ברור: כמה הון תרצו לצבור ובאיזה מועד. יעד מדיד מקל על קבלת החלטות.</p>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">2. בנו תמונת מצב פיננסית</h3>
+      <p>רשמו את כל הנכסים, ההלוואות, ההתחייבויות, ההכנסות וההוצאות. בלי תמונה ברורה קשה לנהל הון.</p>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">3. צרו קרן חירום</h3>
+      <p>לפני הגדלת הסיכון בהשקעות, חשוב להחזיק כרית נזילה שתאפשר להתמודד עם הוצאות בלתי צפויות.</p>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">4. הפכו חיסכון לאוטומטי</h3>
+      <p>הוראת קבע או הפקדה אוטומטית הופכות את החיסכון להרגל במקום להחלטה שצריך לקבל בכל חודש מחדש.</p>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">5. השקיעו בהתאם לטווח הזמן ולסיכון</h3>
+      <p>כסף שיידרש בקרוב אינו בהכרח מתאים לאותה רמת סיכון כמו כסף שמיועד לעשרות שנים.</p>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">6. הגדילו את שיעור החיסכון כאשר ההכנסה עולה</h3>
+      <p>כאשר השכר עולה, אפשר להפנות חלק מהגידול לחיסכון ולהשקעות במקום להגדיל מיד את רמת החיים.</p>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">7. בדקו את התוכנית פעם או פעמיים בשנה</h3>
+      <p>אין צורך לשנות השקעות בכל שבוע. בדיקה תקופתית מספיקה לרוב כדי לבדוק אם אתם עדיין בדרך ליעד.</p>
+    </div>
+
+  </div>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">הכנסה גבוהה אינה שווה בהכרח לעושר</h2>
+
+  <p>
+    הכנסה היא המנוע שמאפשר לצבור הון, אבל היא אינה ההון עצמו. אם כל עלייה בשכר מלווה
+    בעלייה מקבילה בהוצאות, ייתכן שהשווי הנקי כמעט לא יגדל.
+  </p>
+
+  <div style="background:#f4f9fc;padding:25px;border-radius:10px;margin:25px 0;text-align:center;">
+    <div style="font-size:20px;font-weight:bold;color:#0071bb;">
+      הכנסה → חיסכון → השקעה → צמיחה → נכסים → חופש פיננסי
+    </div>
+  </div>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">מהו חופש פיננסי?</h2>
+
+  <p>
+    חופש פיננסי אינו בהכרח מצב שבו אדם אינו עובד כלל. עבור אנשים שונים המשמעות שונה.
+    עבור אדם אחד מדובר באפשרות לפרוש מוקדם, עבור אחר ביכולת לעבוד פחות, ועבור אדם אחר
+    בביטחון שהוצאות המחיה יכולות להיות מכוסות גם אם ההכנסה מעבודה משתנה.
+  </p>
+
+  <p>
+    לכן כדאי להגדיר חופש פיננסי בצורה אישית ומספרית: מהן ההוצאות החודשיות הרצויות?
+    איזה סכום חיסכון נדרש? אילו מקורות הכנסה קיימים? ומהו טווח הזמן?
+  </p>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">טעויות נפוצות בדרך לבניית עושר</h2>
+
+  <ul style="background:#fafafa;padding:25px 45px;border-radius:10px;">
+    <li style="margin-bottom:10px;">רדיפה אחר תשואה מהירה וגבוהה.</li>
+    <li style="margin-bottom:10px;">השקעה ללא קרן חירום.</li>
+    <li style="margin-bottom:10px;">ריכוז חלק גדול מדי מההון בנכס אחד.</li>
+    <li style="margin-bottom:10px;">התעלמות מעמלות, מיסוי ועלויות השקעה.</li>
+    <li style="margin-bottom:10px;">הגדלת רמת החיים בכל פעם שההכנסה עולה.</li>
+    <li style="margin-bottom:10px;">קבלת החלטות מתוך פחד בזמן ירידות בשווקים.</li>
+    <li>חוסר מעקב אחר ההתקדמות לאורך השנים.</li>
+  </ul>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">איך להתחיל כבר החודש?</h2>
+
+  <div style="background:#eef7fc;border-radius:12px;padding:28px;margin:25px 0;">
+    <ol style="margin:0;padding-right:25px;">
+      <li style="margin-bottom:12px;">חשבו את השווי הנקי שלכם.</li>
+      <li style="margin-bottom:12px;">רשמו את ההכנסה וההוצאות החודשיות.</li>
+      <li style="margin-bottom:12px;">קבעו סכום חיסכון חודשי קבוע.</li>
+      <li style="margin-bottom:12px;">בדקו אם קיימת קרן חירום מספקת.</li>
+      <li style="margin-bottom:12px;">הגדירו מטרה ל-5, 10 ו-20 שנים.</li>
+      <li style="margin-bottom:12px;">בדקו אילו נכסים כבר נמצאים בבעלותכם.</li>
+      <li>בחרו אסטרטגיה שמתאימה לטווח הזמן ולרמת הסיכון שלכם.</li>
+    </ol>
+  </div>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">שאלות נפוצות</h2>
+
+  <div style="border:1px solid #ddd;border-radius:10px;padding:20px;margin-bottom:15px;">
+    <h3 style="margin-top:0;color:#0071bb;">האם צריך הרבה כסף כדי להתחיל לבנות עושר?</h3>
+    <p>לא בהכרח. היכולת להתחיל בסכום קטן ולהתמיד לאורך זמן יכולה להיות משמעותית, במיוחד כאשר ההשקעה נהנית מאפקט הריבית דריבית.</p>
+  </div>
+
+  <div style="border:1px solid #ddd;border-radius:10px;padding:20px;margin-bottom:15px;">
+    <h3 style="margin-top:0;color:#0071bb;">האם ריבית דריבית מבטיחה רווח?</h3>
+    <p>לא. ריבית דריבית היא מנגנון מתמטי של צמיחה מצטברת, אך השקעות בפועל עשויות לעלות ולרדת ואין ודאות לגבי תשואות עתידיות.</p>
+  </div>
+
+  <div style="border:1px solid #ddd;border-radius:10px;padding:20px;margin-bottom:15px;">
+    <h3 style="margin-top:0;color:#0071bb;">מה חשוב יותר – לחסוך או להגדיל הכנסה?</h3>
+    <p>שני הדברים יכולים להשלים זה את זה. הגדלת הכנסה מגדילה את פוטנציאל החיסכון, בעוד שליטה בהוצאות מאפשרת להפנות חלק גדול יותר מההכנסה לבניית נכסים.</p>
+  </div>
+
+  <div style="background:#0071bb;color:#fff;padding:30px;border-radius:12px;text-align:center;margin-top:35px;">
+    <h2 style="margin-top:0;">עושר נבנה לאורך זמן</h2>
+    <p style="font-size:18px;margin-bottom:0;">
+      לא צריך לנחש איזו השקעה תצליח מחר. צריך לבנות תהליך פיננסי שאפשר להתמיד בו היום,
+      מחר ובעוד עשר שנים.
+    </p>
+  </div>
+
+  <p style="font-size:13px;color:#666;margin-top:25px;">
+    המידע במאמר הוא מידע כללי וחינוכי בלבד ואינו מהווה ייעוץ השקעות, ייעוץ פנסיוני,
+    ייעוץ מס או המלצה לביצוע פעולה פיננסית. לפני קבלת החלטה פיננסית מומלץ לבחון את
+    המצב האישי, המטרות, טווח ההשקעה ורמת הסיכון ולהיעזר בבעל מקצוע מוסמך במידת הצורך.
+  </p>
+
+</div>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "September 22, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "How to Accumulate Assets: A Practical Guide to Long-Term Wealth Building",
+                body: `<div dir="ltr" style="font-family:Arial,Helvetica,sans-serif;max-width:1100px;margin:0 auto;color:#222;line-height:1.8;background:#fff;">
+
+  <div style="background:linear-gradient(135deg,#0071bb,#004f87);padding:45px 30px;border-radius:14px;margin-bottom:30px;color:#fff;text-align:center;">
+    <h1 style="font-size:36px;margin:0 0 18px;font-weight:700;">Building Sustainable Wealth: How to Create Long-Term Financial Freedom</h1>
+    <p style="font-size:20px;margin:0;line-height:1.7;">
+      Sustainable wealth is rarely created by a single financial breakthrough.
+      It is built through consistent saving, asset accumulation, disciplined investing,
+      and giving compound growth enough time to work.
+    </p>
+  </div>
+
+  <div style="background:#f4f9fc;border-left:5px solid #0071bb;padding:22px 25px;border-radius:8px;margin-bottom:30px;">
+    <strong style="font-size:21px;">The bottom line:</strong>
+    <p style="margin:8px 0 0;font-size:17px;">
+      Financial wealth grows when a portion of your income is consistently converted
+      into assets that may preserve value, generate income, or grow over time.
+      You do not necessarily need a large starting capital. You need a process you can maintain.
+    </p>
+  </div>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">What Is Financial Wealth?</h2>
+
+  <p>
+    Many people associate wealth with a high salary, an expensive car, or a large home.
+    From a financial perspective, however, an important measure is <strong>net worth</strong>:
+    the total value of your assets minus your liabilities.
+  </p>
+
+  <div style="background:#fafafa;border:1px solid #ddd;padding:25px;border-radius:10px;text-align:center;margin:25px 0;">
+    <div style="font-size:24px;font-weight:bold;color:#0071bb;">Net Worth = Assets − Liabilities</div>
+  </div>
+
+  <p>
+    Someone can earn a high income and still accumulate relatively little wealth if most
+    of that income is spent on consumption and debt. Another person may earn less but
+    consistently save and invest a portion of their income and gradually build substantial assets.
+  </p>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">What Is a Real Asset?</h2>
+
+  <p>
+    An asset is a resource with economic value. When building wealth, it is useful to
+    distinguish between assets that can potentially contribute to future wealth and
+    consumption expenses that primarily create costs or liabilities.
+  </p>
+
+  <div style="overflow-x:auto;margin:25px 0;">
+    <table style="width:100%;border-collapse:collapse;font-size:16px;">
+      <thead>
+        <tr style="background:#0071bb;color:#fff;">
+          <th style="padding:14px;border:1px solid #ddd;">Type</th>
+          <th style="padding:14px;border:1px solid #ddd;">Examples</th>
+          <th style="padding:14px;border:1px solid #ddd;">Potential Contribution</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding:14px;border:1px solid #ddd;"><strong>Financial Investments</strong></td>
+          <td style="padding:14px;border:1px solid #ddd;">Stocks, bonds, funds and other financial products</td>
+          <td style="padding:14px;border:1px solid #ddd;">Potential long-term growth and income</td>
+        </tr>
+        <tr style="background:#f7f7f7;">
+          <td style="padding:14px;border:1px solid #ddd;"><strong>Real Estate</strong></td>
+          <td style="padding:14px;border:1px solid #ddd;">Residential, rental or commercial property</td>
+          <td style="padding:14px;border:1px solid #ddd;">May generate income and appreciate</td>
+        </tr>
+        <tr>
+          <td style="padding:14px;border:1px solid #ddd;"><strong>Business Ownership</strong></td>
+          <td style="padding:14px;border:1px solid #ddd;">A company, business or ownership interest</td>
+          <td style="padding:14px;border:1px solid #ddd;">May generate cash flow and grow in value</td>
+        </tr>
+        <tr style="background:#f7f7f7;">
+          <td style="padding:14px;border:1px solid #ddd;"><strong>Human Capital</strong></td>
+          <td style="padding:14px;border:1px solid #ddd;">Knowledge, skills, education and experience</td>
+          <td style="padding:14px;border:1px solid #ddd;">Potential to increase future income</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="background:#fff8e8;border:1px solid #f0d48a;padding:22px;border-radius:10px;margin:25px 0;">
+    <strong style="font-size:19px;">Important:</strong>
+    <p style="margin:8px 0 0;">
+      Not every asset is a good investment, and no asset is guaranteed to increase in value.
+      Investments involve risk, and past performance does not guarantee future results.
+      The objective should be to build a balanced financial system rather than rely on a single asset.
+    </p>
+  </div>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">Compound Interest: The Engine of Long-Term Growth</h2>
+
+  <p>
+    One of the most important concepts in wealth building is <strong>compound interest</strong>.
+    It means that returns generated by an investment can remain invested and potentially
+    generate additional returns in the future.
+  </p>
+
+  <p>
+    Put simply: at first, your money works for you. Over time, the returns generated by
+    your money can begin working for you as well.
+  </p>
+
+  <div style="background:#eef7fc;padding:28px;border-radius:10px;margin:25px 0;">
+    <h3 style="color:#0071bb;margin-top:0;">A Simple Example</h3>
+
+    <p>
+      Suppose you invest $100,000 and hypothetically earn an average annual return of 6%,
+      with the returns remaining invested.
+    </p>
+
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;text-align:center;">
+        <tr style="background:#0071bb;color:#fff;">
+          <th style="padding:12px;border:1px solid #ddd;">Period</th>
+          <th style="padding:12px;border:1px solid #ddd;">Approximate Value</th>
+        </tr>
+        <tr>
+          <td style="padding:12px;border:1px solid #ddd;">Initial Investment</td>
+          <td style="padding:12px;border:1px solid #ddd;">$100,000</td>
+        </tr>
+        <tr style="background:#fff;">
+          <td style="padding:12px;border:1px solid #ddd;">10 Years</td>
+          <td style="padding:12px;border:1px solid #ddd;">$179,085</td>
+        </tr>
+        <tr>
+          <td style="padding:12px;border:1px solid #ddd;">20 Years</td>
+          <td style="padding:12px;border:1px solid #ddd;">$320,714</td>
+        </tr>
+        <tr style="background:#fff;">
+          <td style="padding:12px;border:1px solid #ddd;">30 Years</td>
+          <td style="padding:12px;border:1px solid #ddd;">$574,349</td>
+        </tr>
+      </table>
+    </div>
+
+    <p style="font-size:14px;margin-bottom:0;">
+      This is an illustration, not a forecast or guarantee. Actual investment returns
+      vary from year to year, while fees, taxes and inflation can affect the final result.
+    </p>
+  </div>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">Why Time Can Matter More Than Finding the Perfect Investment</h2>
+
+  <p>
+    A common mistake is constantly searching for the investment that will produce the highest return.
+    Long-term wealth building also depends on consistency, diversification, risk management and time.
+  </p>
+
+  <p>
+    Trying to perfectly time financial markets can result in investors missing periods of growth.
+    A better starting point is to define an investment strategy based on your goals,
+    time horizon and ability to tolerate losses.
+  </p>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">7 Practical Steps to Building Wealth</h2>
+
+  <div style="display:block;">
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">1. Define a Financial Goal</h3>
+      <p>Set a measurable target: how much wealth do you want to build and by when? A specific goal makes financial decisions easier.</p>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">2. Create a Financial Snapshot</h3>
+      <p>List your assets, debts, liabilities, income and expenses. You cannot manage wealth effectively without knowing where you stand.</p>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">3. Build an Emergency Fund</h3>
+      <p>Before taking significant investment risk, consider maintaining accessible savings for unexpected expenses.</p>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">4. Automate Your Savings</h3>
+      <p>Automatic transfers turn saving into a habit rather than a decision you have to make from scratch every month.</p>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">5. Invest According to Your Time Horizon and Risk</h3>
+      <p>Money you may need soon does not necessarily belong in the same type of investment as money intended for several decades.</p>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">6. Increase Savings When Income Rises</h3>
+      <p>When your income increases, consider directing part of the increase toward savings and investments instead of immediately increasing your lifestyle.</p>
+    </div>
+
+    <div style="border:1px solid #ddd;border-radius:10px;padding:22px;margin:15px 0;">
+      <h3 style="color:#0071bb;margin-top:0;">7. Review the Plan Periodically</h3>
+      <p>You do not need to change your investments every week. A periodic review can help determine whether you are still moving toward your objectives.</p>
+    </div>
+
+  </div>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">A High Income Does Not Automatically Mean Wealth</h2>
+
+  <p>
+    Income is the engine that can help you accumulate wealth, but income itself is not wealth.
+    If every salary increase is followed by a similar increase in spending, net worth may barely change.
+  </p>
+
+  <div style="background:#f4f9fc;padding:25px;border-radius:10px;margin:25px 0;text-align:center;">
+    <div style="font-size:20px;font-weight:bold;color:#0071bb;">
+      Income → Saving → Investing → Growth → Assets → Financial Freedom
+    </div>
+  </div>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">What Does Financial Freedom Mean?</h2>
+
+  <p>
+    Financial freedom does not necessarily mean never working again. Its meaning differs from person to person.
+    For one person, it may mean early retirement. For another, it may mean working fewer hours.
+    For someone else, it may mean knowing that essential living expenses can still be covered
+    even if employment income changes.
+  </p>
+
+  <p>
+    That is why it helps to define financial freedom in personal and measurable terms:
+    What are your desired monthly expenses? How much capital might you need?
+    What income sources do you have? And what is your target time frame?
+  </p>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">Common Wealth-Building Mistakes</h2>
+
+  <ul style="background:#fafafa;padding:25px 45px;border-radius:10px;">
+    <li style="margin-bottom:10px;">Chasing quick and unusually high returns.</li>
+    <li style="margin-bottom:10px;">Investing without an emergency fund.</li>
+    <li style="margin-bottom:10px;">Concentrating too much wealth in a single asset.</li>
+    <li style="margin-bottom:10px;">Ignoring fees, taxes and investment costs.</li>
+    <li style="margin-bottom:10px;">Increasing lifestyle spending every time income rises.</li>
+    <li style="margin-bottom:10px;">Making emotional decisions during market declines.</li>
+    <li>Failing to monitor progress over the years.</li>
+  </ul>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">How to Start This Month</h2>
+
+  <div style="background:#eef7fc;border-radius:12px;padding:28px;margin:25px 0;">
+    <ol style="margin:0;padding-left:25px;">
+      <li style="margin-bottom:12px;">Calculate your current net worth.</li>
+      <li style="margin-bottom:12px;">Write down your monthly income and expenses.</li>
+      <li style="margin-bottom:12px;">Set a fixed monthly savings amount.</li>
+      <li style="margin-bottom:12px;">Check whether your emergency fund is adequate.</li>
+      <li style="margin-bottom:12px;">Set financial targets for 5, 10 and 20 years.</li>
+      <li style="margin-bottom:12px;">Review the assets you already own.</li>
+      <li>Choose an investment strategy that matches your time horizon and risk tolerance.</li>
+    </ol>
+  </div>
+
+  <h2 style="color:#0071bb;border-bottom:2px solid #0071bb;padding-bottom:10px;">Frequently Asked Questions</h2>
+
+  <div style="border:1px solid #ddd;border-radius:10px;padding:20px;margin-bottom:15px;">
+    <h3 style="margin-top:0;color:#0071bb;">Do I need a lot of money to start building wealth?</h3>
+    <p>Not necessarily. Starting with a modest amount and remaining consistent over time can be meaningful, particularly when compound growth has many years to work.</p>
+  </div>
+
+  <div style="border:1px solid #ddd;border-radius:10px;padding:20px;margin-bottom:15px;">
+    <h3 style="margin-top:0;color:#0071bb;">Does compound interest guarantee profits?</h3>
+    <p>No. Compound interest describes a mathematical mechanism for cumulative growth, but actual investments can rise and fall and future returns are uncertain.</p>
+  </div>
+
+  <div style="border:1px solid #ddd;border-radius:10px;padding:20px;margin-bottom:15px;">
+    <h3 style="margin-top:0;color:#0071bb;">What is more important: saving or increasing income?</h3>
+    <p>Both can work together. Increasing income can increase your savings potential, while controlling expenses allows you to direct more of your income toward building assets.</p>
+  </div>
+
+  <div style="background:#0071bb;color:#fff;padding:30px;border-radius:12px;text-align:center;margin-top:35px;">
+    <h2 style="margin-top:0;">Wealth Is Built Over Time</h2>
+    <p style="font-size:18px;margin-bottom:0;">
+      You do not need to predict which investment will succeed tomorrow.
+      You need a financial process that you can follow today, tomorrow and ten years from now.
+    </p>
+  </div>
+
+  <p style="font-size:13px;color:#666;margin-top:25px;">
+    This article is provided for general educational and informational purposes only and does not constitute
+    investment, pension, tax or financial advice, nor does it constitute a recommendation to take any financial action.
+    Before making financial decisions, consider your personal circumstances, objectives, investment horizon and risk tolerance,
+    and consult a qualified professional where appropriate.
+  </p>
+
+</div>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
