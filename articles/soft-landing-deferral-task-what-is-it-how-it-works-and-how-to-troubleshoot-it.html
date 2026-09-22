@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soft Landing Deferral Task: מה זה, איך זה עובד ואיך לפתור תקלות?</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "22 בספטמבר 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "Soft Landing Deferral Task: מה זה, איך זה עובד ואיך לפתור תקלות?",
+                body: `<div style="max-width:1000px;margin:0 auto;font-family:Arial,sans-serif;line-height:1.75;color:#333;direction:rtl;text-align:right;">
+
+    <div style="background:linear-gradient(135deg,#0b5cab,#1688d8);padding:45px 30px;border-radius:14px;margin-bottom:30px;color:#fff;">
+        <h1 style="font-size:36px;line-height:1.25;margin:0 0 18px 0;color:#fff;">
+            Soft Landing Deferral Task: מה זה, איך זה עובד ואיך לפתור תקלות?
+        </h1>
+        <p style="font-size:19px;margin:0;color:#fff;">
+            מדריך מעשי להבנת Soft Landing Deferral Task, Soft Landing Trigger Task,
+            Soft Landing Scheduled Task ו-Deferred Task.
+        </p>
+    </div>
+
+    <div style="background:#f4f8fb;border-right:5px solid #0b5cab;padding:22px 25px;margin-bottom:35px;border-radius:8px;">
+        <p style="font-size:18px;margin:0;">
+            אם חיפשתם <strong>softlandingdeferraltask</strong>,
+            <strong>soft landing deferral task</strong>,
+            <strong>soft landing trigger task</strong> או
+            <strong>soft landing scheduled task</strong>, מדריך זה מסביר את הטרמינולוגיה,
+            את הקשר בין המשימות השונות ואת הנקודות המרכזיות שיש לבדוק בעת פתרון תקלות
+            בתהליך נדחה או מתוזמן.
+        </p>
+    </div>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        מה זה Soft Landing Deferral Task?
+    </h2>
+
+    <p>
+        <strong>Soft Landing Deferral Task</strong> היא משימה המקושרת לתהליך
+        שדוחה את הביצוע שלה במקום לבצע פעולה באופן מיידי.
+        ההתנהגות המדויקת תלויה במערכת, בתצורה (Configuration) ובפרוסס שבו
+        המשימה משולבת.
+    </p>
+
+    <p>
+        המונח עשוי להופיע בפורמטים שונים בחיפושים ובסביבות מערכת,
+        כולל <strong>softlandingdeferraltask</strong>,
+        <strong>soft landing deferral task</strong> ו-
+        <strong>softlanding deferral task</strong>.
+    </p>
+
+    <p>
+        בעת חקירת משימה מסוג זה, חשוב להבין לא רק את שם המשימה,
+        אלא גם את הסטטוס שלה, הטריגר, התזמון, התלויות (Dependencies) והיסטוריית הביצוע.
+    </p>
+
+    <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:25px;margin:30px 0;">
+        <h3 style="margin-top:0;color:#0b5cab;">הגדרה מהירה</h3>
+        <p style="margin-bottom:0;font-size:18px;">
+            <strong>Soft Landing Deferral Task</strong> מתייחס למשימה שביצועה
+            נדחה או נדחה למועד מאוחר יותר כחלק מבלוק או מנגנון נחיתה רכה (Soft-Landing).
+            הסיבה לדחייה תלויה במערכת הספציפית ובהגדרותיה.
+        </p>
+    </div>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        המשמעות של Soft Landing Deferral Task
+    </h2>
+
+    <p>
+        במילים פשוטות, המילה <strong>deferral</strong> (דחייה/השהיה) פירושה שפעולה
+        נדחית לנקודת זמן מאוחרת יותר או עד להתקיימות תנאי ספציפי.
+    </p>
+
+    <p>
+        לפיכך, כאשר נתקלים ב-<strong>Soft Landing Deferral Task</strong>,
+        השאלה החשובה אינה רק "מהי המשימה?",
+        אלא בעיקר:
+    </p>
+
+    <ul style="padding-right:25px;">
+        <li>מדוע המשימה נדחתה?</li>
+        <li>איזה תנאי שולט בביצוע שלה?</li>
+        <li>מה הפעיל (Triggered) את המשימה?</li>
+        <li>מתי היא מתוזמנת לרוץ?</li>
+        <li>האם היא ממתינה לתהליך אחר?</li>
+        <li>האם הביצוע הקודם נכשל?</li>
+    </ul>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        Soft Landing Deferral Task מול Deferred Task
+    </h2>
+
+    <p>
+        <strong>Deferred Task</strong> הוא תיאור כללי למשימה שביצועה
+        נדחה.
+    </p>
+
+    <p>
+        <strong>Soft Landing Deferral Task</strong> הוא מונח ספציפי יותר
+        המתייחס למשימה נדחית המשולבת במנגנון או בתהליך של נחיתה רכה.
+    </p>
+
+    <div style="overflow-x:auto;margin:25px 0;">
+        <table style="width:100%;border-collapse:collapse;background:#fff;">
+            <thead>
+                <tr>
+                    <th style="background:#0b5cab;color:#fff;padding:14px;border:1px solid #ddd;text-align:right;">
+                        מונח
+                    </th>
+                    <th style="background:#0b5cab;color:#fff;padding:14px;border:1px solid #ddd;text-align:right;">
+                        משמעות כללית
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding:14px;border:1px solid #ddd;">
+                        Soft Landing Deferral Task
+                    </td>
+                    <td style="padding:14px;border:1px solid #ddd;">
+                        משימה המשויכת לתהליך soft-landing שנדחתה או שהושתתה על השהיה.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:14px;border:1px solid #ddd;">
+                        Deferred Task
+                    </td>
+                    <td style="padding:14px;border:1px solid #ddd;">
+                        משימה כללית שביצועה נדחה למועד מאוחר יותר.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:14px;border:1px solid #ddd;">
+                        Scheduled Task
+                    </td>
+                    <td style="padding:14px;border:1px solid #ddd;">
+                        משימה המוגדרת לרוץ לפי לוח זמנים או תנאי מוגדר מראש.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:14px;border:1px solid #ddd;">
+                        Trigger Task
+                    </td>
+                    <td style="padding:14px;border:1px solid #ddd;">
+                        משימה או מנגנון האחראים להפעלת תהליך אחר.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        מה זה Soft Landing Trigger Task?
+    </h2>
+
+    <p>
+        <strong>Soft Landing Trigger Task</strong> הוא מונח המשמש להתייחסות
+        למשימה או מנגנון האחראי להפעלת תהליך ה-soft-landing.
+    </p>
+
+    <p>
+        אם משימה אינה פועלת כצפוי, בדיקת הטריגר היא שלב קריטי בפתרון התקלה.
+        טריגר יכול להיות תלוי באירוע ספציפי, תנאי, לוח זמנים או תהליך מקביל.
+    </p>
+
+    <div style="background:#fff8e8;border:1px solid #f0d48a;border-radius:10px;padding:22px;margin:25px 0;">
+        <strong>חשוב:</strong>
+        <p style="margin-bottom:0;">
+            התנהגות הטריגר המדויקת תלויה במערכת שבה המשימה מיושמת.
+            יש לאמת תמיד את הגדרות המשימה והתיעוד של הסביבה הספציפית.
+        </p>
+    </div>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        מה זה Soft Landing Scheduled Task?
+    </h2>
+
+    <p>
+        <strong>Soft Landing Scheduled Task</strong> מתייחס לתהליך מתוזמן
+        המקושר למנגנון ה-soft-landing.
+    </p>
+
+    <p>
+        בעת פתרון תקלות במשימה מתוזמנת, יש לבחון מספר פרמטרים:
+    </p>
+
+    <ol style="padding-right:25px;">
+        <li>זמן הביצוע המתוכנן</li>
+        <li>תדירות או מחזוריות (Recurrence)</li>
+        <li>סטטוס המשימה הנוכחי</li>
+        <li>תנאי הטריגר</li>
+        <li>תלויות בתהליכים אחרים</li>
+        <li>תוצאות הביצוע הקודם</li>
+        <li>לוגים של שגיאות ומערכת</li>
+    </ol>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        מדוע Soft Landing Deferral Task יידחה?
+    </h2>
+
+    <p>
+        קיימות מספר סיבות לכך שמשימה אינה מבוצעת באופן מיידי.
+        הסיבה המדויקת תלויה במימוש, אך תחומים נפוצים לחקירה כוללים:
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin:25px 0;">
+
+        <div style="border:1px solid #ddd;border-radius:10px;padding:20px;background:#fff;">
+            <h3 style="color:#0b5cab;margin-top:0;">תזמון (Scheduling)</h3>
+            <p style="margin-bottom:0;">
+                המשימה עשויהשוט להמתין לזמן הביצוע שהוגדר לה.
+            </p>
+        </div>
+
+        <div style="border:1px solid #ddd;border-radius:10px;padding:20px;background:#fff;">
+            <h3 style="color:#0b5cab;margin-top:0;">תלויות (Dependencies)</h3>
+            <p style="margin-bottom:0;">
+                תהליך אחר צריך להסתיים לפני שניתן להמשיך בביצוע.
+            </p>
+        </div>
+
+        <div style="border:1px solid #ddd;border-radius:10px;padding:20px;background:#fff;">
+            <h3 style="color:#0b5cab;margin-top:0;">טריגרים (Triggers)</h3>
+            <p style="margin-bottom:0;">
+                תנאי הטריגר הנדרש טרם התקיים.
+            </p>
+        </div>
+
+        <div style="border:1px solid #ddd;border-radius:10px;padding:20px;background:#fff;">
+            <h3 style="color:#0b5cab;margin-top:0;">כישלון קודם</h3>
+            <p style="margin-bottom:0;">
+                ריצה קודמת נכשלה או נכנסה למצב ניסיון חוזר (Retry).
+            </p>
+        </div>
+
+    </div>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        איך לפתור תקלות ב-Soft Landing Deferral Task
+    </h2>
+
+    <p>
+        אם אתם חוקרים תקלה ב-<strong>softlandingdeferraltask</strong>,
+        הצ'ק-ליסט הבא יעזור לכם לצמצם את הגורם לבעיה.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        1. בדיקת שם המשימה
+    </h3>
+
+    <p>
+        וודאו שאתם בוחנים את המשימה הנכונה. שמות דומים עשויים להפנות
+        לתהליכים או לרכיבים שונים.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        2. בדיקת הסטטוס הנוכחי
+    </h3>
+
+    <p>
+        קבעו האם המשימה מתוזמנת, ממתינה, נדחתה, רצה, הושלמה או נכשלה.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        3. בדיקת הטריגר
+    </h3>
+
+    <p>
+        זהו את האירוע או התנאי שאמור לגרום למשימה לרוץ.
+        אם הטריגר לא התרחש, המשימה תיארך במצב נדחה.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        4. בדיקת לוח הזמנים
+    </h3>
+
+    <p>
+        אימתו את זמן הביצוע המוגדר, המחזוריות והגדרות אזור הזמן (Timezone) הרלוונטיות.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        5. בדיקת תלויות
+    </h3>
+
+    <p>
+        בידקו האם ג'וב, משימה, שירות או תהליך אחר חייבים להסתיים קודם לכן.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        6. בדיקת לוגים
+    </h3>
+
+    <p>
+        עברו על לוגי המערכת והיסטוריית הביצועים כדי לזהות שגיאות,
+        אזהרות, ניסיונות חוזרים וכשלים בתלויות.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        7. בדיקת שינויים אחרונים
+    </h3>
+
+    <p>
+        אם המשימה פעלה בעבר כראוי, בדקו שינויי תצורה, תוכנה, תזמון או תשתית שבוצעו לאחרונה.
+    </p>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        Softlandingdeferraltask: מונחי חיפוש שונים
+    </h2>
+
+    <p>
+        משתמשים עשויים לחפש את אותו המושג תוך שימוש בכתיב וברקע שונים.
+        דוגמאות כוללות:
+    </p>
+
+    <ul style="padding-right:25px;">
+        <li>softlandingdeferraltask</li>
+        <li>soft landing deferral task</li>
+        <li>softlanding deferral task</li>
+        <li>soft landing deferred task</li>
+        <li>softlandingdeferaltask</li>
+        <li>softlandingdefferaltask</li>
+        <li>soft landing task</li>
+        <li>soft landing trigger task</li>
+        <li>softlanding trigger task</li>
+        <li>soft landing scheduled task</li>
+    </ul>
+
+    <p>
+        וריאציות אלו שימושיות בעת מחקר הטרמינולוגיה מכיוון
+        שמשתמשים לא תמיד משתמשים באותו כתיב או רווחים.
+    </p>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        שאלות נפוצות (FAQ)
+    </h2>
+
+    <div style="margin-top:25px;">
+
+        <div style="border-bottom:1px solid #ddd;padding:20px 0;">
+            <h3 style="margin:0 0 10px 0;color:#0b5cab;">
+                מה זה Soft Landing Deferral Task?
+            </h3>
+            <p style="margin:0;">
+                זוהי משימה המשויכת לתהליך נחיתה רכה (Soft-Landing) שביצועה
+                נדחה או הושהה בהתאם לתנאי המערכת או התצורה.
+            </p>
+        </div>
+
+        <div style="border-bottom:1px solid #ddd;padding:20px 0;">
+            <h3 style="margin:0 0 10px 0;color:#0b5cab;">
+                מהי משימה נדחית (Deferred Task)?
+            </h3>
+            <p style="margin:0;">
+                משימה נדחית היא משימה שביצועה נדחה במועד מאוחר יותר או עד להתקיימות התנאי הנדרש.
+            </p>
+        </div>
+
+        <div style="border-bottom:1px solid #ddd;padding:20px 0;">
+            <h3 style="margin:0 0 10px 0;color:#0b5cab;">
+                מה זה Soft Landing Trigger Task?
+            </h3>
+            <p style="margin:0;">
+                המונח מתייחס לטריגר או למשימה האחראית להתחלה או להמשך
+                של תהליך ה-soft-landing.
+            </p>
+        </div>
+
+        <div style="border-bottom:1px solid #ddd;padding:20px 0;">
+            <h3 style="margin:0 0 10px 0;color:#0b5cab;">
+                מה זה Soft Landing Scheduled Task?
+            </h3>
+            <p style="margin:0;">
+                זהו תהליך מתוזמן המשויך למנגנון ה-soft-landing,
+                הכפוף ללוח הזמנים ולתנאי הביצוע שהוגדרו לו.
+            </p>
+        </div>
+
+        <div style="border-bottom:1px solid #ddd;padding:20px 0;">
+            <h3 style="margin:0 0 10px 0;color:#0b5cab;">
+                מדוע ה-Soft Landing Deferral Task שלי לא רץ?
+            </h3>
+            <p style="margin:0;">
+                בדקו את סטטוס המשימה, תנאי הטריגר, התזמון, התלויות,
+                היסטוריית הביצוע ולוגי המערכת כדי לקבוע מדוע המשימה לא הופעלה.
+            </p>
+        </div>
+
+    </div>
+
+    <div style="background:#eef7ff;border-radius:12px;padding:28px;margin:40px 0 20px 0;border:1px solid #cfe5f7;">
+        <h2 style="margin-top:0;color:#0b5cab;">
+            צ'ק-ליסט לדיבאגינג ופתרון תקלות
+        </h2>
+
+        <p>
+            בעת חקירת משימה נדחית, עבדו לפי הצ'ק-ליסט הבא:
+        </p>
+
+        <ul style="padding-right:25px;">
+            <li>אימות שם המשימה המדויק.</li>
+            <li>בדיקת סטטוס המשימה הנוכחי.</li>
+            <li>זיהוי הטריגר והתנאים להפעלתו.</li>
+            <li>אימות לוח הזמנים ואזור הזמן.</li>
+            <li>בדיקת תלויות בתהליכים קודמים.</li>
+            <li>סריקת היסטוריית ריצות קודמות.</li>
+            <li>סקירת לוגים של שגיאות ומערכת.</li>
+            <li>בדיקת שינויי גרסה או קונפיגורציה אחרונים.</li>
+        </ul>
+    </div>
+
+    <div style="background:#f7f7f7;border-radius:10px;padding:25px;margin-top:35px;">
+        <p style="margin:0;font-size:14px;color:#666;">
+            <strong>הערה:</strong> ההתנהגות והתצורה המדויקות של
+            Soft Landing Deferral Task עשויות להשתנות בין מערכות ומימושים שונים.
+            יש לאמת תמיד את הסביבה הספציפית, התיעוד והגדרות המשימה
+            לפני ביצוע שינויים בסביבת הייצור (Production).
+        </p>
+    </div>
+
+</div>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "September 22, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Soft Landing Deferral Task: What Is It, How It Works and How to Troubleshoot It",
+                body: `<div style="max-width:1000px;margin:0 auto;font-family:Arial,sans-serif;line-height:1.75;color:#333;direction:ltr;text-align:left;">
+
+    <div style="background:linear-gradient(135deg,#0b5cab,#1688d8);padding:45px 30px;border-radius:14px;margin-bottom:30px;color:#fff;">
+        <h1 style="font-size:36px;line-height:1.25;margin:0 0 18px 0;color:#fff;">
+            Soft Landing Deferral Task: What Is It, How It Works and How to Troubleshoot It
+        </h1>
+        <p style="font-size:19px;margin:0;color:#fff;">
+            A practical guide to Soft Landing Deferral Task, Soft Landing Trigger Task,
+            Soft Landing Scheduled Task and Deferred Task.
+        </p>
+    </div>
+
+    <div style="background:#f4f8fb;border-left:5px solid #0b5cab;padding:22px 25px;margin-bottom:35px;border-radius:8px;">
+        <p style="font-size:18px;margin:0;">
+            If you searched for <strong>softlandingdeferraltask</strong>,
+            <strong>soft landing deferral task</strong>,
+            <strong>soft landing trigger task</strong> or
+            <strong>soft landing scheduled task</strong>, this guide explains the terminology,
+            the relationship between these tasks and the main points to check when troubleshooting
+            a deferred or scheduled process.
+        </p>
+    </div>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        What Is Soft Landing Deferral Task?
+    </h2>
+
+    <p>
+        A <strong>Soft Landing Deferral Task</strong> is a task associated with a process
+        that postpones execution rather than performing an operation immediately.
+        The exact behavior depends on the system, configuration and process in which
+        the task is used.
+    </p>
+
+    <p>
+        The term may appear in different forms in searches and system environments,
+        including <strong>softlandingdeferraltask</strong>,
+        <strong>soft landing deferral task</strong> and
+        <strong>softlanding deferral task</strong>.
+    </p>
+
+    <p>
+        When investigating this type of task, it is important to understand not only
+        the task name, but also its status, trigger, schedule, dependencies and execution
+        history.
+    </p>
+
+    <div style="background:#fff;border:1px solid #ddd;border-radius:10px;padding:25px;margin:30px 0;">
+        <h3 style="margin-top:0;color:#0b5cab;">Quick definition</h3>
+        <p style="margin-bottom:0;font-size:18px;">
+            <strong>Soft Landing Deferral Task</strong> refers to a task whose execution
+            is deferred or postponed as part of a soft-landing process or mechanism.
+            The reason for the deferral depends on the specific system and configuration.
+        </p>
+    </div>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        Soft Landing Deferral Task Meaning
+    </h2>
+
+    <p>
+        In simple terms, the word <strong>deferral</strong> means that an action is
+        postponed until a later point in time or until a specific condition is satisfied.
+    </p>
+
+    <p>
+        Therefore, when you see a <strong>Soft Landing Deferral Task</strong>,
+        the important question is usually not simply "what is the task?",
+        but rather:
+    </p>
+
+    <ul style="padding-left:25px;">
+        <li>Why was the task deferred?</li>
+        <li>What condition controls its execution?</li>
+        <li>What triggered the task?</li>
+        <li>When is it scheduled to run?</li>
+        <li>Is it waiting for another process?</li>
+        <li>Did the previous execution fail?</li>
+    </ul>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        Soft Landing Deferral Task vs Deferred Task
+    </h2>
+
+    <p>
+        A <strong>deferred task</strong> is a general description of a task whose
+        execution has been postponed.
+    </p>
+
+    <p>
+        A <strong>Soft Landing Deferral Task</strong> is a more specific term that
+        refers to a deferral task associated with a soft-landing mechanism or process.
+    </p>
+
+    <div style="overflow-x:auto;margin:25px 0;">
+        <table style="width:100%;border-collapse:collapse;background:#fff;">
+            <tr>
+                <th style="background:#0b5cab;color:#fff;padding:14px;border:1px solid #ddd;text-align:left;">
+                    Term
+                </th>
+                <th style="background:#0b5cab;color:#fff;padding:14px;border:1px solid #ddd;text-align:left;">
+                    General meaning
+                </th>
+            </tr>
+            <tr>
+                <td style="padding:14px;border:1px solid #ddd;">
+                    Soft Landing Deferral Task
+                </td>
+                <td style="padding:14px;border:1px solid #ddd;">
+                    A task associated with a soft-landing process that is deferred or postponed.
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:14px;border:1px solid #ddd;">
+                    Deferred Task
+                </td>
+                <td style="padding:14px;border:1px solid #ddd;">
+                    A general task whose execution has been postponed.
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:14px;border:1px solid #ddd;">
+                    Scheduled Task
+                </td>
+                <td style="padding:14px;border:1px solid #ddd;">
+                    A task configured to execute according to a schedule or defined condition.
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:14px;border:1px solid #ddd;">
+                    Trigger Task
+                </td>
+                <td style="padding:14px;border:1px solid #ddd;">
+                    A task or mechanism associated with triggering another process.
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        What Is a Soft Landing Trigger Task?
+    </h2>
+
+    <p>
+        A <strong>Soft Landing Trigger Task</strong> is terminology that may be used
+        when referring to a task or mechanism responsible for triggering a soft-landing
+        process.
+    </p>
+
+    <p>
+        If a task is not executing as expected, checking the trigger is an important
+        troubleshooting step. A trigger may depend on a specific event, condition,
+        schedule or another process.
+    </p>
+
+    <div style="background:#fff8e8;border:1px solid #f0d48a;border-radius:10px;padding:22px;margin:25px 0;">
+        <strong>Important:</strong>
+        <p style="margin-bottom:0;">
+            The exact trigger behavior depends on the system in which the task is implemented.
+            Always verify the task configuration and documentation for the specific environment.
+        </p>
+    </div>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        What Is a Soft Landing Scheduled Task?
+    </h2>
+
+    <p>
+        A <strong>Soft Landing Scheduled Task</strong> refers to a scheduled process
+        associated with the soft-landing mechanism.
+    </p>
+
+    <p>
+        When troubleshooting a scheduled task, several parameters should be reviewed:
+    </p>
+
+    <ol style="padding-left:25px;">
+        <li>Scheduled execution time</li>
+        <li>Frequency or recurrence</li>
+        <li>Current task status</li>
+        <li>Trigger conditions</li>
+        <li>Dependencies on other processes</li>
+        <li>Previous execution results</li>
+        <li>Error and system logs</li>
+    </ol>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        Why Would a Soft Landing Deferral Task Be Deferred?
+    </h2>
+
+    <p>
+        There can be several reasons why a task does not execute immediately.
+        The exact reason depends on the implementation, but common areas to investigate include:
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin:25px 0;">
+
+        <div style="border:1px solid #ddd;border-radius:10px;padding:20px;background:#fff;">
+            <h3 style="color:#0b5cab;margin-top:0;">Scheduling</h3>
+            <p style="margin-bottom:0;">
+                The task may simply be waiting for its configured execution time.
+            </p>
+        </div>
+
+        <div style="border:1px solid #ddd;border-radius:10px;padding:20px;background:#fff;">
+            <h3 style="color:#0b5cab;margin-top:0;">Dependencies</h3>
+            <p style="margin-bottom:0;">
+                Another process may need to complete before execution can continue.
+            </p>
+        </div>
+
+        <div style="border:1px solid #ddd;border-radius:10px;padding:20px;background:#fff;">
+            <h3 style="color:#0b5cab;margin-top:0;">Triggers</h3>
+            <p style="margin-bottom:0;">
+                The required trigger condition may not yet have been satisfied.
+            </p>
+        </div>
+
+        <div style="border:1px solid #ddd;border-radius:10px;padding:20px;background:#fff;">
+            <h3 style="color:#0b5cab;margin-top:0;">Previous Failure</h3>
+            <p style="margin-bottom:0;">
+                A previous execution may have failed or entered a retry state.
+            </p>
+        </div>
+
+    </div>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        How to Troubleshoot Soft Landing Deferral Task
+    </h2>
+
+    <p>
+        If you are investigating a <strong>softlandingdeferraltask</strong>,
+        the following checklist can help narrow down the cause.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        1. Check the Task Name
+    </h3>
+
+    <p>
+        Confirm that you are looking at the correct task. Similar names can refer
+        to different processes or components.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        2. Check the Current Status
+    </h3>
+
+    <p>
+        Determine whether the task is scheduled, waiting, deferred, running,
+        completed or failed.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        3. Check the Trigger
+    </h3>
+
+    <p>
+        Identify the event or condition that should cause the task to execute.
+        If the trigger has not occurred, the task may remain deferred.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        4. Check the Schedule
+    </h3>
+
+    <p>
+        Verify the configured execution time, recurrence and relevant time-zone settings.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        5. Check Dependencies
+    </h3>
+
+    <p>
+        Determine whether another job, task, service or process must complete first.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        6. Check Logs
+    </h3>
+
+    <p>
+        Review the relevant system logs and execution history for errors,
+        retries, warnings and dependency failures.
+    </p>
+
+    <h3 style="font-size:22px;color:#333;">
+        7. Check Recent Changes
+    </h3>
+
+    <p>
+        If the task previously worked correctly, investigate recent configuration,
+        software, scheduling or infrastructure changes.
+    </p>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        Softlandingdeferraltask: Different Search Terms
+    </h2>
+
+    <p>
+        Users may search for the same concept using different spelling and spacing.
+        Examples include:
+    </p>
+
+    <ul style="padding-left:25px;">
+        <li>softlandingdeferraltask</li>
+        <li>soft landing deferral task</li>
+        <li>softlanding deferral task</li>
+        <li>soft landing deferred task</li>
+        <li>softlandingdeferaltask</li>
+        <li>softlandingdefferaltask</li>
+        <li>soft landing task</li>
+        <li>soft landing trigger task</li>
+        <li>softlanding trigger task</li>
+        <li>soft landing scheduled task</li>
+    </ul>
+
+    <p>
+        These variations are useful when researching the terminology because
+        search users do not always use the same spelling or spacing.
+    </p>
+
+    <h2 style="font-size:28px;color:#0b5cab;border-bottom:2px solid #e5e5e5;padding-bottom:10px;">
+        Frequently Asked Questions
+    </h2>
+
+    <div style="margin-top:25px;">
+
+        <div style="border-bottom:1px solid #ddd;padding:20px 0;">
+            <h3 style="margin:0 0 10px 0;color:#0b5cab;">
+                What is Soft Landing Deferral Task?
+            </h3>
+            <p style="margin:0;">
+                It is a task associated with a soft-landing process in which execution
+                is deferred or postponed according to the system's conditions or configuration.
+            </p>
+        </div>
+
+        <div style="border-bottom:1px solid #ddd;padding:20px 0;">
+            <h3 style="margin:0 0 10px 0;color:#0b5cab;">
+                What is a deferred task?
+            </h3>
+            <p style="margin:0;">
+                A deferred task is a task whose execution has been postponed until
+                a later time or until a required condition is met.
+            </p>
+        </div>
+
+        <div style="border-bottom:1px solid #ddd;padding:20px 0;">
+            <h3 style="margin:0 0 10px 0;color:#0b5cab;">
+                What is a Soft Landing Trigger Task?
+            </h3>
+            <p style="margin:0;">
+                It refers to a trigger or task associated with initiating or continuing
+                a soft-landing process.
+            </p>
+        </div>
+
+        <div style="border-bottom:1px solid #ddd;padding:20px 0;">
+            <h3 style="margin:0 0 10px 0;color:#0b5cab;">
+                What is a Soft Landing Scheduled Task?
+            </h3>
+            <p style="margin:0;">
+                It is a scheduled process associated with the soft-landing mechanism,
+                subject to its configured schedule and execution conditions.
+            </p>
+        </div>
+
+        <div style="border-bottom:1px solid #ddd;padding:20px 0;">
+            <h3 style="margin:0 0 10px 0;color:#0b5cab;">
+                Why is my Soft Landing Deferral Task not running?
+            </h3>
+            <p style="margin:0;">
+                Check the task status, trigger conditions, schedule, dependencies,
+                execution history and system logs to determine why the task has not executed.
+            </p>
+        </div>
+
+    </div>
+
+    <div style="background:#eef7ff;border-radius:12px;padding:28px;margin:40px 0 20px 0;border:1px solid #cfe5f7;">
+        <h2 style="margin-top:0;color:#0b5cab;">
+            Soft Landing Deferral Task Checklist
+        </h2>
+
+        <p>
+            When investigating a deferred task, work through this checklist:
+        </p>
+
+        <ul style="padding-left:25px;">
+            <li>Confirm the exact task name.</li>
+            <li>Check the current task status.</li>
+            <li>Identify the trigger.</li>
+            <li>Verify the schedule.</li>
+            <li>Check dependencies.</li>
+            <li>Review previous executions.</li>
+            <li>Review error and system logs.</li>
+            <li>Check recent system or configuration changes.</li>
+        </ul>
+    </div>
+
+    <div style="background:#f7f7f7;border-radius:10px;padding:25px;margin-top:35px;">
+        <p style="margin:0;font-size:14px;color:#666;">
+            <strong>Note:</strong> The exact behavior and configuration of a
+            Soft Landing Deferral Task can vary between systems and implementations.
+            Always verify the specific environment, documentation and task configuration
+            before making production changes.
+        </p>
+    </div>
+
+</div>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
