@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחשבון החזר חובות: השיטה המהירה לצאת לחרות פיננסית</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "23 בספטמבר 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "מחשבון החזר חובות: השיטה המהירה לצאת לחרות פיננסית",
+                body: `<div id="debt-payoff-calculator" dir="rtl" style="font-family:Arial,Helvetica,sans-serif;max-width:1100px;margin:30px auto;color:#222;line-height:1.5;">
+
+  <div style="background:#f5f8fc;border:1px solid #dbe4ef;border-radius:14px;padding:28px;">
+
+    <h1 style="margin:0 0 10px;font-size:32px;color:#17365d;">
+      מחשבון החזר חובות
+    </h1>
+
+    <p style="margin:0 0 25px;color:#566575;font-size:16px;">
+      גלו כמה זמן ייקח לכם להיפטר מהחובות והשוו בין שתי שיטות פופולריות:
+      <strong>שיטת כדור השלג</strong> ו<strong>שיטת המפולת</strong>.
+    </p>
+
+    <!-- הזנת חובות -->
+    <div style="background:#fff;border:1px solid #e0e6ed;border-radius:12px;padding:20px;margin-bottom:20px;">
+
+      <h2 style="margin-top:0;color:#17365d;font-size:22px;">
+        החובות שלכם
+      </h2>
+
+      <div id="debts"></div>
+
+      <button onclick="addDebt()"
+        style="margin-top:15px;background:#fff;color:#1769aa;border:2px solid #1769aa;border-radius:7px;padding:10px 18px;font-size:15px;font-weight:bold;cursor:pointer;">
+        + הוספת חוב נוסף
+      </button>
+
+    </div>
+
+    <!-- תקציב חודשי -->
+    <div style="background:#fff;border:1px solid #e0e6ed;border-radius:12px;padding:20px;margin-bottom:20px;">
+
+      <h2 style="margin-top:0;color:#17365d;font-size:22px;">
+        תקציב חודשי
+      </h2>
+
+      <label style="display:block;font-weight:bold;margin-bottom:7px;">
+        תשלום חודשי נוסף
+      </label>
+
+      <div style="position:relative;max-width:320px;">
+        <span style="position:absolute;right:12px;top:10px;color:#777;font-size:17px;">$</span>
+
+        <input id="extraPayment" type="number" min="0" step="1" value="200"
+          style="width:100%;box-sizing:border-box;padding:10px 28px 10px 10px;border:1px solid #cbd5df;border-radius:7px;font-size:16px;">
+      </div>
+
+      <p style="font-size:13px;color:#697586;margin-bottom:0;">
+        סכום זה מתווסף לתשלומי המינימום החודשיים שלכם בכל חודש.
+      </p>
+
+    </div>
+
+    <button onclick="calculateDebtPayoff()"
+      style="width:100%;background:#1769aa;color:white;border:0;border-radius:8px;padding:15px;font-size:18px;font-weight:bold;cursor:pointer;">
+      חשבו את החזר החובות שלי
+    </button>
+
+  </div>
+
+
+  <!-- תוצאות -->
+
+  <div id="results" style="display:none;margin-top:25px;">
+
+    <h2 style="font-size:27px;color:#17365d;margin-bottom:15px;">
+      תוצאות החזר החובות
+    </h2>
+
+    <div id="comparison" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;"></div>
+
+
+    <!-- סיכום -->
+
+    <div style="background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:22px;margin-top:20px;">
+
+      <h3 style="margin-top:0;color:#17365d;">
+        לוח זמנים לסילוק החובות
+      </h3>
+
+      <div style="overflow-x:auto;">
+
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+
+          <thead>
+
+            <tr style="background:#f3f6f9;">
+
+              <th style="padding:10px;text-align:right;border-bottom:1px solid #ddd;">
+                שיטה
+              </th>
+
+              <th style="padding:10px;text-align:right;border-bottom:1px solid #ddd;">
+                חודשים
+              </th>
+
+              <th style="padding:10px;text-align:right;border-bottom:1px solid #ddd;">
+                ריבית ששולמה
+              </th>
+
+              <th style="padding:10px;text-align:right;border-bottom:1px solid #ddd;">
+                סך הכול שולם
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="summaryTable"></tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <!-- חיסכון בריבית -->
+
+    <div style="background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:22px;margin-top:20px;">
+
+      <h3 style="margin-top:0;color:#17365d;">
+        חיסכון בריבית
+      </h3>
+
+      <div id="savingsBox"></div>
+
+    </div>
+
+
+    <!-- הסבר על השיטות -->
+
+    <div style="background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:22px;margin-top:20px;">
+
+      <h3 style="margin-top:0;color:#17365d;">
+        איך שיטות החזר החוב עובדות?
+      </h3>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+
+        <div style="background:#f7f9fb;border-radius:9px;padding:18px;">
+
+          <h4 style="margin-top:0;color:#1769aa;">
+            שיטת כדור השלג
+          </h4>
+
+          <p style="margin-bottom:0;">
+            בשיטת כדור השלג משלמים קודם את
+            <strong>החוב בעל היתרה הקטנה ביותר</strong>,
+            תוך המשך תשלום תשלומי המינימום על שאר החובות.
+            לאחר סילוק חוב, התשלום שהיה מיועד אליו מתווסף לתשלום של החוב הבא.
+          </p>
+
+        </div>
+
+
+        <div style="background:#f7f9fb;border-radius:9px;padding:18px;">
+
+          <h4 style="margin-top:0;color:#1769aa;">
+            שיטת המפולת
+          </h4>
+
+          <p style="margin-bottom:0;">
+            בשיטת המפולת משלמים קודם את החוב בעל
+            <strong>הריבית הגבוהה ביותר</strong>.
+            המטרה היא להפחית את סכום הריבית המשולם לאורך זמן.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- לוח תשלומים חודשי -->
+
+    <div style="background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:22px;margin-top:20px;">
+
+      <h3 style="margin-top:0;color:#17365d;">
+        לוח סילוק חובות חודשי
+      </h3>
+
+      <div style="overflow-x:auto;">
+
+        <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:650px;">
+
+          <thead>
+
+            <tr style="background:#f3f6f9;">
+
+              <th style="padding:9px;border-bottom:1px solid #ddd;">
+                חודש
+              </th>
+
+              <th style="padding:9px;border-bottom:1px solid #ddd;text-align:right;">
+                יתרת חוב - כדור שלג
+              </th>
+
+              <th style="padding:9px;border-bottom:1px solid #ddd;text-align:right;">
+                ריבית - כדור שלג
+              </th>
+
+              <th style="padding:9px;border-bottom:1px solid #ddd;text-align:right;">
+                יתרת חוב - מפולת
+              </th>
+
+              <th style="padding:9px;border-bottom:1px solid #ddd;text-align:right;">
+                ריבית - מפולת
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="scheduleTable"></tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+let debtCounter = 0;
+
+
+/* =========================
+   הוספת חוב
+========================= */
+
+function addDebt(balance = "", apr = "", minimum = "") {
+
+  debtCounter++;
+
+  const container = document.getElementById("debts");
+
+  const row = document.createElement("div");
+
+  row.id = "debt-" + debtCounter;
+
+  row.style.cssText =
+    "display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr auto;gap:10px;align-items:end;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #edf0f3;";
+
+  row.innerHTML = `
+
+    <div>
+
+      <label style="display:block;font-size:13px;font-weight:bold;margin-bottom:5px;">
+        שם החוב
+      </label>
+
+      <input class="debt-name" type="text"
+        value="${balance !== "" ? "כרטיס אשראי " + debtCounter : ""}"
+        placeholder="לדוגמה: כרטיס ויזה"
+        style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #cbd5df;border-radius:6px;">
+
+    </div>
+
+
+    <div>
+
+      <label style="display:block;font-size:13px;font-weight:bold;margin-bottom:5px;">
+        יתרה ($)
+      </label>
+
+      <input class="debt-balance" type="number" min="0" step="0.01"
+        value="${balance}"
+        placeholder="5000"
+        style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #cbd5df;border-radius:6px;">
+
+    </div>
+
+
+    <div>
+
+      <label style="display:block;font-size:13px;font-weight:bold;margin-bottom:5px;">
+        ריבית שנתית (%)
+      </label>
+
+      <input class="debt-apr" type="number" min="0" step="0.01"
+        value="${apr}"
+        placeholder="24.99"
+        style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #cbd5df;border-radius:6px;">
+
+    </div>
+
+
+    <div>
+
+      <label style="display:block;font-size:13px;font-weight:bold;margin-bottom:5px;">
+        תשלום מינימום ($)
+      </label>
+
+      <input class="debt-minimum" type="number" min="0" step="0.01"
+        value="${minimum}"
+        placeholder="150"
+        style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #cbd5df;border-radius:6px;">
+
+    </div>
+
+
+    <button onclick="removeDebt(${debtCounter})"
+      style="background:#fff;color:#c0392b;border:1px solid #e0b5b0;border-radius:6px;padding:9px;cursor:pointer;">
+      הסרה
+    </button>
+
+  `;
+
+  container.appendChild(row);
+
+}
+
+
+/* =========================
+   הסרת חוב
+========================= */
+
+function removeDebt(id) {
+
+  const element = document.getElementById("debt-" + id);
+
+  if (element) {
+    element.remove();
+  }
+
+}
+
+
+/* =========================
+   קריאת החובות
+========================= */
+
+function getDebts() {
+
+  const rows = document.querySelectorAll("#debts > div");
+
+  const debts = [];
+
+  rows.forEach((row, index) => {
+
+    const name =
+      row.querySelector(".debt-name").value.trim() ||
+      "חוב " + (index + 1);
+
+    const balance =
+      parseFloat(row.querySelector(".debt-balance").value) || 0;
+
+    const apr =
+      parseFloat(row.querySelector(".debt-apr").value) || 0;
+
+    const minimum =
+      parseFloat(row.querySelector(".debt-minimum").value) || 0;
+
+    if (balance > 0) {
+
+      debts.push({
+        name: name,
+        balance: balance,
+        apr: apr,
+        minimum: minimum
+      });
+
+    }
+
+  });
+
+  return debts;
+
+}
+
+
+/* =========================
+   חישוב שיטת החזר
+========================= */
+
+function simulate(originalDebts, strategy, extraPayment) {
+
+  let debts = originalDebts.map(d => ({
+    name: d.name,
+    balance: d.balance,
+    apr: d.apr,
+    minimum: d.minimum
+  }));
+
+  let month = 0;
+
+  let totalInterest = 0;
+
+  let totalPaid = 0;
+
+  const schedule = [];
+
+  const maxMonths = 1200;
+
+
+  while (
+    debts.some(d => d.balance > 0.005) &&
+    month < maxMonths
+  ) {
+
+    month++;
+
+    let monthlyInterest = 0;
+
+
+    /* הוספת ריבית */
+
+    debts.forEach(d => {
+
+      if (d.balance > 0) {
+
+        const interest =
+          d.balance * (d.apr / 100 / 12);
+
+        d.balance += interest;
+
+        monthlyInterest += interest;
+
+      }
+
+    });
+
+
+    totalInterest += monthlyInterest;
+
+
+    /* תשלומי מינימום */
+
+    let paymentsThisMonth = 0;
+
+
+    debts.forEach(d => {
+
+      if (d.balance > 0) {
+
+        const payment =
+          Math.min(d.minimum, d.balance);
+
+        d.balance -= payment;
+
+        paymentsThisMonth += payment;
+
+      }
+
+    });
+
+
+    /*
+      קביעת החוב הבא לטיפול
+    */
+
+    let activeDebts =
+      debts.filter(d => d.balance > 0.005);
+
+
+    activeDebts.sort((a, b) => {
+
+      if (strategy === "snowball") {
+
+        return a.balance - b.balance;
+
+      } else {
+
+        return b.apr - a.apr;
+
+      }
+
+    });
+
+
+    /*
+      התשלום הנוסף מופנה לחוב היעד
+    */
+
+    let remainingExtra = extraPayment;
+
+
+    for (let d of activeDebts) {
+
+      if (remainingExtra <= 0) break;
+
+      const payment =
+        Math.min(remainingExtra, d.balance);
+
+      d.balance -= payment;
+
+      remainingExtra -= payment;
+
+      paymentsThisMonth += payment;
+
+    }
+
+
+    /*
+      אם כל החוב שולם, יתרת התשלום
+      אינה נחשבת כתשלום נוסף לחוב.
+    */
+
+    totalPaid += paymentsThisMonth;
+
+
+    schedule.push({
+
+      month: month,
+
+      balance: debts.reduce(
+        (sum, d) => sum + Math.max(0, d.balance),
+        0
+      ),
+
+      interest: monthlyInterest
+
+    });
+
+  }
+
+
+  return {
+
+    months: month,
+
+    interest: totalInterest,
+
+    totalPaid: totalPaid,
+
+    schedule: schedule
+
+  };
+
+}
+
+
+/* =========================
+   עיצוב סכום כסף
+========================= */
+
+function money(value) {
+
+  return "$" + value.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+}
+
+
+/* =========================
+   חישוב ראשי
+========================= */
+
+function calculateDebtPayoff() {
+
+  const debts = getDebts();
+
+
+  if (debts.length === 0) {
+
+    alert("יש להזין לפחות חוב אחד.");
+
+    return;
+
+  }
+
+
+  for (const d of debts) {
+
+    if (d.minimum <= 0) {
+
+      alert("יש להזין תשלום מינימום עבור כל חוב.");
+
+      return;
+
+    }
+
+  }
+
+
+  const extraPayment =
+    parseFloat(
+      document.getElementById("extraPayment").value
+    ) || 0;
+
+
+  const snowball =
+    simulate(
+      debts,
+      "snowball",
+      extraPayment
+    );
+
+
+  const avalanche =
+    simulate(
+      debts,
+      "avalanche",
+      extraPayment
+    );
+
+
+  document.getElementById("results").style.display = "block";
+
+
+  /* =========================
+     כרטיסי השוואה
+  ========================= */
+
+  document.getElementById("comparison").innerHTML = `
+
+    <div style="background:#fff;border:2px solid #1769aa;border-radius:12px;padding:22px;">
+
+      <div style="font-size:14px;font-weight:bold;color:#1769aa;">
+        שיטת כדור השלג
+      </div>
+
+      <div style="font-size:30px;font-weight:bold;margin:8px 0;">
+        ${snowball.months} חודשים
+      </div>
+
+      <div style="color:#687585;">
+        הזמן עד לסילוק כל החובות
+      </div>
+
+      <hr style="border:0;border-top:1px solid #eee;margin:18px 0;">
+
+      <div style="display:flex;justify-content:space-between;margin:8px 0;">
+        <span>סך הריבית</span>
+        <strong>${money(snowball.interest)}</strong>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;">
+        <span>סך הכול שולם</span>
+        <strong>${money(snowball.totalPaid)}</strong>
+      </div>
+
+    </div>
+
+
+    <div style="background:#fff;border:2px solid #17365d;border-radius:12px;padding:22px;">
+
+      <div style="font-size:14px;font-weight:bold;color:#17365d;">
+        שיטת המפולת
+      </div>
+
+      <div style="font-size:30px;font-weight:bold;margin:8px 0;">
+        ${avalanche.months} חודשים
+      </div>
+
+      <div style="color:#687585;">
+        הזמן עד לסילוק כל החובות
+      </div>
+
+      <hr style="border:0;border-top:1px solid #eee;margin:18px 0;">
+
+      <div style="display:flex;justify-content:space-between;margin:8px 0;">
+        <span>סך הריבית</span>
+        <strong>${money(avalanche.interest)}</strong>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;">
+        <span>סך הכול שולם</span>
+        <strong>${money(avalanche.totalPaid)}</strong>
+      </div>
+
+    </div>
+
+  `;
+
+
+  /* =========================
+     טבלת סיכום
+  ========================= */
+
+  document.getElementById("summaryTable").innerHTML = `
+
+    <tr>
+
+      <td style="padding:10px;border-bottom:1px solid #eee;">
+        שיטת כדור השלג
+      </td>
+
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;">
+        ${snowball.months}
+      </td>
+
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;">
+        ${money(snowball.interest)}
+      </td>
+
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;">
+        ${money(snowball.totalPaid)}
+      </td>
+
+    </tr>
+
+
+    <tr>
+
+      <td style="padding:10px;border-bottom:1px solid #eee;">
+        שיטת המפולת
+      </td>
+
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;">
+        ${avalanche.months}
+      </td>
+
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;">
+        ${money(avalanche.interest)}
+      </td>
+
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;">
+        ${money(avalanche.totalPaid)}
+      </td>
+
+    </tr>
+
+  `;
+
+
+  /* =========================
+     הפרש בריבית
+  ========================= */
+
+  const interestSavings =
+    Math.abs(
+      snowball.interest -
+      avalanche.interest
+    );
+
+
+  const timeDifference =
+    Math.abs(
+      snowball.months -
+      avalanche.months
+    );
+
+
+  document.getElementById("savingsBox").innerHTML = `
+
+    <div style="font-size:18px;margin-bottom:12px;">
+      ההפרש בריבית בין שתי השיטות הוא:
+    </div>
+
+    <div style="font-size:34px;font-weight:bold;color:#1769aa;">
+      ${money(interestSavings)}
+    </div>
+
+    <p style="color:#66717f;">
+      שתי השיטות שונות זו מזו בכ-
+      <strong>
+        ${timeDifference}
+        ${timeDifference === 1 ? "חודש" : "חודשים"}
+      </strong>
+      לפי לוח הזמנים המחושב.
+    </p>
+
+    <p style="font-size:13px;color:#777;">
+      התוצאות הן הערכה המבוססת על הנתונים שהוזנו ומניחה חישוב
+      ריבית חודשי ותשלומים קבועים לאורך התקופה.
+    </p>
+
+  `;
+
+
+  /* =========================
+     לוח תשלומים חודשי
+  ========================= */
+
+  const maxSchedule =
+    Math.max(
+      snowball.schedule.length,
+      avalanche.schedule.length
+    );
+
+
+  let scheduleHTML = "";
+
+
+  for (let i = 0; i < maxSchedule; i++) {
+
+    const s = snowball.schedule[i];
+
+    const a = avalanche.schedule[i];
+
+
+    scheduleHTML += `
+
+      <tr>
+
+        <td style="padding:8px;border-bottom:1px solid #eee;">
+          ${i + 1}
+        </td>
+
+        <td style="padding:8px;text-align:right;border-bottom:1px solid #eee;">
+          ${s ? money(s.balance) : "-"}
+        </td>
+
+        <td style="padding:8px;text-align:right;border-bottom:1px solid #eee;">
+          ${s ? money(s.interest) : "-"}
+        </td>
+
+        <td style="padding:8px;text-align:right;border-bottom:1px solid #eee;">
+          ${a ? money(a.balance) : "-"}
+        </td>
+
+        <td style="padding:8px;text-align:right;border-bottom:1px solid #eee;">
+          ${a ? money(a.interest) : "-"}
+        </td>
+
+      </tr>
+
+    `;
+
+  }
+
+
+  document.getElementById("scheduleTable").innerHTML =
+    scheduleHTML;
+
+
+  /* גלילה לתוצאות */
+
+  document.getElementById("results").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+}
+
+
+/* =========================
+   חובות ברירת מחדל
+========================= */
+
+addDebt(5000, 24.99, 150);
+
+addDebt(3000, 19.99, 100);
+
+addDebt(8000, 14.99, 200);
+
+</script>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "September 23, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Debt Payoff Calculator: The Fastest Path to Financial Freedom",
+                body: ````html
+<div id="debt-payoff-calculator" style="font-family:Arial,Helvetica,sans-serif;max-width:1100px;margin:30px auto;color:#222;line-height:1.5;">
+
+  <div style="background:#f5f8fc;border:1px solid #dbe4ef;border-radius:14px;padding:28px;">
+
+    <h1 style="margin:0 0 10px;font-size:32px;color:#17365d;">
+      Debt Payoff Calculator
+    </h1>
+
+    <p style="margin:0 0 25px;color:#566575;font-size:16px;">
+      See how long it will take to become debt-free and compare the
+      <strong>Debt Snowball</strong> and <strong>Debt Avalanche</strong> strategies.
+    </p>
+
+    <!-- Debt Inputs -->
+    <div style="background:#fff;border:1px solid #e0e6ed;border-radius:12px;padding:20px;margin-bottom:20px;">
+
+      <h2 style="margin-top:0;color:#17365d;font-size:22px;">
+        Your Debts
+      </h2>
+
+      <div id="debts"></div>
+
+      <button onclick="addDebt()"
+        style="margin-top:15px;background:#fff;color:#1769aa;border:2px solid #1769aa;border-radius:7px;padding:10px 18px;font-size:15px;font-weight:bold;cursor:pointer;">
+        + Add Another Debt
+      </button>
+
+    </div>
+
+    <!-- Extra Payment -->
+    <div style="background:#fff;border:1px solid #e0e6ed;border-radius:12px;padding:20px;margin-bottom:20px;">
+
+      <h2 style="margin-top:0;color:#17365d;font-size:22px;">
+        Monthly Budget
+      </h2>
+
+      <label style="display:block;font-weight:bold;margin-bottom:7px;">
+        Extra Monthly Payment
+      </label>
+
+      <div style="position:relative;max-width:320px;">
+        <span style="position:absolute;left:12px;top:10px;color:#777;font-size:17px;">$</span>
+        <input id="extraPayment" type="number" min="0" step="1" value="200"
+          style="width:100%;box-sizing:border-box;padding:10px 10px 10px 28px;border:1px solid #cbd5df;border-radius:7px;font-size:16px;">
+      </div>
+
+      <p style="font-size:13px;color:#697586;margin-bottom:0;">
+        This amount is added to your regular minimum payments each month.
+      </p>
+
+    </div>
+
+    <button onclick="calculateDebtPayoff()"
+      style="width:100%;background:#1769aa;color:white;border:0;border-radius:8px;padding:15px;font-size:18px;font-weight:bold;cursor:pointer;">
+      Calculate My Debt Payoff
+    </button>
+
+  </div>
+
+
+  <!-- RESULTS -->
+
+  <div id="results" style="display:none;margin-top:25px;">
+
+    <h2 style="font-size:27px;color:#17365d;margin-bottom:15px;">
+      Your Debt Payoff Results
+    </h2>
+
+    <div id="comparison" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;"></div>
+
+    <div style="background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:22px;margin-top:20px;">
+
+      <h3 style="margin-top:0;color:#17365d;">
+        Payoff Timeline
+      </h3>
+
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;">
+          <thead>
+            <tr style="background:#f3f6f9;">
+              <th style="padding:10px;text-align:left;border-bottom:1px solid #ddd;">Strategy</th>
+              <th style="padding:10px;text-align:right;border-bottom:1px solid #ddd;">Months</th>
+              <th style="padding:10px;text-align:right;border-bottom:1px solid #ddd;">Interest Paid</th>
+              <th style="padding:10px;text-align:right;border-bottom:1px solid #ddd;">Total Paid</th>
+            </tr>
+          </thead>
+          <tbody id="summaryTable"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+
+    <div style="background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:22px;margin-top:20px;">
+
+      <h3 style="margin-top:0;color:#17365d;">
+        Interest Savings
+      </h3>
+
+      <div id="savingsBox"></div>
+
+    </div>
+
+
+    <div style="background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:22px;margin-top:20px;">
+
+      <h3 style="margin-top:0;color:#17365d;">
+        How the Strategies Work
+      </h3>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+
+        <div style="background:#f7f9fb;border-radius:9px;padding:18px;">
+          <h4 style="margin-top:0;color:#1769aa;">Debt Snowball</h4>
+          <p style="margin-bottom:0;">
+            The Snowball method pays off your <strong>smallest balance first</strong>,
+            while making minimum payments on all other debts. Once a debt is paid,
+            its payment is rolled into the next debt.
+          </p>
+        </div>
+
+        <div style="background:#f7f9fb;border-radius:9px;padding:18px;">
+          <h4 style="margin-top:0;color:#1769aa;">Debt Avalanche</h4>
+          <p style="margin-bottom:0;">
+            The Avalanche method pays off the debt with the
+            <strong>highest interest rate first</strong>. This can reduce the
+            amount of interest paid over time.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div style="background:#fff;border:1px solid #dfe5ec;border-radius:12px;padding:22px;margin-top:20px;">
+
+      <h3 style="margin-top:0;color:#17365d;">
+        Monthly Payoff Schedule
+      </h3>
+
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:650px;">
+          <thead>
+            <tr style="background:#f3f6f9;">
+              <th style="padding:9px;border-bottom:1px solid #ddd;">Month</th>
+              <th style="padding:9px;border-bottom:1px solid #ddd;text-align:right;">Snowball Balance</th>
+              <th style="padding:9px;border-bottom:1px solid #ddd;text-align:right;">Snowball Interest</th>
+              <th style="padding:9px;border-bottom:1px solid #ddd;text-align:right;">Avalanche Balance</th>
+              <th style="padding:9px;border-bottom:1px solid #ddd;text-align:right;">Avalanche Interest</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleTable"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+let debtCounter = 0;
+
+
+/* =========================
+   ADD DEBT
+========================= */
+
+function addDebt(balance = "", apr = "", minimum = "") {
+
+  debtCounter++;
+
+  const container = document.getElementById("debts");
+
+  const row = document.createElement("div");
+
+  row.id = "debt-" + debtCounter;
+
+  row.style.cssText =
+    "display:grid;grid-template-columns:1.3fr 1fr 1fr auto;gap:10px;align-items:end;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #edf0f3;";
+
+  row.innerHTML = `
+
+    <div>
+      <label style="display:block;font-size:13px;font-weight:bold;margin-bottom:5px;">
+        Debt Name
+      </label>
+      <input class="debt-name" type="text"
+        value="${balance !== "" ? "Credit Card " + debtCounter : ""}"
+        placeholder="e.g. Visa Card"
+        style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #cbd5df;border-radius:6px;">
+    </div>
+
+    <div>
+      <label style="display:block;font-size:13px;font-weight:bold;margin-bottom:5px;">
+        Balance ($)
+      </label>
+      <input class="debt-balance" type="number" min="0" step="0.01"
+        value="${balance}"
+        placeholder="5000"
+        style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #cbd5df;border-radius:6px;">
+    </div>
+
+    <div>
+      <label style="display:block;font-size:13px;font-weight:bold;margin-bottom:5px;">
+        APR (%)
+      </label>
+      <input class="debt-apr" type="number" min="0" step="0.01"
+        value="${apr}"
+        placeholder="24.99"
+        style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #cbd5df;border-radius:6px;">
+    </div>
+
+    <div>
+      <label style="display:block;font-size:13px;font-weight:bold;margin-bottom:5px;">
+        Minimum ($)
+      </label>
+      <input class="debt-minimum" type="number" min="0" step="0.01"
+        value="${minimum}"
+        placeholder="150"
+        style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #cbd5df;border-radius:6px;">
+    </div>
+
+    <button onclick="removeDebt(${debtCounter})"
+      style="background:#fff;color:#c0392b;border:1px solid #e0b5b0;border-radius:6px;padding:9px;cursor:pointer;">
+      Remove
+    </button>
+
+  `;
+
+  container.appendChild(row);
+}
+
+
+function removeDebt(id) {
+
+  const element = document.getElementById("debt-" + id);
+
+  if (element) {
+    element.remove();
+  }
+
+}
+
+
+/* =========================
+   READ DEBTS
+========================= */
+
+function getDebts() {
+
+  const rows = document.querySelectorAll("#debts > div");
+
+  const debts = [];
+
+  rows.forEach((row, index) => {
+
+    const name =
+      row.querySelector(".debt-name").value.trim() ||
+      "Debt " + (index + 1);
+
+    const balance =
+      parseFloat(row.querySelector(".debt-balance").value) || 0;
+
+    const apr =
+      parseFloat(row.querySelector(".debt-apr").value) || 0;
+
+    const minimum =
+      parseFloat(row.querySelector(".debt-minimum").value) || 0;
+
+    if (balance > 0) {
+
+      debts.push({
+        name: name,
+        balance: balance,
+        apr: apr,
+        minimum: minimum
+      });
+
+    }
+
+  });
+
+  return debts;
+
+}
+
+
+/* =========================
+   CALCULATE STRATEGY
+========================= */
+
+function simulate(originalDebts, strategy, extraPayment) {
+
+  let debts = originalDebts.map(d => ({
+    name: d.name,
+    balance: d.balance,
+    apr: d.apr,
+    minimum: d.minimum
+  }));
+
+  let month = 0;
+  let totalInterest = 0;
+  let totalPaid = 0;
+
+  const schedule = [];
+
+  const maxMonths = 1200;
+
+  while (
+    debts.some(d => d.balance > 0.005) &&
+    month < maxMonths
+  ) {
+
+    month++;
+
+    let monthlyInterest = 0;
+
+    /* Add interest */
+
+    debts.forEach(d => {
+
+      if (d.balance > 0) {
+
+        const interest = d.balance * (d.apr / 100 / 12);
+
+        d.balance += interest;
+
+        monthlyInterest += interest;
+
+      }
+
+    });
+
+    totalInterest += monthlyInterest;
+
+
+    /* Minimum payments */
+
+    let paymentsThisMonth = 0;
+
+    debts.forEach(d => {
+
+      if (d.balance > 0) {
+
+        const payment = Math.min(d.minimum, d.balance);
+
+        d.balance -= payment;
+
+        paymentsThisMonth += payment;
+
+      }
+
+    });
+
+
+    /*
+      Determine target debt.
+    */
+
+    let activeDebts = debts.filter(d => d.balance > 0.005);
+
+    activeDebts.sort((a, b) => {
+
+      if (strategy === "snowball") {
+
+        return a.balance - b.balance;
+
+      } else {
+
+        return b.apr - a.apr;
+
+      }
+
+    });
+
+
+    /*
+      Extra money is applied to target debt.
+    */
+
+    let remainingExtra = extraPayment;
+
+    for (let d of activeDebts) {
+
+      if (remainingExtra <= 0) break;
+
+      const payment = Math.min(remainingExtra, d.balance);
+
+      d.balance -= payment;
+
+      remainingExtra -= payment;
+
+      paymentsThisMonth += payment;
+
+    }
+
+
+    /*
+      If all debt is gone, any remaining amount is not counted
+      as debt payment.
+    */
+
+    totalPaid += paymentsThisMonth;
+
+
+    schedule.push({
+
+      month: month,
+
+      balance: debts.reduce(
+        (sum, d) => sum + Math.max(0, d.balance),
+        0
+      ),
+
+      interest: monthlyInterest
+
+    });
+
+  }
+
+
+  return {
+
+    months: month,
+
+    interest: totalInterest,
+
+    totalPaid: totalPaid,
+
+    schedule: schedule
+
+  };
+
+}
+
+
+/* =========================
+   FORMAT MONEY
+========================= */
+
+function money(value) {
+
+  return "$" + value.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+}
+
+
+/* =========================
+   MAIN CALCULATION
+========================= */
+
+function calculateDebtPayoff() {
+
+  const debts = getDebts();
+
+  if (debts.length === 0) {
+
+    alert("Please enter at least one debt.");
+
+    return;
+
+  }
+
+
+  for (const d of debts) {
+
+    if (d.minimum <= 0) {
+
+      alert("Please enter a minimum payment for every debt.");
+
+      return;
+
+    }
+
+  }
+
+
+  const extraPayment =
+    parseFloat(document.getElementById("extraPayment").value) || 0;
+
+
+  const snowball =
+    simulate(debts, "snowball", extraPayment);
+
+  const avalanche =
+    simulate(debts, "avalanche", extraPayment);
+
+
+  document.getElementById("results").style.display = "block";
+
+
+  /* =========================
+     COMPARISON CARDS
+  ========================= */
+
+  document.getElementById("comparison").innerHTML = `
+
+    <div style="background:#fff;border:2px solid #1769aa;border-radius:12px;padding:22px;">
+
+      <div style="font-size:14px;font-weight:bold;color:#1769aa;">
+        DEBT SNOWBALL
+      </div>
+
+      <div style="font-size:30px;font-weight:bold;margin:8px 0;">
+        ${snowball.months} months
+      </div>
+
+      <div style="color:#687585;">
+        Time until debt-free
+      </div>
+
+      <hr style="border:0;border-top:1px solid #eee;margin:18px 0;">
+
+      <div style="display:flex;justify-content:space-between;margin:8px 0;">
+        <span>Total Interest</span>
+        <strong>${money(snowball.interest)}</strong>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;">
+        <span>Total Paid</span>
+        <strong>${money(snowball.totalPaid)}</strong>
+      </div>
+
+    </div>
+
+
+    <div style="background:#fff;border:2px solid #17365d;border-radius:12px;padding:22px;">
+
+      <div style="font-size:14px;font-weight:bold;color:#17365d;">
+        DEBT AVALANCHE
+      </div>
+
+      <div style="font-size:30px;font-weight:bold;margin:8px 0;">
+        ${avalanche.months} months
+      </div>
+
+      <div style="color:#687585;">
+        Time until debt-free
+      </div>
+
+      <hr style="border:0;border-top:1px solid #eee;margin:18px 0;">
+
+      <div style="display:flex;justify-content:space-between;margin:8px 0;">
+        <span>Total Interest</span>
+        <strong>${money(avalanche.interest)}</strong>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;">
+        <span>Total Paid</span>
+        <strong>${money(avalanche.totalPaid)}</strong>
+      </div>
+
+    </div>
+
+  `;
+
+
+  /* =========================
+     SUMMARY TABLE
+  ========================= */
+
+  document.getElementById("summaryTable").innerHTML = `
+
+    <tr>
+      <td style="padding:10px;border-bottom:1px solid #eee;">
+        Debt Snowball
+      </td>
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;">
+        ${snowball.months}
+      </td>
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;">
+        ${money(snowball.interest)}
+      </td>
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;">
+        ${money(snowball.totalPaid)}
+      </td>
+    </tr>
+
+    <tr>
+      <td style="padding:10px;border-bottom:1px solid #eee;">
+        Debt Avalanche
+      </td>
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;">
+        ${avalanche.months}
+      </td>
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;">
+        ${money(avalanche.interest)}
+      </td>
+      <td style="padding:10px;text-align:right;border-bottom:1px solid #eee;">
+        ${money(avalanche.totalPaid)}
+      </td>
+    </tr>
+
+  `;
+
+
+  /* =========================
+     SAVINGS
+  ========================= */
+
+  const interestSavings =
+    Math.abs(snowball.interest - avalanche.interest);
+
+  const timeDifference =
+    Math.abs(snowball.months - avalanche.months);
+
+
+  document.getElementById("savingsBox").innerHTML = `
+
+    <div style="font-size:18px;margin-bottom:12px;">
+      The difference in interest between the two strategies is:
+    </div>
+
+    <div style="font-size:34px;font-weight:bold;color:#1769aa;">
+      ${money(interestSavings)}
+    </div>
+
+    <p style="color:#66717f;">
+      The two strategies differ by approximately
+      <strong>${timeDifference} month${timeDifference === 1 ? "" : "s"}</strong>
+      in the calculated payoff timeline.
+    </p>
+
+    <p style="font-size:13px;color:#777;">
+      Results are estimates based on the information entered and assume
+      monthly interest calculations and consistent payments.
+    </p>
+
+  `;
+
+
+  /* =========================
+     MONTHLY SCHEDULE
+  ========================= */
+
+  const maxSchedule =
+    Math.max(
+      snowball.schedule.length,
+      avalanche.schedule.length
+    );
+
+
+  let scheduleHTML = "";
+
+
+  for (let i = 0; i < maxSchedule; i++) {
+
+    const s = snowball.schedule[i];
+    const a = avalanche.schedule[i];
+
+    scheduleHTML += `
+
+      <tr>
+
+        <td style="padding:8px;border-bottom:1px solid #eee;">
+          ${i + 1}
+        </td>
+
+        <td style="padding:8px;text-align:right;border-bottom:1px solid #eee;">
+          ${s ? money(s.balance) : "-"}
+        </td>
+
+        <td style="padding:8px;text-align:right;border-bottom:1px solid #eee;">
+          ${s ? money(s.interest) : "-"}
+        </td>
+
+        <td style="padding:8px;text-align:right;border-bottom:1px solid #eee;">
+          ${a ? money(a.balance) : "-"}
+        </td>
+
+        <td style="padding:8px;text-align:right;border-bottom:1px solid #eee;">
+          ${a ? money(a.interest) : "-"}
+        </td>
+
+      </tr>
+
+    `;
+
+  }
+
+
+  document.getElementById("scheduleTable").innerHTML = scheduleHTML;
+
+
+  /* Scroll to results */
+
+  document.getElementById("results").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+}
+
+
+/* =========================
+   DEFAULT DEBTS
+========================= */
+
+addDebt(5000, 24.99, 150);
+addDebt(3000, 19.99, 100);
+addDebt(8000, 14.99, 200);
+
+</script>
+```
+`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
