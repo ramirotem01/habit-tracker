@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>האם זה מסוכן? איך להעריך ולהתמודד עם סיכונים בדרך לבניית נכסים</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "24 בספטמבר 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "האם זה מסוכן? איך להעריך ולהתמודד עם סיכונים בדרך לבניית נכסים",
+                body: `<article style="font-family: Arial, sans-serif; line-height: 1.7; color: #2d3748; max-width: 800px; margin: 0 auto; direction: rtl; text-align: right;">
+  <p style="font-size: 1.1em; color: #4a5568; margin-bottom: 24px;">אחת השאלות הראשונות שעולות כשמדברים על השקעות, נדל"ן או צבירת נכסים היא: <strong style="color: #e53e3e;">"האם זה מסוכן?"</strong>. התשובה הקצרה היא: כן, בכל השקעה יש סיכון. אך התשובה המעמיקה יותר היא שאי-עשייה ואי-צבירת נכסים מסוכנות הרבה יותר לאורך זמן.</p>
+
+  <p style="margin-bottom: 24px;">כדי להצליח בעולם הפיננסי, אינך צריך להימנע מסיכון לחלוטין — אלא ללמוד להבין אותו, למדוד אותו ולנהל אותו בצורה מושכלת.</p>
+
+  <h2 style="color: #1a365d; font-size: 1.5em; margin-top: 32px; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">1. מהו סיכון פיננסי אמיתי?</h2>
+  <p style="margin-bottom: 16px;">רבים מבלבלים בין <strong>תנודתיות (Volatility)</strong> לבין <strong>סיכון (Risk)</strong>:</p>
+  <ul style="margin-bottom: 20px; padding-right: 24px;">
+    <li style="margin-bottom: 10px;"><strong style="color: #2b6cb0;">תנודתיות:</strong> העלייה והירידה הזמנית במחיר הנכס בטווח הקצר. זהו חלק טבעי ובריא משוק ההון.</li>
+    <li style="margin-bottom: 10px;"><strong style="color: #c53030;">סיכון אמיתי:</strong> האפשרות להפסד קבוע של ההון (Permanent Loss of Capital) או אובדן כוח הקנייה לאורך זמן.</li>
+  </ul>
+  <p style="margin-bottom: 24px;">למשל, השארת כסף במזומן או בעובר ושב נתפסת כ"בטוחה", אך בפועל היא נושאת סיכון כמעט ודאי: <strong>אינפלציה</strong> השוחקת את ערך הכסף מדי שנה.</p>
+
+  <h2 style="color: #1a365d; font-size: 1.5em; margin-top: 32px; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">2. הסיכונים המרכזיים בבניית נכסים</h2>
+  <p style="margin-bottom: 20px;">כשאתה משקיע בנכסים, ישנם מספר סיכונים מרכזיים שחשוב להכיר:</p>
+
+  <div style="overflow-x: auto; margin-bottom: 24px;">
+    <table style="width: 100%; border-collapse: collapse; font-size: 0.95em;">
+      <thead>
+        <tr style="background-color: #2b6cb0; color: #ffffff; text-align: right;">
+          <th style="padding: 12px; border: 1px solid #cbd5e0;">סוג הסיכון</th>
+          <th style="padding: 12px; border: 1px solid #cbd5e0;">מה משמעותו?</th>
+          <th style="padding: 12px; border: 1px solid #cbd5e0;">דרכי התמודדות</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background-color: #ffffff;">
+          <td style="padding: 12px; border: 1px solid #e2e8f0;"><strong>סיכון שוק (Market Risk)</strong></td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">ירידות שערים כלליות בשווקים בעקבות משבר כלכלי</td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">השקעה לטווח ארוך ופיזור רחב (ETFs)</td>
+        </tr>
+        <tr style="background-color: #f7fafc;">
+          <td style="padding: 12px; border: 1px solid #e2e8f0;"><strong>סיכון נזילות (Liquidity Risk)</strong></td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">קושי להמיר נכס למזומן במהירות ללא הפסד (למשל בנדל"ן)</td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">החזקת קרן חירום נזילה בנפרד</td>
+        </tr>
+        <tr style="background-color: #ffffff;">
+          <td style="padding: 12px; border: 1px solid #e2e8f0;"><strong>סיכון מינוף (Leverage Risk)</strong></td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">לקחת חוב גדול מדי לרכישת נכס (משכנתא/הלוואה)</td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">שמירה על יחס חוב-הכנסה סביר והחזר מחושב</td>
+        </tr>
+        <tr style="background-color: #f7fafc;">
+          <td style="padding: 12px; border: 1px solid #e2e8f0;"><strong>סיכון התנהגותי (Behavioral Risk)</strong></td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">מכירת נכסים מתוך פאניקה בזמן נפילות בשוק</td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">אוטומציה של ההשקעות ואימוץ אופק ארוך טווח</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 style="color: #1a365d; font-size: 1.5em; margin-top: 32px; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">3. ארבעת כללי הזהב לנטרול סיכונים מיותרים</h2>
+
+  <div style="background-color: #ebf8ff; border: 1px solid #bee3f8; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+    <h3 style="color: #2b6cb0; font-size: 1.15em; margin-top: 0; margin-bottom: 8px;">1. פיזור (Diversification)</h3>
+    <p style="margin: 0;">"אל תשים את כל הביצים בסל אחד". השקעה במדדי מניות עולמיים או שילוב של מניות, אג"ח ונדל"ן מבטיחה שגם אם סקטור אחד נפגע, השאר מגינים על הפורטפוליו.</p>
+  </div>
+
+  <div style="background-color: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+    <h3 style="color: #2b6cb0; font-size: 1.15em; margin-top: 0; margin-bottom: 8px;">2. אופק זמן ארוך (Time Horizon)</h3>
+    <p style="margin: 0;">היסטורית, ככל שפרק הזמן של החזקת הנכס ארוך יותר (10–20 שנה), ההסתברות להפסד בשוק ההון שואפת לאפס.</p>
+  </div>
+
+  <div style="background-color: #ebf8ff; border: 1px solid #bee3f8; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+    <h3 style="color: #2b6cb0; font-size: 1.15em; margin-top: 0; margin-bottom: 8px;">3. הקמת כרית ביטחון (Emergency Fund)</h3>
+    <p style="margin: 0;">כאשר יש לך סכום נזיל שמכסה 3–6 חודשי הוצאות, אינך נדרש למכור נכסים בהפסד בעת פציעה, פיטורין או אירוע בלתי צפוי.</p>
+  </div>
+
+  <div style="background-color: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+    <h3 style="color: #2b6cb0; font-size: 1.15em; margin-top: 0; margin-bottom: 8px;">4. השקעה במה שאתה מבין</h3>
+    <p style="margin: 0;">הימנע מהשקעות ספקולטיביות, מניות מובילות טרנד או מוצרים פיננסיים מורכבים שאינך מבין עד הסוף. פשטות היא הכלי הטוב ביותר לניהול סיכונים.</p>
+  </div>
+
+  <div style="background-color: #212529; color: #ffffff; padding: 20px; border-radius: 8px; margin-top: 32px;">
+    <p style="margin: 0; font-size: 1.05em; line-height: 1.6;"><strong style="color: #63b3ed;">בשורה התחתונה:</strong> תשובה לשאלה "האם זה מסוכן?" תלויה בך. השקעה ללא ידע וללא אסטרטגיה היא אכן מסוכנת. אך השקעה ממושמעת, מפוזרת ולאורך זמן היא הדרך הבטוחה ביותר להשיג חופש פיננסי.</p>
+  </div>
+</article>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "September 24, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Is It Dangerous? How to Assess and Manage Risk on the Path to Wealth Accumulation",
+                body: `<article style="font-family: Arial, sans-serif; line-height: 1.7; color: #2d3748; max-width: 800px; margin: 0 auto; direction: ltr; text-align: left;">
+  <p style="font-size: 1.1em; color: #4a5568; margin-bottom: 24px;">One of the first questions that arises when discussing investments, real estate, or wealth building is: <strong style="color: #e53e3e;">"Is it risky?"</strong>. The short answer is: yes, every investment carries risk. But the deeper answer is that inaction and failing to acquire assets are far riskier over time.</p>
+
+  <p style="margin-bottom: 24px;">To succeed in the financial world, you don't need to avoid risk entirely — instead, you need to learn to understand it, measure it, and manage it wisely.</p>
+
+  <h2 style="color: #1a365d; font-size: 1.5em; margin-top: 32px; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">1. What Is Real Financial Risk?</h2>
+  <p style="margin-bottom: 16px;">Many people confuse <strong>Volatility</strong> with <strong>Risk</strong>:</p>
+  <ul style="margin-bottom: 20px; padding-left: 24px;">
+    <li style="margin-bottom: 10px;"><strong style="color: #2b6cb0;">Volatility:</strong> The temporary ups and downs of an asset's price in the short term. This is a natural and healthy part of the capital market.</li>
+    <li style="margin-bottom: 10px;"><strong style="color: #c53030;">Real Risk:</strong> The possibility of Permanent Loss of Capital or the loss of purchasing power over time.</li>
+  </ul>
+  <p style="margin-bottom: 24px;">For example, keeping money in cash or a checking account is perceived as "safe," but in reality, it carries an almost guaranteed risk: <strong>inflation</strong> eroding the value of your money every year.</p>
+
+  <h2 style="color: #1a365d; font-size: 1.5em; margin-top: 32px; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">2. Major Risks in Asset Building</h2>
+  <p style="margin-bottom: 20px;">When investing in assets, there are several key risks to keep in mind:</p>
+
+  <div style="overflow-x: auto; margin-bottom: 24px;">
+    <table style="width: 100%; border-collapse: collapse; font-size: 0.95em;">
+      <thead>
+        <tr style="background-color: #2b6cb0; color: #ffffff; text-align: left;">
+          <th style="padding: 12px; border: 1px solid #cbd5e0;">Risk Type</th>
+          <th style="padding: 12px; border: 1px solid #cbd5e0;">What Does It Mean?</th>
+          <th style="padding: 12px; border: 1px solid #cbd5e0;">Management Strategy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background-color: #ffffff;">
+          <td style="padding: 12px; border: 1px solid #e2e8f0;"><strong>Market Risk</strong></td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">Broad market declines due to an economic crisis</td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">Long-term investing and broad diversification (ETFs)</td>
+        </tr>
+        <tr style="background-color: #f7fafc;">
+          <td style="padding: 12px; border: 1px solid #e2e8f0;"><strong>Liquidity Risk</strong></td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">Difficulty converting an asset into cash quickly without a loss (e.g., real estate)</td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">Maintaining a separate liquid emergency fund</td>
+        </tr>
+        <tr style="background-color: #ffffff;">
+          <td style="padding: 12px; border: 1px solid #e2e8f0;"><strong>Leverage Risk</strong></td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">Taking on too much debt to acquire an asset (mortgage/loans)</td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">Maintaining a reasonable debt-to-income ratio and calculated repayments</td>
+        </tr>
+        <tr style="background-color: #f7fafc;">
+          <td style="padding: 12px; border: 1px solid #e2e8f0;"><strong>Behavioral Risk</strong></td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">Panic-selling assets during market downturns</td>
+          <td style="padding: 12px; border: 1px solid #e2e8f0;">Automating investments and adopting a long-term horizon</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 style="color: #1a365d; font-size: 1.5em; margin-top: 32px; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">3. The Four Golden Rules to Eliminate Unnecessary Risks</h2>
+
+  <div style="background-color: #ebf8ff; border: 1px solid #bee3f8; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+    <h3 style="color: #2b6cb0; font-size: 1.15em; margin-top: 0; margin-bottom: 8px;">1. Diversification</h3>
+    <p style="margin: 0;">"Don't put all your eggs in one basket." Investing in global stock indexes or combining stocks, bonds, and real estate ensures that even if one sector is hit, the rest protect your portfolio.</p>
+  </div>
+
+  <div style="background-color: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+    <h3 style="color: #2b6cb0; font-size: 1.15em; margin-top: 0; margin-bottom: 8px;">2. Long-Time Horizon</h3>
+    <p style="margin: 0;">Historically, the longer the holding period of an asset (10–20 years), the probability of a loss in the stock market approaches zero.</p>
+  </div>
+
+  <div style="background-color: #ebf8ff; border: 1px solid #bee3f8; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+    <h3 style="color: #2b6cb0; font-size: 1.15em; margin-top: 0; margin-bottom: 8px;">3. Building an Emergency Fund</h3>
+    <p style="margin: 0;">When you have liquid cash covering 3–6 months of expenses, you won't be forced to sell assets at a loss during injury, job loss, or unforeseen events.</p>
+  </div>
+
+  <div style="background-color: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+    <h3 style="color: #2b6cb0; font-size: 1.15em; margin-top: 0; margin-bottom: 8px;">4. Invest in What You Understand</h3>
+    <p style="margin: 0;">Avoid speculative investments, trend-chasing stocks, or complex financial products you don't fully comprehend. Simplicity is the best tool for risk management.</p>
+  </div>
+
+  <div style="background-color: #212529; color: #ffffff; padding: 20px; border-radius: 8px; margin-top: 32px;">
+    <p style="margin: 0; font-size: 1.05em; line-height: 1.6;"><strong style="color: #63b3ed;">The Bottom Line:</strong> The answer to "Is it risky?" depends on you. Investing without knowledge or strategy is indeed risky. But disciplined, diversified, long-term investing is the safest path to achieving financial freedom.</p>
+  </div>
+</article>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
