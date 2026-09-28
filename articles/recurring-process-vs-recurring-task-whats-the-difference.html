@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תהליך מחזורי מול משימה מחזורית: מה ההבדל ואיך מנהלים כל אחד נכון?</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root { --primary-color: #3498db; --secondary-color: #2c3e50; --text-color: #333; }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; line-height: 1.8; color: var(--text-color); }
+        .article-page-container { max-width: 700px; margin: 0 auto; padding: 40px 20px; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); min-height: 100vh; }
+        .back-to-blog { display: inline-block; margin-bottom: 30px; color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .article-header { border-bottom: 2px solid #f0f0f0; padding-bottom: 20px; margin-bottom: 30px; }
+        .article-header h1 { font-size: 2.2em; color: var(--secondary-color); margin: 10px 0; }
+        .meta-info { color: #95a5a6; font-size: 0.9em; display: flex; gap: 15px; }
+        .article-body { font-size: 1.15em; }
+        .footer-cta { margin-top: 60px; padding: 30px; background: #f8f9fa; border-radius: 10px; text-align: center; }
+        .btn-main { display: inline-block; background: var(--primary-color); color: white; padding: 12px 25px; border-radius: 5px; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="article-page-container">
+        <a href="../blog.html" class="back-to-blog" id="back-link"></a>
+        <article>
+            <header class="article-header">
+                <div class="meta-info">
+                    <span id="meta-date"></span>
+                    <span id="meta-read-time"></span>
+                </div>
+                <h1 id="main-h1"></h1>
+            </header>
+            <div class="article-body" id="article-body-content"></div>
+            <div class="footer-cta">
+                <h3 id="footer-h3"></h3>
+                <a href="../index.html" class="btn-main" id="footer-btn"></a>
+            </div>
+        </article>
+    </div>
+    <script>
+        const translations = {
+            he: { 
+                back: "← חזרה לבלוג", 
+                date: "28 בספטמבר 2026", 
+                readTime: "⏱️ 5 דקות קריאה",
+                title: "תהליך מחזורי מול משימה מחזורית: מה ההבדל ואיך מנהלים כל אחד נכון?",
+                body: `<article style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.75; color: #1f2937; max-width: 820px; margin: 0 auto; direction: rtl; text-align: right; background-color: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+
+  <header style="margin-bottom: 32px; border-bottom: 3px solid #6366f1; padding-bottom: 16px;">
+    <p style="font-size: 1.15em; color: #4b5563; margin: 0;">בעולם הניהול והפרודוקטיביות, המילים <strong>"משימה"</strong> ו-<strong>"תהליך"</strong> משמשות לעיתים קרובות בערבוביה. אך כשמדובר בפעילויות שחוזרות על עצמן בשגרה, האבחנה ביניהן היא קריטית: שגיאה בסיווג עלולה להוביל לצווארי בקבוק, חוסר יעילות ופספוס יעדים.</p>
+  </header>
+
+  <section style="margin-bottom: 32px;">
+    <h2 style="color: #312e81; font-size: 1.6em; margin-bottom: 16px; font-weight: 700;">1. ההגדרות הבסיסיות: מה ההבדל המהותי?</h2>
+    
+    <div style="background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%); border-right: 5px solid #4f46e5; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+      <h3 style="color: #3730a3; margin-top: 0; margin-bottom: 8px; font-size: 1.2em;">📌 משימה מחזורית (Recurring Task)</h3>
+      <p style="margin: 0; color: #1e1b4b;">פעולה בודדת, מוגדרת ועצמאית שחוזרת על עצמה במרווחי זמן קבועים (יומי, שבועי, חודשי). משימה מחזורית מבוצעת בדרך כלל על ידי אדם אחד, אינה דורשת תלות מורכבת בגורמים אחרים, וניתן לסמן עליה "V" במהירות.</p>
+    </div>
+
+    <div style="background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%); border-right: 5px solid #16a34a; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+      <h3 style="color: #14532d; margin-top: 0; margin-bottom: 8px; font-size: 1.2em;">🔄 תהליך מחזורי (Recurring Process)</h3>
+      <p style="margin: 0; color: #052e16;">סדרה של צעדים מקושרים ומסודרים שחוזרת על עצמה כדי להשיג תוצאה ארגונית מוגדרת. תהליך מחזורי כולל מספר משימות, לעיתים של מספר בעלי תפקידים, וכולל התניות, נקודות בקרה ותלויות הדדיות.</p>
+    </div>
+  </section>
+
+  <section style="margin-bottom: 32px;">
+    <h2 style="color: #312e81; font-size: 1.6em; margin-bottom: 16px; font-weight: 700;">2. טבלת השוואה מהירה</h2>
+    <div style="overflow-x: auto; margin-bottom: 24px;">
+      <table style="width: 100%; border-collapse: collapse; text-align: right; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+        <thead>
+          <tr style="background-color: #4f46e5; color: #ffffff;">
+            <th style="padding: 14px; font-size: 1em;">מאפיין</th>
+            <th style="padding: 14px; font-size: 1em;">משימה מחזורית</th>
+            <th style="padding: 14px; font-size: 1em;">תהליך מחזורי</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background-color: #ffffff; border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 12px 14px; font-weight: bold; color: #374151;">היקף ומורכבות</td>
+            <td style="padding: 12px 14px; color: #4b5563;">פעולה יחידה נקודתית</td>
+            <td style="padding: 12px 14px; color: #4b5563;">שרשרת משימות מרובות צעדים</td>
+          </tr>
+          <tr style="background-color: #f9fafb; border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 12px 14px; font-weight: bold; color: #374151;">בעלות ותפקידים</td>
+            <td style="padding: 12px 14px; color: #4b5563;">אדם אחד בדרך כלל</td>
+            <td style="padding: 12px 14px; color: #4b5563;">צוות או מספר בעלי תפקידים</td>
+          </tr>
+          <tr style="background-color: #ffffff; border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 12px 14px; font-weight: bold; color: #374151;">תלויות (Dependencies)</td>
+            <td style="padding: 12px 14px; color: #4b5563;">כמעט ואין תלויות חיצוניות</td>
+            <td style="padding: 12px 14px; color: #4b5563;">כל שלב תלוי בסיום השלב שלפניו</td>
+          </tr>
+          <tr style="background-color: #f9fafb;">
+            <td style="padding: 12px 14px; font-weight: bold; color: #374151;">תוצאה מצופה</td>
+            <td style="padding: 12px 14px; color: #4b5563;">ביצוע מטלה דיסקרטית</td>
+            <td style="padding: 12px 14px; color: #4b5563;">אימפקט או תוצר ארגוני מדיד</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section style="margin-bottom: 32px;">
+    <h2 style="color: #312e81; font-size: 1.6em; margin-bottom: 16px; font-weight: 700;">3. דוגמאות מעשיות מהשטח</h2>
+    
+    <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+      <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; background-color: #fafafa;">
+        <h4 style="margin: 0 0 8px 0; color: #4f46e5; font-size: 1.1em;">💼 דוגמה מעולם משאבי האנוש</h4>
+        <p style="margin: 0 0 6px 0;"><strong>משימה מחזורית:</strong> שליחת אימייל תזכורת לצוות למלא דיווח שעות בכל יום חמישי ב-16:00.</p>
+        <p style="margin: 0;"><strong>תהליך מחזורי:</strong> קליטת עובד חדש (Onboarding) בכל תחילת חודש — כולל הכנת הציוד, פתיחת הרשאות, שיחת אוריינטציה, והגדרת יעדים לשבוע הראשון.</p>
+      </div>
+
+      <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; background-color: #fafafa;">
+        <h4 style="margin: 0 0 8px 0; color: #4f46e5; font-size: 1.1em;">📊 דוגמה מעולם הכספים</h4>
+        <p style="margin: 0 0 6px 0;"><strong>משימה מחזורית:</strong> הורדת דף חשבון בנק ב-1 בכל חודש.</p>
+        <p style="margin: 0;"><strong>תהליך מחזורי:</strong> סגירת מאזן חודשי — איסוף חשבוניות, התאמת בנקים, קליטת הוצאות, הפקת דוחות ואישור רואה חשבון.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-bottom: 32px;">
+    <h2 style="color: #312e81; font-size: 1.6em; margin-bottom: 16px; font-weight: 700;">4. איך לנהל כל אחד מהם ביעילות?</h2>
+    
+    <ul style="list-style: none; padding: 0; margin: 0;">
+      <li style="margin-bottom: 16px; padding: 16px; background-color: #f3f4f6; border-radius: 8px; border-right: 4px solid #818cf8;">
+        <strong style="color: #1e1b4b; font-size: 1.05em;">ניהול משימות מחזוריות:</strong>
+        <p style="margin: 6px 0 0 0; color: #374151;">השתמש באוטומציות פשוטות במנהל המשימות שלך (כמו Todoist, Asana, או PCS365) להגדרה של תזכורות אוטומטיות. אל תעמיס עליהן תיעוד מורכב — שמור על פשטות.</p>
+      </li>
+      <li style="margin-bottom: 16px; padding: 16px; background-color: #f3f4f6; border-radius: 8px; border-right: 4px solid #34d399;">
+        <strong style="color: #064e3b; font-size: 1.05em;">ניהול תהליכים מחזוריים:</strong>
+        <p style="margin: 6px 0 0 0; color: #374151;">השתמש בתבניות מובנות (Checklists / Workflows), הגדר בעלי תפקידים לכל שלב, ובצע אופטימיזציה תקופתית (SOP) כדי לזהות היכן התהליך נתקע.</p>
+      </li>
+    </ul>
+  </section>
+
+  <footer style="background-color: #1e1b4b; color: #ffffff; padding: 20px; border-radius: 8px; text-align: center; margin-top: 24px;">
+    <p style="margin: 0; font-size: 1.05em; font-weight: 600; color: #e0e7ff;">💡 הכלל המוביל: משימה מחזוריות דורשת תזכורת. תהליך מחזורי דורש מפת דרכים.</p>
+  </footer>
+
+</article>`, 
+                footerH3: "מוכנים להתחיל?", 
+                footerBtn: "חזרה לאפליקציה" 
+            },
+            en: { 
+                back: "Back to Blog →", 
+                date: "September 28, 2026", 
+                readTime: "⏱️ 5 min read",
+                title: "Recurring Process vs. Recurring Task: What's the Difference?",
+                body: `<article style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.75; color: #1f2937; max-width: 820px; margin: 0 auto; direction: ltr; text-align: left; background-color: #ffffff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+
+  <header style="margin-bottom: 32px; border-bottom: 3px solid #6366f1; padding-bottom: 16px;">
+    <p style="font-size: 1.15em; color: #4b5563; margin: 0;">In productivity and operational management, the terms <strong>"task"</strong> and <strong>"process"</strong> are often used interchangeably. However, when it comes to recurring work, distinguishing between them is crucial: misclassifying them can lead to operational bottlenecks, team confusion, and missed targets.</p>
+  </header>
+
+  <section style="margin-bottom: 32px;">
+    <h2 style="color: #312e81; font-size: 1.6em; margin-bottom: 16px; font-weight: 700;">1. Core Definitions: The Fundamental Difference</h2>
+    
+    <div style="background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%); border-left: 5px solid #4f46e5; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+      <h3 style="color: #3730a3; margin-top: 0; margin-bottom: 8px; font-size: 1.2em;">📌 Recurring Task</h3>
+      <p style="margin: 0; color: #1e1b4b;">A single, isolated, and well-defined action repeated at set intervals (daily, weekly, monthly). A recurring task is usually executed by one individual, lacks complex dependencies, and can be checked off quickly.</p>
+    </div>
+
+    <div style="background: linear-gradient(135deg, #dcfce7 0%, #f0fdf4 100%); border-left: 5px solid #16a34a; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+      <h3 style="color: #14532d; margin-top: 0; margin-bottom: 8px; font-size: 1.2em;">🔄 Recurring Process</h3>
+      <p style="margin: 0; color: #052e16;">A structured series of interconnected steps repeated regularly to achieve a specific organizational outcome. A recurring process encompasses multiple tasks, often across different roles, involving conditional logic, handoffs, and dependencies.</p>
+    </div>
+  </section>
+
+  <section style="margin-bottom: 32px;">
+    <h2 style="color: #312e81; font-size: 1.6em; margin-bottom: 16px; font-weight: 700;">2. Quick Comparison Matrix</h2>
+    <div style="overflow-x: auto; margin-bottom: 24px;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+        <thead>
+          <tr style="background-color: #4f46e5; color: #ffffff;">
+            <th style="padding: 14px; font-size: 1em;">Feature</th>
+            <th style="padding: 14px; font-size: 1em;">Recurring Task</th>
+            <th style="padding: 14px; font-size: 1em;">Recurring Process</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background-color: #ffffff; border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 12px 14px; font-weight: bold; color: #374151;">Scope & Complexity</td>
+            <td style="padding: 12px 14px; color: #4b5563;">Single, discrete action</td>
+            <td style="padding: 12px 14px; color: #4b5563;">Multi-step sequence of tasks</td>
+          </tr>
+          <tr style="background-color: #f9fafb; border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 12px 14px; font-weight: bold; color: #374151;">Ownership</td>
+            <td style="padding: 12px 14px; color: #4b5563;">Usually a single owner</td>
+            <td style="padding: 12px 14px; color: #4b5563;">Multiple roles or cross-functional teams</td>
+          </tr>
+          <tr style="background-color: #ffffff; border-bottom: 1px solid #e5e7eb;">
+            <td style="padding: 12px 14px; font-weight: bold; color: #374151;">Dependencies</td>
+            <td style="padding: 12px 14px; color: #4b5563;">Minimal to none</td>
+            <td style="padding: 12px 14px; color: #4b5563;">Sequential; steps depend on previous handoffs</td>
+          </tr>
+          <tr style="background-color: #f9fafb;">
+            <td style="padding: 12px 14px; font-weight: bold; color: #374151;">Expected Outcome</td>
+            <td style="padding: 12px 14px; color: #4b5563;">Completion of an action item</td>
+            <td style="padding: 12px 14px; color: #4b5563;">A business result or deliverable</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section style="margin-bottom: 32px;">
+    <h2 style="color: #312e81; font-size: 1.6em; margin-bottom: 16px; font-weight: 700;">3. Real-World Examples</h2>
+    
+    <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+      <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; background-color: #fafafa;">
+        <h4 style="margin: 0 0 8px 0; color: #4f46e5; font-size: 1.1em;">💼 Human Resources Context</h4>
+        <p style="margin: 0 0 6px 0;"><strong>Recurring Task:</strong> Sending a weekly reminder to the team to submit timesheets every Thursday at 4 PM.</p>
+        <p style="margin: 0;"><strong>Recurring Process:</strong> Employee Onboarding — hardware setup, software access provision, orientation meeting, and first-week goal alignment.</p>
+      </div>
+
+      <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; background-color: #fafafa;">
+        <h4 style="margin: 0 0 8px 0; color: #4f46e5; font-size: 1.1em;">📊 Finance & Operations Context</h4>
+        <p style="margin: 0 0 6px 0;"><strong>Recurring Task:</strong> Downloading monthly bank statements on the 1st of each month.</p>
+        <p style="margin: 0;"><strong>Recurring Process:</strong> Monthly Financial Close — invoice collection, bank reconciliation, expense matching, reporting, and CPA approval.</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-bottom: 32px;">
+    <h2 style="color: #312e81; font-size: 1.6em; margin-bottom: 16px; font-weight: 700;">4. Best Practices for Managing Both</h2>
+    
+    <ul style="list-style: none; padding: 0; margin: 0;">
+      <li style="margin-bottom: 16px; padding: 16px; background-color: #f3f4f6; border-radius: 8px; border-left: 4px solid #818cf8;">
+        <strong style="color: #1e1b4b; font-size: 1.05em;">Managing Recurring Tasks:</strong>
+        <p style="margin: 6px 0 0 0; color: #374151;">Use simple recurrence rules in your task manager (e.g., Asana, Todoist, or PCS365). Keep them straightforward without adding unnecessary workflow friction.</p>
+      </li>
+      <li style="margin-bottom: 16px; padding: 16px; background-color: #f3f4f6; border-radius: 8px; border-left: 4px solid #34d399;">
+        <strong style="color: #064e3b; font-size: 1.05em;">Managing Recurring Processes:</strong>
+        <p style="margin: 6px 0 0 0; color: #374151;">Build reusable templates or SOPs (Standard Operating Procedures) with clear step owners, automated handoffs, and status visibility across stages.</p>
+      </li>
+    </ul>
+  </section>
+
+  <footer style="background-color: #1e1b4b; color: #ffffff; padding: 20px; border-radius: 8px; text-align: center; margin-top: 24px;">
+    <p style="margin: 0; font-size: 1.05em; font-weight: 600; color: #e0e7ff;">💡 Rule of Thumb: A recurring task needs a reminder. A recurring process needs a roadmap.</p>
+  </footer>
+
+</article>`, 
+                footerH3: "Ready to Start?", 
+                footerBtn: "Back to App" 
+            }
+        };
+
+        const userLang = navigator.language.startsWith('he') ? 'he' : 'en';
+        const t = translations[userLang];
+        
+        document.documentElement.lang = userLang;
+        document.documentElement.dir = (userLang === 'he') ? 'rtl' : 'ltr';
+        
+        document.title = t.title;
+        document.getElementById('back-link').innerText = t.back;
+        document.getElementById('meta-date').innerText = t.date;
+        document.getElementById('meta-read-time').innerText = t.readTime;
+        document.getElementById('main-h1').innerText = t.title;
+        document.getElementById('article-body-content').innerHTML = t.body;
+        document.getElementById('footer-h3').innerText = t.footerH3;
+        document.getElementById('footer-btn').innerText = t.footerBtn;
+    </script>
+</body>
+</html>
